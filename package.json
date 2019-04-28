@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "postinstall": "npm run build",
     "bundle": "trash graphics && trash dashboard && node script/bundle.js",
-    "build": "trash .cache && cross-env NODE_ENV=production npm run bundle",
+    "build": "npm run build:extension && npm run build:browser",
+    "build:browser": "trash .cache && cross-env NODE_ENV=production npm run bundle",
+    "build:extension": "trash extension && npx tsc -b tsconfig.json",
     "watch": "npm run bundle"
   },
   "repository": {
@@ -36,15 +37,16 @@
       }
     ]
   },
-  "dependencies": {
-    "cross-env": "^5.2.0",
-    "trash-cli": "^1.4.0",
-    "vue": "^2.6.7"
-  },
   "devDependencies": {
-    "@vue/component-compiler-utils": "^2.6.0",
-    "parcel-bundler": "^1.11.0",
-    "vue-template-compiler": "^2.6.7",
-    "vue-hot-reload-api": "^2.3.3"
+    "@vue/component-compiler-utils": "^3.0.0",
+    "cross-env": "^5.2.0",
+    "parcel-bundler": "^1.12.3",
+    "trash-cli": "^2.0.0",
+    "tslint": "^5.16.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "typescript": "^3.4.5",
+    "vue": "^2.6.10",
+    "vue-hot-reload-api": "^2.3.3",
+    "vue-template-compiler": "^2.6.10"
   }
 }

@@ -1,0 +1,43 @@
+{
+  "Actions": [
+    {
+      "Name": "Example",
+      "Icon": "icons/actionIcon",
+      "States": [
+        {
+          "Image": "icons/actionDefaultImage",
+          "TitleAlignment": "middle",
+          "Title": "Example"
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Example action needed to run the plugin.",
+      "UUID": "com.esamarathon.streamdeck.action"
+    }
+  ],
+  "Author": "zoton2",
+  "Category": "ESA Marathon",
+  "CategoryIcon": "icons/categoryIcon",
+  "CodePath": "backend.html",
+  "Description": "Barebones plugin to be used with streamdeck-util.",
+  "Name": "ESA Marathon",
+  "Icon": "icons/pluginIcon",
+  "URL": "https://github.com/esamarathon/esa-layouts",
+  "PropertyInspectorPath": "pi.html",
+  "DefaultWindowSize": [400, 200],
+  "Version": "1.0",
+  "SDKVersion": 2,
+  "OS": [
+    {
+      "Platform": "mac",
+      "MinimumVersion": "10.11"
+    },
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Software": {
+    "MinimumVersion": "4.1"
+  }
+}

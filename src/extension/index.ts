@@ -5,4 +5,5 @@ export = (nodecg: NodeCG) => {
   nodecgApiContext.set(nodecg);
 
   require('./streamdeck');
+  require('./rabbitmq');
 };

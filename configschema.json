@@ -9,6 +9,16 @@
         "key": { "type": "string", "default": "DEFAULT_KEY" },
         "debug": { "type": "boolean", "default": false }
       }
+    },
+    "rabbitmq": {
+      "type": "object",
+      "properties": {
+        "protocol": { "type": "string", "default": "amqps" },
+        "hostname": { "type": "string", "default": "mq.esamarathon.com" },
+        "username": { "type": "string", "default": "USERNAME" },
+        "password": { "type": "string", "default": "PASSWORD" },
+        "vhost": { "type": "string", "default": "esa_prod" }
+      }
     }
   }
 }

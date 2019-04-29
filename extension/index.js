@@ -10,5 +10,6 @@ var nodecgApiContext = __importStar(require("./util/nodecg-api-context"));
 module.exports = function (nodecg) {
     nodecgApiContext.set(nodecg);
     require('./streamdeck');
+    require('./rabbitmq');
 };
 //# sourceMappingURL=index.js.map

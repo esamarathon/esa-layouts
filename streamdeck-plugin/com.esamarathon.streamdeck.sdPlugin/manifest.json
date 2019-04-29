@@ -1,18 +1,20 @@
 {
   "Actions": [
     {
-      "Name": "Example",
+      "Name": "Toggle Timer",
       "Icon": "icons/actionIcon",
       "States": [
         {
           "Image": "icons/actionDefaultImage",
           "TitleAlignment": "middle",
-          "Title": "Example"
+          "FontSize": "9",
+          "Title": "Start\nTimer",
+          "ShowTitle": true
         }
       ],
       "SupportedInMultiActions": false,
-      "Tooltip": "Example action needed to run the plugin.",
-      "UUID": "com.esamarathon.streamdeck.action"
+      "Tooltip": "Used to start and stop the timer.",
+      "UUID": "com.esamarathon.streamdeck.timer"
     }
   ],
   "Author": "zoton2",

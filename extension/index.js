@@ -9,5 +9,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 var nodecgApiContext = __importStar(require("./util/nodecg-api-context"));
 module.exports = function (nodecg) {
     nodecgApiContext.set(nodecg);
+    require('./streamdeck');
 };
 //# sourceMappingURL=index.js.map

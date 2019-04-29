@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "streamdeck": {
+      "type": "object",
+      "properties": {
+        "port": { "type": "integer", "default": 1235 },
+        "key": { "type": "string", "default": "DEFAULT_KEY" },
+        "debug": { "type": "boolean", "default": false }
+      }
+    }
+  }
+}

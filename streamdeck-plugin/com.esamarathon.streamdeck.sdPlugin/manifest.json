@@ -19,7 +19,7 @@
   "Category": "ESA Marathon",
   "CategoryIcon": "icons/categoryIcon",
   "CodePath": "backend.html",
-  "Description": "Barebones plugin to be used with streamdeck-util.",
+  "Description": "Plugin with actions programmed for use at ESA Marathons.",
   "Name": "ESA Marathon",
   "Icon": "icons/pluginIcon",
   "URL": "https://github.com/esamarathon/esa-layouts",

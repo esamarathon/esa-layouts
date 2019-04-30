@@ -5,7 +5,7 @@
     "streamdeck": {
       "type": "object",
       "properties": {
-        "port": { "type": "integer", "default": 1235 },
+        "port": { "type": "integer", "default": 9091 },
         "key": { "type": "string", "default": "DEFAULT_KEY" },
         "debug": { "type": "boolean", "default": false }
       }

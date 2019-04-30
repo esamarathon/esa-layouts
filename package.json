@@ -22,6 +22,9 @@
   "homepage": "https://github.com/esamarathon/esa-layouts#readme",
   "nodecg": {
     "compatibleRange": "^1.0.0",
+    "bundleDependencies": {
+      "nodecg-speedcontrol": "^1.0.0"
+    },
     "dashboardPanels": [
       {
         "name": "example-dashboard",

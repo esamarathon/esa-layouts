@@ -2,9 +2,9 @@
 
 > The on-screen graphics used during European Speedrunner Assembly (and other relevant) events.
 
-## Nothing Here...?
+*This is a bundle for [NodeCG](https://nodecg.com/); if you do not understand what that is, we advise you read their website first for more information.*
 
-Right now as the bundle is pretty new and hasn't been used for an event yet, all the work is being done in the `dev` branch.
+This is a [NodeCG](https://nodecg.com) v1 bundle. You will need to have NodeCG v1 installed to run it. It also requires you to install the [nodecg-speedcontrol](https://github.com/speedcontrol/nodecg-speedcontrol) bundle.
 
 ## Previous Bundles
 

@@ -4,7 +4,10 @@ module.exports = {
     browser: true,
     es6: true,
   },
-  extends: 'airbnb-base',
+  extends: [
+    'airbnb-base',
+    'plugin:vue/recommended'
+  ],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
@@ -17,6 +20,6 @@ module.exports = {
     'vue',
   ],
   rules: {
-    'import/no-extraneous-dependencies': [error, { devDependencies: true }]
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }]
   },
 };

@@ -19,6 +19,14 @@
         "password": { "type": "string", "default": "PASSWORD" },
         "vhost": { "type": "string", "default": "esa_prod" }
       }
+    },
+    "obs": {
+      "type": "object",
+      "properties": {
+        "enable": { "type": "boolean", "default": true },
+        "address": { "type": "string", "default": "localhost:4444" },
+        "password": { "type": "string" }
+      }
     }
   }
 }

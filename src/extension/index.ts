@@ -6,4 +6,9 @@ export = (nodecg: NodeCG) => {
 
   require('./streamdeck');
   require('./rabbitmq');
+
+  // Set up OBS connection if enabled.
+  if (nodecg.bundleConfig.obs.enable) {
+    require('./util/obs');
+  }
 };

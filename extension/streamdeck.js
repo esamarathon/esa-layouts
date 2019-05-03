@@ -58,7 +58,7 @@ function init() {
         // com.esamarathon.streamdeck.timer
         // Controls the nodecg-speedcontrol timer when the button is pressed.
         // USES "UNSUPPORTED" API STUFF, NEEDS CHANGING IN FUTURE.
-        // ALSO nodecg.sendMessageToBundle NEEDS ADDING TO THEIR TYPINGS!
+        // The "@ts-ignore" lines need removing when NodeCG is updated.
         if (data.action === 'com.esamarathon.streamdeck.timer') {
             switch (timer.value.state) {
                 case 'stopped':

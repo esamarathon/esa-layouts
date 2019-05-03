@@ -11,5 +11,9 @@ module.exports = function (nodecg) {
     nodecgApiContext.set(nodecg);
     require('./streamdeck');
     require('./rabbitmq');
+    // Set up OBS connection if enabled.
+    if (nodecg.bundleConfig.obs.enable) {
+        require('./util/obs');
+    }
 };
 //# sourceMappingURL=index.js.map

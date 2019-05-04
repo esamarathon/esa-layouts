@@ -6,7 +6,9 @@
 
 Right now as the bundle is pretty new and hasn't been used for an event yet, all the work is being done in the `dev` branch.
 
-## Previous Bundles
+## Other Information
+
+### Previous Bundles
 
 Here's a list of previous bundles that used to fulfil the purpose of this one, when we kept making new repositories for most of them.
 

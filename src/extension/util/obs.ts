@@ -1,8 +1,25 @@
 import * as nodecgApiContext from './nodecg-api-context';
 import obsWebsocketJs from 'obs-websocket-js';
 
+// Extending the OBS library with some of our own functions.
+class OBSUtility extends obsWebsocketJs {
+  constructor() {
+    super();
+  }
+
+  /**
+   * Change to this scene in OBS.
+   * @param name Name of the scene.
+   */
+  changeScene(name: string) {
+    this.send('SetCurrentScene', { 'scene-name': name }).catch((err) => {
+      nodecg.log.warn(`Cannot change OBS scene [${name}]: ${err.error}`);
+    });
+  }
+}
+
 const nodecg = nodecgApiContext.get();
-const obs = new obsWebsocketJs();
+const obs = new OBSUtility();
 const settings = {
   address: nodecg.bundleConfig.obs.address,
   password: nodecg.bundleConfig.obs.password,

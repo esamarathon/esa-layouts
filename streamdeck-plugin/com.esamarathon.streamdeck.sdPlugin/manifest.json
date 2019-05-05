@@ -15,6 +15,22 @@
       "SupportedInMultiActions": false,
       "Tooltip": "Used to start and stop the timer.",
       "UUID": "com.esamarathon.streamdeck.timer"
+    },
+    {
+      "Name": "Twitch Ads",
+      "Icon": "icons/actionIcon",
+      "States": [
+        {
+          "Image": "icons/actionDefaultImage",
+          "TitleAlignment": "middle",
+          "FontSize": "9",
+          "Title": "STEP 1\nTWITCH AD",
+          "ShowTitle": true
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Switches scene, plays ads and displays countdown timer for them.",
+      "UUID": "com.esamarathon.streamdeck.twitchads"
     }
   ],
   "Author": "zoton2",

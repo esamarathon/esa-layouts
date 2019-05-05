@@ -15,13 +15,17 @@ streamdeck.on('init', () => {
   timerButtons.forEach((button) => {
     streamdeck.updateButtonText(button.context, 'Start\nTimer');
   });
+  const adButtons = streamdeck.findButtonsWithAction('com.esamarathon.streamdeck.twitchads');
+  timerButtons.forEach((button) => {
+    streamdeck.updateButtonText(button.context, 'STEP 1\nTWITCH AD');
+  });
 });
 
 function init() {
   // com.esamarathon.streamdeck.timer
   // Controls the text on the buttons.
   const timer = nodecg.Replicant<any>('timer', 'nodecg-speedcontrol');
-  timer.on('change', (newVal: any, oldVal: any) => {
+  timer.on('change', (newVal: any) => {
     const buttons = streamdeck.findButtonsWithAction('com.esamarathon.streamdeck.timer');
     buttons.forEach((button) => {
       switch (newVal.state) {
@@ -62,6 +66,10 @@ function init() {
           nodecg.sendMessageToBundle('resetTime', 'nodecg-speedcontrol');
           break;
       }
+    }
+
+    if (data.action === 'com.esamarathon.streamdeck.twitchads') {
+      obs.changeScene(nodecg.bundleConfig.obs.names.scenes.ads);
     }
   });
 }

@@ -61,6 +61,7 @@
   "dependencies": {
     "amqplib": "^0.5.3",
     "obs-websocket-js": "^3.0.0",
+    "speedcontrol-util": "^0.1.0",
     "streamdeck-util": "^0.2.0"
   }
 }

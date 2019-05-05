@@ -1,24 +1,19 @@
 import * as nodecgApiContext from './util/nodecg-api-context';
-import streamdeckUtil from 'streamdeck-util';
+import streamdeck from './util/streamdeck';
 import obs from './util/obs';
 
 const nodecg = nodecgApiContext.get();
 let initDone = false;
-const sd = new streamdeckUtil({
-  key: nodecg.bundleConfig.streamdeck.key,
-  port: nodecg.bundleConfig.streamdeck.port,
-  debug: nodecg.bundleConfig.streamdeck.debug,
-});
 
-sd.on('init', () => {
+streamdeck.on('init', () => {
   if (!initDone) { init(); }
   initDone = true;
 
   // com.esamarathon.streamdeck.timer
   // Set default text on buttons.
-  const timerButtons = sd.findButtonsWithAction('com.esamarathon.streamdeck.timer');
+  const timerButtons = streamdeck.findButtonsWithAction('com.esamarathon.streamdeck.timer');
   timerButtons.forEach((button) => {
-    sd.updateButtonText(button.context, 'Start\nTimer');
+    streamdeck.updateButtonText(button.context, 'Start\nTimer');
   });
 });
 
@@ -27,26 +22,26 @@ function init() {
   // Controls the text on the buttons.
   const timer = nodecg.Replicant<any>('timer', 'nodecg-speedcontrol');
   timer.on('change', (newVal: any, oldVal: any) => {
-    const buttons = sd.findButtonsWithAction('com.esamarathon.streamdeck.timer');
+    const buttons = streamdeck.findButtonsWithAction('com.esamarathon.streamdeck.timer');
     buttons.forEach((button) => {
       switch (newVal.state) {
         case 'stopped':
-          sd.updateButtonText(button.context, 'Start\nTimer');
+          streamdeck.updateButtonText(button.context, 'Start\nTimer');
           break;
         case 'running':
-          sd.updateButtonText(button.context, 'Stop\nTimer');
+          streamdeck.updateButtonText(button.context, 'Stop\nTimer');
           break;
         case 'paused':
-          sd.updateButtonText(button.context, 'Resume\nTimer');
+          streamdeck.updateButtonText(button.context, 'Resume\nTimer');
           break;
         case 'finished':
-          sd.updateButtonText(button.context, 'Reset\nTimer');
+          streamdeck.updateButtonText(button.context, 'Reset\nTimer');
           break;
       }
     });
   });
 
-  sd.on('keyUp', (data: any) => {
+  streamdeck.on('keyUp', (data: any) => {
     // com.esamarathon.streamdeck.timer
     // Controls the nodecg-speedcontrol timer when the button is pressed.
     // USES "UNSUPPORTED" API STUFF, NEEDS CHANGING IN FUTURE.

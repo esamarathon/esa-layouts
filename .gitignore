@@ -4,6 +4,6 @@ streamdeck-plugin/DistributionTool.exe
 transition.psd
 
 # Ignore built files (for now).
-./dashboard/
-./extension/
-./graphics/
+/dashboard/
+/extension/
+/graphics/

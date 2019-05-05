@@ -12,9 +12,7 @@ const options: amqplib.Options.Connect = {
 };
 
 amqplib.connect(options).then((conn) => {
-  console.log('rabbitmq connected');
-  // connected
+  nodecg.log.info('RabbitMQ connection successful.');
 }).catch((err) => {
-  console.log(err);
-  // error
+  nodecg.log.warn('RabbitMQ connection error: ', err);
 });

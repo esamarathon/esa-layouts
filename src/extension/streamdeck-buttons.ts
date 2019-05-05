@@ -16,7 +16,7 @@ streamdeck.on('init', () => {
     streamdeck.updateButtonText(button.context, 'Start\nTimer');
   });
   const adButtons = streamdeck.findButtonsWithAction('com.esamarathon.streamdeck.twitchads');
-  timerButtons.forEach((button) => {
+  adButtons.forEach((button) => {
     streamdeck.updateButtonText(button.context, 'STEP 1\nTWITCH AD');
   });
 });

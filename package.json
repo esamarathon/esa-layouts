@@ -12,6 +12,9 @@
     "watch:extension": "trash extension && npx tsc -b tsconfig.json -w",
     "start": "node ../.."
   },
+  "vue": {
+    "runtimeCompiler": true
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/esamarathon/esa-layouts.git"

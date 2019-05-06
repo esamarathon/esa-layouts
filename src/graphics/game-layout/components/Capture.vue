@@ -1,5 +1,5 @@
 <template>
-  <div class="capture" />
+  <div class="Capture" />
 </template>
 
 <script>
@@ -9,7 +9,7 @@ export default {
 </script>
 
 <style>
-  .capture {
+  .Capture {
     position: fixed;
     background-color: black;
   }

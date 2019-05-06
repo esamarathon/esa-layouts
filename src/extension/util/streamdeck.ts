@@ -10,6 +10,7 @@ if (nodecg.bundleConfig.streamdeck.enable) {
     port: nodecg.bundleConfig.streamdeck.port,
     debug: nodecg.bundleConfig.streamdeck.debug,
   });
+  nodecg.log.info('Listening for Stream Deck connections.');
 
   sd.on('open', () => {
     nodecg.log.info('Stream Deck connection successful.');

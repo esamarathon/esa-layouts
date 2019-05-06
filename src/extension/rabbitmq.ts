@@ -11,6 +11,7 @@ const options: amqplib.Options.Connect = {
   vhost: nodecg.bundleConfig.rabbitmq.vhost,
 };
 
+nodecg.log.info('Setting up RabbitMQ Connection.');
 amqplib.connect(options).then((conn) => {
   nodecg.log.info('RabbitMQ connection successful.');
 }).catch((err) => {

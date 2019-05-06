@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
-    <capture id="gameCapture1" />
-    <capture id="camCapture1" />
+  <div id="layout">
+    <capture id="gameCapture1"></capture>
+    <capture id="camCapture1"></capture>
   </div>
 </template>
 
@@ -9,7 +9,7 @@
 import Capture from './components/Capture.vue';
 
 export default {
-  name: 'App',
+  name: 'Layout',
   components: {
     Capture,
   },

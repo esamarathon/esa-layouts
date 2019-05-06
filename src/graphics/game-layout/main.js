@@ -7,6 +7,7 @@ Vue.use(VueRouter);
 
 const routes = [
   { path: '/4_3-1p', component: Layout1 },
+  { path: '*', redirect: '/4_3-1p' },
 ];
 
 const router = new VueRouter({

@@ -39,6 +39,13 @@
           }
         }
       }
+    },
+    "tracker": {
+      "type": "object",
+      "properties": {
+        "username": { "type": "string", "default": "USERNAME" },
+        "password": { "type": "string", "default": "PASSWORD" }
+      }
     }
   }
 }

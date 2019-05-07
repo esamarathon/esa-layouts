@@ -4,6 +4,7 @@ import * as nodecgApiContext from './util/nodecg-api-context';
 export = (nodecg: NodeCG) => {
   nodecgApiContext.set(nodecg);
 
+  require('./tracker');
   require('./rabbitmq');
   require('./streamdeck-buttons');
 };

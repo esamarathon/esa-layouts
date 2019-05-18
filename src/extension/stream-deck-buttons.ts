@@ -1,56 +1,56 @@
 import * as nodecgApiContext from './util/nodecg-api-context';
-import streamdeck from './util/streamdeck';
+import streamDeck from './util/stream-deck';
 import obs from './util/obs';
 
 const nodecg = nodecgApiContext.get();
 let initDone = false;
 
-streamdeck.on('init', () => {
+streamDeck.on('init', () => {
   if (!initDone) { init(); }
   initDone = true;
 
-  // com.esamarathon.streamdeck.timer
+  // com.esamarathon.streamDeck.timer
   // Set default text on buttons.
-  const timerButtons = streamdeck.findButtonsWithAction('com.esamarathon.streamdeck.timer');
+  const timerButtons = streamDeck.findButtonsWithAction('com.esamarathon.streamDeck.timer');
   timerButtons.forEach((button) => {
-    streamdeck.updateButtonText(button.context, 'Start\nTimer');
+    streamDeck.updateButtonText(button.context, 'Start\nTimer');
   });
-  const adButtons = streamdeck.findButtonsWithAction('com.esamarathon.streamdeck.twitchads');
+  const adButtons = streamDeck.findButtonsWithAction('com.esamarathon.streamDeck.twitchads');
   adButtons.forEach((button) => {
-    streamdeck.updateButtonText(button.context, 'STEP 1\nTWITCH AD');
+    streamDeck.updateButtonText(button.context, 'STEP 1\nTWITCH AD');
   });
 });
 
 function init() {
-  // com.esamarathon.streamdeck.timer
+  // com.esamarathon.streamDeck.timer
   // Controls the text on the buttons.
   const timer = nodecg.Replicant<any>('timer', 'nodecg-speedcontrol');
   timer.on('change', (newVal: any) => {
-    const buttons = streamdeck.findButtonsWithAction('com.esamarathon.streamdeck.timer');
+    const buttons = streamDeck.findButtonsWithAction('com.esamarathon.streamDeck.timer');
     buttons.forEach((button) => {
       switch (newVal.state) {
         case 'stopped':
-          streamdeck.updateButtonText(button.context, 'Start\nTimer');
+          streamDeck.updateButtonText(button.context, 'Start\nTimer');
           break;
         case 'running':
-          streamdeck.updateButtonText(button.context, 'Stop\nTimer');
+          streamDeck.updateButtonText(button.context, 'Stop\nTimer');
           break;
         case 'paused':
-          streamdeck.updateButtonText(button.context, 'Resume\nTimer');
+          streamDeck.updateButtonText(button.context, 'Resume\nTimer');
           break;
         case 'finished':
-          streamdeck.updateButtonText(button.context, 'Reset\nTimer');
+          streamDeck.updateButtonText(button.context, 'Reset\nTimer');
           break;
       }
     });
   });
 
-  streamdeck.on('keyUp', (data: any) => {
-    // com.esamarathon.streamdeck.timer
+  streamDeck.on('keyUp', (data: any) => {
+    // com.esamarathon.streamDeck.timer
     // Controls the nodecg-speedcontrol timer when the button is pressed.
     // USES "UNSUPPORTED" API STUFF, NEEDS CHANGING IN FUTURE.
     // The "@ts-ignore" lines need removing when NodeCG is updated.
-    if (data.action === 'com.esamarathon.streamdeck.timer') {
+    if (data.action === 'com.esamarathon.streamDeck.timer') {
       switch (timer.value.state) {
         case 'stopped':
         case 'paused':
@@ -68,7 +68,7 @@ function init() {
       }
     }
 
-    if (data.action === 'com.esamarathon.streamdeck.twitchads') {
+    if (data.action === 'com.esamarathon.streamDeck.twitchads') {
       obs.changeScene(nodecg.bundleConfig.obs.names.scenes.ads);
     }
   });

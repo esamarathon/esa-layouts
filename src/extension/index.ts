@@ -6,5 +6,5 @@ export = (nodecg: NodeCG) => {
 
   require('./tracker');
   require('./rabbitmq');
-  require('./streamdeck-buttons');
+  require('./stream-deck-buttons');
 };

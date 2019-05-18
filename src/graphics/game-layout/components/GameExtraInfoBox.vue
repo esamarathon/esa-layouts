@@ -5,7 +5,8 @@
   >
     <div
       v-if="show"
-      id="GameNameBox"
+      id="GameExtraInfoBox"
+      ref="name"
       :key="keyValue"
       class="GameInfoBox FlexContainer"
     >
@@ -18,7 +19,7 @@
 import Vue from 'vue';
 
 export default {
-  name: 'GameNameBox',
+  name: 'GameExtraInfoBox',
   data() {
     return {
       name: '',
@@ -31,7 +32,7 @@ export default {
       if (runData) {
         this.show = true;
         this.keyValue = !this.keyValue; // Triggers the transition.
-        this.name = runData.game;
+        this.name = runData.category;
       } else {
         this.show = false;
       }
@@ -44,8 +45,9 @@ export default {
   @import url('./GameInfoBox.css');
   @import url('./FlexContainer.css');
 
-  #GameNameBox {
-    font-size: 45px;
+  #GameExtraInfoBox {
+    font-size: 25px;
+    background-color: cadetblue
   }
 
   .fade-enter-active, .fade-leave-active {

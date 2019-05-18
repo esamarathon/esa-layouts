@@ -15,6 +15,7 @@
     <!-- Information Storage -->
     <info-storage-box>
       <game-name-box></game-name-box>
+      <game-extra-info-box></game-extra-info-box>
     </info-storage-box>
   </div>
 </template>
@@ -23,6 +24,7 @@
 import Capture from './components/Capture.vue';
 import InfoStorageBox from './components/InfoStorageBox.vue';
 import GameNameBox from './components/GameNameBox.vue';
+import GameExtraInfoBox from './components/GameExtraInfoBox.vue';
 
 export default {
   name: 'Layout',
@@ -30,6 +32,7 @@ export default {
     Capture,
     InfoStorageBox,
     GameNameBox,
+    GameExtraInfoBox,
   },
 };
 </script>

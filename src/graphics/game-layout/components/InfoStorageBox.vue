@@ -19,6 +19,7 @@ export default {
   #InfoStorageBox {
     position: fixed;
     box-sizing: border-box;
-    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column
   }
 </style>

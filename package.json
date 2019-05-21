@@ -2,52 +2,34 @@
   "name": "esa-layouts",
   "version": "1.0.0",
   "description": "",
-  "scripts": {
-    "bundle": "trash graphics && trash dashboard && node script/bundle.js",
-    "build": "npm run build:extension && npm run build:browser",
-    "build:browser": "trash .cache && cross-env NODE_ENV=production npm run bundle",
-    "build:extension": "trash extension && npx tsc -b tsconfig.json",
-    "watch": "run-p watch:*",
-    "watch:browser": "npm run bundle",
-    "watch:extension": "trash extension && npx tsc -b tsconfig.json -w",
-    "start": "node ../.."
-  },
-  "vue": {
-    "runtimeCompiler": true
-  },
-  "alias": {
-    "vue": "./node_modules/vue/dist/vue.esm.js"
+  "homepage": "https://github.com/esamarathon/esa-layouts#readme",
+  "bugs": {
+    "url": "https://github.com/esamarathon/esa-layouts/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/esamarathon/esa-layouts.git"
   },
-  "author": "zoton2",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/esamarathon/esa-layouts/issues"
+  "author": "zoton2",
+  "scripts": {
+    "build": "npm run build:extension && npm run build:browser",
+    "build:browser": "trash .cache && cross-env NODE_ENV=production npm run bundle",
+    "build:extension": "trash extension && npx tsc -b tsconfig.json",
+    "bundle": "trash graphics && trash dashboard && node script/bundle.js",
+    "start": "node ../..",
+    "watch": "run-p watch:*",
+    "watch:browser": "npm run bundle",
+    "watch:extension": "trash extension && npx tsc -b tsconfig.json -w"
   },
-  "homepage": "https://github.com/esamarathon/esa-layouts#readme",
-  "nodecg": {
-    "compatibleRange": "^1.0.0",
-    "bundleDependencies": {
-      "nodecg-speedcontrol": "^1.0.0"
-    },
-    "dashboardPanels": [
-      {
-        "name": "example-dashboard",
-        "title": "Example Dashboard",
-        "width": 2,
-        "file": "example-dashboard.html"
-      }
-    ],
-    "graphics": [
-      {
-        "file": "game-layout.html",
-        "width": 1920,
-        "height": 1080
-      }
-    ]
+  "dependencies": {
+    "amqplib": "^0.5.3",
+    "cheerio": "^1.0.0-rc.3",
+    "obs-websocket-js": "^3.0.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
+    "speedcontrol-util": "^0.1.0",
+    "streamdeck-util": "^0.3.0"
   },
   "devDependencies": {
     "@types/amqplib": "^0.5.11",
@@ -70,13 +52,37 @@
     "vue-router": "^3.0.6",
     "vue-template-compiler": "^2.6.10"
   },
-  "dependencies": {
-    "amqplib": "^0.5.3",
-    "cheerio": "^1.0.0-rc.3",
-    "obs-websocket-js": "^3.0.0",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.4",
-    "speedcontrol-util": "^0.1.0",
-    "streamdeck-util": "^0.3.0"
+  "alias": {
+    "vue": "./node_modules/vue/dist/vue.esm.js"
+  },
+  "nodecg": {
+    "compatibleRange": "^1.0.0",
+    "bundleDependencies": {
+      "nodecg-speedcontrol": "^1.0.0"
+    },
+    "dashboardPanels": [
+      {
+        "name": "example-dashboard",
+        "title": "Example Dashboard",
+        "width": 2,
+        "file": "example-dashboard.html"
+      }
+    ],
+    "graphics": [
+      {
+        "file": "game-layout.html",
+        "width": 1920,
+        "height": 1080
+      }
+    ],
+    "mount": [
+      {
+        "directory": "static",
+        "endpoint": "static"
+      }
+    ]
+  },
+  "vue": {
+    "runtimeCompiler": true
   }
 }

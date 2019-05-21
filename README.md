@@ -35,3 +35,7 @@ Here's a list of previous bundles that used to fulfil the purpose of this one, w
   * ESA Winter 2018
 * [esa17-layouts](https://github.com/esamarathon/esa17-layouts)
   * ESA 2017
+
+### Credits
+
+* Country flags sourced from [speedrun.com](https://www.speedrun.com/).

@@ -2,8 +2,22 @@ import * as nodecgApiContext from './nodecg-api-context';
 import amqplib from 'amqplib';
 import { EventEmitter } from 'events';
 
+interface MQEmitter extends EventEmitter {
+  // Remote
+  on(event: 'evt-donation-total', listener: (data: object) => void): this;
+  on(event: 'donation-fully-processed', listener: (data: object) => void): this;
+  on(event: 'new-screened-tweet', listener: (data: object) => void): this;
+  on(event: 'new-screened-sub', listener: (data: object) => void): this;
+
+  // Local
+  on(event: 'flagcarrier-tag-scanned', listener: (data: object) => void): this;
+  on(event: 'BigButton', listener: (data: object) => void): this;
+
+  on(event: string, listener: Function): this;
+}
+
 const nodecg = nodecgApiContext.get();
-export const mq = new EventEmitter();
+export const mq: MQEmitter = new EventEmitter();
 nodecg.log.info('Setting up RabbitMQ connections.');
 
 // Remote/local queues we need to listen on.
@@ -50,7 +64,7 @@ function listenToQueues(local?: boolean) {
   for (const queue of queues) {
     chan.assertQueue(queue);
     chan.consume(queue, (msg) => {
-      if (msg) {
+      if (msg && msg.content) {
         mq.emit(queue, JSON.parse(msg.content.toString()));
       }
     }, { // tslint:disable-next-line: align

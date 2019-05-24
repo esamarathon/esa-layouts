@@ -5,6 +5,8 @@ export = (nodecg: NodeCG) => {
   nodecgApiContext.set(nodecg);
 
   require('./tracker');
-  require('./rabbitmq');
   require('./stream-deck-buttons');
+
+  // temp
+  require('./util/rabbitmq');
 };

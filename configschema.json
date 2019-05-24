@@ -14,11 +14,26 @@
     "rabbitmq": {
       "type": "object",
       "properties": {
-        "protocol": { "type": "string", "default": "amqps" },
-        "hostname": { "type": "string", "default": "mq.esamarathon.com" },
-        "username": { "type": "string", "default": "USERNAME" },
-        "password": { "type": "string", "default": "PASSWORD" },
-        "vhost": { "type": "string", "default": "esa_prod" }
+        "remote": {
+          "type": "object",
+          "properties": {
+            "protocol": { "type": "string", "default": "amqps" },
+            "hostname": { "type": "string", "default": "" },
+            "username": { "type": "string", "default": "" },
+            "password": { "type": "string", "default": "" },
+            "vhost": { "type": "string", "default": "" }
+          }
+        },
+        "local": {
+          "type": "object",
+          "properties": {
+            "protocol": { "type": "string", "default": "amqp" },
+            "hostname": { "type": "string", "default": "localhost" },
+            "username": { "type": "string", "default": "" },
+            "password": { "type": "string", "default": "" },
+            "vhost": { "type": "string", "default": "" }
+          }
+        }
       }
     },
     "obs": {
@@ -43,8 +58,8 @@
     "tracker": {
       "type": "object",
       "properties": {
-        "username": { "type": "string", "default": "USERNAME" },
-        "password": { "type": "string", "default": "PASSWORD" }
+        "username": { "type": "string", "default": "" },
+        "password": { "type": "string", "default": "" }
       }
     }
   }

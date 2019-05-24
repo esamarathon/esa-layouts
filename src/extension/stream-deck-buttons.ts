@@ -9,24 +9,18 @@ streamDeck.on('init', () => {
   if (!initDone) { init(); }
   initDone = true;
 
-  // com.esamarathon.streamDeck.timer
+  // com.esamarathon.streamdeck.timer
   // Set default text on buttons.
-  const timerButtons = streamDeck.findButtonsWithAction('com.esamarathon.streamDeck.timer');
-  timerButtons.forEach((button) => {
-    streamDeck.updateButtonText(button.context, 'Start\nTimer');
-  });
-  const adButtons = streamDeck.findButtonsWithAction('com.esamarathon.streamDeck.twitchads');
-  adButtons.forEach((button) => {
-    streamDeck.updateButtonText(button.context, 'STEP 1\nTWITCH AD');
-  });
+  setTextOnAllButtonsWithAction('com.esamarathon.streamdeck.timer', 'Start\nTimer');
+  setTextOnAllButtonsWithAction('com.esamarathon.streamdeck.twitchads', 'STEP 1\nTWITCH AD');
 });
 
 function init() {
-  // com.esamarathon.streamDeck.timer
+  // com.esamarathon.streamdeck.timer
   // Controls the text on the buttons.
   const timer = nodecg.Replicant<any>('timer', 'nodecg-speedcontrol');
   timer.on('change', (newVal: any) => {
-    const buttons = streamDeck.findButtonsWithAction('com.esamarathon.streamDeck.timer');
+    const buttons = streamDeck.findButtonsWithAction('com.esamarathon.streamdeck.timer');
     buttons.forEach((button) => {
       switch (newVal.state) {
         case 'stopped':
@@ -46,11 +40,11 @@ function init() {
   });
 
   streamDeck.on('keyUp', (data: any) => {
-    // com.esamarathon.streamDeck.timer
+    // com.esamarathon.streamdeck.timer
     // Controls the nodecg-speedcontrol timer when the button is pressed.
     // USES "UNSUPPORTED" API STUFF, NEEDS CHANGING IN FUTURE.
     // The "@ts-ignore" lines need removing when NodeCG is updated.
-    if (data.action === 'com.esamarathon.streamDeck.timer') {
+    if (data.action === 'com.esamarathon.streamdeck.timer') {
       switch (timer.value.state) {
         case 'stopped':
         case 'paused':
@@ -68,8 +62,16 @@ function init() {
       }
     }
 
-    if (data.action === 'com.esamarathon.streamDeck.twitchads') {
+    // com.esamarathon.streamdeck.twitchads
+    if (data.action === 'com.esamarathon.streamdeck.twitchads') {
       obs.changeScene(nodecg.bundleConfig.obs.names.scenes.ads);
     }
+  });
+}
+
+function setTextOnAllButtonsWithAction(action: string, text: string) {
+  const buttons = streamDeck.findButtonsWithAction(action);
+  buttons.forEach((button) => {
+    streamDeck.updateButtonText(button.context, text);
   });
 }

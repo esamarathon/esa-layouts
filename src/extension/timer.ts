@@ -7,7 +7,7 @@ const timer = nodecg.Replicant<Timer>('timer', 'nodecg-speedcontrol');
 
 // Controls the nodecg-speedcontrol timer when the big buttons are pressed.
 mq.on('BigButton', (data: any) => {
-  const buttonID = data.button_id;
+  const buttonID = data.button_id - 1;
 
   // Make sure we're listening for the right message.
   if (!data.time && !data.button_message_count) {

@@ -1,6 +1,7 @@
+import { Timer } from '../../../nodecg-speedcontrol/types';
 import * as nodecgApiContext from './util/nodecg-api-context';
-import streamDeck from './util/stream-deck';
 import obs from './util/obs';
+import streamDeck from './util/stream-deck';
 
 const nodecg = nodecgApiContext.get();
 let initDone = false;
@@ -18,7 +19,7 @@ streamDeck.on('init', () => {
 function init() {
   // com.esamarathon.streamdeck.timer
   // Controls the text on the buttons.
-  const timer = nodecg.Replicant<any>('timer', 'nodecg-speedcontrol');
+  const timer = nodecg.Replicant<Timer>('timer', 'nodecg-speedcontrol');
   timer.on('change', (newVal: any) => {
     const buttons = streamDeck.findButtonsWithAction('com.esamarathon.streamdeck.timer');
     buttons.forEach((button) => {
@@ -42,22 +43,21 @@ function init() {
   streamDeck.on('keyUp', (data: any) => {
     // com.esamarathon.streamdeck.timer
     // Controls the nodecg-speedcontrol timer when the button is pressed.
-    // USES "UNSUPPORTED" API STUFF, NEEDS CHANGING IN FUTURE.
-    // The "@ts-ignore" lines need removing when NodeCG is updated.
+    // Currently the "Stop Timer" state only works if there's only 1 team.
     if (data.action === 'com.esamarathon.streamdeck.timer') {
       switch (timer.value.state) {
         case 'stopped':
         case 'paused':
-          // @ts-ignore
-          nodecg.sendMessageToBundle('startTime', 'nodecg-speedcontrol');
+          // @ts-ignore: NodeCG not declaring this (yet).
+          nodecg.sendMessageToBundle('startTimer', 'nodecg-speedcontrol');
           break;
         case 'running':
-          // @ts-ignore
-          nodecg.sendMessageToBundle('finishTime', 'nodecg-speedcontrol');
+          // @ts-ignore: NodeCG not declaring this (yet).
+          nodecg.sendMessageToBundle('stopTimer', 'nodecg-speedcontrol', 0);
           break;
         case 'finished':
-          // @ts-ignore
-          nodecg.sendMessageToBundle('resetTime', 'nodecg-speedcontrol');
+          // @ts-ignore: NodeCG not declaring this (yet).
+          nodecg.sendMessageToBundle('resetTimer', 'nodecg-speedcontrol');
           break;
       }
     }

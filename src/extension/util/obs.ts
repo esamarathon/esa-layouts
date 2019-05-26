@@ -1,5 +1,5 @@
-import * as nodecgApiContext from './nodecg-api-context';
 import obsWebsocketJs from 'obs-websocket-js';
+import * as nodecgApiContext from './nodecg-api-context';
 
 // Extending the OBS library with some of our own functions.
 class OBSUtility extends obsWebsocketJs {

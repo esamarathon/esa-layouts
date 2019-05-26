@@ -1,6 +1,6 @@
-import * as nodecgApiContext from './nodecg-api-context';
 import amqplib from 'amqplib';
 import { EventEmitter } from 'events';
+import * as nodecgApiContext from './nodecg-api-context';
 
 interface MQEmitter extends EventEmitter {
   // Remote

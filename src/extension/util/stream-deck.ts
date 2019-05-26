@@ -1,5 +1,5 @@
-import * as nodecgApiContext from './nodecg-api-context';
 import streamdeckUtil from 'streamdeck-util';
+import * as nodecgApiContext from './nodecg-api-context';
 
 const nodecg = nodecgApiContext.get();
 const sd = new streamdeckUtil();

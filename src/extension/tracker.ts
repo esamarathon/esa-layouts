@@ -1,6 +1,6 @@
-import * as nodecgApiContext from './util/nodecg-api-context';
 import cheerio from 'cheerio';
 import requestPromise from 'request-promise';
+import * as nodecgApiContext from './util/nodecg-api-context';
 
 const nodecg = nodecgApiContext.get();
 requestPromise.defaults({ jar: true });

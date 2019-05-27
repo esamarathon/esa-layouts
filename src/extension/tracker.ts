@@ -3,6 +3,7 @@ import needle from 'needle';
 import requestPromise from 'request-promise';
 import { DonationTotal } from '../../schemas';
 import { bundleConfig, getCtx } from './util/nodecg';
+import { mq } from './util/rabbitmq';
 
 const nodecg = getCtx();
 requestPromise.defaults({ jar: true });
@@ -65,6 +66,23 @@ async function updateFeaturedChannels(usernames: string[]) {
     nodecg.log.warn('Failed to send featured channels to FCB server.');
   }
 }
+
+mq.on('evt-donation-total', (data) => {
+  if (data.event === eventShort) {
+    donationTotal.value = data.new_total;
+    nodecg.log.info('Updated donation total received: $%s', data.new_total.toFixed(2));
+  }
+});
+
+mq.on('donation-fully-processed', (data) => {
+  if (data.event === eventShort) {
+    nodecg.log.info('Received new donation with ID %s.', data._id);
+    nodecg.sendMessage('newDonation', data);
+  }
+});
+
+mq.on('new-screened-sub', data => nodecg.sendMessage('newSub', data));
+mq.on('new-screened-tweet', data => nodecg.sendMessage('newTweet', data));
 
 // Fetch the login page, and run the response body through cheerio
 // so we can extract the CSRF token from the hidden input field.

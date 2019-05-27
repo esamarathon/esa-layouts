@@ -4,14 +4,14 @@ import * as nodecgUtils from './nodecg';
 
 interface MQEmitter extends EventEmitter {
   // Remote
-  on(event: 'evt-donation-total', listener: (data: object) => void): this;
-  on(event: 'donation-fully-processed', listener: (data: object) => void): this;
-  on(event: 'new-screened-tweet', listener: (data: object) => void): this;
-  on(event: 'new-screened-sub', listener: (data: object) => void): this;
+  on(event: 'evt-donation-total', listener: (data: any) => void): this;
+  on(event: 'donation-fully-processed', listener: (data: any) => void): this;
+  on(event: 'new-screened-tweet', listener: (data: any) => void): this;
+  on(event: 'new-screened-sub', listener: (data: any) => void): this;
 
   // Local
-  on(event: 'flagcarrier-tag-scanned', listener: (data: object) => void): this;
-  on(event: 'BigButton', listener: (data: object) => void): this;
+  on(event: 'flagcarrier-tag-scanned', listener: (data: any) => void): this;
+  on(event: 'BigButton', listener: (data: any) => void): this;
 
   on(event: string, listener: Function): this;
 }

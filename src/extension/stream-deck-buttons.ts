@@ -1,4 +1,4 @@
-import { Timer } from '../../../nodecg-speedcontrol/schemas';
+import { Timer } from '../../../nodecg-speedcontrol/types';
 import * as nodecgApiContext from './util/nodecg-api-context';
 import obs from './util/obs';
 import streamDeck from './util/stream-deck';

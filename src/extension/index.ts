@@ -8,6 +8,7 @@ export = (nodecg: NodeCG) => {
   require('./util/rabbitmq'); // temp?
 
   require('./tracker');
+  require('./emotes');
   require('./stream-deck-buttons');
   require('./timer');
 };

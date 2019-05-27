@@ -49,8 +49,13 @@ async function updateFeaturedChannels(usernames: string[]) {
   const resp = await needle(
     'post',
     `https://fcb.esamarathon.com/featured_channels?key=${postKey}`,
-    {
+    JSON.stringify({
       channels: usernames,
+    }),
+    {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
     },
   );
 

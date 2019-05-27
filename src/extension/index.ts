@@ -1,8 +1,8 @@
 import { NodeCG } from '../../../../types/server';
-import * as nodecgApiContext from './util/nodecg-api-context';
+import * as nodecgUtils from './util/nodecg';
 
 export = (nodecg: NodeCG) => {
-  nodecgApiContext.set(nodecg);
+  nodecgUtils.setCtx(nodecg);
 
   // MUST BE DONE FIRST!
   require('./util/rabbitmq'); // temp?

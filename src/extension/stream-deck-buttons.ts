@@ -1,9 +1,9 @@
 import { Timer } from '../../../nodecg-speedcontrol/types';
-import * as nodecgApiContext from './util/nodecg-api-context';
+import * as nodecgUtils from './util/nodecg';
 import obs from './util/obs';
 import streamDeck from './util/stream-deck';
 
-const nodecg = nodecgApiContext.get();
+const nodecg = nodecgUtils.getCtx();
 let initDone = false;
 
 streamDeck.on('init', () => {

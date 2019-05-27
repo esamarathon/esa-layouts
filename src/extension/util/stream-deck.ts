@@ -1,7 +1,7 @@
 import streamdeckUtil from 'streamdeck-util';
-import * as nodecgApiContext from './nodecg-api-context';
+import * as nodecgUtils from './nodecg';
 
-const nodecg = nodecgApiContext.get();
+const nodecg = nodecgUtils.getCtx();
 const sd = new streamdeckUtil();
 
 if (nodecg.bundleConfig.streamdeck.enable) {

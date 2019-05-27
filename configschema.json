@@ -61,6 +61,12 @@
         "username": { "type": "string", "default": "" },
         "password": { "type": "string", "default": "" }
       }
+    },
+    "fcb": {
+      "type": "object",
+      "properties": {
+        "postKey": { "type": "string", "default": "" }
+      }
     }
   }
 }

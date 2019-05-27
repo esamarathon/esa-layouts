@@ -1,6 +1,6 @@
 import amqplib from 'amqplib';
 import { EventEmitter } from 'events';
-import * as nodecgApiContext from './nodecg-api-context';
+import * as nodecgUtils from './nodecg';
 
 interface MQEmitter extends EventEmitter {
   // Remote
@@ -16,7 +16,7 @@ interface MQEmitter extends EventEmitter {
   on(event: string, listener: Function): this;
 }
 
-const nodecg = nodecgApiContext.get();
+const nodecg = nodecgUtils.getCtx();
 export const mq: MQEmitter = new EventEmitter();
 nodecg.log.info('Setting up RabbitMQ connections.');
 

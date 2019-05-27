@@ -1,8 +1,8 @@
 import { Timer } from '../../../nodecg-speedcontrol/types';
-import * as nodecgApiContext from './util/nodecg-api-context';
+import * as nodecgUtils from './util/nodecg';
 import { mq } from './util/rabbitmq';
 
-const nodecg = nodecgApiContext.get();
+const nodecg = nodecgUtils.getCtx();
 const timer = nodecg.Replicant<Timer>('timer', 'nodecg-speedcontrol');
 
 // Controls the nodecg-speedcontrol timer when the big buttons are pressed.

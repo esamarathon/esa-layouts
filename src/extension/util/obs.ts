@@ -1,5 +1,5 @@
 import obsWebsocketJs from 'obs-websocket-js';
-import * as nodecgApiContext from './nodecg-api-context';
+import * as nodecgUtils from './nodecg';
 
 // Extending the OBS library with some of our own functions.
 class OBSUtility extends obsWebsocketJs {
@@ -18,7 +18,7 @@ class OBSUtility extends obsWebsocketJs {
   }
 }
 
-const nodecg = nodecgApiContext.get();
+const nodecg = nodecgUtils.getCtx();
 const obs = new OBSUtility();
 const settings = {
   address: nodecg.bundleConfig.obs.address,

@@ -1,0 +1,53 @@
+#webcam1 {
+	left: 195px;
+	top: 0px;
+	width: 954px;
+	height: 536px;
+}
+
+#playersWrapper {
+	left: 195px;
+	top: 0px;
+	width: 954px;
+	height: 536px;
+
+	flex-direction: column; /* Top to bottom */
+	justify-content: flex-end; /* Aligns vertically bottom. */
+	align-items: flex-start; /* Aligns horizontally left. */
+	padding: 10px;
+}
+
+#gameCapture1 {
+	left: 1152px;
+	top: 0px;
+	width: 571px;
+	height: 1000px;
+}
+
+#infoContainer {
+	left: 567px;
+	top: 539px;
+	width: 582px;
+	height: 461px;
+	
+	line-height: 1;
+	text-align: center;
+	flex-direction: column; /* Top to bottom */
+	justify-content: space-evenly;
+
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+#sponsorLogoWrapper {
+	left: 0px;
+	top: 539px;
+	width: 564px;
+	height: 461px;
+
+	outline: 0;
+}
+
+.sponsorLogo {
+	margin: 50px;
+}

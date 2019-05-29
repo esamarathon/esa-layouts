@@ -8,3 +8,5 @@
 
 # Using TSLint for TypeScript.
 **/*.ts
+
+src/extension/**/*.js

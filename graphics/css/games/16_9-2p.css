@@ -1,0 +1,70 @@
+#webcam1 {
+	left: 627px;
+	top: 543px;
+	width: 667px;
+	height: 457px;
+}
+
+.playerWrapperMulti {
+	padding: 10px;
+}
+
+#playerWrapperMulti1 {
+	left: 0px;
+	top: 543px;
+	width: 624px;
+	height: 70px;
+	justify-content: flex-end; /* Aligns horizontally right. */
+}
+
+#playerWrapperMulti1 .finishTime {
+	order: -1; /* Puts the finish time first in the flexbox. */
+}
+
+#playerWrapperMulti2 {
+	left: 1297px;
+	top: 543px;
+	width: 623px;
+	height: 70px;
+	justify-content: flex-start; /* Aligns horizontally left. */
+}
+
+#gameCapture1 {
+	left: 0px;
+	top: 0px;
+	width: 959px;
+	height: 540px;
+}
+
+#gameCapture2 {
+	left: 962px;
+	top: 0px;
+	width: 958px;
+	height: 540px;
+}
+
+#infoContainer {
+	left: 1297px;
+	top: 613px;
+	width: 623px;
+	height: 387px;
+
+	outline: 0;
+	line-height: 1;
+	text-align: center;
+	flex-direction: column; /* Top to bottom */
+	justify-content: space-evenly;
+}
+
+#sponsorLogoWrapper {
+	left: 0px;
+	top: 613px;
+	width: 624px;
+	height: 387px;
+
+	outline: 0;
+}
+
+.sponsorLogo {
+	margin: 40px;
+}

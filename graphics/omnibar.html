@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html data-sceneid="omnibar">
+	<head>
+		<meta charset="UTF-8">
+		
+		<!-- CSS -->
+		<link href="css/omnibar.css" rel="stylesheet"/>
+		
+		<!-- JavaScript -->
+		<script src="//twemoji.maxcdn.com/2/twemoji.min.js?2.4"></script>
+		<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="../bower_components/moment/min/moment.min.js"></script>
+		<script src="../bower_components/jquery-animateNumber/jquery.animateNumber.min.js"></script>
+		<script src="../bower_components/waitForImages/dist/jquery.waitforimages.min.js"></script>
+		<script src="js/utils.js"></script>
+		<script src="js/animation.js"></script>
+		<script src="js/omnibar/tick-handler.js"></script>
+		<script src="js/omnibar/clock.js"></script>
+		<script src="js/omnibar/esa-logo.js"></script>
+		<script src="js/omnibar/donation-total.js"></script>
+		<script src="js/omnibar/ticker-msgs.js"></script>
+	</head>
+	<body>
+		<div id="barWrapper" class="flexContainer">
+			<!-- ESA Logo -->
+			<div id="esaBarLogoContainer" class="barContainers">
+				<img id="esaSmallLogo" src="img/omnibar/esa-small-logo.png">
+				<img id="esaHashtagLogo" src="img/omnibar/esa-hashtag-logo.png">
+			</div>
+
+			<div class="divider"></div>
+			
+			<!-- Donation Total -->
+			<div id="donationTotalContainer" class="barContainers flexContainer textGlow">
+				<img id="stcLogo" src="img/omnibar/stc-logo.png">
+				<div id="amountText"><!--Donation Total --></div>
+			</div>
+
+			<div class="divider"></div>
+			
+			<!-- General Ticker Messages -->
+			<div id="generalMessagesContainer" class="barContainers">
+				<div id="linesWrapper">
+					<div class="line1"><!-- Line 1 Text --></div>
+					<div class="line2"><!-- Line 2 Text --></div>
+				</div>
+			</div>
+			
+			<div class="divider"></div>
+			
+			<!-- Clock -->
+			<div id="clockContainer" class="barContainers flexContainer textGlow">
+				<div id="clockText"><!-- Current Time --></div>
+			</div>
+		</div>
+	</body>
+</html>

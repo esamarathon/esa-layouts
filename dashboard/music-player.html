@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<script src="../bower_components/jquery/dist/jquery.js"></script>
+		<script src="../bower_components/jquery-ui/jquery-ui.js"></script>
+		<link rel="stylesheet" href="../bower_components/jquery-ui/themes/redmond/jquery-ui.css"/>
+		<script src="js/music-player.js"></script>
+		<style>
+			#warningMsg {
+				font-weight: bold;
+				padding-bottom: 10px;
+				font-size: 14px;
+			}
+
+			#currentTrack {
+				padding-bottom: 10px;
+			}
+
+			#skipSong, #pausePlaySong {
+				width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="warningMsg">The controls in this panel shouldn't be needed unless necessary; music should pause/play automatically.</div>
+		<div><b>Current Track:</b></div>
+		<div id="currentTrack"></div>
+		<button type="button" id="pausePlaySong">Pause Song</button>
+		<button type="button" id="skipSong">Skip Song</button>
+	</body>
+</html>

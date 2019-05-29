@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html data-sceneid="game-layout">
+	<head>
+		<meta charset="UTF-8">
+		
+		<!-- CSS -->
+		<link href="css/common.css" rel="stylesheet"/>
+		<link id="layoutCSSFile" rel="stylesheet"/>
+
+		<!-- JavaScript -->
+		<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="../bower_components/letteringjs/jquery.lettering.js"></script>
+		<script src="js/utils.js"></script>
+		<script src="js/animation.js"></script>
+		<script src="js/games/layout-change.js"></script>
+		<script src="js/games/run-info.js"></script>
+		<script src="js/games/players.js"></script>
+		<script src="js/games/timer.js"></script>
+		<script src="js/sponsors.js"></script>
+		<script src="js/auto-highlighting.js"></script>
+	</head>
+	<body>
+		<!-- Webcam(s) -->
+		<div id="webcam1" class="storageBox webcam"></div>
+		
+		<!-- Game area(s) -->
+		<div id="gameCapture1" class="storageBox gameCapture"></div>
+
+		<!-- Players wrapper for 1 player layouts. -->
+		<div id="playersWrapper" class="storageBox flexContainer">
+			<div class="playerContainer flexContainer">
+				<img class="nameLogo" src="img/player-solo.png">
+				<img class="twitchLogo" src="img/twitch-logo.png">
+				<span class="playerName"></span>
+				<img class="flag">
+			</div>
+			<div class="playerContainer flexContainer">
+				<img class="nameLogo" src="img/player-solo.png">
+				<img class="twitchLogo" src="img/twitch-logo.png">
+				<span class="playerName"></span>
+				<img class="flag">
+			</div>
+			<div class="playerContainer flexContainer">
+				<img class="nameLogo" src="img/player-solo.png">
+				<img class="twitchLogo" src="img/twitch-logo.png">
+				<span class="playerName"></span>
+				<img class="flag">
+			</div>
+			<div class="playerContainer flexContainer">
+				<img class="nameLogo" src="img/player-solo.png">
+				<img class="twitchLogo" src="img/twitch-logo.png">
+				<span class="playerName"></span>
+				<img class="flag">
+			</div>
+		</div>
+
+		<!-- Player wrappers for 2+ player layouts. -->
+		<div id="playerWrapperMulti1" class="playerWrapperMulti storageBox flexContainer">
+			<div class="playerContainer flexContainer">
+				<img class="nameLogo" src="img/player-1.png">
+				<img class="twitchLogo" src="img/twitch-logo.png">
+				<span class="playerName"></span>
+				<img class="flag">
+			</div>
+			<div class="finishTime flexContainer">99:99:99</div>
+		</div>
+		<div id="playerWrapperMulti2" class="playerWrapperMulti storageBox flexContainer">
+			<div class="playerContainer flexContainer">
+				<img class="nameLogo" src="img/player-2.png">
+				<img class="twitchLogo" src="img/twitch-logo.png">
+				<span class="playerName"></span>
+				<img class="flag">
+			</div>
+			<div class="finishTime flexContainer">99:99:99</div>
+		</div>
+		<div id="playerWrapperMulti3" class="playerWrapperMulti storageBox flexContainer">
+			<div class="playerContainer flexContainer">
+				<img class="nameLogo" src="img/player-3.png">
+				<img class="twitchLogo" src="img/twitch-logo.png">
+				<span class="playerName"></span>
+				<img class="flag">
+			</div>
+			<div class="finishTime flexContainer">99:99:99</div>
+		</div>
+		<div id="playerWrapperMulti4" class="playerWrapperMulti storageBox flexContainer">
+			<div class="playerContainer flexContainer">
+				<img class="nameLogo" src="img/player-4.png">
+				<img class="twitchLogo" src="img/twitch-logo.png">
+				<span class="playerName"></span>
+				<img class="flag">
+			</div>
+			<div class="finishTime flexContainer">99:99:99</div>
+		</div>
+
+		<!-- Temporary storage -->
+		<!-- Stuff here is moved into the correct places in JavaScript. -->
+		<div id="temporaryStorage">
+			<div id="gameName"></div>
+			<div id="gameAdditionalDetails">
+				<span id="gameCategory"></span>
+				<span id="gameSystem"></span>
+				<span id="gameEstimate"></span>
+			</div>
+			<div id="timer"></div>
+			<div id="sponsorLogoWrapper">
+				<div class="sponsorLogo"></div>
+			</div>
+		</div>
+		
+		<!-- Used to store extra stuff added by JavaScript. -->
+		<div id="extraElements"></div>
+	</body>
+</html>

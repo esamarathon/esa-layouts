@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html data-sceneid="intermission">
+	<head>
+		<meta charset="UTF-8">
+		
+		<!-- CSS -->
+		<link href="css/common.css" rel="stylesheet"/>
+		<link href="css/intermission.css" rel="stylesheet"/>
+		
+		<!-- JavaScript -->
+		<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="../bower_components/moment/min/moment.min.js"></script>
+		<script src="../bower_components/waitForImages/dist/jquery.waitforimages.min.js"></script>
+		<script src="../bower_components/letteringjs/jquery.lettering.js"></script>
+		<script src="js/utils.js"></script>
+		<script src="js/animation.js"></script>
+		<script src="js/sponsors.js"></script>
+		<script src="js/intermission/general.js"></script>
+		<script src="js/intermission/rotating-info.js"></script>
+		<script src="js/intermission/reader.js"></script>
+		<script src="js/intermission/music.js"></script>
+	</head>
+	<body>
+		<!-- Webcam(s) -->
+		<div id="webcam1" class="storageBox webcam">
+			<div id="twitchAdCountdownTimer">
+				Twitch Ads Running: <span id="twitchAdCountdownTime">00:00</div>
+			</div>
+		</div>
+
+		<!-- Our Logo -->
+		<div id="esaLogo"></div>
+		
+		<!-- Sponsor Logos -->
+		<div id="sponsorLogoWrapper" class="storageBox">
+			<div class="sponsorLogo"></div>
+		</div>
+
+		<!-- Coming Up Next (always on screen) -->
+		<div id="comingUpNext" class="comingUpContainer flexContainer"></div>
+
+		<!-- Rotating sponsor slides (sometimes on screen) -->
+		<div id="rotatingSponsorSlidesBox" class="rotatingInfoBox">
+			<video id="sponsorVideoPlayer" muted>
+				<source class="videoSrc" type="video/mp4">
+			</video>
+			<div id="sponsorSlideDisplay"></div>
+		</div>
+
+		<!-- Rotating coming up runs (sometimes on screen) -->
+		<div id="rotatingComingUpRunsBox" class="rotatingInfoBox flexContainer"></div>
+
+		<!-- Rotating bids box (sometimes on screen) -->
+		<div id="rotatingBidsBox" class="rotatingInfoBox flexContainer">
+			<div id="bidsWrapper">
+				<div class="bidsHeader flexContainer"><span></span>:</div>
+				<div class="bidsGame bidsChild"></div>
+				<div class="bidsName bidsChild"></div>
+				<!--<div class="bidsDesc bidsChild"></div>-->
+				<div class="bidsAmount bidsChild"></div>
+			</div>
+		</div>
+
+		<!-- Rotating prizes box (sometimes on screen) -->
+		<div id="rotatingPrizesBox" class="rotatingInfoBox flexContainer">
+			<div id="prizeWrapper">
+				<div class="prizeHeader flexContainer">Prize Available</div>
+				<img class="prizeImg prizeChild">
+				<div class="prizeChild prizeTitle"><span id="prizeName">?</span> provided by <span id="prizeProvider">?</span></div>
+				<div class="prizeChild prizeMinDonation">Minimum donation amount: <span id="prizeMinDonation">?</span></div>
+				<div class="prizeChild prizeDeadline">Donate in the next <span id="prizeDeadline">?</span></div>
+			</div>
+		</div>
+
+		<div id="rotatingPlayerPBsBox" class="rotatingInfoBox flexContainer">
+			<div id="playerWrapper">
+				<div class="playerHeader flexContainer">Information On Upcoming Runner</div>
+				<div class="playerSRcomName"></div>
+				<div class="playerTwitch"></div>
+				<div class="playerTwitter"></div>
+				<div class="playerPB"></div>
+				<div class="playerPB"></div>
+				<div class="playerPB"></div>
+			</div>
+		</div>
+
+		<!-- Reader/Music information -->
+		<div id="readerMusicInfo" class="flexContainer">
+			<img id="micIcon" src="img/mic-icon.png">
+			<div id="readerInfo" class="flexContainer">
+				<div class="name"></div>
+				<img class="flag">
+			</div>
+			<img id="mcIcon" src="img/mcat-icon.png">
+			<div id="musicInfo"></div>
+		</div>
+	</body>
+</html>

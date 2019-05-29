@@ -1,0 +1,118 @@
+/* Custom Fonts */
+@import url('https://fonts.googleapis.com/css?family=Barlow+Condensed:500&subset=latin-ext');
+
+/* Some general settings used for everything and other minor changes to the body. */
+body {
+	font-family: 'Barlow Condensed', sans-serif;
+	color: white;
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
+}
+
+/* Basic flex container class which auto centres it's contents. */
+.flexContainer {
+	display: flex;
+	align-items: center; /* Aligns vertically centre. */
+	justify-content: center; /* Aligns horizontally centre. */
+}
+
+/* Resizes Twitter's emoji/Twitch emotes correctly so they fit in with the text. */
+img.emoji {
+	height: 1.2em;
+	margin: 0 .05em 0 .1em;
+	vertical-align: -0.25em;
+}
+
+#barWrapper {
+	width: 1920px;
+	height: 80px;
+	justify-content: flex-start;
+
+	/* Gradient in browser looks slightly different than in Photoshop, so using image for now. */
+	/*background: linear-gradient(#233771, #0c1328);*/
+	background-image: url('../img/omnibar/background-gradient.png');
+}
+
+/* All the containers below use these things. */
+.barContainers {
+	height: inherit;
+	overflow: hidden;
+	box-sizing: border-box;
+}
+
+/* Black glow on the text. */
+.textGlow {
+	text-shadow: 0 0 6px black, 0 0 10px black, 0 0 14px black;
+}
+
+.divider {
+	height: inherit;
+	width: 3px;
+	background-color: #39b0f6;
+}
+
+/* ESA Logo */
+#esaBarLogoContainer {
+	width: 409px;
+}
+#esaBarLogoContainer #esaSmallLogo {position: absolute;}
+#esaBarLogoContainer #esaHashtagLogo {position: absolute; opacity: 0;}
+
+/* Donation Total */
+#donationTotalContainer {
+	font-size: 45px;
+	width: 256px;
+}
+#donationTotalContainer #stcLogo {position: absolute;}
+#donationTotalContainer #amountText {
+	position: absolute;
+	padding-left: 80px;
+	width: inherit;
+	box-sizing: border-box;
+	text-align: center;
+	margin-top: -3px;
+	letter-spacing: 2.5px;
+}
+
+/* General Messages */
+#generalMessagesContainer {
+	width: 1122px;
+	padding: 0 20px;
+	font-size: 24px;
+	line-height: 130%;
+	
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start; /* Aligns horizontally centre. */
+	justify-content: center; /* Aligns vertically centre. */
+}
+#generalMessagesContainer div {
+	white-space: nowrap;
+}
+#generalMessagesContainer .line2 {
+	/*display: none;*/ /* You would need to do this if only 1 line needed to be shown. */
+}
+.messageUppercase {
+	text-transform: uppercase;
+	color: #b7b7b7;
+}
+.greyText {
+	color: #b7b7b7;
+}
+
+/* Clock */
+#clockContainer {
+	width: 124px;
+}
+
+#clockText {
+	margin-top: -3px;
+	font-size: 45px;
+}
+
+#clockText span {
+	display: inline-block;
+	width: 0.3em;
+	text-align: center;
+}

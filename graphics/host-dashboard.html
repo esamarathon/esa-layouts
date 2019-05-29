@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html data-sceneid="host-dashboard">
+	<head>
+		<meta charset="UTF-8">
+		<title>ESAW2019 Host Dashboard</title>
+		
+		<!-- CSS -->
+		<link href="css/host-dashboard.css" rel="stylesheet"/>
+		
+		<!-- JavaScript -->
+		<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="../bower_components/moment/min/moment.min.js"></script>
+		<script src="js/utils.js"></script>
+		<script src="js/host-dashboard.js"></script>
+	</head>
+	<body>
+		<div id="columnsWrapper">
+			<div id="column1" class="column">
+				<div id="unReadDonationsHeader">Unread Donations:</div>
+				<div id="unReadDonationsContainer"></div>
+			</div>
+			<div id="column2" class="column">
+				<div id="bidsHeader">Upcoming Goals/Bidwars:</div>
+				<div id="bidsContainer"></div>
+			</div>
+			<div id="column3" class="column">
+				<div id="scheduleHeader">Run Schedule:</div>
+				<div id="runsContainer"></div>
+			</div>
+			<div id="column4" class="column">
+				<div id="donationTotalHeader">Donation Total:</div>
+				<div id="donationTotal">$10,000</div>
+				<div id="prizesHeader">Currently Available Prizes:</div>
+				<div id="prizesContainer"></div>
+			</div>
+		</div>
+	</body>
+</html>

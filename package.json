@@ -13,20 +13,25 @@
   "license": "MIT",
   "author": "zoton2",
   "scripts": {
-    "build": "npm run build:extension && npm run build:browser",
+    "build": "npm run build:extension",
+    "build_new": "npm run build:extension && npm run build:browser",
     "build:browser": "trash .cache && cross-env NODE_ENV=production npm run bundle",
     "build:extension": "trash extension && npx tsc -b tsconfig.json",
     "bundle": "trash graphics && trash dashboard && node script/bundle.js",
     "start": "node ../..",
     "typeschemas": "node script/typeschemas.js",
-    "watch": "run-p watch:*",
+    "watch": "run-p watch:extension",
+    "watch_new": "run-p watch:*",
     "watch:browser": "npm run bundle",
     "watch:extension": "trash extension && npx tsc -b tsconfig.json -w"
   },
   "dependencies": {
     "amqplib": "^0.5.3",
     "cheerio": "^1.0.0-rc.3",
+    "clone": "^2.1.2",
+    "css": "^2.2.4",
     "moment": "^2.24.0",
+    "mpd": "^1.3.0",
     "needle": "^2.4.0",
     "obs-websocket-js": "^3.0.0",
     "request": "^2.88.0",
@@ -37,6 +42,8 @@
   "devDependencies": {
     "@types/amqplib": "^0.5.11",
     "@types/cheerio": "^0.22.11",
+    "@types/clone": "^0.1.30",
+    "@types/css": "0.0.31",
     "@types/needle": "^2.0.4",
     "@types/request-promise": "^4.1.43",
     "@vue/component-compiler-utils": "^3.0.0",
@@ -65,19 +72,77 @@
     "bundleDependencies": {
       "nodecg-speedcontrol": "^1.0.0"
     },
-    "dashboardPanels": [
-      {
-        "name": "example-dashboard",
-        "title": "Example Dashboard",
-        "width": 2,
-        "file": "example-dashboard.html"
-      }
-    ],
     "graphics": [
+      {
+        "file": "host-dashboard.html",
+        "width": 1920,
+        "height": 1080
+      },
+      {
+        "file": "omnibar.html",
+        "width": 1920,
+        "height": 80
+      },
+      {
+        "file": "intermission.html",
+        "width": 1920,
+        "height": 1080
+      },
+      {
+        "file": "intermission-hosts.html",
+        "width": 1920,
+        "height": 1080
+      },
       {
         "file": "game-layout.html",
         "width": 1920,
         "height": 1080
+      }
+    ],
+    "dashboardPanels": [
+      {
+        "name": "intermission-control",
+        "title": "Intermission Control",
+        "width": 2,
+        "file": "intermission-control.html",
+        "workspace": "Scene Editing"
+      },
+      {
+        "name": "music-player",
+        "title": "Music Player",
+        "width": 2,
+        "file": "music-player.html",
+        "workspace": "Scene Editing"
+      },
+      {
+        "name": "game-layout-override",
+        "title": "Game Layout Override",
+        "width": 2,
+        "file": "game-layout-override.html",
+        "workspace": "Scene Editing"
+      }
+    ],
+    "assetCategories": [
+      {
+        "name": "sponsor-logos",
+        "title": "Sponsor Logos",
+        "allowedTypes": [
+          "jpg",
+          "jpeg",
+          "png",
+          "svg"
+        ]
+      },
+      {
+        "name": "sponsor-slides",
+        "title": "Sponsor Slide Images/Videos",
+        "allowedTypes": [
+          "jpg",
+          "jpeg",
+          "png",
+          "svg",
+          "mp4"
+        ]
       }
     ],
     "mount": [

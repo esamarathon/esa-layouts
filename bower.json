@@ -1,0 +1,11 @@
+{
+  "name": "esaw19-layouts",
+  "dependencies": {
+    "jquery": "^3.3.1",
+    "letteringjs": "^0.7.0",
+    "moment": "^2.24.0",
+    "jquery-animateNumber": "^0.0.14",
+    "waitForImages": "^2.4.0",
+    "jquery-ui": "^1.12.1"
+  }
+}

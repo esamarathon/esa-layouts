@@ -1,0 +1,79 @@
+#webcam1 {
+	left: 563px;
+	top: 556px;
+	width: 795px;
+	height: 444px;
+}
+
+.playerWrapperMulti {
+	padding: 10px;
+	justify-content: center; /* Aligns horizontally centre. */
+}
+
+#playerWrapperMulti1 {
+	left: 0px;
+	top: 483px;
+	width: 638px;
+	height: 70px;
+}
+
+#playerWrapperMulti2 {
+	left: 641px;
+	top: 483px;
+	width: 638px;
+	height: 70px;
+}
+
+#playerWrapperMulti3 {
+	left: 1282px;
+	top: 483px;
+	width: 638px;
+	height: 70px;
+}
+
+#gameCapture1 {
+	left: 0px;
+	top: 0px;
+	width: 638px;
+	height: 480px;
+}
+
+#gameCapture2 {
+	left: 641px;
+	top: 0px;
+	width: 638px;
+	height: 480px;
+}
+
+#gameCapture3 {
+	left: 1282px;
+	top: 0px;
+	width: 638px;
+	height: 480px;
+}
+
+#infoContainer {
+	left: 1361px;
+	top: 556px;
+	width: 559px;
+	height: 444px;
+
+	outline: 0;
+	line-height: 1;
+	text-align: center;
+	flex-direction: column; /* Top to bottom */
+	justify-content: space-evenly;
+}
+
+#sponsorLogoWrapper {
+	left: 0px;
+	top: 556px;
+	width: 560px;
+	height: 444px;
+
+	outline: 0;
+}
+
+.sponsorLogo {
+	margin: 50px;
+}

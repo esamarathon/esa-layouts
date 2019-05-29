@@ -1,0 +1,60 @@
+#webcam1 {
+	left: 0px;
+	top: 0px;
+	width: 758px;
+	height: 516px;
+}
+
+#playersWrapper {
+	left: 0px;
+	top: 0px;
+	width: 758px;
+	height: 516px;
+
+	flex-direction: column; /* Top to bottom */
+	justify-content: flex-end; /* Aligns vertically bottom. */
+	align-items: flex-start; /* Aligns horizontally left. */
+	padding: 10px;
+}
+
+#gameCapture1 {
+	left: 761px;
+	top: 0px;
+	width: 1159px;
+	height: 870px;
+}
+
+#gameCapture2 {
+	left: 0px;
+	top: 519px;
+	width: 758px;
+	height: 351px;
+}
+
+#infoContainer {
+	left: 0px;
+	top: 873px;
+	width: 1920px;
+	height: 127px;
+
+	line-height: 1.1;
+	text-align: center;
+	justify-content: space-evenly;
+	white-space: nowrap;
+}
+
+#sponsorLogoWrapper {
+	order: -2; /* Puts the sponsor logo first in the flexbox. */
+	width: 400px;
+	flex-grow: 0; /* On this layout we want the sponsor logo to have a fixed width. */
+}
+
+.sponsorLogo {
+	margin: 15px;
+}
+
+.infoDivider {
+	border-left: 3px solid #39b0f6;
+	height: 50%;
+	order: -1; /* Puts the divider second in the flexbox. */
+}

@@ -1,0 +1,20 @@
+#hostNameStorage {
+    position: fixed;
+    left: 0;
+    top: 868px;
+    width: 1920px;
+    height: 133px;
+    justify-content: space-evenly;
+}
+
+.hostContainer {
+    background-color: rgba(0,0,0,0.5);
+    height: 70px;
+    padding: 10px;
+    font-size: 40px;
+}
+
+.flag {
+    height: 100%;
+    padding-left: 10px;
+}

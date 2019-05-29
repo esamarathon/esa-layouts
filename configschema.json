@@ -1,9 +1,11 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
+  "additionalProperties": false,
   "properties": {
     "streamdeck": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "enable": { "type": "boolean", "default": true },
         "port": { "type": "number", "default": 9091 },
@@ -13,40 +15,49 @@
     },
     "rabbitmq": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "remote": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "protocol": { "type": "string", "default": "amqps" },
             "hostname": { "type": "string", "default": "" },
             "username": { "type": "string", "default": "" },
             "password": { "type": "string", "default": "" },
             "vhost": { "type": "string", "default": "" }
-          }
+          },
+          "required": ["protocol", "hostname", "username", "password", "vhost"]
         },
         "local": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "protocol": { "type": "string", "default": "amqp" },
             "hostname": { "type": "string", "default": "localhost" },
             "username": { "type": "string", "default": "" },
             "password": { "type": "string", "default": "" },
             "vhost": { "type": "string", "default": "" }
-          }
+          },
+          "required": ["protocol"]
         }
-      }
+      },
+      "required": ["remote"]
     },
     "obs": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "enable": { "type": "boolean", "default": true },
         "address": { "type": "string", "default": "localhost:4444" },
         "password": { "type": "string" },
         "names": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "scenes": {
               "type": "object",
+              "additionalProperties": false,
               "properties": {
                 "ads": { "type": "string", "default": "Intermission (ads)" }
               }
@@ -57,19 +68,23 @@
     },
     "tracker": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "username": { "type": "string", "default": "" },
         "password": { "type": "string", "default": "" }
-      }
+      },
+      "required": ["username", "password"]
     },
     "fcb": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "postKey": { "type": "string", "default": "" }
       }
     },
     "mpd": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "enable": { "type": "boolean", "default": true },
         "address": { "type": "string", "default": "localhost" },
@@ -77,5 +92,6 @@
         "volume": { "type": "number", "default": 10 }
       }
     }
-  }
+  },
+  "required": ["rabbitmq", "tracker"]
 }

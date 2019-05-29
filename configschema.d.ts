@@ -11,26 +11,22 @@ export interface Configschema {
     port?: number;
     key?: string;
     debug?: boolean;
-    [k: string]: any;
   };
-  rabbitmq?: {
-    remote?: {
-      protocol?: string;
-      hostname?: string;
-      username?: string;
-      password?: string;
-      vhost?: string;
-      [k: string]: any;
+  rabbitmq: {
+    remote: {
+      protocol: string;
+      hostname: string;
+      username: string;
+      password: string;
+      vhost: string;
     };
     local?: {
-      protocol?: string;
+      protocol: string;
       hostname?: string;
       username?: string;
       password?: string;
       vhost?: string;
-      [k: string]: any;
     };
-    [k: string]: any;
   };
   obs?: {
     enable?: boolean;
@@ -39,20 +35,20 @@ export interface Configschema {
     names?: {
       scenes?: {
         ads?: string;
-        [k: string]: any;
       };
-      [k: string]: any;
     };
-    [k: string]: any;
   };
-  tracker?: {
-    username?: string;
-    password?: string;
-    [k: string]: any;
+  tracker: {
+    username: string;
+    password: string;
   };
   fcb?: {
     postKey?: string;
-    [k: string]: any;
   };
-  [k: string]: any;
+  mpd?: {
+    enable?: boolean;
+    address?: string;
+    port?: number;
+    volume?: number;
+  };
 }

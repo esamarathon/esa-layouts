@@ -14,16 +14,16 @@
   "author": "zoton2",
   "scripts": {
     "build": "npm run build:extension",
-    "build_new": "npm run build:extension && npm run build:browser",
     "build:browser": "trash .cache && cross-env NODE_ENV=production npm run bundle",
     "build:extension": "trash extension && npx tsc -b tsconfig.json",
+    "build_new": "npm run build:extension && npm run build:browser",
     "bundle": "trash graphics && trash dashboard && node script/bundle.js",
     "start": "node ../..",
     "typeschemas": "node script/typeschemas.js",
     "watch": "run-p watch:extension",
-    "watch_new": "run-p watch:*",
     "watch:browser": "npm run bundle",
-    "watch:extension": "trash extension && npx tsc -b tsconfig.json -w"
+    "watch:extension": "trash extension && npx tsc -b tsconfig.json -w",
+    "watch_new": "run-p watch:*"
   },
   "dependencies": {
     "amqplib": "^0.5.3",

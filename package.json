@@ -26,6 +26,7 @@
     "watch_new": "run-p watch:*"
   },
   "dependencies": {
+    "amqp-connection-manager": "^2.3.2",
     "amqplib": "^0.5.3",
     "cheerio": "^1.0.0-rc.3",
     "clone": "^2.1.2",
@@ -40,6 +41,7 @@
     "streamdeck-util": "^0.3.0"
   },
   "devDependencies": {
+    "@types/amqp-connection-manager": "^2.0.4",
     "@types/amqplib": "^0.5.11",
     "@types/cheerio": "^0.22.11",
     "@types/clone": "^0.1.30",

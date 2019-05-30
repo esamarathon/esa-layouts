@@ -13,4 +13,8 @@ export = (nodecg: NodeCG) => {
   require('./music');
   require('./stream-deck-buttons');
   require('./timer');
+
+  return {
+    obs: require('./util/obs').default,
+  };
 };

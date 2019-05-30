@@ -4,7 +4,7 @@
 	width: 404px;
 	height: 224px;
 	outline: 0;
-	box-shadow: 0 -3px 0 #39b0f6; /* Outline override. */
+	box-shadow: 0 -3px 0 #ffbd16; /* Outline override. */
 }
 
 #webcam2 {
@@ -13,7 +13,7 @@
 	width: 404px;
 	height: 224px;
 	outline: 0;
-	box-shadow: 0 3px 0 #39b0f6; /* Outline override. */
+	box-shadow: 0 3px 0 #ffbd16; /* Outline override. */
 }
 
 #playerWrapperMulti1 {

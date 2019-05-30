@@ -20,7 +20,7 @@ body {
 	height: 1080px;
 }
 
-#esaLogo {
+#eventLogo {
 	position: fixed;
 	background-repeat: no-repeat;
 	background-size: contain;
@@ -31,7 +31,7 @@ body {
 /* A transparent box with 3px yellow outline. */
 .storageBox {
 	position: fixed;
-	outline: 3px solid #39b0f6;
+	outline: 3px solid #68b4ea;
 	overflow: hidden;
 	box-sizing: border-box;
 }
@@ -51,7 +51,7 @@ body {
 	box-sizing: border-box;
 	padding: 3px;
 	height: 50px;
-	background-color: #39b0f6;
+	background-color: #68b4ea;
 	opacity: 0; /* These elements need to be 0 opacity on load so they fade in correctly. */
 }
 .playerName {
@@ -102,7 +102,7 @@ body {
 /* Different colours for each state the timer can be in. */
 .timer_running {color: white}
 .timer_paused, .timer_stopped {color: #b7b7b7;}
-.timer_finished {color: #39b0f6;}
+.timer_finished {color: #68b4ea;}
 
 /* Each character in the timer is in a span; setting width so the numbers appear monospaced. */
 #timer span {

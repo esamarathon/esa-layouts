@@ -1,6 +1,6 @@
-/* Big ESAS logo that appears in the top left. */
-#esaLogo {
-	background-image: url('../img/esa-big-logo-1.png');
+/* Big UKSG Winter logo that appears in the top left. */
+#eventLogo {
+	background-image: url('../img/uksg-big-logo.png');
 	left: 53px;
 	top: 43px;
 	width: 609px;
@@ -32,7 +32,7 @@
 }
 
 .comingUpHeader {
-	background-color: #39b0f6;
+	background-color: #68b4ea;
 	width: 100%;
 	height: 60px;
 	text-align: center;
@@ -135,7 +135,7 @@
 	font-size: 30px;
 }
 
-#bidsWrapper, #prizeWrapper, #playerWrapper {
+#bidsWrapper, #prizeWrapper {
 	flex-direction: column;
 	text-align: center;
 	background-color: rgba(0,0,0,0.3);
@@ -146,9 +146,9 @@
 	margin: 20px
 }
 
-#bidsWrapper > .bidsHeader, #prizeWrapper > .prizeHeader, #playerWrapper > .playerHeader {
+#bidsWrapper > .bidsHeader, #prizeWrapper > .prizeHeader {
 	width: 100%;
-	background-color: #39b0f6;
+	background-color: #68b4ea;
 	color: black;
 	height: 60px;
 	font-size: 41px;
@@ -168,16 +168,6 @@
 }
 
 #bidsWrapper > .bidsAmount {
-	font-size: 35px;
-}
-
-#playerWrapper > .playerSRcomName {
-	font-size: 50px;
-}
-#playerWrapper > .playerTwitch, #playerWrapper > .playerTwitter {
-	font-size: 40px;
-}
-#playerWrapper > .playerPB {
 	font-size: 35px;
 }
 
@@ -220,7 +210,7 @@
 	right: 0;
 	padding: 8px;
 	font-size: 20px;
-	border: 3px solid #39b0f6;
+	border: 3px solid #68b4ea;
 	border-width: 3px 0 0 3px;
 	background-color: rgba(0,0,0,0.3);
 	width: 200px;

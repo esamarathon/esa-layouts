@@ -7,7 +7,7 @@ $(() => {
 	// First timeout is a dirty hack to wait for the replicants to be ready.
 	setTimeout(tick, 200); setInterval(tick, tickRate);
 	function tick() {
-		changeESALogo(); // esa-logo.js
+		changeUKSGLogo(); // uksg-logo.js
 		showTickerMessages(); // ticker-msgs.js
 	}
 });

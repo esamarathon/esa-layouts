@@ -27,6 +27,7 @@ function updateBids() {
     setTimeout(updateBids, refreshTime);
   }).catch((err: any) => {
     nodecg.log.warn('Error updating bids:', err);
+    bids.value = [];
     setTimeout(updateBids, refreshTime);
   });
 }

@@ -28,6 +28,7 @@ function updatePrizes() {
     setTimeout(updatePrizes, refreshTime);
   }).catch((err: any) => {
     nodecg.log.warn('Error updating prizes:', err);
+    prizes.value = [];
     setTimeout(updatePrizes, refreshTime);
   });
 }

@@ -1,20 +1,21 @@
 'use strict';
 $(() => {
 	var init = false;
-	var sponsorLogos = nodecg.Replicant('sponsor-logos_assets');
+	var sponsorLogos = nodecg.Replicant('assets:sponsor-logos');
 	sponsorLogos.on('change', newVal => {
 		// If we aren't currently doing a rotation and there are logos available, start it off.
 		if (!init && newVal.length > 0) {
-			setInterval(showSponsor, 60000);
-			showSponsor();
+			setInterval(rotateSponsors, 60000);
+			rotateSponsors();
 			init = true;
 		}
 	});
 
 	// Rotate through logos.
-	function showSponsor() {
-		var array = createAssetArrayWithChances(sponsorLogos.value);
-		var rand = getRandomInt(array.length);
-		animationChangeSponsorImage($('.sponsorLogo'), array[rand].url);
+	var index = 0;
+	function rotateSponsors() {
+		animationChangeSponsorImage($('.sponsorLogo'), sponsorLogos.value[index].url);
+		index++;
+		if (index >= sponsorLogos.value.length) index = 0;
 	}
 });

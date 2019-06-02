@@ -313,7 +313,7 @@ function showBid() {
 	let line2;
 
 	// Normal Goal
-	if (!bid.options) {
+	if (!bid.options || !bid.options.length) {
 		line1 = `<span class="messageUppercase textGlow">Upcoming Goal:</span> ${bid.game} - ${bid.category}`;
 		line2 = `<span class="greyText">${bid.name}</span> (${bid.description}): ${formatDollarAmount(bid.total)}/${formatDollarAmount(bid.goal)}`;
 	}

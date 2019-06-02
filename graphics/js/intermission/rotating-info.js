@@ -126,7 +126,7 @@ $(() => {
 		var optionsString = '';
 
 		// Normal Goal
-		if (!bid.options) {
+		if (!bid.options || !bid.options.length) {
 			$('.bidsHeader > span', bidsBox).html('Upcoming Goal');
 			optionsString = formatDollarAmount(bid.total)+'/'+formatDollarAmount(bid.goal);
 			$('.bidsAmount', bidsBox).css('font-size', '45px');

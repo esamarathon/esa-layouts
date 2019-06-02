@@ -13,7 +13,7 @@ const refreshTime = 60000; // Get bids every 60s.
 const eventID = 14;
 
 // Replicants.
-const prizes = nodecg.Replicant<Prizes>('prizes');
+const prizes = nodecg.Replicant<Prizes>('prizes', { persistent: false });
 
 // Get the prizes from the API.
 updatePrizes();

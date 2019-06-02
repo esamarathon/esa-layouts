@@ -121,7 +121,7 @@ runDataActiveRun.on('change', (newVal: any, oldVal: any) => {
 
     // Only trigger a change if the layout is actually different.
     const layoutInfo = findLayoutInfo(layoutCode);
-    if (layoutInfo && (!currentGameLayout.value || layoutInfo.code !== currentGameLayout.value.code)) { changeGameLayout(layoutInfo); }
+    if (oldVal && layoutInfo && (!currentGameLayout.value || layoutInfo.code !== currentGameLayout.value.code)) { changeGameLayout(layoutInfo); }
   }
 });
 

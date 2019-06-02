@@ -14,30 +14,40 @@ const donationTotal = nodecg.Replicant<DonationTotal>('donationTotal');
 
 init();
 async function init() {
-  // Get initial total from API and set an interval as a fallback.
-  updateDonationTotalFromAPI();
-  setInterval(updateDonationTotalFromAPI, 60000);
+  try {
+    await loginToTracker();
 
-  await loginToTracker();
-  require('./tracker-bids');
-  require('./tracker-prizes');
+    // Get initial total from API and set an interval as a fallback.
+    updateDonationTotalFromAPI();
+    setInterval(updateDonationTotalFromAPI, 60000);
 
-  // Tracker logins expire every 2 hours. Re-login every 90 minutes.
-  setInterval(loginToTracker, 90 * 60 * 1000);
+    require('./tracker-bids');
+    require('./tracker-prizes');
+
+    // Tracker logins expire every 2 hours. Re-login every 90 minutes.
+    setInterval(loginToTracker, 90 * 60 * 1000);
+  } catch (err) {
+    nodecg.log.warn('Error logging into tracker, retrying in 60 seconds.\n');
+    setTimeout(init, 60000);
+  }
 }
 
 async function updateDonationTotalFromAPI() {
-  const resp = await needle('get', statsURL);
-  if (resp.statusCode === 200) {
-    const total = resp.body.agg.amount ? parseFloat(resp.body.agg.amount) : 0;
-    if (donationTotal.value > total) {
-      return;
-    }
+  try {
+    const resp = await needle('get', statsURL);
+    if (resp.statusCode === 200) {
+      const total = resp.body.agg.amount ? parseFloat(resp.body.agg.amount) : 0;
+      if (donationTotal.value > total) {
+        return;
+      }
 
-    if (donationTotal.value !== total) {
-      nodecg.log.info('API donation total changed: $%s', total);
-      donationTotal.value = total;
+      if (donationTotal.value !== total) {
+        nodecg.log.info('API donation total changed: $%s', total);
+        donationTotal.value = total;
+      }
     }
+  } catch (err) {
+    // silently drop it for now
   }
 }
 
@@ -47,23 +57,27 @@ if (bundleConfig.fcb && bundleConfig.fcb.postKey) {
 
 async function updateFeaturedChannels(usernames: string[]) {
   const postKey = bundleConfig.fcb ? bundleConfig.fcb.postKey : '';
-  const resp = await needle(
-    'post',
-    `https://fcb.esamarathon.com/featured_channels?key=${postKey}`,
-    JSON.stringify({
-      channels: usernames,
-    }),
-    {
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
+  try {
+    const resp = await needle(
+      'post',
+      `https://fcb.esamarathon.com/featured_channels?key=${postKey}`,
+      JSON.stringify({
+        channels: usernames,
+      }),
+      {
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
       },
-    },
-  );
+    );
 
-  if (resp.statusCode === 200) {
-    nodecg.log.info('Successfully sent featured channels to FCB server.');
-  } else {
-    nodecg.log.warn('Failed to send featured channels to FCB server.');
+    if (resp.statusCode === 200) {
+      nodecg.log.info('Successfully sent featured channels to FCB server.');
+    } else {
+      nodecg.log.warn('Failed to send featured channels to FCB server.');
+    }
+  } catch (err) {
+    nodecg.log.warn('Failed to send featured channels to FCB server.', err);
   }
 }
 
@@ -87,43 +101,47 @@ mq.on('new-screened-tweet', data => nodecg.sendMessage('newTweet', data));
 // Fetch the login page, and run the response body through cheerio
 // so we can extract the CSRF token from the hidden input field.
 // Then, POST with our username, password, and the csrfmiddlewaretoken.
-async function loginToTracker() {
-  if (isFirstLogin) {
-    nodecg.log.info('Logging into the tracker as %s.', nodecg.bundleConfig.tracker.username);
-  } else {
-    // tslint:disable-next-line: max-line-length
-    nodecg.log.info('Refreshing tracker login session as %s.', nodecg.bundleConfig.tracker.username);
-  }
-
-  const loginURL = 'https://donations.esamarathon.com/admin/login/';
-  try {
-    const $ = await requestPromise({
-      uri: loginURL,
-      transform(body) {
-        return cheerio.load(body);
-      },
-    });
-    await requestPromise({
-      method: 'POST',
-      uri: loginURL,
-      form: {
-        username: nodecg.bundleConfig.tracker.username,
-        password: nodecg.bundleConfig.tracker.password,
-        csrfmiddlewaretoken: $('#login-form > input[name="csrfmiddlewaretoken"]').val(),
-      },
-      headers: {
-        Referer: loginURL,
-      },
-      resolveWithFullResponse: true,
-      simple: false,
-    });
+function loginToTracker(): Promise<any> {
+  return new Promise(async (resolve, reject) => {
     if (isFirstLogin) {
-      isFirstLogin = false;
-      nodecg.log.info('Logged into the tracker as %s.', nodecg.bundleConfig.tracker.username);
+      nodecg.log.info('Logging into the tracker as %s.', nodecg.bundleConfig.tracker.username);
     } else {
-      nodecg.log.info('Refreshed tracker session as %s.', nodecg.bundleConfig.tracker.username);
+      // tslint:disable-next-line: max-line-length
+      nodecg.log.info('Refreshing tracker login session as %s.', nodecg.bundleConfig.tracker.username);
     }
-  } catch (err) {
-    nodecg.log.warn('Error authenticating!\n', err);
-  }
+
+    const loginURL = 'https://donations.esamarathon.com/admin/login/';
+    try {
+      const $ = await requestPromise({
+        uri: loginURL,
+        transform(body) {
+          return cheerio.load(body);
+        },
+      });
+      await requestPromise({
+        method: 'POST',
+        uri: loginURL,
+        form: {
+          username: nodecg.bundleConfig.tracker.username,
+          password: nodecg.bundleConfig.tracker.password,
+          csrfmiddlewaretoken: $('#login-form > input[name="csrfmiddlewaretoken"]').val(),
+        },
+        headers: {
+          Referer: loginURL,
+        },
+        resolveWithFullResponse: true,
+        simple: false,
+      });
+      if (isFirstLogin) {
+        isFirstLogin = false;
+        nodecg.log.info('Logged into the tracker as %s.', nodecg.bundleConfig.tracker.username);
+      } else {
+        nodecg.log.info('Refreshed tracker session as %s.', nodecg.bundleConfig.tracker.username);
+      }
+      resolve();
+    } catch (err) {
+      nodecg.log.warn('Error authenticating!\n', err);
+      reject(err);
+    }
+  });
 }

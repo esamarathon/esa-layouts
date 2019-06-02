@@ -12,20 +12,19 @@ const emotes = nodecg.Replicant<Emotes>('emotes');
 updateEmotes();
 function updateEmotes() {
   getTwitchEmotes();
-  setTimeout(updateEmotes, refreshTime);
+  setInterval(updateEmotes, refreshTime);
 }
 
 // Get Twitch global emoticons.
 async function getTwitchEmotes(callback?: Function) {
-  const resp = await needle('get', twitchURL);
-
-  if (resp.statusCode === 200) {
-    emotes.value = resp.body;
-  } else {
+  try {
+    const resp = await needle('get', twitchURL);
+    if (resp.statusCode === 200) {
+      emotes.value = resp.body;
+    } else {
+      nodecg.log.warn('Error updating Twitch emoticons.');
+    }
+  } catch (err) {
     nodecg.log.warn('Error updating Twitch emoticons.');
-  }
-
-  if (callback) {
-    callback();
   }
 }

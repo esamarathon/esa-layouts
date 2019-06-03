@@ -12,7 +12,7 @@ const emotes = nodecg.Replicant<Emotes>('emotes');
 updateEmotes();
 function updateEmotes() {
   getTwitchEmotes();
-  setInterval(updateEmotes, refreshTime);
+  setTimeout(updateEmotes, refreshTime);
 }
 
 // Get Twitch global emoticons.

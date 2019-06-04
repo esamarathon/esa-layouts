@@ -43,7 +43,7 @@ const localQueues = [
 
 // Remote connection.
 const remoteConn = amqpConnectionManager.connect(
-  [buildMQURL(nodecg.bundleConfig.rabbitmq.remote)]
+  [buildMQURL(nodecg.bundleConfig.rabbitmq.remote)],
 ).on('connect', () => {
   nodecg.log.info('RabbitMQ remote server connection successful.');
 }).on('disconnect', (err) => {
@@ -65,7 +65,7 @@ const remoteChan = remoteConn.createChannel({
 
 // Local connection.
 const localConn = amqpConnectionManager.connect([
-  buildMQURL(nodecg.bundleConfig.rabbitmq.local)]
+  buildMQURL(nodecg.bundleConfig.rabbitmq.local)],
 ).on('connect', () => {
   nodecg.log.info('RabbitMQ local server connection successful.');
 }).on('disconnect', (err) => {

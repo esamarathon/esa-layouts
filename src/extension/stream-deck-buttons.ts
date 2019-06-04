@@ -1,9 +1,10 @@
-import { Timer } from '../../../nodecg-speedcontrol/types';
+import speedcontrolUtil from 'speedcontrol-util';
 import * as nodecgUtils from './util/nodecg';
 import obs from './util/obs';
 import streamDeck from './util/stream-deck';
 
 const nodecg = nodecgUtils.getCtx();
+const sc = new speedcontrolUtil(nodecg);
 let initDone = false;
 
 streamDeck.on('init', () => {
@@ -19,8 +20,7 @@ streamDeck.on('init', () => {
 function init() {
   // com.esamarathon.streamdeck.timer
   // Controls the text on the buttons.
-  const timer = nodecg.Replicant<Timer>('timer', 'nodecg-speedcontrol');
-  timer.on('change', (newVal: any) => {
+  sc.timer.on('change', (newVal) => {
     const buttons = streamDeck.findButtonsWithAction('com.esamarathon.streamdeck.timer');
     buttons.forEach((button) => {
       switch (newVal.state) {
@@ -45,19 +45,16 @@ function init() {
     // Controls the nodecg-speedcontrol timer when the button is pressed.
     // Currently the "Stop Timer" state only works if there's only 1 team.
     if (data.action === 'com.esamarathon.streamdeck.timer') {
-      switch (timer.value.state) {
+      switch (sc.timer.value.state) {
         case 'stopped':
         case 'paused':
-          // @ts-ignore: NodeCG not declaring this (yet).
-          nodecg.sendMessageToBundle('startTimer', 'nodecg-speedcontrol');
+          sc.startTimer();
           break;
         case 'running':
-          // @ts-ignore: NodeCG not declaring this (yet).
-          nodecg.sendMessageToBundle('stopTimer', 'nodecg-speedcontrol', 0);
+          sc.stopTimer();
           break;
         case 'finished':
-          // @ts-ignore: NodeCG not declaring this (yet).
-          nodecg.sendMessageToBundle('resetTimer', 'nodecg-speedcontrol');
+          sc.resetTimer();
           break;
       }
     }

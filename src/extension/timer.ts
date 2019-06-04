@@ -1,9 +1,9 @@
-import { Timer } from '../../../nodecg-speedcontrol/types';
+import speedcontrolUtil from 'speedcontrol-util';
 import * as nodecgUtils from './util/nodecg';
 import { mq } from './util/rabbitmq';
 
 const nodecg = nodecgUtils.getCtx();
-const timer = nodecg.Replicant<Timer>('timer', 'nodecg-speedcontrol');
+const sc = new speedcontrolUtil(nodecg);
 
 // Controls the nodecg-speedcontrol timer when the big buttons are pressed.
 mq.on('BigButton', (data: any) => {
@@ -14,14 +14,12 @@ mq.on('BigButton', (data: any) => {
     return;
   }
 
-  switch (timer.value.state) {
+  switch (sc.timer.value.state) {
     case 'stopped':
-      // @ts-ignore: NodeCG not declaring this (yet).
-      nodecg.sendMessageToBundle('startTimer', 'nodecg-speedcontrol');
+      sc.startTimer();
       break;
     case 'running':
-      // @ts-ignore: NodeCG not declaring this (yet).
-      nodecg.sendMessageToBundle('stopTimer', 'nodecg-speedcontrol', buttonID);
+      sc.stopTimer(buttonID);
       break;
   }
 });

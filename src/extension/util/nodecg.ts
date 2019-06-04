@@ -1,4 +1,4 @@
-import { NodeCG } from '../../../../../types/server';
+import { NodeCG } from 'nodecg/types/server';
 import { Configschema } from '../../../configschema';
 
 let context: NodeCG;

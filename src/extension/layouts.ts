@@ -3,9 +3,11 @@
 import clone from 'clone';
 import css from 'css';
 import fs from 'fs';
+import speedcontrolUtil from 'speedcontrol-util';
 import { getCtx } from './util/nodecg';
 import obs from './util/obs';
 const nodecg = getCtx();
+const sc = new speedcontrolUtil(nodecg);
 
 if (nodecg.bundleConfig.obs && !nodecg.bundleConfig.obs.enable) {
   // @ts-ignore
@@ -85,8 +87,7 @@ const obsSourceKeys: any = {
 };
 
 // nodecg-speedcontrol no longer sends forceRefreshIntermission so doing it here instead
-const timer = nodecg.Replicant('timer', 'nodecg-speedcontrol');
-timer.on('change', (newVal: any, oldVal: any) => {
+sc.timer.on('change', (newVal: any, oldVal: any) => {
   // Timer just finished
   if (oldVal && oldVal.state !== 'finished' && newVal.state === 'finished') {
     nodecg.sendMessage('forceRefreshIntermission');
@@ -109,8 +110,7 @@ nodecg.listenFor('changeGameLayout', (id, callback) => {
 });
 
 // Listens for the current run to change, to get it's layout info.
-const runDataActiveRun = nodecg.Replicant('runDataActiveRun', speedcontrolBundle);
-runDataActiveRun.on('change', (newVal: any, oldVal: any) => {
+sc.runDataActiveRun.on('change', (newVal, oldVal) => {
   // If the run has the same ID, we don't need to change the layout.
   // This stops the layout messing up if you force change it and *then* edit run data.
   if (newVal && oldVal && newVal.id === oldVal.id) return;

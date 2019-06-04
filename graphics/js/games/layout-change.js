@@ -9,7 +9,7 @@ $(() => {
 
 	// If hash specified, looks through the layouts to see if that one exists.
 	// If so, uses that layout style.
-	// Example: http://localhost:9090/bundles/esaw19-layouts/graphics/game-layout.html#4_3-1p
+	// Example: http://localhost:9090/bundles/esa-layouts/graphics/game-layout.html#4_3-1p
 	if (layoutHash) {
 		layouts.on('change', newVal => {
 			if (newVal) {

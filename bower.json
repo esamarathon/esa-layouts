@@ -1,5 +1,5 @@
 {
-  "name": "esaw19-layouts",
+  "name": "esa-layouts",
   "dependencies": {
     "jquery": "^3.3.1",
     "letteringjs": "^0.7.0",

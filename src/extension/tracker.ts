@@ -2,10 +2,10 @@ import cheerio from 'cheerio';
 import needle from 'needle';
 import requestPromise from 'request-promise';
 import { DonationTotal } from '../../schemas';
-import { bundleConfig, getCtx } from './util/nodecg';
+import * as nodecgApiContext from './util/nodecg-api-context';
 import { mq } from './util/rabbitmq';
 
-const nodecg = getCtx();
+const nodecg = nodecgApiContext.get();
 requestPromise.defaults({ jar: true });
 let isFirstLogin = true;
 const eventShort = 'uksgsu19';
@@ -27,7 +27,7 @@ async function init() {
     // Tracker logins expire every 2 hours. Re-login every 90 minutes.
     setInterval(loginToTracker, 90 * 60 * 1000);
   } catch (err) {
-    nodecg.log.warn('Error logging into tracker, retrying in 60 seconds.\n');
+    nodecg.log.warn('Error logging into tracker, retrying in 60 seconds.');
     setTimeout(init, 60000);
   }
 }
@@ -51,12 +51,12 @@ async function updateDonationTotalFromAPI() {
   }
 }
 
-if (bundleConfig.fcb && bundleConfig.fcb.postKey) {
+if (nodecg.bundleConfig.fcb && nodecg.bundleConfig.fcb.postKey) {
   nodecg.listenFor('updateFFZFollowing', 'nodecg-speedcontrol', updateFeaturedChannels);
 }
 
 async function updateFeaturedChannels(usernames: string[]) {
-  const postKey = bundleConfig.fcb ? bundleConfig.fcb.postKey : '';
+  const postKey = nodecg.bundleConfig.fcb ? nodecg.bundleConfig.fcb.postKey : '';
   try {
     const resp = await needle(
       'post',
@@ -74,10 +74,11 @@ async function updateFeaturedChannels(usernames: string[]) {
     if (resp.statusCode === 200) {
       nodecg.log.info('Successfully sent featured channels to FCB server.');
     } else {
-      nodecg.log.warn('Failed to send featured channels to FCB server.');
+      nodecg.log.warn('Failed to send featured channels to FCB server (%s).', resp.statusCode);
     }
   } catch (err) {
-    nodecg.log.warn('Failed to send featured channels to FCB server.', err);
+    nodecg.log.warn('Failed to send featured channels to FCB server.');
+    nodecg.log.debug('Failed to send featured channels to FCB server:\n', err);
   }
 }
 
@@ -140,6 +141,7 @@ function loginToTracker(): Promise<any> {
       }
       resolve();
     } catch (err) {
+      nodecg.log.warn('Error authenticating!');
       nodecg.log.warn('Error authenticating!\n', err);
       reject(err);
     }

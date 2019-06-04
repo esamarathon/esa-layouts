@@ -4,9 +4,9 @@ import clone from 'clone';
 import css from 'css';
 import fs from 'fs';
 import speedcontrolUtil from 'speedcontrol-util';
-import { getCtx } from './util/nodecg';
+import * as nodecgApiContext from './util/nodecg-api-context';
 import obs from './util/obs';
-const nodecg = getCtx();
+const nodecg = nodecgApiContext.get();
 const sc = new speedcontrolUtil(nodecg);
 
 if (nodecg.bundleConfig.obs && !nodecg.bundleConfig.obs.enable) {

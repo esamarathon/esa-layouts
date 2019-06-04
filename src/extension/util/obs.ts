@@ -1,5 +1,5 @@
 import obsWebsocketJs from 'obs-websocket-js';
-import * as nodecgUtils from './nodecg';
+import * as nodecgApiContext from './nodecg-api-context';
 
 // Extending the OBS library with some of our own functions.
 class OBSUtility extends obsWebsocketJs {
@@ -18,7 +18,7 @@ class OBSUtility extends obsWebsocketJs {
   }
 }
 
-const nodecg = nodecgUtils.getCtx();
+const nodecg = nodecgApiContext.get();
 const obs = new OBSUtility();
 const settings = {
   address: nodecg.bundleConfig.obs.address,
@@ -34,8 +34,9 @@ if (nodecg.bundleConfig.obs.enable) {
   });
 
   // @ts-ignore: Pretty sure this emits an error.
-  obs.on('error', (err: Error) => {
-    nodecg.log.warn('OBS connection error: ', err);
+  obs.on('error', (err) => {
+    nodecg.log.warn('OBS connection error.');
+    nodecg.log.debug('OBS connection error:\n', err);
   });
 }
 
@@ -43,7 +44,8 @@ function connect() {
   obs.connect(settings).then(() => {
     nodecg.log.info('OBS connection successful.');
   }).catch((err) => {
-    nodecg.log.warn('OBS connection error: ', err);
+    nodecg.log.warn('OBS connection error.');
+    nodecg.log.debug('OBS connection error:\n', err);
   });
 }
 

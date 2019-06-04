@@ -1,7 +1,7 @@
 import amqpConnectionManager from 'amqp-connection-manager';
 import amqplib from 'amqplib';
 import { EventEmitter } from 'events';
-import * as nodecgUtils from './nodecg';
+import * as nodecgApiContext from './nodecg-api-context';
 
 interface MQEmitter extends EventEmitter {
   // Remote
@@ -25,7 +25,7 @@ interface RabbitMQConfig {
   vhost: string | undefined;
 }
 
-const nodecg = nodecgUtils.getCtx();
+const nodecg = nodecgApiContext.get();
 export const mq: MQEmitter = new EventEmitter();
 nodecg.log.info('Setting up RabbitMQ connections.');
 
@@ -49,7 +49,8 @@ const remoteConn = amqpConnectionManager.connect(
 }).on('disconnect', (err) => {
   nodecg.log.warn('RabbitMQ remote server connection closed.');
   if (err) {
-    nodecg.log.warn('RabbitMQ remote server connection error: ', err);
+    nodecg.log.warn('RabbitMQ remote server connection error.');
+    nodecg.log.debug('RabbitMQ remote server connection error:\n', err);
   }
 });
 const remoteChan = remoteConn.createChannel({
@@ -60,7 +61,8 @@ const remoteChan = remoteConn.createChannel({
     return;
   },
 }).on('error', (err) => {
-  nodecg.log.warn('RabbitMQ remote server channel error: ', err);
+  nodecg.log.warn('RabbitMQ remote server channel error.');
+  nodecg.log.debug('RabbitMQ remote server connection error:\n', err);
 });
 
 // Local connection.
@@ -71,7 +73,8 @@ const localConn = amqpConnectionManager.connect([
 }).on('disconnect', (err) => {
   nodecg.log.warn('RabbitMQ local server connection closed.');
   if (err) {
-    nodecg.log.warn('RabbitMQ local server connection error: ', err);
+    nodecg.log.warn('RabbitMQ local server connection error.');
+    nodecg.log.debug('RabbitMQ local server connection error:\n', err);
   }
 });
 const localChan = localConn.createChannel({
@@ -82,7 +85,8 @@ const localChan = localConn.createChannel({
     return;
   },
 }).on('error', (err) => {
-  nodecg.log.warn('RabbitMQ remote server channel error: ', err);
+  nodecg.log.warn('RabbitMQ local server channel error.');
+  nodecg.log.debug('RabbitMQ local server connection error:\n', err);
 });
 
 function listenToQueues(chan: amqplib.ConfirmChannel, local?: boolean) {

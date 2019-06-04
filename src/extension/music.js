@@ -1,6 +1,6 @@
 'use strict';
 
-const nodecg = require('./util/nodecg').getCtx();
+const nodecg = require('./util/nodecg-api-context').get();
 const mpd = require('mpd');
 
 var mpdConfig = nodecg.bundleConfig.mpd || {};
@@ -94,7 +94,8 @@ function onEnd() {
 }
 
 function onError(err) {
-	//nodecg.log.warn('MPD connection error:', err);
+	nodecg.log.warn('MPD connection error.', err);
+	nodecg.log.debug('MPD connection error:\n', err);
 }
 
 // Update stuff when the player status changes.

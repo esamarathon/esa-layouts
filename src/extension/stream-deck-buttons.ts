@@ -1,9 +1,9 @@
 import speedcontrolUtil from 'speedcontrol-util';
-import * as nodecgUtils from './util/nodecg';
+import * as nodecgApiContext from './util/nodecg-api-context';
 import obs from './util/obs';
 import streamDeck from './util/stream-deck';
 
-const nodecg = nodecgUtils.getCtx();
+const nodecg = nodecgApiContext.get();
 const sc = new speedcontrolUtil(nodecg);
 let initDone = false;
 

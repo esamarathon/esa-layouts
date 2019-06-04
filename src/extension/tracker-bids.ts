@@ -2,9 +2,9 @@
 
 import requestPromise from 'request-promise';
 import { Bids } from '../../schemas';
-import * as nodecgUtils from './util/nodecg';
+import * as nodecgApiContext from './util/nodecg-api-context';
 
-const nodecg = nodecgUtils.getCtx();
+const nodecg = nodecgApiContext.get();
 requestPromise.defaults({ jar: true });
 const apiURL = 'https://donations.esamarathon.com/search';
 const refreshTime = 60000; // Get bids every 60s.
@@ -26,7 +26,8 @@ function updateBids() {
     bids.value = currentBids;
     setTimeout(updateBids, refreshTime);
   }).catch((err: any) => {
-    nodecg.log.warn('Error updating bids:', err);
+    nodecg.log.warn('Error updating bids.');
+    nodecg.log.debug('Error updating bids:\n', err);
     bids.value = [];
     setTimeout(updateBids, refreshTime);
   });

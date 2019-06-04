@@ -1,7 +1,7 @@
 import streamdeckUtil from 'streamdeck-util';
-import * as nodecgUtils from './nodecg';
+import * as nodecgApiContext from './nodecg-api-context';
 
-const nodecg = nodecgUtils.getCtx();
+const nodecg = nodecgApiContext.get();
 const sd = new streamdeckUtil();
 
 if (nodecg.bundleConfig.streamdeck.enable) {
@@ -19,7 +19,8 @@ if (nodecg.bundleConfig.streamdeck.enable) {
     nodecg.log.warn('Stream Deck connection lost (%s).', code);
   });
   sd.on('error', (err) => {
-    nodecg.log.warn('Stream Deck connection error: ', err);
+    nodecg.log.warn('Stream Deck connection error.');
+    nodecg.log.debug('Stream Deck connection error:\n', err);
   });
 }
 

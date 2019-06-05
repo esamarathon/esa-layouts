@@ -36,7 +36,7 @@ if (nodecg.bundleConfig.obs.enable) {
   // @ts-ignore: Pretty sure this emits an error.
   obs.on('error', (err) => {
     nodecg.log.warn('OBS connection error.');
-    nodecg.log.debug('OBS connection error:\n', err);
+    nodecg.log.debug('OBS connection error:', err);
   });
 }
 
@@ -45,7 +45,7 @@ function connect() {
     nodecg.log.info('OBS connection successful.');
   }).catch((err) => {
     nodecg.log.warn('OBS connection error.');
-    nodecg.log.debug('OBS connection error:\n', err);
+    nodecg.log.debug('OBS connection error:', err);
   });
 }
 

@@ -78,7 +78,7 @@ async function updateFeaturedChannels(usernames: string[]) {
     }
   } catch (err) {
     nodecg.log.warn('Failed to send featured channels to FCB server.');
-    nodecg.log.debug('Failed to send featured channels to FCB server:\n', err);
+    nodecg.log.debug('Failed to send featured channels to FCB server:', err);
   }
 }
 
@@ -142,7 +142,7 @@ function loginToTracker(): Promise<any> {
       resolve();
     } catch (err) {
       nodecg.log.warn('Error authenticating!');
-      nodecg.log.warn('Error authenticating!\n', err);
+      nodecg.log.debug('Error authenticating!', err);
       reject(err);
     }
   });

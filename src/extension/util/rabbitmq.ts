@@ -50,7 +50,7 @@ const remoteConn = amqpConnectionManager.connect(
   nodecg.log.warn('RabbitMQ remote server connection closed.');
   if (err) {
     nodecg.log.warn('RabbitMQ remote server connection error.');
-    nodecg.log.debug('RabbitMQ remote server connection error:\n', err);
+    nodecg.log.debug('RabbitMQ remote server connection error:', err);
   }
 });
 const remoteChan = remoteConn.createChannel({
@@ -62,7 +62,7 @@ const remoteChan = remoteConn.createChannel({
   },
 }).on('error', (err) => {
   nodecg.log.warn('RabbitMQ remote server channel error.');
-  nodecg.log.debug('RabbitMQ remote server connection error:\n', err);
+  nodecg.log.debug('RabbitMQ remote server connection error:', err);
 });
 
 // Local connection.
@@ -74,7 +74,7 @@ const localConn = amqpConnectionManager.connect([
   nodecg.log.warn('RabbitMQ local server connection closed.');
   if (err) {
     nodecg.log.warn('RabbitMQ local server connection error.');
-    nodecg.log.debug('RabbitMQ local server connection error:\n', err);
+    nodecg.log.debug('RabbitMQ local server connection error:', err);
   }
 });
 const localChan = localConn.createChannel({
@@ -86,7 +86,7 @@ const localChan = localConn.createChannel({
   },
 }).on('error', (err) => {
   nodecg.log.warn('RabbitMQ local server channel error.');
-  nodecg.log.debug('RabbitMQ local server connection error:\n', err);
+  nodecg.log.debug('RabbitMQ local server connection error:', err);
 });
 
 function listenToQueues(chan: amqplib.ConfirmChannel, local?: boolean) {

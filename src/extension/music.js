@@ -95,7 +95,7 @@ function onEnd() {
 
 function onError(err) {
 	nodecg.log.warn('MPD connection error.', err);
-	nodecg.log.debug('MPD connection error:\n', err);
+	nodecg.log.debug('MPD connection error:', err);
 }
 
 // Update stuff when the player status changes.

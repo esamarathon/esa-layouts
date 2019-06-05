@@ -20,7 +20,7 @@ if (nodecg.bundleConfig.streamdeck.enable) {
   });
   sd.on('error', (err) => {
     nodecg.log.warn('Stream Deck connection error.');
-    nodecg.log.debug('Stream Deck connection error:\n', err);
+    nodecg.log.debug('Stream Deck connection error:', err);
   });
 }
 

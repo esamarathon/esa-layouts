@@ -21,6 +21,6 @@ async function getTwitchEmotes() {
     }
   } catch (err) {
     nodecg.log.warn('Error updating Twitch emoticons.');
-    nodecg.log.debug('Error updating Twitch emoticons:\n', err);
+    nodecg.log.debug('Error updating Twitch emoticons:', err);
   }
 }

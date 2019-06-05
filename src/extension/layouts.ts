@@ -134,6 +134,12 @@ obs.on('SwitchScenes', (data) => {
     // @ts-ignore: NodeCG not declaring this (yet).
     nodecg.sendMessageToBundle('playTwitchAd', speedcontrolBundle);
   }
+
+  if (currentScene.value.toLowerCase().includes('game layout')) {
+    sc.enableTimerChanges();
+  } else {
+    sc.disableTimerChanges();
+  }
 });
 
 function changeGameLayout(info: any, callback?: any) {

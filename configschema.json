@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -70,15 +70,17 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "address": { "type": "string", "default": "donations.esamarathon.com" },
         "username": { "type": "string", "default": "" },
         "password": { "type": "string", "default": "" }
       },
-      "required": ["username", "password"]
+      "required": ["address", "username", "password"]
     },
     "fcb": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "address": { "type": "string", "default": "fcb.esamarathon.com" },
         "postKey": { "type": "string", "default": "" }
       }
     },

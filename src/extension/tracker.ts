@@ -1,15 +1,13 @@
-import cheerio from 'cheerio';
 import needle from 'needle';
-import requestPromise from 'request-promise';
 import { DonationTotal } from '../../schemas';
 import * as nodecgApiContext from './util/nodecg-api-context';
 import { mq } from './util/rabbitmq';
 
 const nodecg = nodecgApiContext.get();
-requestPromise.defaults({ jar: true });
 let isFirstLogin = true;
+export let cookies: needle.NeedleResponse['cookies'];
 const eventShort = 'uksgsu19';
-const statsURL = 'https://donations.esamarathon.com/14?json';
+export const eventID = 14;
 const donationTotal = nodecg.Replicant<DonationTotal>('donationTotal');
 
 init();
@@ -25,22 +23,21 @@ async function init() {
     require('./tracker-prizes');
 
     // Tracker logins expire every 2 hours. Re-login every 90 minutes.
-    setInterval(loginToTracker, 90 * 60 * 1000);
+    setTimeout(loginToTracker, 90 * 60 * 1000);
   } catch (err) {
-    nodecg.log.warn('Error logging into tracker, retrying in 60 seconds.');
+    nodecg.log.warn('Error setting up tracker, retrying in 60 seconds.');
     setTimeout(init, 60000);
   }
 }
 
 async function updateDonationTotalFromAPI() {
   try {
-    const resp = await needle('get', statsURL);
+    const resp = await needle(
+      'get',
+      `https://${nodecg.bundleConfig.tracker.address}/${eventID}?json`,
+    );
     if (resp.statusCode === 200) {
       const total = resp.body.agg.amount ? parseFloat(resp.body.agg.amount) : 0;
-      if (donationTotal.value > total) {
-        return;
-      }
-
       if (donationTotal.value !== total) {
         nodecg.log.info('API donation total changed: $%s', total);
         donationTotal.value = total;
@@ -55,12 +52,13 @@ if (nodecg.bundleConfig.fcb && nodecg.bundleConfig.fcb.postKey) {
   nodecg.listenFor('updateFFZFollowing', 'nodecg-speedcontrol', updateFeaturedChannels);
 }
 
+// Used to update the featured channels on the bridge running on an external server.
 async function updateFeaturedChannels(usernames: string[]) {
-  const postKey = nodecg.bundleConfig.fcb ? nodecg.bundleConfig.fcb.postKey : '';
+  const postKey = nodecg.bundleConfig.fcb.postKey;
   try {
     const resp = await needle(
       'post',
-      `https://fcb.esamarathon.com/featured_channels?key=${postKey}`,
+      `https://${nodecg.bundleConfig.fcb.address}/featured_channels?key=${postKey}`,
       JSON.stringify({
         channels: usernames,
       }),
@@ -82,6 +80,7 @@ async function updateFeaturedChannels(usernames: string[]) {
   }
 }
 
+// When the donation total is updated, this is fired.
 mq.on('evt-donation-total', (data) => {
   if (data.event === eventShort) {
     donationTotal.value = data.new_total;
@@ -89,6 +88,7 @@ mq.on('evt-donation-total', (data) => {
   }
 });
 
+// When a new donation is fully processed on the tracker, this is fired.
 mq.on('donation-fully-processed', (data) => {
   if (data.event === eventShort) {
     nodecg.log.info('Received new donation with ID %s.', data._id);
@@ -96,13 +96,11 @@ mq.on('donation-fully-processed', (data) => {
   }
 });
 
+// Is this tracker stuff? Living here for now.
 mq.on('new-screened-sub', data => nodecg.sendMessage('newSub', data));
 mq.on('new-screened-tweet', data => nodecg.sendMessage('newTweet', data));
 
-// Fetch the login page, and run the response body through cheerio
-// so we can extract the CSRF token from the hidden input field.
-// Then, POST with our username, password, and the csrfmiddlewaretoken.
-function loginToTracker(): Promise<any> {
+function loginToTracker():Promise<any> {
   return new Promise(async (resolve, reject) => {
     if (isFirstLogin) {
       nodecg.log.info('Logging into the tracker as %s.', nodecg.bundleConfig.tracker.username);
@@ -111,39 +109,56 @@ function loginToTracker(): Promise<any> {
       nodecg.log.info('Refreshing tracker login session as %s.', nodecg.bundleConfig.tracker.username);
     }
 
-    const loginURL = 'https://donations.esamarathon.com/admin/login/';
+    const loginURL = `https://${nodecg.bundleConfig.tracker.address}/admin/login/`;
     try {
-      const $ = await requestPromise({
-        uri: loginURL,
-        transform(body) {
-          return cheerio.load(body);
-        },
-      });
-      await requestPromise({
-        method: 'POST',
-        uri: loginURL,
-        form: {
+      // Access login page to get CSRF token.
+      const resp1 = await needle('get', loginURL);
+      if (resp1.statusCode !== 200) {
+        throw new Error('Could not access the tracker log in page.');
+      }
+
+      // POST using the CSRF token alongside the username/password.
+      const resp2 = await needle(
+        'post',
+        loginURL,
+        {
           username: nodecg.bundleConfig.tracker.username,
           password: nodecg.bundleConfig.tracker.password,
-          csrfmiddlewaretoken: $('#login-form > input[name="csrfmiddlewaretoken"]').val(),
+          csrfmiddlewaretoken: (resp1.cookies) ? resp1.cookies.csrftoken : undefined,
         },
-        headers: {
-          Referer: loginURL,
+        {
+          cookies: resp1.cookies,
+          headers: {
+            referer: loginURL,
+          },
         },
-        resolveWithFullResponse: true,
-        simple: false,
-      });
+      );
+
+      // If we're not being redirected or there's no session token, the login failed.
+      if (resp2.statusCode !== 302 || (resp2.cookies && !resp2.cookies.tracker_session)) {
+        throw new Error('Log in to the tracker was unsuccessful, is your user/pass correct?');
+      }
+
+      // Store cookie for later use.
+      cookies = resp2.cookies;
+
       if (isFirstLogin) {
         isFirstLogin = false;
         nodecg.log.info('Logged into the tracker as %s.', nodecg.bundleConfig.tracker.username);
       } else {
         nodecg.log.info('Refreshed tracker session as %s.', nodecg.bundleConfig.tracker.username);
       }
+
+      // Tracker logins expire every 2 hours. Re-login every 90 minutes.
+      setTimeout(loginToTracker, 90 * 60 * 1000);
       resolve();
     } catch (err) {
-      nodecg.log.warn('Error authenticating!');
-      nodecg.log.debug('Error authenticating!', err);
-      reject(err);
+      nodecg.log.warn('Error authenticating with the tracker.');
+      nodecg.log.debug('Error authenticating with the tracker:', err);
+      if (!isFirstLogin) {
+        setTimeout(loginToTracker, 60000);
+      }
+      reject();
     }
   });
 }

@@ -1,36 +1,34 @@
-// https://github.com/GamesDoneQuick/agdq18-layouts/blob/master/extension/bids.js
-
-import requestPromise from 'request-promise';
+import needle from 'needle';
 import { Bids } from '../../schemas';
+import { cookies, eventID } from './tracker';
 import * as nodecgApiContext from './util/nodecg-api-context';
 
 const nodecg = nodecgApiContext.get();
-requestPromise.defaults({ jar: true });
-const apiURL = 'https://donations.esamarathon.com/search';
 const refreshTime = 60000; // Get bids every 60s.
-
-const eventID = 14;
 
 // Replicants.
 const bids = nodecg.Replicant<Bids>('bids', { persistent: false });
 
 // Get the open bids from the API.
 updateBids();
-function updateBids() {
-  requestPromise({
-    uri: `${apiURL}/?event=${eventID}&type=allbids&state=OPENED`,
-    resolveWithFullResponse: true,
-    json: true,
-  }).then((resp: any) => {
+async function updateBids() {
+  try {
+    const resp = await needle(
+      'get',
+      `${nodecg.bundleConfig.tracker.address}/search/?event=${eventID}&type=allbids&state=OPENED`,
+      {
+        cookies,
+      },
+    );
     const currentBids = processRawBids(resp.body);
     bids.value = currentBids;
     setTimeout(updateBids, refreshTime);
-  }).catch((err: any) => {
+  } catch (err) {
     nodecg.log.warn('Error updating bids.');
     nodecg.log.debug('Error updating bids:', err);
     bids.value = [];
     setTimeout(updateBids, refreshTime);
-  });
+  }
 }
 
 // Processes the response from the API above.

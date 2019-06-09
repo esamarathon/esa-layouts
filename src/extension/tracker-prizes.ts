@@ -1,37 +1,35 @@
-// Event ID 9 only is being used for prizes; all prizes are stored in stream 1's event.
-
 import moment from 'moment';
-import requestPromise from 'request-promise';
+import needle from 'needle';
 import { Prizes } from '../../schemas';
+import { cookies, eventID } from './tracker';
 import * as nodecgApiContext from './util/nodecg-api-context';
 
 const nodecg = nodecgApiContext.get();
-requestPromise.defaults({ jar: true });
-const apiURL = 'https://donations.esamarathon.com/search';
 const refreshTime = 60000; // Get bids every 60s.
-
-const eventID = 14;
 
 // Replicants.
 const prizes = nodecg.Replicant<Prizes>('prizes', { persistent: false });
 
 // Get the prizes from the API.
 updatePrizes();
-function updatePrizes() {
-  requestPromise({
-    uri: `${apiURL}/?event=${eventID}&type=prize&state=ACCEPTED`,
-    resolveWithFullResponse: true,
-    json: true,
-  }).then((resp: any) => {
+async function updatePrizes() {
+  try {
+    const resp = await needle(
+      'get',
+      `${nodecg.bundleConfig.tracker.address}/search/?event=${eventID}&type=prize&state=ACCEPTED`,
+      {
+        cookies,
+      },
+    );
     const currentPrizes = processRawPrizes(resp.body);
     prizes.value = currentPrizes;
     setTimeout(updatePrizes, refreshTime);
-  }).catch((err: any) => {
+  } catch (err) {
     nodecg.log.warn('Error updating prizes.');
     nodecg.log.debug('Error updating prizes:', err);
     prizes.value = [];
     setTimeout(updatePrizes, refreshTime);
-  });
+  }
 }
 
 // Processes the response from the API above.

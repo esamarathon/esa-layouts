@@ -21,6 +21,7 @@ module.exports = {
   ],
   rules: {
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
-    'vue/html-self-closing': ['error', { html: { component: 'never' } }]
+    'vue/html-self-closing': ['error', { html: { component: 'never' } }],
+    'indent': ['error', 2]
   },
 };

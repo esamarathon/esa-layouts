@@ -113,6 +113,10 @@ function listenToQueues(chan: amqplib.ConfirmChannel, local?: boolean) {
     chan.consume(queue, (msg) => {
       if (msg && msg.content) {
         mq.emit(queue, JSON.parse(msg.content.toString()));
+        nodecg.log.debug(
+          `Received message from RabbitMQ queue [${local ? 'local' : 'remote'} server] %s: %s`,
+          queue, msg.content.toString(),
+        );
       }
     }, { // tslint:disable-next-line: align
       noAck: true,

@@ -1,8 +1,9 @@
 import moment from 'moment';
 import needle from 'needle';
 import { Prizes } from '../../schemas';
-import { cookies, eventID } from './tracker';
+import { cookies, eventInfo } from './tracker';
 import * as nodecgApiContext from './util/nodecg-api-context';
+import { bundleConfig } from './util/nodecg-bundleconfig';
 
 const nodecg = nodecgApiContext.get();
 const refreshTime = 60000; // Get bids every 60s.
@@ -16,7 +17,9 @@ async function updatePrizes() {
   try {
     const resp = await needle(
       'get',
-      `${nodecg.bundleConfig.tracker.address}/search/?event=${eventID}&type=prize&state=ACCEPTED`,
+      // Prizes always from the first event specified.
+      // tslint:disable-next-line: max-line-length
+      `https://${bundleConfig.tracker.address}/search/?event=${eventInfo[0].id}&type=prize&state=ACCEPTED`,
       {
         cookies,
       },

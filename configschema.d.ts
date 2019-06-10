@@ -6,49 +6,61 @@
  */
 
 export interface Configschema {
-  streamdeck?: {
-    enable?: boolean;
-    port?: number;
-    key?: string;
-    debug?: boolean;
+  streamdeck: {
+    enable: boolean;
+    port: number;
+    key: string;
+    debug: boolean;
   };
   rabbitmq: {
     remote: {
+      enable?: boolean;
       protocol: string;
       hostname: string;
       username: string;
       password: string;
       vhost: string;
     };
-    local?: {
-      protocol: string;
-      hostname?: string;
-      username?: string;
-      password?: string;
-      vhost?: string;
-    };
+    local: Rabbitmq;
   };
-  obs?: {
-    enable?: boolean;
-    address?: string;
-    password?: string;
-    names?: {
-      scenes?: {
-        ads?: string;
+  obs: {
+    enable: boolean;
+    address: string;
+    password: string;
+    names: {
+      scenes: {
+        ads: string;
       };
     };
   };
   tracker: {
+    enable: boolean;
+    address: string;
     username: string;
     password: string;
+    events: string | string[];
+    /**
+     * If the 'event' has multiple tracker events, this a 1-indexed value of which one is applicable to this stream from the events array.
+     */
+    streamEvent: number;
   };
-  fcb?: {
-    postKey?: string;
+  fcb: {
+    enable: boolean;
+    address: string;
+    postKey: string;
   };
-  mpd?: {
-    enable?: boolean;
-    address?: string;
-    port?: number;
-    volume?: number;
+  mpd: {
+    enable: boolean;
+    address: string;
+    port: number;
+    volume: number;
   };
+}
+export interface Rabbitmq {
+  enable?: boolean;
+  protocol: string;
+  hostname: string;
+  username: string;
+  password: string;
+  vhost: string;
 }

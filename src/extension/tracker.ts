@@ -1,18 +1,47 @@
 import needle from 'needle';
 import { DonationTotal } from '../../schemas';
 import * as nodecgApiContext from './util/nodecg-api-context';
+import { bundleConfig } from './util/nodecg-bundleconfig';
 import { mq } from './util/rabbitmq';
+
+interface EventInfo {
+  id: number;
+  short: string;
+  total: number;
+}
 
 const nodecg = nodecgApiContext.get();
 let isFirstLogin = true;
 export let cookies: needle.NeedleResponse['cookies'];
-const eventShort = 'uksgsu19';
-export const eventID = 14;
+export const eventInfo: EventInfo[] = [];
+export const streamEvtNumber = bundleConfig.tracker.streamEvent - 1;
 const donationTotal = nodecg.Replicant<DonationTotal>('donationTotal');
 
 init();
 async function init() {
   try {
+    // Go through all events and compile the important info for them.
+    const events = (
+      Array.isArray(bundleConfig.tracker.events)
+    ) ? bundleConfig.tracker.events : [bundleConfig.tracker.events];
+    for await (const short of events) {
+      try {
+        const id = await getEventIDFromShort(short);
+        eventInfo.push({
+          id,
+          short,
+          total: 0,
+        });
+      } catch (err) {
+        // silently drop it for now
+      }
+    }
+
+    if (!eventInfo.length) {
+      nodecg.log.warn('No events found to query the tracker for.');
+      throw new Error('');
+    }
+
     await loginToTracker();
 
     // Get initial total from API and set an interval as a fallback.
@@ -30,21 +59,47 @@ async function init() {
   }
 }
 
-async function updateDonationTotalFromAPI() {
-  try {
-    const resp = await needle(
-      'get',
-      `https://${nodecg.bundleConfig.tracker.address}/${eventID}?json`,
-    );
-    if (resp.statusCode === 200) {
-      const total = resp.body.agg.amount ? parseFloat(resp.body.agg.amount) : 0;
-      if (donationTotal.value !== total) {
-        nodecg.log.info('API donation total changed: $%s', total);
-        donationTotal.value = total;
+function getEventIDFromShort(short: string): Promise<number> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const resp = await needle(
+        'get',
+        `https://${nodecg.bundleConfig.tracker.address}/search/?short=${short}&type=event`,
+        cookies,
+      );
+
+      if (!resp.body.length) {
+        throw new Error(`Event ${short} does not exist on the tracker.`);
       }
+
+      resolve(resp.body[0].pk);
+    } catch (err) {
+      reject(err);
     }
-  } catch (err) {
-    // silently drop it for now
+  });
+}
+
+async function updateDonationTotalFromAPI() {
+  let total = 0;
+  for await (const event of eventInfo) {
+    try {
+      const resp = await needle(
+        'get',
+        `https://${nodecg.bundleConfig.tracker.address}/${event.id}?json`,
+      );
+      if (resp.statusCode === 200) {
+        const evtTotal = resp.body.agg.amount ? parseFloat(resp.body.agg.amount) : 0;
+        event.total = evtTotal;
+        total += evtTotal;
+      }
+    } catch (err) {
+      // silently drop it for now
+    }
+  }
+
+  if (donationTotal.value !== total) {
+    nodecg.log.info('API donation total changed: $%s', total);
+    donationTotal.value = total;
   }
 }
 
@@ -82,15 +137,25 @@ async function updateFeaturedChannels(usernames: string[]) {
 
 // When the donation total is updated, this is fired.
 mq.on('evt-donation-total', (data) => {
-  if (data.event === eventShort) {
-    donationTotal.value = data.new_total;
-    nodecg.log.info('Updated donation total received: $%s', data.new_total.toFixed(2));
+  let total = 0;
+
+  for (const event of eventInfo) {
+    if (data.event === event.short) {
+      event.total = data.new_total;
+    }
+
+    total += event.total;
+  }
+
+  if (donationTotal.value !== total) {
+    donationTotal.value = total;
+    nodecg.log.info('Updated donation total received: $%s', total.toFixed(2));
   }
 });
 
 // When a new donation is fully processed on the tracker, this is fired.
 mq.on('donation-fully-processed', (data) => {
-  if (data.event === eventShort) {
+  if (data.event === eventInfo[streamEvtNumber].short) {
     nodecg.log.info('Received new donation with ID %s.', data._id);
     nodecg.sendMessage('newDonation', data);
   }

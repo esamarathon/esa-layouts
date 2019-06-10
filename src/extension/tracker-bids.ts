@@ -1,7 +1,8 @@
 import needle from 'needle';
 import { Bids } from '../../schemas';
-import { cookies, eventID } from './tracker';
+import { cookies, eventInfo, streamEvtNumber } from './tracker';
 import * as nodecgApiContext from './util/nodecg-api-context';
+import { bundleConfig } from './util/nodecg-bundleconfig';
 
 const nodecg = nodecgApiContext.get();
 const refreshTime = 60000; // Get bids every 60s.
@@ -15,7 +16,8 @@ async function updateBids() {
   try {
     const resp = await needle(
       'get',
-      `${nodecg.bundleConfig.tracker.address}/search/?event=${eventID}&type=allbids&state=OPENED`,
+      // tslint:disable-next-line: max-line-length
+      `https://${bundleConfig.tracker.address}/search/?event=${eventInfo[streamEvtNumber].id}&type=allbids&state=OPENED`,
       {
         cookies,
       },

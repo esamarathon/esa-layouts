@@ -1,5 +1,20 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "rabbitmq": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enable": { "type": "boolean", "default": true },
+        "protocol": { "type": "string", "default": "amqp" },
+        "hostname": { "type": "string", "default": "" },
+        "username": { "type": "string", "default": "" },
+        "password": { "type": "string", "default": "" },
+        "vhost": { "type": "string", "default": "" }
+      },
+      "required": ["protocol", "hostname", "username", "password", "vhost"]
+    }
+  },
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -11,38 +26,29 @@
         "port": { "type": "number", "default": 9091 },
         "key": { "type": "string", "default": "DEFAULT_KEY" },
         "debug": { "type": "boolean", "default": false }
-      }
+      },
+      "required": ["enable", "port", "key", "debug"]
     },
     "rabbitmq": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "remote": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "protocol": { "type": "string", "default": "amqps" },
-            "hostname": { "type": "string", "default": "" },
-            "username": { "type": "string", "default": "" },
-            "password": { "type": "string", "default": "" },
-            "vhost": { "type": "string", "default": "" }
-          },
-          "required": ["protocol", "hostname", "username", "password", "vhost"]
+          "$ref": "#/definitions/rabbitmq",
+          "default": {
+            "enable": true,
+            "protocol": "amqps",
+            "hostname": "mq.esamarathon.com",
+            "username": "",
+            "password": "",
+            "vhost": "esa_prod"
+          }
         },
         "local": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "protocol": { "type": "string", "default": "amqp" },
-            "hostname": { "type": "string", "default": "localhost" },
-            "username": { "type": "string", "default": "" },
-            "password": { "type": "string", "default": "" },
-            "vhost": { "type": "string", "default": "" }
-          },
-          "required": ["protocol"]
+          "$ref": "#/definitions/rabbitmq"
         }
       },
-      "required": ["remote"]
+      "required": ["remote", "local"]
     },
     "obs": {
       "type": "object",
@@ -50,7 +56,7 @@
       "properties": {
         "enable": { "type": "boolean", "default": true },
         "address": { "type": "string", "default": "localhost:4444" },
-        "password": { "type": "string" },
+        "password": { "type": "string", "default": "" },
         "names": {
           "type": "object",
           "additionalProperties": false,
@@ -60,29 +66,51 @@
               "additionalProperties": false,
               "properties": {
                 "ads": { "type": "string", "default": "Intermission (ads)" }
-              }
+              },
+              "required": ["ads"]
             }
-          }
+          },
+          "required": ["scenes"]
         }
-      }
+      },
+      "required": ["enable", "address", "password", "names"]
     },
     "tracker": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "enable": { "type": "boolean", "default": true },
         "address": { "type": "string", "default": "donations.esamarathon.com" },
         "username": { "type": "string", "default": "" },
-        "password": { "type": "string", "default": "" }
+        "password": { "type": "string", "default": "" },
+        "events": {
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "array",
+              "items": { "type": "string" },
+              "uniqueItems": true
+            }
+          ],
+          "default": "uksgsu19"
+        },
+        "streamEvent": {
+          "type": "number",
+          "description": "If the 'event' has multiple tracker events, this a 1-indexed value of which one is applicable to this stream from the events array.",
+          "default": 1
+        }
       },
-      "required": ["address", "username", "password"]
+      "required": ["enable", "address", "username", "password", "events", "streamEvent"]
     },
     "fcb": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "enable": { "type": "boolean", "default": false },
         "address": { "type": "string", "default": "fcb.esamarathon.com" },
         "postKey": { "type": "string", "default": "" }
-      }
+      },
+      "required": ["enable", "address", "postKey"]
     },
     "mpd": {
       "type": "object",
@@ -92,8 +120,9 @@
         "address": { "type": "string", "default": "localhost" },
         "port": { "type": "number", "default": 6600 },
         "volume": { "type": "number", "default": 10 }
-      }
+      },
+      "required": ["enable", "address", "port", "volume"]
     }
   },
-  "required": ["rabbitmq", "tracker"]
+  "required": ["streamdeck", "rabbitmq", "obs", "tracker", "fcb", "mpd"]
 }

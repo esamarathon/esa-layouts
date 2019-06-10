@@ -13,17 +13,15 @@
   "license": "MIT",
   "author": "zoton2",
   "scripts": {
-    "build": "npm run build:extension",
+    "build": "npm run build:extension && npm run build:browser",
     "build:browser": "trash .cache && cross-env NODE_ENV=production npm run bundle",
     "build:extension": "trash extension && npx tsc -b tsconfig.json",
-    "build_new": "npm run build:extension && npm run build:browser",
     "bundle": "trash graphics && trash dashboard && node script/bundle.js",
     "start": "node ../..",
     "typeschemas": "node script/typeschemas.js",
-    "watch": "run-p watch:extension",
+    "watch": "run-p watch:*",
     "watch:browser": "npm run bundle",
-    "watch:extension": "trash extension && npx tsc -b tsconfig.json -w",
-    "watch_new": "run-p watch:*"
+    "watch:extension": "trash extension && npx tsc -b tsconfig.json -w"
   },
   "dependencies": {
     "amqp-connection-manager": "^2.3.2",
@@ -75,77 +73,19 @@
     "bundleDependencies": {
       "nodecg-speedcontrol": "^1.0.0"
     },
+    "dashboardPanels": [
+      {
+        "name": "example-dashboard",
+        "title": "Example Dashboard",
+        "width": 2,
+        "file": "example-dashboard.html"
+      }
+    ],
     "graphics": [
-      {
-        "file": "host-dashboard.html",
-        "width": 1920,
-        "height": 1080
-      },
-      {
-        "file": "omnibar.html",
-        "width": 1920,
-        "height": 80
-      },
-      {
-        "file": "intermission.html",
-        "width": 1920,
-        "height": 1080
-      },
-      {
-        "file": "intermission-hosts.html",
-        "width": 1920,
-        "height": 1080
-      },
       {
         "file": "game-layout.html",
         "width": 1920,
         "height": 1080
-      }
-    ],
-    "dashboardPanels": [
-      {
-        "name": "intermission-control",
-        "title": "Intermission Control",
-        "width": 2,
-        "file": "intermission-control.html",
-        "workspace": "Scene Editing"
-      },
-      {
-        "name": "music-player",
-        "title": "Music Player",
-        "width": 2,
-        "file": "music-player.html",
-        "workspace": "Scene Editing"
-      },
-      {
-        "name": "game-layout-override",
-        "title": "Game Layout Override",
-        "width": 2,
-        "file": "game-layout-override.html",
-        "workspace": "Scene Editing"
-      }
-    ],
-    "assetCategories": [
-      {
-        "name": "sponsor-logos",
-        "title": "Sponsor Logos",
-        "allowedTypes": [
-          "jpg",
-          "jpeg",
-          "png",
-          "svg"
-        ]
-      },
-      {
-        "name": "sponsor-slides",
-        "title": "Sponsor Slide Images/Videos",
-        "allowedTypes": [
-          "jpg",
-          "jpeg",
-          "png",
-          "svg",
-          "mp4"
-        ]
       }
     ],
     "mount": [

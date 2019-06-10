@@ -24,7 +24,7 @@ Here's a list of previous bundles that used to fulfil the purpose of this one, w
 
 * [esaw19-layouts](https://github.com/esamarathon/esaw19-layouts)
   * ESA Winter 2019
-  * ESA @ TwitchCon Europe 2018
+  * ESA @ TwitchCon Europe 2019
 * [esas18-layouts](https://github.com/esamarathon/esas18-layouts)
   * ESA Summer 2018
   * UKSG Fall 2018 

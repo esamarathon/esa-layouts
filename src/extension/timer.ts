@@ -1,6 +1,12 @@
 import speedcontrolUtil from 'speedcontrol-util';
 import * as nodecgApiContext from './util/nodecg-api-context';
+import { bundleConfig } from './util/nodecg-bundleconfig';
 import { mq } from './util/rabbitmq';
+
+if (!bundleConfig.rabbitmq.local.enable) {
+  // @ts-ignore: Gonna do this anyway :)
+  return;
+}
 
 const nodecg = nodecgApiContext.get();
 const sc = new speedcontrolUtil(nodecg);

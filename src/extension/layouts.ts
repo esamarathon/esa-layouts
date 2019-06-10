@@ -5,14 +5,16 @@ import css from 'css';
 import fs from 'fs';
 import speedcontrolUtil from 'speedcontrol-util';
 import * as nodecgApiContext from './util/nodecg-api-context';
+import { bundleConfig } from './util/nodecg-bundleconfig';
 import obs from './util/obs';
-const nodecg = nodecgApiContext.get();
-const sc = new speedcontrolUtil(nodecg);
 
-if (nodecg.bundleConfig.obs && !nodecg.bundleConfig.obs.enable) {
-  // @ts-ignore
+if (!bundleConfig.obs.enable) {
+  // @ts-ignore: Gonna do this anyway :)
   return;
 }
+
+const nodecg = nodecgApiContext.get();
+const sc = new speedcontrolUtil(nodecg);
 
 // The bundle name where all the run information is pulled from.
 const speedcontrolBundle = 'nodecg-speedcontrol';

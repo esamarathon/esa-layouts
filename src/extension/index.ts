@@ -4,9 +4,6 @@ import * as nodecgApiContext from './util/nodecg-api-context';
 export = (nodecg: NodeCG) => {
   nodecgApiContext.set(nodecg);
 
-  // MUST BE DONE FIRST!
-  require('./util/rabbitmq'); // temp?
-
   require('./layouts');
   require('./emotes');
   require('./tracker');

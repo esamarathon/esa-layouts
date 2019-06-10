@@ -4,6 +4,11 @@ import * as nodecgApiContext from './util/nodecg-api-context';
 import { bundleConfig } from './util/nodecg-bundleconfig';
 import { mq } from './util/rabbitmq';
 
+if (!bundleConfig.tracker.enable) {
+  // @ts-ignore: Gonna do this anyway :)
+  return;
+}
+
 interface EventInfo {
   id: number;
   short: string;

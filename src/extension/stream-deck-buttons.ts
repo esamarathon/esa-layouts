@@ -1,7 +1,13 @@
 import speedcontrolUtil from 'speedcontrol-util';
 import * as nodecgApiContext from './util/nodecg-api-context';
+import { bundleConfig } from './util/nodecg-bundleconfig';
 import obs from './util/obs';
 import streamDeck from './util/stream-deck';
+
+if (!bundleConfig.streamdeck.enable) {
+  // @ts-ignore: Gonna do this anyway :)
+  return;
+}
 
 const nodecg = nodecgApiContext.get();
 const sc = new speedcontrolUtil(nodecg);

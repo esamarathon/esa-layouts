@@ -9,8 +9,9 @@ var currentVolume = volume;
 var fadeInterval;
 var connected = false;
 
-if (nodecg.bundleConfig.mpd && !nodecg.bundleConfig.mpd.enable)
+if (!nodecg.bundleConfig.mpd.enable) {
 	return;
+}
 
 // Stores song data to be displayed on layouts.
 var songData = nodecg.Replicant('songData', { persistent: false });

@@ -2,6 +2,7 @@ import amqpConnectionManager from 'amqp-connection-manager';
 import amqplib from 'amqplib';
 import { EventEmitter } from 'events';
 import * as nodecgApiContext from './nodecg-api-context';
+import { bundleConfig } from './nodecg-bundleconfig';
 
 interface MQEmitter extends EventEmitter {
   // Remote
@@ -25,10 +26,6 @@ interface RabbitMQConfig {
   vhost: string | undefined;
 }
 
-const nodecg = nodecgApiContext.get();
-export const mq: MQEmitter = new EventEmitter();
-nodecg.log.info('Setting up RabbitMQ connections.');
-
 // Remote/local queues we need to listen on.
 const remoteQueues = [
   'evt-donation-total',
@@ -41,53 +38,73 @@ const localQueues = [
   'BigButton',
 ];
 
-// Remote connection.
-const remoteConn = amqpConnectionManager.connect(
-  [buildMQURL(nodecg.bundleConfig.rabbitmq.remote)],
-).on('connect', () => {
-  nodecg.log.info('RabbitMQ remote server connection successful.');
-}).on('disconnect', (err) => {
-  nodecg.log.warn('RabbitMQ remote server connection closed.');
-  if (err) {
-    nodecg.log.warn('RabbitMQ remote server connection error.');
-    nodecg.log.debug('RabbitMQ remote server connection error:', err);
+const nodecg = nodecgApiContext.get();
+export const mq: MQEmitter = new EventEmitter();
+let remoteChan: amqpConnectionManager.ChannelWrapper;
+let localChan: amqpConnectionManager.ChannelWrapper;
+
+if (bundleConfig.rabbitmq.local.enable || bundleConfig.rabbitmq.remote.enable) {
+  nodecg.log.info('Setting up RabbitMQ connection(s).');
+
+  if (bundleConfig.rabbitmq.remote.enable) {
+    remoteInit();
   }
-});
-const remoteChan = remoteConn.createChannel({
-  json: false,
-  setup(chan: amqplib.ConfirmChannel) {
-    listenToQueues(chan);
-    nodecg.log.info('RabbitMQ remote server connection listening to queues.');
-    return;
-  },
-}).on('error', (err) => {
-  nodecg.log.warn('RabbitMQ remote server channel error.');
-  nodecg.log.debug('RabbitMQ remote server connection error:', err);
-});
+  if (bundleConfig.rabbitmq.local.enable) {
+    localInit();
+  }
+}
+
+// Remote connection.
+function remoteInit() {
+  const remoteConn = amqpConnectionManager.connect(
+    [buildMQURL(nodecg.bundleConfig.rabbitmq.remote)],
+  ).on('connect', () => {
+    nodecg.log.info('RabbitMQ remote server connection successful.');
+  }).on('disconnect', (err) => {
+    nodecg.log.warn('RabbitMQ remote server connection closed.');
+    if (err) {
+      nodecg.log.warn('RabbitMQ remote server connection error.');
+      nodecg.log.debug('RabbitMQ remote server connection error:', err);
+    }
+  });
+  remoteChan = remoteConn.createChannel({
+    json: false,
+    setup(chan: amqplib.ConfirmChannel) {
+      listenToQueues(chan);
+      nodecg.log.info('RabbitMQ remote server connection listening to queues.');
+      return;
+    },
+  }).on('error', (err) => {
+    nodecg.log.warn('RabbitMQ remote server channel error.');
+    nodecg.log.debug('RabbitMQ remote server connection error:', err);
+  });
+}
 
 // Local connection.
-const localConn = amqpConnectionManager.connect([
-  buildMQURL(nodecg.bundleConfig.rabbitmq.local)],
-).on('connect', () => {
-  nodecg.log.info('RabbitMQ local server connection successful.');
-}).on('disconnect', (err) => {
-  nodecg.log.warn('RabbitMQ local server connection closed.');
-  if (err) {
-    nodecg.log.warn('RabbitMQ local server connection error.');
+function localInit() {
+  const localConn = amqpConnectionManager.connect([
+    buildMQURL(nodecg.bundleConfig.rabbitmq.local)],
+  ).on('connect', () => {
+    nodecg.log.info('RabbitMQ local server connection successful.');
+  }).on('disconnect', (err) => {
+    nodecg.log.warn('RabbitMQ local server connection closed.');
+    if (err) {
+      nodecg.log.warn('RabbitMQ local server connection error.');
+      nodecg.log.debug('RabbitMQ local server connection error:', err);
+    }
+  });
+  localChan = localConn.createChannel({
+    json: false,
+    setup(chan: amqplib.ConfirmChannel) {
+      listenToQueues(chan, true);
+      nodecg.log.info('RabbitMQ local server connection listening to queues.');
+      return;
+    },
+  }).on('error', (err) => {
+    nodecg.log.warn('RabbitMQ local server channel error.');
     nodecg.log.debug('RabbitMQ local server connection error:', err);
-  }
-});
-const localChan = localConn.createChannel({
-  json: false,
-  setup(chan: amqplib.ConfirmChannel) {
-    listenToQueues(chan, true);
-    nodecg.log.info('RabbitMQ local server connection listening to queues.');
-    return;
-  },
-}).on('error', (err) => {
-  nodecg.log.warn('RabbitMQ local server channel error.');
-  nodecg.log.debug('RabbitMQ local server connection error:', err);
-});
+  });
+}
 
 function listenToQueues(chan: amqplib.ConfirmChannel, local?: boolean) {
   const queues = local ? localQueues : remoteQueues;

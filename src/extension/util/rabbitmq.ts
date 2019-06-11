@@ -28,14 +28,17 @@ interface RabbitMQConfig {
 
 // Remote/local queues we need to listen on.
 const remoteQueues = [
-  'evt-donation-total',
-  'donation-fully-processed',
-  'new-screened-tweet',
-  'new-screened-sub',
+  { name: 'evt-donation-total', consume: true },
+  { name: 'donation-fully-processed', consume: true },
+  { name: 'new-screened-tweet', consume: true },
+  { name: 'new-screened-sub', consume: true },
+  { name: 'obs-scene-change', consume: false },
+  { name: 'sc-timer-change', consume: false },
+  { name: 'sc-active-run-change', consume: false },
 ];
 const localQueues = [
-  'flagcarrier-tag-scanned',
-  'BigButton',
+  { name: 'flagcarrier-tag-scanned', consume: true },
+  { name: 'BigButton', consume: true },
 ];
 
 const nodecg = nodecgApiContext.get();
@@ -109,12 +112,16 @@ function localInit() {
 function listenToQueues(chan: amqplib.ConfirmChannel, local?: boolean) {
   const queues = local ? localQueues : remoteQueues;
   for (const queue of queues) {
-    chan.assertQueue(queue);
-    chan.consume(queue, (msg) => {
+    chan.assertQueue(queue.name);
+    if (!queue.consume) {
+      // We don't need to consume everything.
+      continue;
+    }
+    chan.consume(queue.name, (msg) => {
       if (msg && msg.content) {
-        mq.emit(queue, JSON.parse(msg.content.toString()));
+        mq.emit(queue.name, JSON.parse(msg.content.toString()));
         nodecg.log.debug(
-          `Received message from RabbitMQ queue [${local ? 'local' : 'remote'} server] %s: %s`,
+          `Received message from RabbitMQ queue [${local ? 'local' : 'remote'}] %s: %s`,
           queue, msg.content.toString(),
         );
       }
@@ -132,6 +139,10 @@ function listenToQueues(chan: amqplib.ConfirmChannel, local?: boolean) {
  */
 export function send(queue: string, data: object, local?: boolean) {
   const chan = local ? localChan : remoteChan;
+  if (!chan) {
+    nodecg.log.debug('Could not send MQ message as channel is not defined.');
+    return;
+  }
   chan.sendToQueue(
     queue,
     Buffer.from(JSON.stringify(data)),
@@ -142,7 +153,7 @@ export function send(queue: string, data: object, local?: boolean) {
 // Used for debugging.
 function queueLog(queue: string, data: string, local?: boolean) {
   nodecg.log.debug(
-    `Sending message to RabbitMQ queue [${local ? 'local' : 'remote'} server] %s: %s`,
+    `Sending message to RabbitMQ queue [${local ? 'local' : 'remote'}] %s: %s`,
     queue, data,
   );
 }

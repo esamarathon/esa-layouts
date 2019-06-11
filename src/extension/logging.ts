@@ -1,5 +1,6 @@
 import speedcontrolUtil from 'speedcontrol-util';
 import * as nodecgApiContext from './util/nodecg-api-context';
+import { bundleConfig } from './util/nodecg-bundleconfig';
 import obs from './util/obs';
 import { send as mqSend } from './util/rabbitmq';
 
@@ -8,6 +9,12 @@ const sc = new speedcontrolUtil(nodecg);
 
 let currentScene: string;
 let lastScene: string;
+
+// This will always be set due to there being a default in the configschema,
+// make sure that is correct!
+const evtString = (
+  Array.isArray(bundleConfig.tracker.events)
+) ? bundleConfig.tracker.events[bundleConfig.tracker.streamEvent - 1] : bundleConfig.tracker.events;
 
 obs.on('ConnectionOpened', async () => {
   try {
@@ -48,11 +55,12 @@ sc.on('timerEdited', () => logTimerChange('edited'));
 sc.on('timerTeamFinished', id => logTimerChange('team_finished', id));
 sc.on('timerTeamUndidFinish', id => logTimerChange('team_undid_finish', id));
 
-function logSceneSwitch(name: string, event: string = 'start') {
+function logSceneSwitch(name: string, action: string = 'start') {
   mqSend(
     'obs-scene-change',
     {
-      event,
+      action,
+      event: evtString,
       scene: name,
       time: {
         unix: (new Date()).getTime() / 1000,
@@ -67,6 +75,7 @@ function logTimerChange(desc: string, teamID?: number) {
     'sc-timer-change',
     {
       desc,
+      event: evtString,
       teamID: (teamID !== undefined && teamID >= 0) ? teamID : undefined,
       timer: sc.timer.value,
       time: {
@@ -81,6 +90,7 @@ function logRunChange() {
   mqSend(
     'sc-active-run-change',
     {
+      event: evtString,
       run: sc.getCurrentRun(),
       time: {
         unix: (new Date()).getTime() / 1000,

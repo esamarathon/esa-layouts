@@ -20,6 +20,6 @@ export default {
     position: fixed;
     box-sizing: border-box;
     justify-content: flex-start;
-    flex-direction: column
+    flex-direction: column;
   }
 </style>

@@ -37,7 +37,8 @@ export default {
   @import url('./FlexContainer.css');
 
   #GameNameBox {
+    font-weight: 500;
     margin-top: 5px;
-    font-size: 45px;
+    font-size: 40px;
   }
 </style>

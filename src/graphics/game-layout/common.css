@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css?family=Barlow+Condensed:400,400i,500,500i,600,600i&display=swap&subset=latin-ext,vietnamese');
+
+body {
+  font-family: 'Barlow Condensed', sans-serif;
+  color: white;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  background-image: url('../background.png');
+}

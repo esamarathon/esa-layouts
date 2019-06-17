@@ -30,6 +30,7 @@ export default {
   @import url('./FlexContainer.css');
 
   #TimerBox {
+    font-weight: 500;
     margin-top: 5px;
     font-size: 100px;
     line-height: 90%;

@@ -28,12 +28,12 @@
 
 <script>
 import Capture from './components/Capture.vue';
-import DonationsBar from './components/DonationsBar.vue';
-import PlayerInfoBox from './components/PlayerInfoBox.vue';
 import CommentatorBox from './components/CommentatorBox.vue';
-import InfoStorageBox from './components/InfoStorageBox.vue';
-import GameNameBox from './components/GameNameBox.vue';
+import DonationsBar from './components/DonationsBar.vue';
 import GameExtraInfoBox from './components/GameExtraInfoBox.vue';
+import GameNameBox from './components/GameNameBox.vue';
+import InfoStorageBox from './components/InfoStorageBox.vue';
+import PlayerInfoBox from './components/PlayerInfoBox.vue';
 import TimerBox from './components/TimerBox.vue';
 
 export default {
@@ -50,20 +50,6 @@ export default {
   },
 };
 </script>
-
-<style>
-  @import url('https://fonts.googleapis.com/css?family=Barlow+Condensed:500&subset=latin-ext');
-
-  /* Needs adding to general layout CSS! */
-  body {
-    font-family: 'Barlow Condensed', sans-serif;
-    color: white;
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-    background-image: url('../background.png');
-  }
-</style>
 
 <style scoped>
   #GameCapture1 {

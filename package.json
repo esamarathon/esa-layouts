@@ -85,7 +85,8 @@
       {
         "file": "game-layout.html",
         "width": 1920,
-        "height": 1080
+        "height": 1080,
+        "singleInstance": true
       },
       {
         "file": "omnibar.html",

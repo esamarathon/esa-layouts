@@ -1,18 +1,12 @@
 <template>
-  <transition
-    name="fade"
-    mode="out-in"
+  <div
+    v-if="show"
+    id="GameExtraInfoBox"
+    ref="name"
+    class="GameInfoBox FlexContainer"
   >
-    <div
-      v-if="show"
-      id="GameExtraInfoBox"
-      ref="name"
-      :key="keyValue"
-      class="GameInfoBox FlexContainer"
-    >
-      {{ name }}
-    </div>
-  </transition>
+    {{ name }}
+  </div>
 </template>
 
 <script>
@@ -23,7 +17,6 @@ export default {
   data() {
     return {
       name: '',
-      keyValue: false,
       show: false,
     };
   },
@@ -31,8 +24,7 @@ export default {
     Vue.prototype.$sc.runDataActiveRun.on('change', (runData) => {
       if (runData) {
         this.show = true;
-        this.keyValue = !this.keyValue; // Triggers the transition.
-        this.name = runData.category;
+        this.name = `${runData.category} / ${runData.system} / ${runData.estimate}`;
       } else {
         this.show = false;
       }
@@ -46,14 +38,7 @@ export default {
   @import url('./FlexContainer.css');
 
   #GameExtraInfoBox {
-    font-size: 25px;
-    background-color: cadetblue
-  }
-
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
-  }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
+    font-size: 35px;
+    background-color: cadetblue;
   }
 </style>

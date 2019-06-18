@@ -35,7 +35,7 @@ const obsGroupKeys: { [key: string]: string } = {
 const obsGameLayoutScene = bundleConfig.obs.names.scenes.gameLayout;
 
 // Triggered when the page is opened; we need to toggle the visibility to off for all captures.
-nodecg.listenFor('gameLayoutGraphicOpened', async () => {
+nodecg.listenFor('hideAllCaptures', async (value, ack) => {
   const keyMap = Object.keys(obsGroupKeys).map((key) => {
     return obsGroupKeys[key];
   });
@@ -43,6 +43,9 @@ nodecg.listenFor('gameLayoutGraphicOpened', async () => {
     try {
       await obs.hideItemInScene(item, obsGameLayoutScene);
     } catch (err) {}
+  }
+  if (ack && !ack.handled) {
+    ack(null);
   }
 });
 

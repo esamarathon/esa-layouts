@@ -24,19 +24,20 @@ function layoutChanged(route) {
   });
 }
 
-nodecg.sendMessage('gameLayoutGraphicOpened');
-
-// eslint-disable-next-line no-unused-vars
-const app = new Vue({
-  router,
-  watch: {
-    $route(to) {
-      // Happens when route is changed.
-      layoutChanged(to);
+// Will only set up Vue app once OBS is ready.
+nodecg.sendMessage('hideAllCaptures').then(() => {
+  // eslint-disable-next-line no-unused-vars
+  const app = new Vue({
+    router,
+    watch: {
+      $route(to) {
+        // Happens when route is changed.
+        layoutChanged(to);
+      },
     },
-  },
-  mounted() {
-    // Initial route.
-    layoutChanged(this.$route);
-  },
-}).$mount('#App');
+    mounted() {
+      // Initial route.
+      layoutChanged(this.$route);
+    },
+  }).$mount('#App');
+}).catch(() => {});

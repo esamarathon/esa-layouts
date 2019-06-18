@@ -1,7 +1,6 @@
+import SpeedcontrolUtil from 'speedcontrol-util';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import SpeedcontrolUtil from 'speedcontrol-util';
-
 import Layout1 from './4_3-1p.vue';
 
 Vue.use(VueRouter);

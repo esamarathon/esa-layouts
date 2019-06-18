@@ -77,7 +77,7 @@ class OBSUtility extends obsWebsocketJs {
           right: position.cropright,
           bottom: position.cropbottom,
           left: position.cropleft,
-        }
+        },
       }).then(resolve).catch((err: { error: any; }) => {
         nodecg.log.warn(`Cannot setup OBS item [${scene}: ${item}]: ${err.error}`);
         reject();

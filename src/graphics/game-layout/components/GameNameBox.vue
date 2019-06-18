@@ -4,7 +4,7 @@
     id="GameNameBox"
     class="GameInfoBox FlexContainer"
   >
-    {{ name }}
+    {{ text }}
   </div>
 </template>
 
@@ -15,19 +15,25 @@ export default {
   name: 'GameNameBox',
   data() {
     return {
-      name: '',
+      text: '',
       show: false,
     };
   },
   mounted() {
-    Vue.prototype.$sc.runDataActiveRun.on('change', (runData) => {
+    Vue.prototype.$sc.runDataActiveRun.on('change', this.updateData);
+  },
+  destroyed() {
+    Vue.prototype.$sc.runDataActiveRun.removeListener('change', this.updateData);
+  },
+  methods: {
+    updateData(runData) {
       if (runData) {
         this.show = true;
-        this.name = runData.game;
+        this.text = runData.game;
       } else {
         this.show = false;
       }
-    });
+    },
   },
 };
 </script>

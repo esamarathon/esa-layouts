@@ -2,10 +2,9 @@
   <div
     v-if="show"
     id="GameExtraInfoBox"
-    ref="name"
     class="GameInfoBox FlexContainer"
   >
-    {{ name }}
+    {{ text }}
   </div>
 </template>
 
@@ -16,19 +15,25 @@ export default {
   name: 'GameExtraInfoBox',
   data() {
     return {
-      name: '',
+      text: '',
       show: false,
     };
   },
   mounted() {
-    Vue.prototype.$sc.runDataActiveRun.on('change', (runData) => {
+    Vue.prototype.$sc.runDataActiveRun.on('change', this.updateData);
+  },
+  destroyed() {
+    Vue.prototype.$sc.runDataActiveRun.removeListener('change', this.updateData);
+  },
+  methods: {
+    updateData(runData) {
       if (runData) {
         this.show = true;
-        this.name = `${runData.category} / ${runData.system} / ${runData.estimate}`;
+        this.text = `${runData.category} / ${runData.system} / ${runData.estimate}`;
       } else {
         this.show = false;
       }
-    });
+    },
   },
 };
 </script>

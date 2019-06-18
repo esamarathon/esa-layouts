@@ -18,9 +18,15 @@ export default {
     };
   },
   mounted() {
-    Vue.prototype.$sc.timer.on('change', (timer) => {
+    Vue.prototype.$sc.timer.on('change', this.updateData);
+  },
+  destroyed() {
+    Vue.prototype.$sc.timer.removeListener('change', this.updateData);
+  },
+  methods: {
+    updateData(timer) {
       this.time = timer.time;
-    });
+    },
   },
 };
 </script>

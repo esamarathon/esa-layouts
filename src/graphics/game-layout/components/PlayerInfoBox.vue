@@ -4,7 +4,7 @@
     id="PlayerInfoBox"
     class="GameInfoBox FlexContainer"
   >
-    {{ name }} <img :src="flag">
+    {{ name }} <img :src="`/bundles/esa-layouts/static/flags/${country}.png`">
   </div>
 </template>
 
@@ -16,21 +16,26 @@ export default {
   data() {
     return {
       name: '',
-      flag: '/static/flags/gb.png',
+      country: 'gb',
       show: false,
     };
   },
   mounted() {
-    Vue.prototype.$sc.runDataActiveRun.on('change', (runData) => {
+    Vue.prototype.$sc.runDataActiveRun.on('change', this.updateData);
+  },
+  destroyed() {
+    Vue.prototype.$sc.runDataActiveRun.removeListener('change', this.updateData);
+  },
+  methods: {
+    updateData(runData) {
       if (runData) {
         this.show = true;
         this.name = runData.teams[0].players[0].name;
-        const { country } = runData.teams[0].players[0];
-        this.flag = `/bundles/esa-layouts/static/flags/${country}.png`;
+        this.country = runData.teams[0].players[0].country;
       } else {
         this.show = false;
       }
-    });
+    },
   },
 };
 </script>

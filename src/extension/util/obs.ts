@@ -6,6 +6,10 @@ interface ItemPosition {
   y: number;
   width: number;
   height: number;
+  croptop: number;
+  cropright: number;
+  cropbottom: number;
+  cropleft: number;
 }
 
 // Extending the OBS library with some of our own functions.
@@ -50,7 +54,7 @@ class OBSUtility extends obsWebsocketJs {
    * Set up game/camera capture in specified OBS scene; turns on, repositions and resizes.
    * @param item Name of the item.
    * @param scene Name of the scene.
-   * @param position Position details (x/y/width/height).
+   * @param position Position details (x/y/width/height/cropping).
    */
   setUpCaptureInScene(item: string, scene: string, position: ItemPosition): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -68,6 +72,12 @@ class OBSUtility extends obsWebsocketJs {
           x: position.width,
           y: position.height,
         },
+        crop: {
+          top: position.croptop,
+          right: position.cropright,
+          bottom: position.cropbottom,
+          left: position.cropleft,
+        }
       }).then(resolve).catch((err: { error: any; }) => {
         nodecg.log.warn(`Cannot setup OBS item [${scene}: ${item}]: ${err.error}`);
         reject();

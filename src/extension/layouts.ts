@@ -34,7 +34,37 @@ const obsGroupKeys: { [key: string]: string } = {
 };
 const obsGameLayoutScene = bundleConfig.obs.names.scenes.gameLayout;
 
-// Triggered when the page is opened; we need to toggle the visibility to off for all captures.
+// nodecg-speedcontrol no longer sends forceRefreshIntermission so doing it here instead
+// TODO: check if we actually need this now as layouts are being remade.
+sc.timer.on('change', (newVal, oldVal) => {
+  // Timer just finished.
+  if (oldVal && oldVal.state !== 'finished' && newVal.state === 'finished') {
+    nodecg.sendMessage('forceRefreshIntermission');
+  }
+});
+
+obs.on('SwitchScenes', (data) => {
+  // Store last/current scene names.
+  lastScene.value = currentScene.value;
+  currentScene.value = data['scene-name'];
+
+  // Trigger Twitch ads when on the relevant scene.
+  if (currentScene.value === bundleConfig.obs.names.scenes.ads) {
+    // TODO: add this to speedcontrol-util.
+    // @ts-ignore: NodeCG not declaring this (yet).
+    nodecg.sendMessageToBundle('playTwitchAd', 'nodecg-speedcontrol');
+  }
+
+  // Enable/disable nodecg-speedcontrol timer changes if on/not on a game layout scene.
+  if (currentScene.value.includes(bundleConfig.obs.names.scenes.gameLayout)) {
+    sc.enableTimerChanges();
+  } else {
+    sc.disableTimerChanges();
+  }
+});
+
+// Triggered when the game layout page is opened;
+// we need to toggle the visibility to off for all captures.
 nodecg.listenFor('hideAllCaptures', async (value, ack) => {
   const keyMap = Object.keys(obsGroupKeys).map((key) => {
     return obsGroupKeys[key];
@@ -58,11 +88,35 @@ nodecg.listenFor('captureChange', async (opts: GameLayoutChange) => {
     } catch (err) {}
   } else {
     try {
+      const crop = { top: 0, right: 0, bottom: 0, left: 0 };
+      // If this is a camera, it may need cropping.
+      if (opts.cssClass === 'CameraCapture') {
+        // Cameras need cropping if not exactly 16:9.
+        // Bigger than 16:9 need top/bottom cropping.
+        // Smaller than 16:9 need left/right cropping.
+        const webcamAR = opts.sizes.width / opts.sizes.height;
+        if (webcamAR > (16 / 9)) {
+          const newHeight = 1920 / webcamAR;
+          const cropAmount = Math.floor((1080 - newHeight) / 2);
+          crop.top = cropAmount;
+          crop.bottom = cropAmount;
+        } else if (webcamAR < (16 / 9)) {
+          const newWidth = 1080 * webcamAR;
+          const cropAmount = Math.floor((1920 - newWidth) / 2);
+          crop.left = cropAmount;
+          crop.right = cropAmount;
+        }
+      }
+
       await obs.setUpCaptureInScene(obsGroupKeys[opts.cssID], obsGameLayoutScene, {
         x: opts.sizes.x,
         y: opts.sizes.y,
         width: opts.sizes.width,
         height: opts.sizes.height,
+        croptop: crop.top,
+        cropright: crop.right,
+        cropbottom: crop.bottom,
+        cropleft: crop.left,
       });
     } catch (err) {}
   }

@@ -11,6 +11,8 @@ module.exports = {
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
+    nodecg: 'readonly',
+    NodeCG: 'readonly',
   },
   parserOptions: {
     ecmaVersion: 2018,

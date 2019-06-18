@@ -30,6 +30,15 @@ export interface Configschema {
     names: {
       scenes: {
         ads: string;
+        gameLayout: string;
+      };
+      groups: {
+        gameCapture1: string;
+        gameCapture2: string;
+        gameCapture3: string;
+        gameCapture4: string;
+        cameraCapture1: string;
+        cameraCapture2: string;
       };
     };
   };

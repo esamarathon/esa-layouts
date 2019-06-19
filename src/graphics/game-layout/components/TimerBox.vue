@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="show"
     id="TimerBox"
     class="GameInfoBox FlexContainer"
     :style="textColor"
@@ -15,6 +16,7 @@ export default {
   name: 'TimerBox',
   data() {
     return {
+      show: false,
       time: '',
       timer: Vue.prototype.$sc.timer,
       backupTimerTO: setTimeout(0),
@@ -31,6 +33,7 @@ export default {
   },
   methods: {
     updateData(timer) {
+      this.show = true;
       this.time = timer.time;
 
       // These colours need changing!

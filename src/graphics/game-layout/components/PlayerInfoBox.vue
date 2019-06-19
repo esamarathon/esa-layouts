@@ -4,7 +4,12 @@
     id="PlayerInfoBox"
     class="GameInfoBox FlexContainer"
   >
-    {{ name }} <img :src="`/bundles/esa-layouts/static/flags/${country}.png`">
+    {{ name }}
+    <img
+      v-if="showFlag"
+      class="flag"
+      :src="`/bundles/esa-layouts/static/flags/${country}.png`"
+    >
   </div>
 </template>
 
@@ -18,6 +23,7 @@ export default {
       name: '',
       country: 'gb',
       show: false,
+      showFlag: true,
     };
   },
   mounted() {
@@ -31,7 +37,13 @@ export default {
       if (runData) {
         this.show = true;
         this.name = runData.teams[0].players[0].name;
-        this.country = runData.teams[0].players[0].country;
+        const { country } = runData.teams[0].players[0];
+        if (country) {
+          this.country = country;
+          this.showFlag = true;
+        } else {
+          this.showFlag = false;
+        }
       } else {
         this.show = false;
       }
@@ -48,5 +60,10 @@ export default {
     font-weight: 500;
     margin-top: 5px;
     font-size: 40px;
+  }
+
+  #PlayerInfoBox > .flag {
+    padding-left: 10px;
+    height: 100%; /* Same height as box depending on font size. */
   }
 </style>

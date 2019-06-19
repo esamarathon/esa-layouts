@@ -55,9 +55,6 @@ async function init() {
 
     require('./tracker-bids');
     require('./tracker-prizes');
-
-    // Tracker logins expire every 2 hours. Re-login every 90 minutes.
-    setTimeout(loginToTracker, 90 * 60 * 1000);
   } catch (err) {
     nodecg.log.warn('Error setting up tracker, retrying in 60 seconds.');
     setTimeout(init, 60000);

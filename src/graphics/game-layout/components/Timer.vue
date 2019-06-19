@@ -1,12 +1,13 @@
 <template>
+  <!-- eslint-disable vue/no-v-html -->
   <div
     v-if="show"
     id="TimerBox"
     class="RunInfoBox FlexContainer"
     :style="textColor"
-  >
-    {{ time }}
-  </div>
+    v-html="time"
+  />
+  <!-- eslint-enable -->
 </template>
 
 <script>
@@ -34,9 +35,8 @@ export default {
   methods: {
     updateData(timer) {
       this.show = true;
-      this.time = timer.time;
+      this.time = this.splitStringToSpans(timer.time);
 
-      // These colours need changing!
       switch (timer.state) {
       default:
       case 'running':
@@ -44,15 +44,18 @@ export default {
         break;
       case 'paused':
       case 'stopped':
-        this.textColor.color = 'yellow';
+        this.textColor.color = '#b7b7b7';
         break;
       case 'finished':
-        this.textColor.color = 'orange';
+        this.textColor.color = '#39b0f6';
       }
 
       // Backup timer (see below).
       clearTimeout(this.backupTimerTO);
       this.backupTimerTO = setTimeout(this.backupTimer, 1000);
+    },
+    splitStringToSpans(string) {
+      return string.replace(/\S/g, '<span>$&</span>');
     },
     // Backup timer that takes over if the connection to the server is lost.
     // Based on the last timestamp that was received.
@@ -62,7 +65,7 @@ export default {
       if (this.timer.value.state === 'running') {
         const missedTime = Date.now() - this.timer.value.timestamp;
         const timeOffset = this.timer.value.milliseconds + missedTime;
-        this.time = this.msToDuration(timeOffset);
+        this.time = this.splitStringToSpans(this.msToDuration(timeOffset));
       }
     },
     msToDuration(ms) {
@@ -92,5 +95,15 @@ export default {
     padding: 15px;
     padding-top: 8px; /* Numbers are strange and this makes it look better. */
     transition: 1s;
+  }
+
+  /* Each character in the timer is in a span; setting width so the numbers appear monospaced. */
+  #TimerBox >>> span {
+    display: inline-block;
+    width: 0.45em;
+    text-align: center;
+  }
+  #TimerBox >>> span:nth-of-type(3), #TimerBox >>> span:nth-of-type(6) {
+    width: 0.22em;
   }
 </style>

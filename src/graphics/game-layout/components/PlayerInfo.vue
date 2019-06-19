@@ -2,7 +2,7 @@
   <div
     v-if="show"
     id="PlayerInfoBox"
-    class="GameInfoBox FlexContainer"
+    class="RunInfoBox FlexContainer"
   >
     {{ name }}
     <img
@@ -17,7 +17,7 @@
 import Vue from 'vue';
 
 export default {
-  name: 'PlayerInfoBox',
+  name: 'PlayerInfo',
   data() {
     return {
       name: '',
@@ -52,8 +52,8 @@ export default {
 };
 </script>
 
-<style>
-  @import url('./GameInfoBox.css');
+<style scoped>
+  @import url('./RunInfoBox.css');
   @import url('./FlexContainer.css');
 
   #PlayerInfoBox {

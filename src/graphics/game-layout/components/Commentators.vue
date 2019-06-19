@@ -1,8 +1,8 @@
 <template>
   <div
     v-if="show"
-    id="CommentatorBox"
-    class="GameInfoBox FlexContainer"
+    id="CommentatorsBox"
+    class="RunInfoBox FlexContainer"
   >
     Commentators: {{ text }}
   </div>
@@ -12,7 +12,7 @@
 // import Vue from 'vue';
 
 export default {
-  name: 'CommentatorBox',
+  name: 'Commentators',
   data() {
     return {
       text: '',
@@ -27,11 +27,11 @@ export default {
 };
 </script>
 
-<style>
-  @import url('./GameInfoBox.css');
+<style scoped>
+  @import url('./RunInfoBox.css');
   @import url('./FlexContainer.css');
 
-  #CommentatorBox {
+  #CommentatorsBox {
     font-size: 30px;
     font-weight: 400;
     background-color: cadetblue;

@@ -41,7 +41,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
   .Capture {
     position: fixed;
     background-color: black;

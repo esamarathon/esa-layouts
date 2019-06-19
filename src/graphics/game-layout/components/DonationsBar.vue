@@ -8,7 +8,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
   #DonationsBar {
     position: fixed;
     background-color: yellow;

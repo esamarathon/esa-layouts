@@ -1,8 +1,8 @@
 <template>
   <div
     v-if="show"
-    id="GameExtraInfoBox"
-    class="GameInfoBox FlexContainer"
+    id="GameNameBox"
+    class="RunInfoBox FlexContainer"
   >
     {{ text }}
   </div>
@@ -12,7 +12,7 @@
 import Vue from 'vue';
 
 export default {
-  name: 'GameExtraInfoBox',
+  name: 'GameName',
   data() {
     return {
       text: '',
@@ -29,7 +29,7 @@ export default {
     updateData(runData) {
       if (runData) {
         this.show = true;
-        this.text = `${runData.category} / ${runData.system} / ${runData.estimate}`;
+        this.text = runData.game;
       } else {
         this.show = false;
       }
@@ -38,12 +38,13 @@ export default {
 };
 </script>
 
-<style>
-  @import url('./GameInfoBox.css');
+<style scoped>
+  @import url('./RunInfoBox.css');
   @import url('./FlexContainer.css');
 
-  #GameExtraInfoBox {
-    font-size: 35px;
-    background-color: cadetblue;
+  #GameNameBox {
+    font-weight: 500;
+    margin-top: 5px;
+    font-size: 40px;
   }
 </style>

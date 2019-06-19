@@ -5,8 +5,7 @@ import obs from './util/obs';
 
 const nodecg = nodecgApiContext.get();
 const sc = new speedcontrolUtil(nodecg);
-const lastScene = nodecg.Replicant<string>('lastOBSScene');
-const currentScene = nodecg.Replicant<string>('currentOBSScene');
+const currentScene = nodecg.Replicant<string>('currentOBSScene'); // temp
 
 interface GameLayoutChange {
   cssID: string;
@@ -44,8 +43,6 @@ sc.timer.on('change', (newVal, oldVal) => {
 });
 
 obs.on('SwitchScenes', (data) => {
-  // Store last/current scene names.
-  lastScene.value = currentScene.value;
   currentScene.value = data['scene-name'];
 
   // Trigger Twitch ads when on the relevant scene.

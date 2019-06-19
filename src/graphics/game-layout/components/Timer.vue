@@ -2,7 +2,7 @@
   <div
     v-if="show"
     id="TimerBox"
-    class="GameInfoBox FlexContainer"
+    class="RunInfoBox FlexContainer"
     :style="textColor"
   >
     {{ time }}
@@ -13,7 +13,7 @@
 import Vue from 'vue';
 
 export default {
-  name: 'TimerBox',
+  name: 'Timer',
   data() {
     return {
       show: false,
@@ -80,8 +80,8 @@ export default {
 };
 </script>
 
-<style>
-  @import url('./GameInfoBox.css');
+<style scoped>
+  @import url('./RunInfoBox.css');
   @import url('./FlexContainer.css');
 
   #TimerBox {

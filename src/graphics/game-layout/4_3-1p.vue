@@ -14,39 +14,39 @@
 
     <!-- Information Storage -->
     <info-storage-box>
-      <player-info-box></player-info-box>
-      <commentator-box></commentator-box>
-      <game-name-box></game-name-box>
-      <game-extra-info-box></game-extra-info-box>
-      <timer-box></timer-box>
+      <player-info></player-info>
+      <commentators></commentators>
+      <game-name></game-name>
+      <game-extra-info></game-extra-info>
+      <timer></timer>
     </info-storage-box>
 
-    <!-- Donation Bar -->
+    <!-- Donations Bar -->
     <donations-bar></donations-bar>
   </div>
 </template>
 
 <script>
 import Capture from './components/Capture.vue';
-import CommentatorBox from './components/CommentatorBox.vue';
+import Commentators from './components/Commentators.vue';
 import DonationsBar from './components/DonationsBar.vue';
-import GameExtraInfoBox from './components/GameExtraInfoBox.vue';
-import GameNameBox from './components/GameNameBox.vue';
+import GameExtraInfo from './components/GameExtraInfo.vue';
+import GameName from './components/GameName.vue';
 import InfoStorageBox from './components/InfoStorageBox.vue';
-import PlayerInfoBox from './components/PlayerInfoBox.vue';
-import TimerBox from './components/TimerBox.vue';
+import PlayerInfo from './components/PlayerInfo.vue';
+import Timer from './components/Timer.vue';
 
 export default {
   name: 'Layout',
   components: {
     Capture,
     DonationsBar,
-    PlayerInfoBox,
-    CommentatorBox,
+    PlayerInfo,
+    Commentators,
     InfoStorageBox,
-    GameNameBox,
-    GameExtraInfoBox,
-    TimerBox,
+    GameName,
+    GameExtraInfo,
+    Timer,
   },
 };
 </script>

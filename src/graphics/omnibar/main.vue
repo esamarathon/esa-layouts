@@ -15,7 +15,7 @@ export default {
 };
 </script>
 
-<style lang="css">
+<style>
   body {
     font-family: 'Barlow Condensed', sans-serif;
     color: white;

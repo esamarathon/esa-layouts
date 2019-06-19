@@ -15,7 +15,7 @@ const router = new VueRouter({
   routes,
 });
 
-// Used to send when the layout is changed to the server.
+// Used to send when the layout is changed.
 function layoutChanged(route) {
   nodecg.sendMessage('layoutChange', {
     name: route.name,

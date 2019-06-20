@@ -19,6 +19,7 @@
       <game-name></game-name>
       <game-extra-info></game-extra-info>
       <timer></timer>
+      <sponsor-logos></sponsor-logos>
     </info-storage-box>
 
     <!-- Donations Bar -->
@@ -34,6 +35,7 @@ import GameExtraInfo from './components/GameExtraInfo.vue';
 import GameName from './components/GameName.vue';
 import InfoStorageBox from './components/InfoStorageBox.vue';
 import PlayerInfo from './components/PlayerInfo.vue';
+import SponsorLogos from './components/SponsorLogos.vue';
 import Timer from './components/Timer.vue';
 
 export default {
@@ -47,6 +49,7 @@ export default {
     GameName,
     GameExtraInfo,
     Timer,
+    SponsorLogos,
   },
 };
 </script>

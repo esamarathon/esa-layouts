@@ -60,6 +60,7 @@ export default {
     font-weight: 500;
     margin-top: 5px;
     font-size: 40px;
+    height: 60px;
   }
 
   #PlayerInfoBox > .flag {

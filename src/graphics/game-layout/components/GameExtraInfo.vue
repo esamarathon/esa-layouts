@@ -45,5 +45,6 @@ export default {
   #GameExtraInfoBox {
     font-size: 35px;
     background-color: cadetblue;
+    height: 55px;
   }
 </style>

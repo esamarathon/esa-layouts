@@ -95,6 +95,7 @@ export default {
     padding: 15px;
     padding-top: 8px; /* Numbers are strange and this makes it look better. */
     transition: 1s;
+    height: 110px;
   }
 
   /* Each character in the timer is in a span; setting width so the numbers appear monospaced. */
@@ -105,5 +106,6 @@ export default {
   }
   #TimerBox >>> span:nth-of-type(3), #TimerBox >>> span:nth-of-type(6) {
     width: 0.22em;
+    margin-top: -0.15em; /* Make the colon appear more towards the centre. */
   }
 </style>

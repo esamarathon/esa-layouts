@@ -4,33 +4,76 @@
     id="PlayerInfoBox"
     class="RunInfoBox FlexContainer"
   >
-    {{ name }}
-    <img
+    <div class="PlayerIcon">
+      <transition name="fade">
+        <img
+          :key="playerIcon"
+          :src="playerIcon"
+        >
+      </transition>
+    </div>
+    <div class="PlayerName FlexContainer">
+      <transition name="fade">
+        <span :key="name">
+          {{ name }}
+        </span>
+      </transition>
+    </div>
+    <div
       v-if="showFlag"
-      class="flag"
-      :src="`/bundles/esa-layouts/static/flags/${country}.png`"
+      class="Flag FlexContainer"
     >
+      <transition name="fade">
+        <img
+          :key="country"
+          :src="`/bundles/esa-layouts/static/flags/${country}.png`"
+        >
+      </transition>
+    </div>
   </div>
 </template>
 
 <script>
-import Vue from 'vue';
+// import Vue from 'vue';
+
+const playerSoloImg = require('../player-solo.png');
+// const twitchIconImg = require('../twitch-icon.png');
 
 export default {
   name: 'PlayerInfo',
+  props: {
+    name: {
+      type: String,
+      default: 'Player',
+    },
+    twitch: {
+      type: String,
+      default: '/twitch',
+    },
+    country: {
+      type: String,
+      default: 'gb',
+    },
+  },
   data() {
     return {
-      name: '',
-      country: 'gb',
+      text: '',
+      countryCode: '',
       show: false,
       showFlag: true,
+      playerIcon: playerSoloImg,
     };
   },
+  created() {
+    this.text = this.name;
+    this.countryCode = this.country;
+    this.show = true;
+  },
   mounted() {
-    Vue.prototype.$sc.runDataActiveRun.on('change', this.updateData);
+    // Vue.prototype.$sc.runDataActiveRun.on('change', this.updateData);
   },
   destroyed() {
-    Vue.prototype.$sc.runDataActiveRun.removeListener('change', this.updateData);
+    // Vue.prototype.$sc.runDataActiveRun.removeListener('change', this.updateData);
   },
   methods: {
     updateData(runData) {
@@ -58,13 +101,49 @@ export default {
 
   #PlayerInfoBox {
     font-weight: 500;
-    margin-top: 5px;
+    margin-top: 3px;
     font-size: 40px;
     height: 60px;
   }
 
-  #PlayerInfoBox > .flag {
-    padding-left: 10px;
-    height: 100%; /* Same height as box depending on font size. */
+  #PlayerInfoBox > .PlayerIcon {
+    height: 100%;
+    width: 100px;
+    text-align: left;
+    position: relative;
+  }
+
+  #PlayerInfoBox > .PlayerIcon > img {
+    height: 100%;
+    position: absolute;
+  }
+
+  #PlayerInfoBox > .PlayerName {
+    flex: 1;
+    position: relative;
+  }
+
+  #PlayerInfoBox > .PlayerName > span {
+    position: absolute;
+  }
+
+  #PlayerInfoBox > .Flag {
+    height: 100%;
+    width: 100px;
+    justify-content: flex-end;
+    position: relative;
+  }
+
+  #PlayerInfoBox > .Flag > img {
+    position: absolute;
+    border: 2px solid white;
+    height: calc(100% - 4px);
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 1s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
   }
 </style>

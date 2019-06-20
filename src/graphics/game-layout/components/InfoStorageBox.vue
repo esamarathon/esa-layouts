@@ -17,6 +17,7 @@ export default {
   @import url('./FlexContainer.css');
 
   #InfoStorageBox {
+    margin-top: 5px;
     position: fixed;
     box-sizing: border-box;
     justify-content: flex-start;

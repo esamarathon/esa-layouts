@@ -6,6 +6,7 @@
     <div class="SponsorLogo FlexContainer">
       <transition name="fade">
         <img
+          v-if="show"
           :key="imgSrc"
           :src="imgSrc"
         >
@@ -21,6 +22,7 @@ export default {
   name: 'SponsorLogos',
   data() {
     return {
+      show: false,
       imgSrc: '',
       index: 0,
     };
@@ -36,6 +38,7 @@ export default {
   },
   methods: {
     showNextLogo() {
+      this.show = true;
       this.imgSrc = logos.value[this.index].url;
       this.index += 1;
       if (logos.value.length <= this.index) {
@@ -64,8 +67,11 @@ export default {
 
   #SponsorLogoBox > .SponsorLogo > img {
     position: absolute;
-    max-height: calc(100% - 100px);
-    max-width: calc(100% - 100px);
+    box-sizing: border-box;
+    padding: 30px;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
   .fade-enter-active, .fade-leave-active {

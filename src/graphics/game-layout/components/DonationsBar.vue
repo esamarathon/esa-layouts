@@ -8,6 +8,7 @@
     </div>
     <div
       id="DonationsContainer"
+      ref="DonationsContainer"
       class="FlexContainer"
     />
   </div>
@@ -33,7 +34,7 @@ export default {
           amount,
         },
       }).$mount();
-      document.getElementById('DonationsContainer').prepend(instance.$el);
+      this.$refs.DonationsContainer.prepend(instance.$el);
     },
   },
 };

@@ -1,8 +1,7 @@
 <template>
   <div
     v-if="show"
-    id="PlayerInfoBox"
-    class="RunInfoBox FlexContainer"
+    class="PlayerInfoBox RunInfoBox FlexContainer"
   >
     <div class="PlayerIcon">
       <transition name="fade">
@@ -99,42 +98,42 @@ export default {
   @import url('./RunInfoBox.css');
   @import url('./FlexContainer.css');
 
-  #PlayerInfoBox {
+  .PlayerInfoBox {
+    padding: 7px;
     font-weight: 500;
-    margin-top: 3px;
-    font-size: 40px;
-    height: 60px;
+    font-size: 30px;
+    height: 55px;
   }
 
-  #PlayerInfoBox > .PlayerIcon {
+  .PlayerInfoBox > .PlayerIcon {
     height: 100%;
     width: 100px;
     text-align: left;
     position: relative;
   }
 
-  #PlayerInfoBox > .PlayerIcon > img {
+  .PlayerInfoBox > .PlayerIcon > img {
     height: 100%;
     position: absolute;
   }
 
-  #PlayerInfoBox > .PlayerName {
+  .PlayerInfoBox > .PlayerName {
     flex: 1;
     position: relative;
   }
 
-  #PlayerInfoBox > .PlayerName > span {
+  .PlayerInfoBox > .PlayerName > span {
     position: absolute;
   }
 
-  #PlayerInfoBox > .Flag {
+  .PlayerInfoBox > .Flag {
     height: 100%;
     width: 100px;
     justify-content: flex-end;
     position: relative;
   }
 
-  #PlayerInfoBox > .Flag > img {
+  .PlayerInfoBox > .Flag > img {
     position: absolute;
     border: 2px solid white;
     height: calc(100% - 4px);

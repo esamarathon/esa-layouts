@@ -14,7 +14,7 @@
 
     <!-- Information Storage -->
     <info-storage-box>
-      <player-info></player-info>
+      <player-container></player-container>
       <commentators></commentators>
       <game-name></game-name>
       <game-extra-info></game-extra-info>
@@ -34,7 +34,7 @@ import DonationsBar from './components/DonationsBar.vue';
 import GameExtraInfo from './components/GameExtraInfo.vue';
 import GameName from './components/GameName.vue';
 import InfoStorageBox from './components/InfoStorageBox.vue';
-import PlayerInfo from './components/PlayerInfo.vue';
+import PlayerContainer from './components/PlayerContainer.vue';
 import SponsorLogos from './components/SponsorLogos.vue';
 import Timer from './components/Timer.vue';
 
@@ -43,7 +43,7 @@ export default {
   components: {
     Capture,
     DonationsBar,
-    PlayerInfo,
+    PlayerContainer,
     Commentators,
     InfoStorageBox,
     GameName,

@@ -90,6 +90,18 @@
         "directory": "static",
         "endpoint": "static"
       }
+    ],
+    "assetCategories": [
+      {
+        "name": "sponsor-logos",
+        "title": "Sponsor Logos",
+        "allowedTypes": [
+          "jpg",
+          "jpeg",
+          "png",
+          "svg"
+        ]
+      }
     ]
   },
   "vue": {

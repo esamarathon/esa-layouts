@@ -15,15 +15,33 @@
 </template>
 
 <script>
-// example of how to reference image
-const sponsorLogo = require('../../twitch.png');
+const logos = nodecg.Replicant('assets:sponsor-logos');
 
 export default {
   name: 'SponsorLogos',
   data() {
     return {
-      imgSrc: sponsorLogo,
+      imgSrc: '',
+      index: 0,
     };
+  },
+  mounted() {
+    NodeCG.waitForReplicants(logos).then(() => {
+      if (!logos.value.length) {
+        return;
+      }
+      this.showNextLogo();
+      setInterval(this.showNextLogo, 10000);
+    });
+  },
+  methods: {
+    showNextLogo() {
+      this.imgSrc = logos.value[this.index].url;
+      this.index += 1;
+      if (logos.value.length <= this.index) {
+        this.index = 0;
+      }
+    },
   },
 };
 </script>

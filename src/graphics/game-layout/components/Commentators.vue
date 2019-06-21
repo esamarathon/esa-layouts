@@ -32,9 +32,10 @@ export default {
   @import url('./FlexContainer.css');
 
   #CommentatorsBox {
-    font-size: 30px;
+    padding: 0;
+    font-size: 25px;
     font-weight: 400;
     background-color: cadetblue;
-    height: 50px;
+    height: 40px;
   }
 </style>

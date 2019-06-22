@@ -1,4 +1,5 @@
 <!-- This component handles displays each player's information within a team. -->
+<!-- This is added dynamically to the PlayerContainer component when we need to show this. -->
 <!-- It is initialised with the info, it does not listen to nodecg-speedcontrol itself. -->
 
 <template>
@@ -22,7 +23,7 @@
       </transition>
     </div>
     <div
-      v-if="showFlag"
+      :style="{ 'opacity' : showFlag ? 1 : 0 }"
       class="Flag FlexContainer"
     >
       <transition name="fade">

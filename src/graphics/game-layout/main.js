@@ -45,20 +45,23 @@ function layoutChanged(route) {
   });
 }
 
-// Will only set up Vue app once OBS is ready.
-nodecg.sendMessage('hideAllCaptures').then(() => {
-  // eslint-disable-next-line no-unused-vars
-  const app = new Vue({
-    router,
-    watch: {
-      $route(to) {
-        // Happens when route is changed.
-        layoutChanged(to);
+// Waiting to make sure the graphic is the only instance open.
+window.addEventListener('nodecg-registration-accepted', () => {
+  // Will only set up Vue app once OBS is ready.
+  nodecg.sendMessage('hideAllCaptures').then(() => {
+    // eslint-disable-next-line no-unused-vars
+    const app = new Vue({
+      router,
+      watch: {
+        $route(to) {
+          // Happens when route is changed.
+          layoutChanged(to);
+        },
       },
-    },
-    mounted() {
-      // Initial route.
-      layoutChanged(this.$route);
-    },
-  }).$mount('#App');
-}).catch(() => {});
+      mounted() {
+        // Initial route.
+        layoutChanged(this.$route);
+      },
+    }).$mount('#App');
+  }).catch(() => {});
+});

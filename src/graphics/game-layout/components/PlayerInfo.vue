@@ -1,3 +1,6 @@
+<!-- This component handles displays each player's information within a team. -->
+<!-- It is initialised with the info, it does not listen to nodecg-speedcontrol itself. -->
+
 <template>
   <div
     v-if="show"
@@ -75,7 +78,7 @@ export default {
     },
   },
   created() {
-    // Listen to the main file for animation timing.
+    // Listen to the main.js file for animation timing.
     serverBus.$on('playerShowTwitch', (showTwitch) => {
       // This doesn't need toggling if no Twitch username exist.
       if (this.twitch) {
@@ -139,7 +142,7 @@ export default {
   .fade-enter-active, .fade-leave-active {
     transition: opacity 1s;
   }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  .fade-enter, .fade-leave-to {
     opacity: 0;
   }
 </style>

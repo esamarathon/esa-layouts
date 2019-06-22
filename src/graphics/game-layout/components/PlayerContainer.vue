@@ -1,3 +1,6 @@
+<!-- This component handles each team's player information. -->
+<!-- It listens to the data from nodecg-speedcontrol and creates PlayerInfo component instances. -->
+
 <template>
   <div class="PlayerContainer" />
 </template>
@@ -11,7 +14,7 @@ const PlayerInfoClass = Vue.extend(PlayerInfo);
 export default {
   name: 'PlayerContainer',
   props: {
-    teamID: {
+    teamId: {
       type: Number,
       default: 0,
     },
@@ -25,8 +28,8 @@ export default {
   methods: {
     updateData(data) {
       while (this.$el.firstChild && this.$el.removeChild(this.$el.firstChild));
-      const { players } = data.teams[this.teamID];
-      if (players) {
+      if (data.teams[this.teamId]) {
+        const { players } = data.teams[this.teamId];
         players.forEach((player) => {
           this.addPlayer(player.name, player.social.twitch, player.country);
         });

@@ -14,7 +14,7 @@
 
     <!-- Information Storage -->
     <info-storage-box>
-      <player-container></player-container>
+      <player-container :team-id="0"></player-container>
       <commentators></commentators>
       <game-name></game-name>
       <game-extra-info></game-extra-info>

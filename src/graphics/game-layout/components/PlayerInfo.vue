@@ -13,8 +13,8 @@
     </div>
     <div class="PlayerName FlexContainer">
       <transition name="fade">
-        <span :key="name">
-          {{ name }}
+        <span :key="text">
+          {{ text }}
         </span>
       </transition>
     </div>
@@ -33,63 +33,60 @@
 </template>
 
 <script>
-// import Vue from 'vue';
+import { serverBus } from '../main';
 
 const playerSoloImg = require('../player-solo.png');
-// const twitchIconImg = require('../twitch-icon.png');
+const twitchIconImg = require('../twitch-icon.png');
 
 export default {
   name: 'PlayerInfo',
   props: {
     name: {
       type: String,
-      default: 'Player',
+      default: '',
     },
     twitch: {
       type: String,
-      default: '/twitch',
+      default: '',
     },
     country: {
       type: String,
-      default: 'gb',
+      default: '',
     },
   },
   data() {
     return {
       text: '',
-      countryCode: '',
       show: false,
-      showFlag: true,
+      showFlag: false,
+      showTwitch: false,
       playerIcon: playerSoloImg,
     };
   },
-  created() {
-    this.text = this.name;
-    this.countryCode = this.country;
-    this.show = true;
-  },
-  mounted() {
-    // Vue.prototype.$sc.runDataActiveRun.on('change', this.updateData);
-  },
-  destroyed() {
-    // Vue.prototype.$sc.runDataActiveRun.removeListener('change', this.updateData);
-  },
-  methods: {
-    updateData(runData) {
-      if (runData) {
-        this.show = true;
-        this.name = runData.teams[0].players[0].name;
-        const { country } = runData.teams[0].players[0];
-        if (country) {
-          this.country = country;
-          this.showFlag = true;
-        } else {
-          this.showFlag = false;
-        }
+  watch: {
+    showTwitch(show) {
+      if (show) {
+        this.playerIcon = twitchIconImg;
+        this.text = `/${this.twitch}`;
       } else {
-        this.show = false;
+        this.playerIcon = playerSoloImg;
+        this.text = this.name;
       }
     },
+  },
+  created() {
+    // Listen to the main file for animation timing.
+    serverBus.$on('playerShowTwitch', (showTwitch) => {
+      // This doesn't need toggling if no Twitch username exist.
+      if (this.twitch) {
+        this.showTwitch = showTwitch;
+      }
+    });
+    this.text = this.name;
+    if (this.country) {
+      this.showFlag = true;
+    }
+    this.show = true;
   },
 };
 </script>

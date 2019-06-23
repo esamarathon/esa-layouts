@@ -66,10 +66,10 @@
     },
     "dashboardPanels": [
       {
-        "name": "example-dashboard",
-        "title": "Example Dashboard",
+        "name": "game-layout-override",
+        "title": "Game Layout Override",
         "width": 2,
-        "file": "example-dashboard.html"
+        "file": "game-layout-override.html"
       }
     ],
     "graphics": [

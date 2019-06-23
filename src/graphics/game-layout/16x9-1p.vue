@@ -93,7 +93,6 @@ export default {
 
   #InfoStorageBox2 {
     margin: 0;
-    padding: 5px 0;
     left: 533px;
     top: 780px;
     width: 1000px;
@@ -102,7 +101,7 @@ export default {
 
   #InfoStorageBox3 {
     margin: 0;
-    padding: 5px 0 5px 5px;
+    padding: 0 0 0 5px;
     left: 1533px;
     top: 780px;
     width: 387px;

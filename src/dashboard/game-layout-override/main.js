@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import App from './example-dashboard.vue';
+import App from './main.vue';
 
 // eslint-disable-next-line no-new
 new Vue({

@@ -1,11 +1,12 @@
 import SpeedcontrolUtil from 'speedcontrol-util';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Layout2 from './16_9-1p.vue';
-import Layout1 from './4_3-1p.vue';
+import * as Layouts from './layout-list';
 
 Vue.use(VueRouter);
 Vue.prototype.$sc = new SpeedcontrolUtil(nodecg);
+const layouts = nodecg.Replicant('layouts', { persistent: false }); // schema this!
+const currentLayout = nodecg.Replicant('currentLayout', { persistent: false }); // schema this!
 // eslint-disable-next-line import/prefer-default-export
 export const serverBus = new Vue();
 
@@ -30,9 +31,9 @@ Vue.prototype.$sc.runDataActiveRun.on('change', () => {
 });
 
 const routes = [
-  { name: '4:3 1 Player', path: '/4_3-1p', component: Layout1 },
-  { name: '16:9 1 Player', path: '/16_9-1p', component: Layout2 },
-  { path: '*', redirect: '/4_3-1p' },
+  { name: '4:3 1 Player', path: '/4x3-1p', component: Layouts.L_4x3_1p },
+  { name: '16:9 1 Player', path: '/16x9-1p', component: Layouts.L_16x9_1p },
+  { path: '*', redirect: '/4x3-1p' },
 ];
 
 const router = new VueRouter({
@@ -40,30 +41,43 @@ const router = new VueRouter({
 });
 
 // Used to send when the layout is changed.
+// Usually happens elsewhere but just in case.
 function layoutChanged(route) {
-  nodecg.sendMessage('layoutChange', {
-    name: route.name,
-    path: route.path,
-  });
+  currentLayout.value = route.path;
 }
 
+currentLayout.on('change', (newVal) => {
+  if (newVal) {
+    router.push(newVal);
+  }
+});
+
+// Sometimes the registration doesn't happen! heh
+const pageRegTimeout = setTimeout(() => window.location.reload(), 1000);
 // Waiting to make sure the graphic is the only instance open.
 window.addEventListener('nodecg-registration-accepted', () => {
-  // Will only set up Vue app once OBS is ready.
-  nodecg.sendMessage('hideAllCaptures').then(() => {
-    // eslint-disable-next-line no-unused-vars
-    const app = new Vue({
-      router,
-      watch: {
-        $route(to) {
-          // Happens when route is changed.
-          layoutChanged(to);
+  clearTimeout(pageRegTimeout);
+  NodeCG.waitForReplicants(layouts).then(() => {
+    layouts.value = routes;
+    window.onunload = () => {
+      layouts.value = {};
+    };
+    // Will only set up Vue app once OBS is ready.
+    nodecg.sendMessage('hideAllCaptures').then(() => {
+      // eslint-disable-next-line no-unused-vars
+      const app = new Vue({
+        router,
+        watch: {
+          $route(to) {
+            // Happens when route is changed.
+            layoutChanged(to);
+          },
         },
-      },
-      mounted() {
-        // Initial route.
-        layoutChanged(this.$route);
-      },
-    }).$mount('#App');
-  }).catch(() => {});
+        mounted() {
+          // Initial route.
+          layoutChanged(this.$route);
+        },
+      }).$mount('#App');
+    }).catch(() => {});
+  });
 });

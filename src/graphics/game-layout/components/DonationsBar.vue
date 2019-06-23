@@ -24,7 +24,13 @@ export default {
   name: 'DonationsBar',
   mounted() {
     // fake donations coming in for testing
+    const names = ['zoton2', 'Edenal', 'Ladaur', 'AuraBorea', 'Maral', 'trollbear', 'Planks', 'English_Ben'];
     // setInterval(() => { this.addDonation('zoton2', 5); }, 2000);
+    for (let i = 0; i < 15; i += 1) {
+      const name = names[Math.floor(Math.random() * names.length)];
+      const amount = Math.floor(Math.random() * 90) + 10;
+      this.addDonation(name, amount);
+    }
   },
   methods: {
     addDonation(name, amount) {

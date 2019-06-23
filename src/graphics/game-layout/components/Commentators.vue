@@ -4,7 +4,10 @@
     id="CommentatorsBox"
     class="RunInfoBox FlexContainer"
   >
-    Commentators: {{ text }}
+    <span id="CommHeader">
+      Commentators:
+    </span>
+    &nbsp;{{ text }}
   </div>
 </template>
 
@@ -37,5 +40,9 @@ export default {
     font-weight: 400;
     background-color: cadetblue;
     height: 40px;
+  }
+
+  #CommHeader {
+    font-weight: 500;
   }
 </style>

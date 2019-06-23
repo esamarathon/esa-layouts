@@ -1,6 +1,7 @@
 import SpeedcontrolUtil from 'speedcontrol-util';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import Layout2 from './16_9-1p.vue';
 import Layout1 from './4_3-1p.vue';
 
 Vue.use(VueRouter);
@@ -30,6 +31,7 @@ Vue.prototype.$sc.runDataActiveRun.on('change', () => {
 
 const routes = [
   { name: '4:3 1 Player', path: '/4_3-1p', component: Layout1 },
+  { name: '16:9 1 Player', path: '/16_9-1p', component: Layout2 },
   { path: '*', redirect: '/4_3-1p' },
 ];
 

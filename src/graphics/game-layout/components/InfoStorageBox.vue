@@ -1,7 +1,6 @@
 <template>
   <div
-    id="InfoStorageBox"
-    class="FlexContainer"
+    class="InfoStorageBox FlexContainer"
   >
     <slot />
   </div>
@@ -16,7 +15,7 @@ export default {
 <style scoped>
   @import url('./FlexContainer.css');
 
-  #InfoStorageBox {
+  .InfoStorageBox {
     margin-top: 5px;
     position: fixed;
     box-sizing: border-box;

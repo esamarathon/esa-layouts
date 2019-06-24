@@ -52,32 +52,33 @@ currentLayout.on('change', (newVal) => {
   }
 });
 
-// Sometimes the registration doesn't happen! heh
-const pageRegTimeout = setTimeout(() => window.location.reload(), 1000);
-// Waiting to make sure the graphic is the only instance open.
-window.addEventListener('nodecg-registration-accepted', () => {
-  clearTimeout(pageRegTimeout);
-  NodeCG.waitForReplicants(layouts).then(() => {
-    layouts.value = routes;
-    window.onunload = () => {
-      layouts.value = {};
-    };
+function setUpVueApp() {
+  // eslint-disable-next-line no-unused-vars
+  const app = new Vue({
+    router,
+    watch: {
+      $route(to) {
+        // Happens when route is changed.
+        layoutChanged(to);
+      },
+    },
+    mounted() {
+      // Initial route.
+      layoutChanged(this.$route);
+    },
+  }).$mount('#App');
+}
+
+NodeCG.waitForReplicants(layouts).then(() => {
+  layouts.value = routes;
+  window.onunload = () => {
+    layouts.value = {};
+  };
+  // Check if we're open in OBS, if not we don't want to do OBS stuff.
+  if (window.obsstudio) {
     // Will only set up Vue app once OBS is ready.
-    nodecg.sendMessage('hideAllCaptures').then(() => {
-      // eslint-disable-next-line no-unused-vars
-      const app = new Vue({
-        router,
-        watch: {
-          $route(to) {
-            // Happens when route is changed.
-            layoutChanged(to);
-          },
-        },
-        mounted() {
-          // Initial route.
-          layoutChanged(this.$route);
-        },
-      }).$mount('#App');
-    }).catch(() => {});
-  });
+    nodecg.sendMessage('hideAllCaptures').then(setUpVueApp).catch(() => {});
+  } else {
+    setUpVueApp();
+  }
 });

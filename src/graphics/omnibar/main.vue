@@ -28,7 +28,7 @@ export default {
     position: fixed;
     width: 1920px;
     height: 80px;
-    background-color: #56b983;
+    background-image: url('./background-gradient.png');
     text-align: center;
   }
 </style>

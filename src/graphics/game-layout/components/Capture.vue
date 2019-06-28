@@ -25,10 +25,10 @@ const captureChange = Vue.directive('captureChange', {
       cssID,
       cssClass,
       sizes: {
-        x: sizes[0].x + Number(leftBorder),
-        y: sizes[0].y + Number(topBorder),
-        width: sizes[0].width - Number(rightBorder) - Number(leftBorder),
-        height: sizes[0].height - Number(bottomBorder) - Number(topBorder),
+        x: sizes[0].x + parseInt(leftBorder, 0),
+        y: sizes[0].y + parseInt(topBorder, 0),
+        width: sizes[0].width - parseInt(rightBorder, 0) - parseInt(leftBorder, 0),
+        height: sizes[0].height - parseInt(bottomBorder, 0) - parseInt(topBorder, 0),
       },
     });
   },
@@ -54,6 +54,7 @@ export default {
 
 <style scoped>
   .Capture {
+    box-sizing: border-box;
     position: fixed;
     background-color: black;
   }

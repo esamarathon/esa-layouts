@@ -11,6 +11,7 @@ export = (nodecg: NodeCG) => {
   require('./stream-deck-buttons');
   require('./timer');
   require('./logging');
+  require('./sponsors');
 
   return {
     obs: require('./util/obs').default,

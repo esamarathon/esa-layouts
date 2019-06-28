@@ -16,7 +16,7 @@
 </template>
 
 <script>
-const logos = nodecg.Replicant('assets:sponsor-logos');
+const current = nodecg.Replicant('currentSponsorLogo', { persistent: false });
 
 export default {
   name: 'SponsorLogos',
@@ -24,27 +24,15 @@ export default {
     return {
       show: false,
       imgSrc: '',
-      index: 0,
     };
   },
   mounted() {
-    NodeCG.waitForReplicants(logos).then(() => {
-      if (!logos.value.length) {
-        return;
+    current.on('change', (newVal) => {
+      if (newVal) {
+        this.show = true;
+        this.imgSrc = newVal;
       }
-      this.showNextLogo();
-      setInterval(this.showNextLogo, 10000);
     });
-  },
-  methods: {
-    showNextLogo() {
-      this.show = true;
-      this.imgSrc = logos.value[this.index].url;
-      this.index += 1;
-      if (logos.value.length <= this.index) {
-        this.index = 0;
-      }
-    },
   },
 };
 </script>

@@ -8,3 +8,16 @@ body {
   padding: 0;
   background-image: url('../background.png');
 }
+
+.BorderTop {
+  border-top: solid #ffbd16 3px;
+}
+.BorderRight {
+  border-right: solid #ffbd16 3px;
+}
+.BorderBottom {
+  border-bottom: solid #ffbd16 3px;
+}
+.BorderLeft {
+  border-left: solid #ffbd16 3px;
+}

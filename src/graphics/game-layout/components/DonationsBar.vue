@@ -57,11 +57,12 @@ export default {
 
   #DonationsBar > .Header {
     font-size: 24px;
-    background-color: indigo;
+    background-color: #6314a9;
     height: 100%;
     text-align: center;
     line-height: 100%;
     padding: 0 15px;
+    border-right: solid 3px white;
   }
 
   #DonationsBar > #DonationsContainer {
@@ -69,5 +70,9 @@ export default {
     white-space: nowrap;
     overflow: hidden;
     justify-content: flex-start;
+  }
+
+  #DonationsBar >>> .DonationBox:nth-of-type(n+2) {
+    margin-left: 3px;
   }
 </style>

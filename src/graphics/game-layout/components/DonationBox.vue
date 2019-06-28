@@ -1,7 +1,6 @@
 <template>
   <div
-    id="DonationBox"
-    class="FlexContainer"
+    class="DonationBox FlexContainer"
     :style="css"
   >
     {{ name }} - ${{ amount }}
@@ -30,7 +29,7 @@ export default {
   },
   created() {
     // Choose a random colour when created (colours need editing).
-    const colours = ['red', 'blue', 'orange', 'purple'];
+    const colours = ['#405a9b', '#5573be', '#6b83c2', '#1c4cc5'];
     const rand = colours[Math.floor(Math.random() * colours.length)];
     this.css['background-color'] = rand;
   },
@@ -40,10 +39,9 @@ export default {
 <style scoped>
   @import url('./FlexContainer.css');
 
-  #DonationBox {
+  .DonationBox {
     height: 100%;
     padding: 0 15px;
     font-size: 30px;
-    border-left: 3px solid white;
   }
 </style>

@@ -47,7 +47,7 @@ export default {
         this.textColor.color = '#b7b7b7';
         break;
       case 'finished':
-        this.textColor.color = '#39b0f6';
+        this.textColor.color = '#ffbd16';
       }
 
       // Backup timer (see below).

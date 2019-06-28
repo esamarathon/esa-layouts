@@ -20,18 +20,24 @@
     </info-storage-box>
 
     <!-- Information Storage (below game, left) -->
-    <info-storage-box id="InfoStorageBox2">
+    <info-storage-box
+      id="InfoStorageBox2"
+      class="BorderLeft"
+    >
       <game-name></game-name>
       <game-extra-info></game-extra-info>
     </info-storage-box>
 
     <!-- Information Storage (below game, right) -->
-    <info-storage-box id="InfoStorageBox3">
+    <info-storage-box
+      id="InfoStorageBox3"
+      class="BorderLeft"
+    >
       <timer></timer>
     </info-storage-box>
 
     <!-- Donations Bar -->
-    <donations-bar></donations-bar>
+    <donations-bar class="BorderTop"></donations-bar>
   </div>
 </template>
 
@@ -92,7 +98,7 @@ export default {
   }
 
   #InfoStorageBox2 {
-    margin: 0;
+    justify-content: center;
     left: 533px;
     top: 780px;
     width: 1000px;
@@ -100,21 +106,13 @@ export default {
   }
 
   #InfoStorageBox3 {
-    margin: 0;
-    padding: 0 0 0 5px;
     left: 1533px;
     top: 780px;
     width: 387px;
     height: 160px;
   }
 
-  #GameNameBox {
-    margin: 0;
-    flex: 1;
-  }
-
   #TimerBox {
-    margin: 0;
     height: 100%;
   }
 </style>

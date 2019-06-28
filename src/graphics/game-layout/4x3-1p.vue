@@ -16,14 +16,19 @@
     <info-storage-box>
       <player-container :team-id="0"></player-container>
       <commentators></commentators>
-      <game-name></game-name>
-      <game-extra-info></game-extra-info>
-      <timer></timer>
+      <div
+        id="GameInfo"
+        class="BorderBottom"
+      >
+        <game-name></game-name>
+        <game-extra-info></game-extra-info>
+        <timer></timer>
+      </div>
       <sponsor-logos></sponsor-logos>
     </info-storage-box>
 
     <!-- Donations Bar -->
-    <donations-bar></donations-bar>
+    <donations-bar class="BorderLeft"></donations-bar>
   </div>
 </template>
 
@@ -81,5 +86,15 @@ export default {
     top: 380px;
     width: 668px;
     height: 620px;
+  }
+
+  #GameInfo {
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  #TimerBox {
+    margin-top: -0.07em;
   }
 </style>

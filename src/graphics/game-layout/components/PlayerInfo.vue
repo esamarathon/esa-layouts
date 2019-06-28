@@ -100,6 +100,8 @@ export default {
   @import url('./FlexContainer.css');
 
   .PlayerInfoBox {
+    background-color: #ffbd16;
+    color: black;
     padding: 7px;
     font-weight: 500;
     font-size: 30px;
@@ -136,7 +138,7 @@ export default {
 
   .PlayerInfoBox > .Flag > img {
     position: absolute;
-    border: 2px solid white;
+    border: 2px solid black;
     height: calc(100% - 4px);
   }
 

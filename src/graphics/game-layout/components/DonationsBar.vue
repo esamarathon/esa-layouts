@@ -50,6 +50,7 @@ export default {
   @import url('./FlexContainer.css');
 
   #DonationsBar {
+    box-sizing: border-box;
     position: fixed;
     justify-content: flex-start;
   }
@@ -61,7 +62,6 @@ export default {
     text-align: center;
     line-height: 100%;
     padding: 0 15px;
-    border-left: 3px solid white;
   }
 
   #DonationsBar > #DonationsContainer {

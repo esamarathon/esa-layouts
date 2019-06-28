@@ -89,13 +89,8 @@ export default {
 
   #TimerBox {
     font-weight: 500;
-    margin-top: 5px;
     font-size: 100px;
-    line-height: 90%;
-    padding: 15px;
-    padding-top: 8px; /* Numbers are strange and this makes it look better. */
     transition: 1s;
-    height: 110px;
   }
 
   /* Each character in the timer is in a span; setting width so the numbers appear monospaced. */

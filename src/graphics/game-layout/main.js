@@ -1,7 +1,7 @@
 import SpeedcontrolUtil from 'speedcontrol-util';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import * as clip from '../_misc/clip';
+import * as Clip from '../_misc/clip';
 import * as Layouts from './layout-list';
 
 Vue.use(VueRouter);
@@ -34,6 +34,7 @@ Vue.prototype.$sc.runDataActiveRun.on('change', () => {
 const routes = [
   { name: '4:3 1 Player', path: '/4x3-1p', component: Layouts.L_4x3_1p },
   { name: '16:9 1 Player', path: '/16x9-1p', component: Layouts.L_16x9_1p },
+  { name: 'GBA 1 Player', path: '/GBA-1p', component: Layouts.L_GBA_1p },
   { path: '*', redirect: '/4x3-1p' },
 ];
 
@@ -56,11 +57,11 @@ function layoutChanged(route) {
       [sizes.x, sizes.bottom],
       [sizes.right, sizes.bottom],
     ];
-    coordsArr.push(clip.sortBoxCoor(coords));
+    coordsArr.push(Clip.sortBoxCoor(coords));
   });
 
-  const css = clip.outputCss(
-    clip.makeCoors(1920, 1080, coordsArr),
+  const css = Clip.outputCss(
+    Clip.makeCoors(1920, 1080, coordsArr),
   );
   document.getElementById('Background').style = css;
 }

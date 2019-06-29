@@ -10,5 +10,3 @@
 **/*.ts
 
 src/extension/**/*.js
-graphics/**/*.js
-graphics/**/*.html

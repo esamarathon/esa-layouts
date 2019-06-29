@@ -37,8 +37,8 @@ export default {
   #CommentatorsBox {
     font-size: 25px;
     font-weight: 400;
-    background-color: rgba(0, 0, 0, 0.3);
-    height: 40px;
+    background-color: #ffb70075;
+    padding: 5px;
   }
 
   #CommHeader {

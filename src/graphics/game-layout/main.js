@@ -7,7 +7,7 @@ import * as Layouts from './layout-list';
 Vue.use(VueRouter);
 Vue.prototype.$sc = new SpeedcontrolUtil(nodecg);
 const layouts = nodecg.Replicant('layouts', { persistent: false }); // schema this!
-const currentLayout = nodecg.Replicant('currentLayout', { persistent: false }); // schema this!
+const currentLayout = nodecg.Replicant('currentLayout'); // schema this!
 // eslint-disable-next-line import/prefer-default-export
 export const serverBus = new Vue();
 

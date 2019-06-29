@@ -16,7 +16,7 @@
 </template>
 
 <script>
-const currentLayout = nodecg.Replicant('currentLayout', { persistent: false });
+const currentLayout = nodecg.Replicant('currentLayout');
 const layouts = nodecg.Replicant('layouts', { persistent: false });
 
 export default {

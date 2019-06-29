@@ -39,3 +39,4 @@ Here's a list of previous bundles that used to fulfil the purpose of this one, w
 ### Credits
 
 * Country flags sourced from [speedrun.com](https://www.speedrun.com/).
+* [clip.ts](src/graphics/_misc/clip.ts) written by [Hoishin](https://github.com/hoishin).

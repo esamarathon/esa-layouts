@@ -1,7 +1,7 @@
 import SpeedcontrolUtil from 'speedcontrol-util';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import * as Clip from '../_misc/clip';
+import CutBackground from '../_misc/cut_bg';
 import * as Layouts from './layout-list';
 
 Vue.use(VueRouter);
@@ -45,25 +45,7 @@ const router = new VueRouter({
 // Used to send when the layout is changed and make the correct clip-path.
 function layoutChanged(route) {
   currentLayout.value = route.path;
-
-  const captureElems = document.getElementsByClassName('Capture');
-  const coordsArr = [];
-
-  Array.from(captureElems).forEach((el) => {
-    const sizes = el.getBoundingClientRect();
-    const coords = [
-      [sizes.x, sizes.y],
-      [sizes.right, sizes.y],
-      [sizes.x, sizes.bottom],
-      [sizes.right, sizes.bottom],
-    ];
-    coordsArr.push(Clip.sortBoxCoor(coords));
-  });
-
-  const css = Clip.outputCss(
-    Clip.makeCoors(1920, 1080, coordsArr),
-  );
-  document.getElementById('Background').style = css;
+  CutBackground();
 }
 
 currentLayout.on('change', (newVal) => {

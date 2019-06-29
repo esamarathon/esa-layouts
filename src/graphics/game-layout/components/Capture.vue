@@ -13,7 +13,7 @@ const captureChange = Vue.directive('captureChange', {
   inserted(el) {
     const cssID = el.id;
     const cssClass = el.classList[1]; // It *should* always be the second one.
-    const sizes = el.getClientRects();
+    const sizes = el.getBoundingClientRect();
 
     // Get the widths of all the borders to figure out the position/size without them.
     const topBorder = getComputedStyle(el).getPropertyValue('border-top-width');
@@ -21,15 +21,17 @@ const captureChange = Vue.directive('captureChange', {
     const bottomBorder = getComputedStyle(el).getPropertyValue('border-bottom-width');
     const leftBorder = getComputedStyle(el).getPropertyValue('border-left-width');
 
+    const calcSizes = {
+      x: sizes.x + parseInt(leftBorder, 0),
+      y: sizes.y + parseInt(topBorder, 0),
+      width: sizes.width - parseInt(rightBorder, 0) - parseInt(leftBorder, 0),
+      height: sizes.height - parseInt(bottomBorder, 0) - parseInt(topBorder, 0),
+    };
+
     nodecg.sendMessage('captureChange', {
       cssID,
       cssClass,
-      sizes: {
-        x: sizes[0].x + parseInt(leftBorder, 0),
-        y: sizes[0].y + parseInt(topBorder, 0),
-        width: sizes[0].width - parseInt(rightBorder, 0) - parseInt(leftBorder, 0),
-        height: sizes[0].height - parseInt(bottomBorder, 0) - parseInt(topBorder, 0),
-      },
+      sizes: calcSizes,
     });
   },
   unbind(el) {

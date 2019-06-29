@@ -1,6 +1,7 @@
 import SpeedcontrolUtil from 'speedcontrol-util';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import * as clip from '../_misc/clip';
 import * as Layouts from './layout-list';
 
 Vue.use(VueRouter);
@@ -40,10 +41,28 @@ const router = new VueRouter({
   routes,
 });
 
-// Used to send when the layout is changed.
-// Usually happens elsewhere but just in case.
+// Used to send when the layout is changed and make the correct clip-path.
 function layoutChanged(route) {
   currentLayout.value = route.path;
+
+  const captureElems = document.getElementsByClassName('Capture');
+  const coordsArr = [];
+
+  Array.from(captureElems).forEach((el) => {
+    const sizes = el.getBoundingClientRect();
+    const coords = [
+      [sizes.x, sizes.y],
+      [sizes.right, sizes.y],
+      [sizes.x, sizes.bottom],
+      [sizes.right, sizes.bottom],
+    ];
+    coordsArr.push(clip.sortBoxCoor(coords));
+  });
+
+  const css = clip.outputCss(
+    clip.makeCoors(1920, 1080, coordsArr),
+  );
+  document.getElementById('Background').style = css;
 }
 
 currentLayout.on('change', (newVal) => {
@@ -52,16 +71,18 @@ currentLayout.on('change', (newVal) => {
   }
 });
 
+router.afterEach((to, from) => {
+  if (from.name) {
+    Vue.nextTick().then(() => {
+      layoutChanged(to);
+    }).catch(() => {});
+  }
+});
+
 function setUpVueApp() {
   // eslint-disable-next-line no-unused-vars
   const app = new Vue({
     router,
-    watch: {
-      $route(to) {
-        // Happens when route is changed.
-        layoutChanged(to);
-      },
-    },
     mounted() {
       // Initial route.
       layoutChanged(this.$route);

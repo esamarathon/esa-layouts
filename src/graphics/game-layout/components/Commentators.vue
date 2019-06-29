@@ -32,7 +32,7 @@ export default {
 
 <style scoped>
   @import url('./RunInfoBox.css');
-  @import url('./FlexContainer.css');
+  @import url('../../_misc/components/FlexContainer.css');
 
   #CommentatorsBox {
     font-size: 25px;

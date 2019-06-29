@@ -38,7 +38,7 @@ export default {
 </script>
 
 <style scoped>
-  @import url('./FlexContainer.css');
+  @import url('../../_misc/components/FlexContainer.css');
 
   /* Some of these values may need moving to the layout files. */
 

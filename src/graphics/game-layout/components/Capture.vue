@@ -56,6 +56,5 @@ export default {
   .Capture {
     box-sizing: border-box;
     position: fixed;
-    background-color: black;
   }
 </style>

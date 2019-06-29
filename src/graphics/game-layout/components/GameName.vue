@@ -40,7 +40,7 @@ export default {
 
 <style scoped>
   @import url('./RunInfoBox.css');
-  @import url('./FlexContainer.css');
+  @import url('../../_misc/components/FlexContainer.css');
 
   #GameNameBox {
     font-weight: 500;

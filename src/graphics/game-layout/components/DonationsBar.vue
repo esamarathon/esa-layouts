@@ -47,7 +47,7 @@ export default {
 </script>
 
 <style scoped>
-  @import url('./FlexContainer.css');
+  @import url('../../_misc/components/FlexContainer.css');
 
   #DonationsBar {
     box-sizing: border-box;

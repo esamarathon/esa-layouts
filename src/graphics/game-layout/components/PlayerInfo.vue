@@ -39,8 +39,8 @@
 <script>
 import { serverBus } from '../main';
 
-const playerSoloImg = require('../player-solo.png');
-const twitchIconImg = require('../twitch-icon.png');
+const playerSoloImg = require('../../_misc/player-solo.png');
+const twitchIconImg = require('../../_misc/twitch-icon.png');
 
 export default {
   name: 'PlayerInfo',
@@ -97,7 +97,7 @@ export default {
 
 <style scoped>
   @import url('./RunInfoBox.css');
-  @import url('./FlexContainer.css');
+  @import url('../../_misc/components/FlexContainer.css');
 
   .PlayerInfoBox {
     background-color: #ffbd16;

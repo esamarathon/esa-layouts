@@ -36,6 +36,7 @@ const routes = [
   { name: '16:9 1 Player', path: '/16x9-1p', component: Layouts.L_16x9_1p },
   { name: 'GameBoy 1 Player', path: '/GB-1p', component: Layouts.L_GB_1p },
   { name: 'GBA 1 Player', path: '/GBA-1p', component: Layouts.L_GBA_1p },
+  { name: '3DS 1 Player', path: '/3DS-1p', component: Layouts.L_3DS_1p },
   { path: '*', redirect: '/4x3-1p' },
 ];
 

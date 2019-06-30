@@ -16,14 +16,6 @@ export default {
 </script>
 
 <style>
-  body {
-    font-family: 'Barlow Condensed', sans-serif;
-    color: white;
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-  }
-
   #app {
     position: fixed;
     width: 1920px;

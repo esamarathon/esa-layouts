@@ -2,21 +2,21 @@
 
 body {
   font-family: 'Barlow Condensed', sans-serif;
-  color: white;
+  color: var(--font-colour);
   overflow: hidden;
   margin: 0;
   padding: 0;
 }
 
 .BorderTop {
-  border-top: solid #ffbd16 3px;
+  border-top: solid var(--border-colour) 3px;
 }
 .BorderRight {
-  border-right: solid #ffbd16 3px;
+  border-right: solid var(--border-colour) 3px;
 }
 .BorderBottom {
-  border-bottom: solid #ffbd16 3px;
+  border-bottom: solid var(--border-colour) 3px;
 }
 .BorderLeft {
-  border-left: solid #ffbd16 3px;
+  border-left: solid var(--border-colour) 3px;
 }

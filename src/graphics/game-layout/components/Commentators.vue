@@ -37,7 +37,7 @@ export default {
   #CommentatorsBox {
     font-size: 25px;
     font-weight: 400;
-    background-color: #ffb70075;
+    background-color: var(--commentators-bg-colour);
     padding: 5px;
   }
 

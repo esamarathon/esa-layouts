@@ -40,14 +40,14 @@ export default {
       switch (timer.state) {
       default:
       case 'running':
-        this.textColor.color = getComputedStyle(document.documentElement).getPropertyValue('--font-colour');
+        this.textColor.color = getComputedStyle(document.documentElement).getPropertyValue('--timer-colour');
         break;
       case 'paused':
       case 'stopped':
         this.textColor.color = getComputedStyle(document.documentElement).getPropertyValue('--font-colour-secondary');
         break;
       case 'finished':
-        this.textColor.color = getComputedStyle(document.documentElement).getPropertyValue('--border-colour');
+        this.textColor.color = getComputedStyle(document.documentElement).getPropertyValue('--timer-finish-colour');
       }
 
       // Backup timer (see below).

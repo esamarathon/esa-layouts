@@ -10,6 +10,8 @@ Stuff to still move here:
   --font-colour-inverted: white; /* In some cases you might want inverted to be same as normal. */
   --icon-colour-inversion: invert(1); /* Default is black, invert for white. */
   --commentators-bg-colour: #6441a475;
+  --timer-colour: white;
+  --timer-finish-colour: #e7cf5f;
 }
 
 #Background {

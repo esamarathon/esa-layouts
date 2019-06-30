@@ -8,6 +8,11 @@ body {
   padding: 0;
 }
 
+#Background {
+  width: 1920px;
+  height: 1080px;
+}
+
 .BorderTop {
   border-top: solid var(--border-colour) 3px;
 }

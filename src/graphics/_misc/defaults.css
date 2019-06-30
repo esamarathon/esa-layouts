@@ -4,9 +4,20 @@ Stuff to still move here:
 **/
 
 :root {
-  --border-colour: #ffbd16;
+  --border-colour: #6441a4;
   --font-colour: white;
   --font-colour-secondary: #b7b7b7;
-  --font-colour-inverted: black;
-  --commentators-bg-colour: #ffb70075;
+  --font-colour-inverted: white; /* In some cases you might want inverted to be same as normal. */
+  --icon-colour-inversion: invert(1); /* Default is black, invert for white. */
+  --commentators-bg-colour: #6441a475;
+}
+
+#Background {
+  /*content: url('./background-blue.png');*/
+  background-color: #19171c;
+}
+
+#Omnibar {
+  /*background-image: url('../omnibar/background-gradient.png');*/
+  background-color: #3b2064;
 }

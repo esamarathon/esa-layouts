@@ -118,6 +118,7 @@ export default {
   .PlayerInfoBox > .PlayerIcon > img {
     height: 100%;
     position: absolute;
+    filter: var(--icon-colour-inversion);
   }
 
   .PlayerInfoBox > .PlayerName {

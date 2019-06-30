@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="Omnibar">
     <h1>{{ msg }}</h1>
   </div>
 </template>
@@ -16,11 +16,10 @@ export default {
 </script>
 
 <style>
-  #app {
+  #Omnibar {
     position: fixed;
     width: 1920px;
     height: 80px;
-    background-image: url('./background-gradient.png');
     text-align: center;
   }
 </style>

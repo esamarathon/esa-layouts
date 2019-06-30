@@ -3,7 +3,7 @@
     class="DonationBox FlexContainer"
     :style="css"
   >
-    {{ name }} - ${{ amount }}
+    <span class="Name">{{ name }}</span>&nbsp;<span class="Amount">${{ amount }}</span>
   </div>
 </template>
 
@@ -24,14 +24,35 @@ export default {
     return {
       css: {
         'background-color': 'purple',
+        color: 'white',
       },
     };
   },
   created() {
-    // Choose a random colour when created (colours need editing).
-    const colours = ['#405a9b', '#5573be', '#6b83c2', '#1c4cc5'];
-    const rand = colours[Math.floor(Math.random() * colours.length)];
-    this.css['background-color'] = rand;
+    const colours = [
+      { background: '#321c4f', text: 'white' },
+      { background: '#281643', text: 'white' },
+      { background: '#432756', text: 'white' },
+      { background: '#502f59', text: 'white' },
+      { background: '#53354d', text: 'white' },
+      { background: '#714e5a', text: 'white' },
+      { background: '#936e59', text: 'white' },
+      { background: '#d1b443', text: 'black' },
+      { background: '#fbd93f', text: 'black' },
+      { background: '#e7cf5f', text: 'black' },
+    ];
+
+    // chosen by fair dice roll.
+    // guaranteed to be random.
+    let rand = 0;
+    if (this.amount < 150) {
+      rand = Math.floor(((this.amount - 20) / 130) * colours.length);
+    } else {
+      rand = colours.length - 1;
+    }
+
+    this.css['background-color'] = colours[rand].background;
+    this.css.color = colours[rand].text;
   },
 };
 </script>
@@ -43,5 +64,14 @@ export default {
     height: 100%;
     padding: 0 15px;
     font-size: 30px;
+  }
+
+  .DonationBox > .Amount {
+    font-weight: 500;
+  }
+
+  .DonationBox > .Name {
+    font-weight: 500;
+    font-style: italic;
   }
 </style>

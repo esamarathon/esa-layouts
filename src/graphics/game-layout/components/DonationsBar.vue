@@ -4,7 +4,7 @@
     class="FlexContainer"
   >
     <div class="Header FlexContainer">
-      Latest<br>Donations
+      Donations
     </div>
     <div
       id="DonationsContainer"
@@ -28,7 +28,7 @@ export default {
     // setInterval(() => { this.addDonation('zoton2', 5); }, 2000);
     for (let i = 0; i < 15; i += 1) {
       const name = names[Math.floor(Math.random() * names.length)];
-      const amount = Math.floor(Math.random() * 90) + 10;
+      const amount = 20 + Math.floor(Math.random() * 150) + 10;
       this.addDonation(name, amount);
     }
   },
@@ -56,13 +56,13 @@ export default {
   }
 
   #DonationsBar > .Header {
-    font-size: 24px;
-    background-color: #6314a9;
+    font-size: 28px;
+    background-color: var(--border-colour);
     height: 100%;
     text-align: center;
     line-height: 100%;
     padding: 0 15px;
-    border-right: solid 3px white;
+    margin-right: 3px;
   }
 
   #DonationsBar > #DonationsContainer {

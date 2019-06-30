@@ -3,7 +3,7 @@
     class="DonationBox FlexContainer"
     :style="css"
   >
-    <span class="Name">{{ name }}</span>&nbsp;<span class="Amount">${{ amount }}</span>
+    ${{ amount }} [{{ name }}]
   </div>
 </template>
 
@@ -23,36 +23,30 @@ export default {
   data() {
     return {
       css: {
-        'background-color': 'purple',
-        color: 'white',
+        'background-color': '#301b4c',
+        color: '#f1d13f',
+        'font-weight': 500,
+        'font-size': '30px',
       },
     };
   },
   created() {
-    const colours = [
-      { background: '#321c4f', text: 'white' },
-      { background: '#281643', text: 'white' },
-      { background: '#432756', text: 'white' },
-      { background: '#502f59', text: 'white' },
-      { background: '#53354d', text: 'white' },
-      { background: '#714e5a', text: 'white' },
-      { background: '#936e59', text: 'white' },
-      { background: '#d1b443', text: 'black' },
-      { background: '#fbd93f', text: 'black' },
-      { background: '#e7cf5f', text: 'black' },
-    ];
-
-    // chosen by fair dice roll.
-    // guaranteed to be random.
-    let rand = 0;
-    if (this.amount < 150) {
-      rand = Math.floor(((this.amount - 20) / 130) * colours.length);
+    if (this.amount < 50) {
+      const shades = ['#301b4c', '#281643', '#502f59'];
+      const rand = Math.floor(Math.random() * shades.length);
+      this.css['background-color'] = shades[rand];
+    } else if (this.amount < 100 && this.amount >= 50) {
+      const shades = ['#f1d13f', '#fbd93f', '#e1c43c'];
+      const rand = Math.floor(Math.random() * shades.length);
+      this.css['background-color'] = shades[rand];
+      this.css.color = '#604054';
+      this.css['font-weight'] = 600;
     } else {
-      rand = colours.length - 1;
+      this.css['background-color'] = '#efbe00';
+      this.css.color = '#604054';
+      this.css['font-weight'] = 700;
+      this.css['font-size'] = '33px';
     }
-
-    this.css['background-color'] = colours[rand].background;
-    this.css.color = colours[rand].text;
   },
 };
 </script>
@@ -64,14 +58,5 @@ export default {
     height: 100%;
     padding: 0 15px;
     font-size: 30px;
-  }
-
-  .DonationBox > .Amount {
-    font-weight: 500;
-  }
-
-  .DonationBox > .Name {
-    font-weight: 500;
-    font-style: italic;
   }
 </style>

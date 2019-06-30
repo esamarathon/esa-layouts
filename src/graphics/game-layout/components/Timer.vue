@@ -44,7 +44,7 @@ export default {
         break;
       case 'paused':
       case 'stopped':
-        this.textColor.color = getComputedStyle(document.documentElement).getPropertyValue('--font-colour-secondary');
+        this.textColor.color = getComputedStyle(document.documentElement).getPropertyValue('--timer-paused-colour');
         break;
       case 'finished':
         this.textColor.color = getComputedStyle(document.documentElement).getPropertyValue('--timer-finish-colour');

@@ -37,7 +37,7 @@
     </info-storage-box>
 
     <!-- Donations Bar -->
-    <donations-bar class="BorderTop"></donations-bar>
+    <donations-bar></donations-bar>
   </div>
 </template>
 

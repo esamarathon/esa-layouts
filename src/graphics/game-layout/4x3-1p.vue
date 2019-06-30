@@ -3,7 +3,7 @@
     <!-- Game Captures -->
     <capture
       id="GameCapture1"
-      class="GameCapture BorderLeft BorderBottom"
+      class="GameCapture BorderLeft"
     ></capture>
 
     <!-- Camera Captures -->

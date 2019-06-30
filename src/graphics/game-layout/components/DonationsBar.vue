@@ -3,9 +3,9 @@
     id="DonationsBar"
     class="FlexContainer"
   >
-    <div class="Header FlexContainer">
+    <!--<div class="Header FlexContainer">
       Donations
-    </div>
+    </div>-->
     <div
       id="DonationsContainer"
       ref="DonationsContainer"
@@ -24,11 +24,11 @@ export default {
   name: 'DonationsBar',
   mounted() {
     // fake donations coming in for testing
-    const names = ['zoton2', 'Edenal', 'Ladaur', 'AuraBorea', 'Maral', 'trollbear', 'Planks', 'English_Ben'];
+    const names = ['zoton2', 'Edenal', 'Ladaur', 'AuraBorea', 'Maral', 'trollbear', 'Planks', 'English_Ben', 'RebelDragon95', 'KrazyRasmus'];
     // setInterval(() => { this.addDonation('zoton2', 5); }, 2000);
-    for (let i = 0; i < 15; i += 1) {
+    for (let i = 0; i < 20; i += 1) {
       const name = names[Math.floor(Math.random() * names.length)];
-      const amount = 20 + Math.floor(Math.random() * 150) + 10;
+      const amount = 20 + Math.floor(Math.random() * 80) + 10;
       this.addDonation(name, amount);
     }
   },
@@ -58,6 +58,7 @@ export default {
   #DonationsBar > .Header {
     font-size: 28px;
     background-color: var(--border-colour);
+    color: var(--font-colour-inverted);
     height: 100%;
     text-align: center;
     line-height: 100%;

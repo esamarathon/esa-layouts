@@ -43,7 +43,7 @@
     </info-storage-box>
 
     <!-- Donations Bar -->
-    <donations-bar class="BorderTop BorderLeft"></donations-bar>
+    <donations-bar class="BorderLeft"></donations-bar>
   </div>
 </template>
 

@@ -35,6 +35,7 @@ const routes = [
   { name: '4:3 1 Player', path: '/4x3-1p', component: Layouts.L_4x3_1p },
   { name: '4:3 2 Player', path: '/4x3-2p', component: Layouts.L_4x3_2p },
   { name: '16:9 1 Player', path: '/16x9-1p', component: Layouts.L_16x9_1p },
+  { name: '16:9 2 Player', path: '/16x9-2p', component: Layouts.L_16x9_2p },
   { name: 'GameBoy 1 Player', path: '/GB-1p', component: Layouts.L_GB_1p },
   { name: 'GBA 1 Player', path: '/GBA-1p', component: Layouts.L_GBA_1p },
   { name: '3DS 1 Player', path: '/3DS-1p', component: Layouts.L_3DS_1p },

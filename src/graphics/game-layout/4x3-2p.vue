@@ -16,7 +16,7 @@
       class="CameraCapture BorderTop BorderRight BorderLeft"
     ></capture>
 
-    <!-- Information Storage (right) -->
+    <!-- Information Storage (left) -->
     <info-storage-box id="InfoStorageBox1">
       <player-container
         :team-id="0"
@@ -26,7 +26,7 @@
       <sponsor-logos></sponsor-logos>
     </info-storage-box>
 
-    <!-- Information Storage (left) -->
+    <!-- Information Storage (right) -->
     <info-storage-box
       id="InfoStorageBox2"
       class=""

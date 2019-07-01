@@ -14,7 +14,7 @@
 
     <!-- Information Storage (below camera) -->
     <info-storage-box id="InfoStorageBox1">
-      <player-container :team-id="0"></player-container>
+      <player-container></player-container>
       <commentators></commentators>
       <sponsor-logos></sponsor-logos>
     </info-storage-box>

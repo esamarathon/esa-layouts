@@ -7,11 +7,11 @@
     v-if="show"
     class="PlayerInfoBox RunInfoBox FlexContainer"
   >
-    <div class="PlayerIcon">
+    <div class="currentIcon">
       <transition name="fade">
         <img
-          :key="playerIcon"
-          :src="playerIcon"
+          :key="currentIcon"
+          :src="currentIcon"
         >
       </transition>
     </div>
@@ -39,6 +39,17 @@ import { serverBus } from '../main';
 
 const playerSoloImg = require('../../_misc/player-solo.png');
 const twitchIconImg = require('../../_misc/twitch-icon.png');
+const playerImg1 = require('../../_misc/player-1.png');
+const playerImg2 = require('../../_misc/player-2.png');
+const playerImg3 = require('../../_misc/player-3.png');
+const playerImg4 = require('../../_misc/player-4.png');
+
+const playerImgNumbered = [
+  playerImg1,
+  playerImg2,
+  playerImg3,
+  playerImg4,
+];
 
 export default {
   name: 'PlayerInfo',
@@ -49,12 +60,17 @@ export default {
         return [];
       },
     },
+    playerSlot: {
+      type: Number,
+      default: -1,
+    },
   },
   data() {
     return {
       text: '',
       show: false,
       showFlag: false,
+      currentIcon: playerSoloImg,
       playerIcon: playerSoloImg,
       index: 0,
     };
@@ -65,10 +81,14 @@ export default {
       if (!show) {
         this.changePlayer();
       } else if (this.players[this.index].social.twitch) {
-        this.playerIcon = twitchIconImg;
+        this.currentIcon = twitchIconImg;
         this.text = `/${this.players[this.index].social.twitch}`;
       }
     });
+    if (this.playerSlot >= 0) {
+      this.playerIcon = playerImgNumbered[this.playerSlot];
+    }
+    this.currentIcon = this.playerIcon;
     this.changePlayer(true);
     this.show = true;
   },
@@ -87,7 +107,7 @@ export default {
       } else {
         this.showFlag = false;
       }
-      this.playerIcon = playerSoloImg;
+      this.currentIcon = this.playerIcon;
     },
   },
 };
@@ -106,14 +126,14 @@ export default {
     height: 55px;
   }
 
-  .PlayerInfoBox > .PlayerIcon {
+  .PlayerInfoBox > .currentIcon {
     height: 100%;
     width: 100px;
     text-align: left;
     position: relative;
   }
 
-  .PlayerInfoBox > .PlayerIcon > img {
+  .PlayerInfoBox > .currentIcon > img {
     height: 100%;
     position: absolute;
     filter: var(--icon-colour-inversion);

@@ -16,7 +16,7 @@ export default {
   props: {
     teamId: {
       type: Number,
-      default: 0,
+      default: -1,
     },
     single: {
       type: Boolean,
@@ -32,8 +32,9 @@ export default {
   methods: {
     updateData(data) {
       while (this.$el.firstChild && this.$el.removeChild(this.$el.firstChild));
-      if (data.teams[this.teamId]) {
-        const { players } = data.teams[this.teamId];
+      const id = (this.teamId >= 0) ? this.teamId : 0;
+      if (data.teams[id]) {
+        const { players } = data.teams[id];
         if (this.single) {
           this.addPlayer(players);
         } else {
@@ -47,6 +48,7 @@ export default {
       const instance = new PlayerInfoClass({
         propsData: {
           players: (Array.isArray(players)) ? players.slice(0) : [players],
+          playerSlot: (this.teamId >= 0) ? this.teamId : -1,
         },
       }).$mount();
       this.$el.appendChild(instance.$el);

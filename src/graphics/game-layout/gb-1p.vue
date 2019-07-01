@@ -14,7 +14,7 @@
 
     <!-- Information Storage -->
     <info-storage-box>
-      <player-container :team-id="0"></player-container>
+      <player-container></player-container>
       <commentators></commentators>
       <div
         id="InfoBox"

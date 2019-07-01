@@ -17,8 +17,8 @@ let playerShowTwitch = false;
 function rotatePlayerInfo(init) {
   if (!init) {
     playerShowTwitch = !playerShowTwitch;
+    serverBus.$emit('playerShowTwitch', playerShowTwitch);
   }
-  serverBus.$emit('playerShowTwitch', playerShowTwitch);
   if (playerShowTwitch) {
     playerShowTwitchTO = setTimeout(rotatePlayerInfo, 15000);
   } else {

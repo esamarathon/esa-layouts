@@ -1,20 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "rabbitmq": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "enable": { "type": "boolean", "default": true },
-        "protocol": { "type": "string", "default": "amqp" },
-        "hostname": { "type": "string", "default": "" },
-        "username": { "type": "string", "default": "" },
-        "password": { "type": "string", "default": "" },
-        "vhost": { "type": "string", "default": "" }
-      },
-      "required": ["protocol", "hostname", "username", "password", "vhost"]
-    }
-  },
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -33,22 +18,14 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "remote": {
-          "$ref": "#/definitions/rabbitmq",
-          "default": {
-            "enable": true,
-            "protocol": "amqps",
-            "hostname": "mq.esamarathon.com",
-            "username": "",
-            "password": "",
-            "vhost": "esa_prod"
-          }
-        },
-        "local": {
-          "$ref": "#/definitions/rabbitmq"
-        }
+        "enable": { "type": "boolean", "default": true },
+        "protocol": { "type": "string", "default": "amqps" },
+        "hostname": { "type": "string", "default": "mq.esamarathon.com" },
+        "username": { "type": "string", "default": "" },
+        "password": { "type": "string", "default": "" },
+        "vhost": { "type": "string", "default": "esa_prod" }
       },
-      "required": ["remote", "local"]
+      "required": ["protocol", "hostname", "username", "password", "vhost"]
     },
     "obs": {
       "type": "object",

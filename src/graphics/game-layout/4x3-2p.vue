@@ -18,7 +18,10 @@
 
     <!-- Information Storage (right) -->
     <info-storage-box id="InfoStorageBox1">
-      <player-container :team-id="0"></player-container>
+      <player-container
+        :team-id="0"
+        single
+      ></player-container>
       <commentators></commentators>
       <sponsor-logos></sponsor-logos>
     </info-storage-box>
@@ -28,7 +31,10 @@
       id="InfoStorageBox2"
       class=""
     >
-      <player-container :team-id="1"></player-container>
+      <player-container
+        :team-id="1"
+        single
+      ></player-container>
       <div
         id="GameInfo"
         class="FlexContainer"
@@ -124,6 +130,10 @@ export default {
     top: 955px;
     width: 711px;
     height: 45px;
+  }
+
+  #DonationsBar >>> .DonationBox {
+    padding: 0 7px;
   }
 
   #TimerBox {

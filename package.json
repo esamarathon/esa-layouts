@@ -69,7 +69,8 @@
         "name": "game-layout-override",
         "title": "Game Layout Override",
         "width": 2,
-        "file": "game-layout-override.html"
+        "file": "game-layout-override.html",
+        "workspace": "Scene Editing"
       }
     ],
     "graphics": [

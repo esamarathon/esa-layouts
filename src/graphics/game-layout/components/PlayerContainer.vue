@@ -18,6 +18,10 @@ export default {
       type: Number,
       default: 0,
     },
+    single: {
+      type: Boolean,
+      default: false,
+    },
   },
   mounted() {
     Vue.prototype.$sc.runDataActiveRun.on('change', this.updateData);
@@ -30,17 +34,19 @@ export default {
       while (this.$el.firstChild && this.$el.removeChild(this.$el.firstChild));
       if (data.teams[this.teamId]) {
         const { players } = data.teams[this.teamId];
-        players.forEach((player) => {
-          this.addPlayer(player.name, player.social.twitch, player.country);
-        });
+        if (this.single) {
+          this.addPlayer(players);
+        } else {
+          players.forEach((player) => {
+            this.addPlayer(player);
+          });
+        }
       }
     },
-    addPlayer(name, twitch, country) {
+    addPlayer(players) {
       const instance = new PlayerInfoClass({
         propsData: {
-          name,
-          twitch,
-          country,
+          players: (Array.isArray(players)) ? players.slice(0) : [players],
         },
       }).$mount();
       this.$el.appendChild(instance.$el);

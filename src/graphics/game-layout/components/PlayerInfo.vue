@@ -22,14 +22,12 @@
         </span>
       </transition>
     </div>
-    <div
-      :style="{ 'opacity' : showFlag ? 1 : 0 }"
-      class="Flag FlexContainer"
-    >
+    <div class="Flag FlexContainer">
       <transition name="fade">
         <img
-          :key="country"
-          :src="`/bundles/esa-layouts/static/flags/${country}.png`"
+          :key="players[index].country"
+          :style="{ 'visibility' : showFlag ? 'visbile' : 'hidden' }"
+          :src="`/bundles/esa-layouts/static/flags/${players[index].country}.png`"
         >
       </transition>
     </div>
@@ -45,17 +43,11 @@ const twitchIconImg = require('../../_misc/twitch-icon.png');
 export default {
   name: 'PlayerInfo',
   props: {
-    name: {
-      type: String,
-      default: '',
-    },
-    twitch: {
-      type: String,
-      default: '',
-    },
-    country: {
-      type: String,
-      default: '',
+    players: {
+      type: Array,
+      default() {
+        return [];
+      },
     },
   },
   data() {
@@ -63,34 +55,40 @@ export default {
       text: '',
       show: false,
       showFlag: false,
-      showTwitch: false,
       playerIcon: playerSoloImg,
+      index: 0,
     };
-  },
-  watch: {
-    showTwitch(show) {
-      if (show) {
-        this.playerIcon = twitchIconImg;
-        this.text = `/${this.twitch}`;
-      } else {
-        this.playerIcon = playerSoloImg;
-        this.text = this.name;
-      }
-    },
   },
   created() {
     // Listen to the main.js file for animation timing.
-    serverBus.$on('playerShowTwitch', (showTwitch) => {
-      // This doesn't need toggling if no Twitch username exist.
-      if (this.twitch) {
-        this.showTwitch = showTwitch;
+    serverBus.$on('playerShowTwitch', (show) => {
+      if (!show) {
+        this.changePlayer();
+      } else if (this.players[this.index].social.twitch) {
+        this.playerIcon = twitchIconImg;
+        this.text = `/${this.players[this.index].social.twitch}`;
       }
     });
-    this.text = this.name;
-    if (this.country) {
-      this.showFlag = true;
-    }
+    this.changePlayer(true);
     this.show = true;
+  },
+  methods: {
+    changePlayer(init) {
+      if (!init) {
+        this.index += 1;
+        if (this.index >= this.players.length) {
+          this.index = 0;
+        }
+      }
+
+      this.text = this.players[this.index].name;
+      if (this.players[this.index].country) {
+        this.showFlag = true;
+      } else {
+        this.showFlag = false;
+      }
+      this.playerIcon = playerSoloImg;
+    },
   },
 };
 </script>
@@ -138,6 +136,7 @@ export default {
   }
 
   .PlayerInfoBox > .Flag > img {
+    visibility: visible;
     position: absolute;
     border: 2px solid var(--font-colour-inverted);
     height: calc(100% - 4px);

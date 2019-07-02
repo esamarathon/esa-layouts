@@ -24,7 +24,7 @@ interface RabbitMQConfig {
 }
 
 // exchanges we need to listen/publish on.
-const ourExchange = 'speedcontrol';
+const ourExchange = 'cg';
 const theirTopics = [
   { name: 'evt-donation-total', exchange: 'tracker', key: 'donation_total.updated' },
   { name: 'donation-fully-processed', exchange: 'tracker', key: 'donation.*.fully_processed' },

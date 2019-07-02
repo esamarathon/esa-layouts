@@ -132,6 +132,10 @@ export default {
   .PlayerContainer {
     width: 580px;
   }
+  .PlayerContainer >>> .PlayerInfoBox {
+    height: 40px;
+    font-size: 25px;
+  }
 
   #PlayerContainer1, #PlayerContainer3 {
     margin-right: 88px;

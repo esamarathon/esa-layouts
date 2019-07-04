@@ -5,15 +5,12 @@ import * as nodecgApiContext from './nodecg-api-context';
 import { bundleConfig } from './nodecg-bundleconfig';
 
 interface MQEmitter extends EventEmitter {
-  // Remote
   on(event: 'evt-donation-total', listener: (data: any) => void): this;
   on(event: 'donation-fully-processed', listener: (data: any) => void): this;
   on(event: 'new-screened-tweet', listener: (data: any) => void): this;
   on(event: 'new-screened-sub', listener: (data: any) => void): this;
-
-  // Local
-  on(event: 'flagcarrier-tag-scanned', listener: (data: any) => void): this;
-  on(event: 'BigButton', listener: (data: any) => void): this;
+  on(event: 'bigbutton-tag-scanned', listener: (data: any) => void): this;
+  on(event: 'bigbutton-pressed', listener: (data: any) => void): this;
 
   on(event: string, listener: Function): this;
 }
@@ -26,135 +23,102 @@ interface RabbitMQConfig {
   vhost: string | undefined;
 }
 
-// Remote/local queues we need to listen on.
-const remoteQueues = [
-  { name: 'evt-donation-total', consume: true },
-  { name: 'donation-fully-processed', consume: true },
-  { name: 'new-screened-tweet', consume: true },
-  { name: 'new-screened-sub', consume: true },
-  { name: 'obs-scene-change', consume: false },
-  { name: 'sc-timer-change', consume: false },
-  { name: 'sc-active-run-change', consume: false },
-];
-const localQueues = [
-  { name: 'flagcarrier-tag-scanned', consume: true },
-  { name: 'BigButton', consume: true },
+// exchanges we need to listen/publish on.
+const ourExchange = 'cg';
+const theirTopics = [
+  { name: 'evt-donation-total', exchange: 'tracker', key: 'donation_total.updated' },
+  { name: 'donation-fully-processed', exchange: 'tracker', key: 'donation.*.fully_processed' },
+  { name: 'new-screened-tweet', exchange: 'moderation', key: 'screened.tweet' },
+  { name: 'new-screened-sub', exchange: 'moderation', key: 'screened.sub' },
+  { name: 'bigbutton-tag-scanned', exchange: 'bigbutton', key: '*.tag_scanned' },
+  { name: 'bigbutton-pressed', exchange: 'bigbutton', key: '*.pressed' },
 ];
 
 const nodecg = nodecgApiContext.get();
 export const mq: MQEmitter = new EventEmitter();
-let remoteChan: amqpConnectionManager.ChannelWrapper;
-let localChan: amqpConnectionManager.ChannelWrapper;
+let mqChan: amqpConnectionManager.ChannelWrapper;
 
-if (bundleConfig.rabbitmq.local.enable || bundleConfig.rabbitmq.remote.enable) {
-  nodecg.log.info('Setting up RabbitMQ connection(s).');
-
-  if (bundleConfig.rabbitmq.remote.enable) {
-    remoteInit();
-  }
-  if (bundleConfig.rabbitmq.local.enable) {
-    localInit();
-  }
+if (bundleConfig.rabbitmq.enable) {
+  nodecg.log.info('Setting up RabbitMQ connection.');
+  rabbitInit();
 }
 
 // Remote connection.
-function remoteInit() {
+function rabbitInit() {
   const remoteConn = amqpConnectionManager.connect(
-    [buildMQURL(nodecg.bundleConfig.rabbitmq.remote)],
+    [buildMQURL(nodecg.bundleConfig.rabbitmq)],
   ).on('connect', () => {
-    nodecg.log.info('RabbitMQ remote server connection successful.');
+    nodecg.log.info('RabbitMQ server connection successful.');
   }).on('disconnect', (err) => {
-    nodecg.log.warn('RabbitMQ remote server connection closed.');
+    nodecg.log.warn('RabbitMQ server connection closed.');
     if (err) {
-      nodecg.log.warn('RabbitMQ remote server connection error.');
-      nodecg.log.debug('RabbitMQ remote server connection error:', err);
+      nodecg.log.warn('RabbitMQ server connection error.');
+      nodecg.log.debug('RabbitMQ server connection error:', err);
     }
   });
-  remoteChan = remoteConn.createChannel({
+  mqChan = remoteConn.createChannel({
     json: false,
     setup(chan: amqplib.ConfirmChannel) {
-      listenToQueues(chan);
-      nodecg.log.info('RabbitMQ remote server connection listening to queues.');
+      setupMqChannel(chan);
+      nodecg.log.info('RabbitMQ server connection listening for messages.');
       return;
     },
   }).on('error', (err) => {
-    nodecg.log.warn('RabbitMQ remote server channel error.');
-    nodecg.log.debug('RabbitMQ remote server connection error:', err);
+    nodecg.log.warn('RabbitMQ server channel error.');
+    nodecg.log.debug('RabbitMQ server connection error:', err);
   });
 }
 
-// Local connection.
-function localInit() {
-  const localConn = amqpConnectionManager.connect([
-    buildMQURL(nodecg.bundleConfig.rabbitmq.local)],
-  ).on('connect', () => {
-    nodecg.log.info('RabbitMQ local server connection successful.');
-  }).on('disconnect', (err) => {
-    nodecg.log.warn('RabbitMQ local server connection closed.');
-    if (err) {
-      nodecg.log.warn('RabbitMQ local server connection error.');
-      nodecg.log.debug('RabbitMQ local server connection error:', err);
-    }
-  });
-  localChan = localConn.createChannel({
-    json: false,
-    setup(chan: amqplib.ConfirmChannel) {
-      listenToQueues(chan, true);
-      nodecg.log.info('RabbitMQ local server connection listening to queues.');
-      return;
-    },
-  }).on('error', (err) => {
-    nodecg.log.warn('RabbitMQ local server channel error.');
-    nodecg.log.debug('RabbitMQ local server connection error:', err);
-  });
-}
+function setupMqChannel(chan: amqplib.ConfirmChannel) {
+  chan.assertExchange(ourExchange, 'topic', { durable: true, autoDelete: true });
 
-function listenToQueues(chan: amqplib.ConfirmChannel, local?: boolean) {
-  const queues = local ? localQueues : remoteQueues;
-  for (const queue of queues) {
-    chan.assertQueue(queue.name);
-    if (!queue.consume) {
-      // We don't need to consume everything.
-      continue;
-    }
-    chan.consume(queue.name, (msg) => {
+  for (const topic of theirTopics) {
+    let queueName: string = `speedcontrol-${topic.name}`;
+
+    chan.assertExchange(topic.exchange, 'topic', { durable: true, autoDelete: true });
+
+    chan.assertQueue(queueName, { durable: true, expires: 4 * 60 * 60 * 1000 });
+    chan.bindQueue(queueName, topic.exchange, topic.key);
+
+    chan.consume(queueName, (msg) => {
       if (msg && msg.content) {
-        mq.emit(queue.name, JSON.parse(msg.content.toString()));
+        mq.emit(topic.name, JSON.parse(msg.content.toString()));
         nodecg.log.debug(
-          `Received message from RabbitMQ queue [${local ? 'local' : 'remote'}] %s: %s`,
-          queue, msg.content.toString(),
+          `Received message from RabbitMQ %s: %s`,
+          topic.name, msg.content.toString(),
         );
+        chan.ack(msg as amqplib.Message);
       }
     }, { // tslint:disable-next-line: align
-      noAck: true,
+      noAck: false,
     });
   }
 }
 
 /**
  * Used to send messages over the RabbitMQ connections.
- * @param queue The name of the queue this message should be sent to.
+ * @param key The routing key this message will be published with (topic exchange)
  * @param data The data that should be sent in this message.
- * @param local If this should be sent to the local server (instead of the remove server).
  */
-export function send(queue: string, data: object, local?: boolean) {
-  const chan = local ? localChan : remoteChan;
-  if (!chan) {
+export function send(key: string, data: object) {
+  if (!mqChan) {
     nodecg.log.debug('Could not send MQ message as channel is not defined.');
     return;
   }
-  chan.sendToQueue(
-    queue,
+  mqChan.publish(
+    ourExchange,
+    key,
     Buffer.from(JSON.stringify(data)),
+    { persistent: true }
   );
-  queueLog(queue, JSON.stringify(data));
+  queueLog(key, JSON.stringify(data));
 }
 
 // Used for debugging.
-function queueLog(queue: string, data: string, local?: boolean) {
+function queueLog(key: string, data: string) {
   nodecg.log.debug(
-    `Sending message to RabbitMQ queue [${local ? 'local' : 'remote'}] %s: %s`,
-    queue, data,
+    `Sending message to RabbitMQ with routing key %s: %s`,
+    key, data,
   );
 }
 

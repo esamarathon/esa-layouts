@@ -7,6 +7,8 @@ import { send as mqSend } from './util/rabbitmq';
 const nodecg = nodecgApiContext.get();
 const sc = new speedcontrolUtil(nodecg);
 
+const obsGameLayoutScene = bundleConfig.obs.names.scenes.gameLayout;
+
 let currentScene: string;
 let lastScene: string;
 
@@ -55,47 +57,55 @@ sc.on('timerEdited', () => logTimerChange('edited'));
 sc.on('timerTeamFinished', id => logTimerChange('team_finished', id));
 sc.on('timerTeamUndidFinish', id => logTimerChange('team_undid_finish', id));
 
+function getTimeInfo() {
+  let nowDate: Date = new Date();
+
+  return {
+    unix: nowDate.getTime() / 1000,
+    iso: nowDate.toISOString(),
+  };
+}
+
 function logSceneSwitch(name: string, action: string = 'start') {
+  let isGameScene: boolean = name == obsGameLayoutScene;
+  let safeName: string = name.replace(/[. ]/g, '_');
+  let gameSceneSuffix: string = isGameScene ? '.gamescene' : '';
+
   mqSend(
-    'obs-scene-change',
+    `obs.scene.${safeName}.${evtString}${gameSceneSuffix}`,
     {
       action,
       event: evtString,
       scene: name,
-      time: {
-        unix: (new Date()).getTime() / 1000,
-        iso: (new Date()).toISOString(),
-      },
+      gameScene: isGameScene,
+      time: getTimeInfo(),
     },
   );
 }
 
 function logTimerChange(desc: string, teamID?: number) {
+  let hasTeam: boolean = teamID !== undefined && teamID >= 0;
+  let teamFix: string = hasTeam ? `team.${teamID}.` : '';
+
   mqSend(
-    'sc-timer-change',
+    `timer.${teamFix}${desc}`,
     {
       desc,
       event: evtString,
-      teamID: (teamID !== undefined && teamID >= 0) ? teamID : undefined,
+      teamID: hasTeam ? teamID : undefined,
       timer: sc.timer.value,
-      time: {
-        unix: (new Date()).getTime() / 1000,
-        iso: (new Date()).toISOString(),
-      },
+      time: getTimeInfo(),
     },
   );
 }
 
 function logRunChange() {
   mqSend(
-    'sc-active-run-change',
+    'run.changed',
     {
       event: evtString,
       run: sc.getCurrentRun(),
-      time: {
-        unix: (new Date()).getTime() / 1000,
-        iso: (new Date()).toISOString(),
-      },
+      time: getTimeInfo(),
     },
   );
 }

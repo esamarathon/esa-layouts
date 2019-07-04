@@ -13,15 +13,12 @@ export interface Configschema {
     debug: boolean;
   };
   rabbitmq: {
-    remote: {
-      enable?: boolean;
-      protocol: string;
-      hostname: string;
-      username: string;
-      password: string;
-      vhost: string;
-    };
-    local: Rabbitmq;
+    enable?: boolean;
+    protocol: string;
+    hostname: string;
+    username: string;
+    password: string;
+    vhost: string;
   };
   obs: {
     enable: boolean;
@@ -64,12 +61,4 @@ export interface Configschema {
     port: number;
     volume: number;
   };
-}
-export interface Rabbitmq {
-  enable?: boolean;
-  protocol: string;
-  hostname: string;
-  username: string;
-  password: string;
-  vhost: string;
 }

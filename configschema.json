@@ -25,7 +25,7 @@
         "password": { "type": "string", "default": "" },
         "vhost": { "type": "string", "default": "esa_prod" }
       },
-      "required": ["protocol", "hostname", "username", "password", "vhost"]
+      "required": ["enable", "protocol", "hostname", "username", "password", "vhost"]
     },
     "obs": {
       "type": "object",

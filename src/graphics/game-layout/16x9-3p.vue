@@ -3,46 +3,66 @@
     <!-- Game Captures -->
     <capture
       id="GameCapture1"
-      class="GameCapture BorderRight"
+      class="GameCapture BorderRight BorderBottom"
     ></capture>
     <capture
       id="GameCapture2"
-      class="GameCapture"
+      class="GameCapture BorderLeft BorderBottom"
+    ></capture>
+    <capture
+      id="GameCapture3"
+      class="GameCapture BorderLeft"
     ></capture>
 
     <!-- Camera Captures -->
     <capture
       id="CameraCapture1"
-      class="CameraCapture BorderTop BorderRight BorderLeft"
+      class="CameraCapture BorderRight"
     ></capture>
 
-    <!-- Information Storage (left) -->
-    <info-storage-box id="InfoStorageBox1">
+    <!-- Players -->
+    <info-storage-box
+      id="InfoStorageBox1"
+      class="PlayerStorageBox"
+    >
       <player-container
         :team-id="0"
         single
       ></player-container>
-      <commentators></commentators>
-      <sponsor-logos></sponsor-logos>
     </info-storage-box>
-
-    <!-- Information Storage (right) -->
     <info-storage-box
       id="InfoStorageBox2"
-      class=""
+      class="PlayerStorageBox"
     >
       <player-container
         :team-id="1"
         single
       ></player-container>
+    </info-storage-box>
+    <info-storage-box
+      id="InfoStorageBox3"
+      class="PlayerStorageBox"
+    >
+      <player-container
+        :team-id="2"
+        single
+      ></player-container>
+    </info-storage-box>
+
+    <info-storage-box id="InfoStorageBox4">
       <div
         id="GameInfo"
-        class="FlexContainer"
+        class="FlexContainer BorderBottom"
       >
         <game-name></game-name>
         <game-extra-info></game-extra-info>
         <timer></timer>
       </div>
+      <sponsor-logos></sponsor-logos>
+    </info-storage-box>
+
+    <info-storage-box id="InfoStorageBox5">
+      <commentators></commentators>
     </info-storage-box>
 
     <!-- Donations Bar -->
@@ -79,38 +99,65 @@ export default {
 
 <style scoped>
   .GameCapture {
-    width: 960px;
-    height: 720px;
+    width: 765px;
+    height: 430px;
   }
 
   #GameCapture1 {
     left: 0px;
-    top: 0px;
+    top: 40px;
   }
   #GameCapture2 {
-    left: 960px;
-    top: 0px;
+    left: 1155px;
+    top: 40px;
+  }
+  #GameCapture3 {
+    left: 1155px;
+    top: 470px;
   }
 
   #CameraCapture1 {
-    left: 711px;
-    top: 720px;
-    width: 498px;
-    height: 280px;
+    left: 0px;
+    top: 470px;
+    width: 765px;
+    height: 470px;
   }
 
+  /* Players */
+  .PlayerStorageBox {
+    width: 765px;
+    height: 40px;
+  }
+  .PlayerContainer >>> .PlayerInfoBox {
+    height: 40px;
+    font-size: 25px;
+  }
   #InfoStorageBox1 {
     left: 0px;
-    top: 720px;
-    width: 711px;
-    height: 280px;
+    top: 0px;
+  }
+  #InfoStorageBox2 {
+    left: 1155px;
+    top: 0px;
+  }
+  #InfoStorageBox3 {
+    left: 1155px;
+    top: 900px;
   }
 
-  #InfoStorageBox2 {
-    left: 1209px;
-    top: 720px;
-    width: 711px;
-    height: 235px;
+  #InfoStorageBox4 {
+    left: 765px;
+    top: 0px;
+    width: 390px;
+    height: 940px;
+  }
+
+  #InfoStorageBox5 {
+    flex-direction: column-reverse;
+    left: 0px;
+    top: 470px;
+    width: 765px;
+    height: 470px;
   }
 
   #GameInfo {
@@ -118,27 +165,18 @@ export default {
     flex-direction: column;
     flex: 1;
   }
-
-  #GameNameBox {
-    font-size: 35px;
+  #GameNameBox, #GameExtraInfoBox {
+    white-space: normal;
   }
-  #GameExtraInfoBox {
-    font-size: 30px;
+  #SponsorLogoBox {
+    height: 550px;
+    flex: unset;
   }
 
   #DonationsBar {
-    left: 1209px;
-    top: 955px;
-    width: 711px;
-    height: 45px;
-  }
-
-  #DonationsBar >>> .DonationBox {
-    padding: 0 7px;
-  }
-
-  #TimerBox {
-    margin-top: -0.09em;
-    font-size: 80px;
+    left: 0px;
+    top: 940px;
+    width: 1920px;
+    height: 60px;
   }
 </style>

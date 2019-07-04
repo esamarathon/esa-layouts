@@ -114,6 +114,7 @@ export default {
   }
 
   #GameInfo {
+    width: 100%;
     flex-direction: column;
     flex: 1;
   }

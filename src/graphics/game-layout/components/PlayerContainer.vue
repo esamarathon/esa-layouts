@@ -49,6 +49,7 @@ export default {
         propsData: {
           players: (Array.isArray(players)) ? players.slice(0) : [players],
           playerSlot: (this.teamId >= 0) ? this.teamId : -1,
+          teamId: this.teamId,
         },
       }).$mount();
       this.$el.appendChild(instance.$el);

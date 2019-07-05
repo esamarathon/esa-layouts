@@ -1,6 +1,6 @@
 <!-- This component handles displays each player's information within a team. -->
 <!-- This is added dynamically to the PlayerContainer component when we need to show this. -->
-<!-- It is initialised with the info, it does not listen to nodecg-speedcontrol itself. -->
+<!-- It is initialised with most info, it only listens to nodecg-speedcontrol for finish times. -->
 
 <template>
   <div
@@ -17,9 +17,17 @@
     </div>
     <div class="PlayerName FlexContainer">
       <transition name="fade">
-        <span :key="text">
-          {{ text }}
-        </span>
+        <div :key="text">
+          <transition name="fade">
+            <span
+              :key="finishTime"
+              class="FinishTime"
+            >
+              {{ finishTime }}
+            </span>
+          </transition>
+          <span>{{ text }}</span>
+        </div>
       </transition>
     </div>
     <div class="Flag FlexContainer">
@@ -35,6 +43,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import { serverBus } from '../main';
 
 const playerSoloImg = require('../../_misc/player-solo.png');
@@ -64,6 +73,10 @@ export default {
       type: Number,
       default: -1,
     },
+    teamId: {
+      type: Number,
+      default: 0,
+    },
   },
   data() {
     return {
@@ -73,6 +86,7 @@ export default {
       currentIcon: playerSoloImg,
       playerIcon: playerSoloImg,
       index: 0,
+      finishTime: '',
     };
   },
   created() {
@@ -92,6 +106,12 @@ export default {
     this.changePlayer(true);
     this.show = true;
   },
+  mounted() {
+    Vue.prototype.$sc.timer.on('change', this.updateFinishTimer);
+  },
+  destroyed() {
+    Vue.prototype.$sc.timer.removeListener('change', this.updateFinishTimer);
+  },
   methods: {
     changePlayer(init) {
       if (!init) {
@@ -108,6 +128,13 @@ export default {
         this.showFlag = false;
       }
       this.currentIcon = this.playerIcon;
+    },
+    updateFinishTimer(timer) {
+      if (this.playerSlot >= 0 && timer.teamFinishTimes[this.teamId]) {
+        this.finishTime = `[${timer.teamFinishTimes[this.teamId].time}]`;
+      } else {
+        this.finishTime = '';
+      }
     },
   },
 };
@@ -144,8 +171,12 @@ export default {
     position: relative;
   }
 
-  .PlayerInfoBox > .PlayerName > span {
+  .PlayerInfoBox > .PlayerName > div {
     position: absolute;
+  }
+
+  .PlayerInfoBox > .PlayerName > div > .FinishTime {
+    color: var(--font-colour);
   }
 
   .PlayerInfoBox > .Flag {

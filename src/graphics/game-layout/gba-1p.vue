@@ -40,7 +40,7 @@ import GameExtraInfo from './components/GameExtraInfo.vue';
 import GameName from './components/GameName.vue';
 import InfoStorageBox from './components/InfoStorageBox.vue';
 import PlayerContainer from './components/PlayerContainer.vue';
-import SponsorLogos from './components/SponsorLogos.vue';
+import SponsorLogos from '../_misc/components/SponsorLogos.vue';
 import Timer from './components/Timer.vue';
 
 export default {

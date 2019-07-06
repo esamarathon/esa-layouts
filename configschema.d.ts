@@ -13,7 +13,7 @@ export interface Configschema {
     debug: boolean;
   };
   rabbitmq: {
-    enable?: boolean;
+    enable: boolean;
     protocol: string;
     hostname: string;
     username: string;

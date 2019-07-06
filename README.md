@@ -16,6 +16,14 @@ Included with this bundle is a plugin for the Elgato Stream Deck software that c
 
 This bundle integrates with our RabbitMQ server; the settings for this need to be set in the bundle's config.
 
+### FlagCarrier Configuration
+
+You will need to install the [speedcontrol-flagcarrier](https://github.com/speedcontrol/speedcontrol-flagcarrier) bundle to use this part, along with using one of the FlagCarrier applications to set them.
+
+**Hosts (the ones on camera):**
+- group_id: `hosts`
+- positions: `left,midleft,middle,midright,right`
+
 ## Other Information
 
 ### Previous Bundles

@@ -17,10 +17,10 @@
 
 <script>
 const currentLayout = nodecg.Replicant('currentLayout');
-const layouts = nodecg.Replicant('layouts', { persistent: false });
+const layouts = nodecg.Replicant('layouts');
 
 export default {
-  name: 'App',
+  name: 'GameLayoutOverride',
   data() {
     return {
       show: false,

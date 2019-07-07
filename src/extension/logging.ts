@@ -6,11 +6,13 @@ import { send as mqSend } from './util/rabbitmq';
 
 const nodecg = nodecgApiContext.get();
 const sc = new speedcontrolUtil(nodecg);
+const currentSponsorLogo = nodecg.Replicant<string>('currentSponsorLogo', { persistent: false });
 
 const obsGameLayoutScene = bundleConfig.obs.names.scenes.gameLayout;
 
 let currentScene: string;
 let lastScene: string;
+let lastSponsorLogo: string | undefined;
 
 // This will always be set due to there being a default in the configschema,
 // make sure that is correct!
@@ -30,6 +32,7 @@ obs.on('ConnectionOpened', async () => {
       logSceneSwitch(lastScene, 'end');
     }
     logSceneSwitch(currentScene, 'start');
+    checkSponsorLogoVisibility();
   } catch (err) {
     // silently drop it for now
   }
@@ -43,6 +46,7 @@ obs.on('SwitchScenes', (data) => {
   }
   logSceneSwitch(lastScene, 'end');
   logSceneSwitch(currentScene, 'start');
+  checkSponsorLogoVisibility();
 });
 
 // Currently also logs when the server starts up, do we need to change that?
@@ -56,6 +60,24 @@ sc.on('timerReset', () => logTimerChange('reset'));
 sc.on('timerEdited', () => logTimerChange('edited'));
 sc.on('timerTeamFinished', id => logTimerChange('team_finished', id));
 sc.on('timerTeamUndidFinish', id => logTimerChange('team_undid_finish', id));
+
+// Currently check to see if the sponsor logo is visible is "hardcoded" to certain layouts.
+function checkSponsorLogoVisibility() {
+  if (currentScene) {
+    const scene = currentScene.toLowerCase();
+    const intermission = bundleConfig.obs.names.scenes.intermission.toLowerCase();
+    const gameLayout = bundleConfig.obs.names.scenes.gameLayout.toLowerCase();
+    if ((scene.includes(intermission) && !scene.includes('hosts')) || scene.includes(gameLayout)) {
+      logSponsorLogoChange(currentSponsorLogo.value);
+    } else {
+      logSponsorLogoChange();
+    }
+  }
+}
+
+currentSponsorLogo.on('change', () => {
+  checkSponsorLogoVisibility();
+});
 
 function getTimeInfo() {
   const nowDate: Date = new Date();
@@ -108,4 +130,21 @@ function logRunChange() {
       time: getTimeInfo(),
     },
   );
+}
+
+function logSponsorLogoChange(logo?: string) {
+  // Don't log if the logo didn't actually change.
+  if (lastSponsorLogo !== logo) {
+    lastSponsorLogo = logo;
+    console.log(logo);
+
+    mqSend(
+      'sponsor.logo.changed',
+      {
+        logo,
+        event: evtString,
+        time: getTimeInfo(),
+      },
+    );
+  }
 }

@@ -28,6 +28,7 @@ export interface Configschema {
       scenes: {
         ads: string;
         gameLayout: string;
+        intermission: string;
       };
       groups: {
         gameCapture1: string;

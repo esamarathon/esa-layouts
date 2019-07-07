@@ -1,6 +1,6 @@
 import * as nodecgApiContext from './util/nodecg-api-context';
 
-// This stuff is done in an extension so it survives reloads/layout changes.
+// This stuff is done in an extension so it survives reloads/game layout changes.
 
 const nodecg = nodecgApiContext.get();
 const logos = nodecg.Replicant<any[]>('assets:sponsor-logos');

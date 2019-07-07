@@ -43,9 +43,10 @@
               "additionalProperties": false,
               "properties": {
                 "ads": { "type": "string", "default": "Intermission (ads)" },
-                "gameLayout": { "type": "string", "default": "Game Layout" }
+                "gameLayout": { "type": "string", "default": "Game Layout" },
+                "intermission": { "type": "string", "default": "Intermission" }
               },
-              "required": ["ads", "gameLayout"]
+              "required": ["ads", "gameLayout", "intermission"]
             },
             "groups": {
               "type": "object",

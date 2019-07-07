@@ -136,7 +136,6 @@ function logSponsorLogoChange(logo?: string) {
   // Don't log if the logo didn't actually change.
   if (lastSponsorLogo !== logo) {
     lastSponsorLogo = logo;
-    console.log(logo);
 
     mqSend(
       'sponsor.logo.changed',

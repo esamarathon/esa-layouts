@@ -2,9 +2,12 @@
   <div>
     <logo-dropdown></logo-dropdown>
     <br>
-    <!-- eslint-disable -->
-    <div ref="logoSettingsList"></div>
-    <!-- eslint-enable -->
+    <logo-settings
+      v-for="(logo, index) in rotation"
+      :key="logo.sum"
+      :data="logo"
+      :index="index"
+    ></logo-settings>
     <br>
     <button @click="debugClear">
       DEBUG CLEAR
@@ -13,41 +16,30 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import LogoDropdown from './components/LogoDropdown.vue';
 import LogoSettings from './components/LogoSettings.vue';
 
-const rotation = nodecg.Replicant('sponsorLogoRotation');
-const LogoSettingsClass = Vue.extend(LogoSettings);
+const rotationRep = nodecg.Replicant('sponsorLogoRotation');
 
 export default {
   name: 'SponsorLogoControl',
   components: {
     LogoDropdown,
+    LogoSettings,
+  },
+  data() {
+    return {
+      rotation: [],
+    };
   },
   mounted() {
-    rotation.on('change', (newVal) => {
-      while (
-        this.$refs.logoSettingsList.firstChild
-        && this.$refs.logoSettingsList.removeChild(this.$refs.logoSettingsList.firstChild)
-      );
-      newVal.forEach((logo, index) => {
-        this.addLogoSettings(logo, index);
-      });
+    rotationRep.on('change', (newVal) => {
+      this.rotation = newVal.slice(0);
     });
   },
   methods: {
     debugClear() {
-      rotation.value = [];
-    },
-    addLogoSettings(data, index) {
-      const instance = new LogoSettingsClass({
-        propsData: {
-          index,
-          data,
-        },
-      }).$mount();
-      this.$refs.logoSettingsList.appendChild(instance.$el);
+      nodecg.sendMessage('clearSponsorLogoRotation');
     },
   },
 };

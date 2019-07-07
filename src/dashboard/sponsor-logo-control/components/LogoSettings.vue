@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'LogoDropdown',
+  name: 'LogoSettings',
   props: {
     index: {
       type: Number,

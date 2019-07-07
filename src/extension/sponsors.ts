@@ -16,6 +16,10 @@ rotation.on('change', (newVal) => {
   }
 });
 
+nodecg.listenFor('clearSponsorLogoRotation', () => {
+  rotation.value.length = 0;
+});
+
 function showNextLogo() {
   // If no logos to show, just wait 10s then check again.
   // (should recode this to be smarter)

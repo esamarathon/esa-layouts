@@ -70,7 +70,8 @@
         "title": "Game Layout Override",
         "width": 2,
         "file": "game-layout-override.html",
-        "workspace": "Scene Editing"
+        "workspace": "Scene Editing",
+        "headerColor": "#c49215"
       },
       {
         "name": "sponsor-logo-control",
@@ -78,6 +79,7 @@
         "width": 3,
         "file": "sponsor-logo-control.html",
         "workspace": "Scene Editing",
+        "headerColor": "#c49215"
       }
     ],
     "graphics": [

@@ -58,7 +58,7 @@ sc.on('timerTeamFinished', id => logTimerChange('team_finished', id));
 sc.on('timerTeamUndidFinish', id => logTimerChange('team_undid_finish', id));
 
 function getTimeInfo() {
-  let nowDate: Date = new Date();
+  const nowDate: Date = new Date();
 
   return {
     unix: nowDate.getTime() / 1000,
@@ -67,9 +67,9 @@ function getTimeInfo() {
 }
 
 function logSceneSwitch(name: string, action: string = 'start') {
-  let isGameScene: boolean = name == obsGameLayoutScene;
-  let safeName: string = name.replace(/[. ]/g, '_');
-  let gameSceneSuffix: string = isGameScene ? '.gamescene' : '';
+  const isGameScene: boolean = name === obsGameLayoutScene;
+  const safeName: string = name.replace(/[. ]/g, '_');
+  const gameSceneSuffix: string = isGameScene ? '.gamescene' : '';
 
   mqSend(
     `obs.scene.${safeName}.${evtString}${gameSceneSuffix}`,
@@ -84,8 +84,8 @@ function logSceneSwitch(name: string, action: string = 'start') {
 }
 
 function logTimerChange(desc: string, teamID?: number) {
-  let hasTeam: boolean = teamID !== undefined && teamID >= 0;
-  let teamFix: string = hasTeam ? `team.${teamID}.` : '';
+  const hasTeam: boolean = teamID !== undefined && teamID >= 0;
+  const teamFix: string = hasTeam ? `team.${teamID}.` : '';
 
   mqSend(
     `timer.${teamFix}${desc}`,

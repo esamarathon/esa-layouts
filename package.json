@@ -71,6 +71,13 @@
         "width": 2,
         "file": "game-layout-override.html",
         "workspace": "Scene Editing"
+      },
+      {
+        "name": "sponsor-logo-control",
+        "title": "Sponsor Logo Control",
+        "width": 3,
+        "file": "sponsor-logo-control.html",
+        "workspace": "Scene Editing",
       }
     ],
     "graphics": [

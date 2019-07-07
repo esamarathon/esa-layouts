@@ -1,25 +1,33 @@
+import { SponsorLogoRotation } from '../../schemas';
 import * as nodecgApiContext from './util/nodecg-api-context';
 
 // This stuff is done in an extension so it survives reloads/game layout changes.
 
 const nodecg = nodecgApiContext.get();
-const logos = nodecg.Replicant<any[]>('assets:sponsor-logos');
 const current = nodecg.Replicant('currentSponsorLogo', { persistent: false });
+const rotation = nodecg.Replicant<SponsorLogoRotation>('sponsorLogoRotation');
 let index = 0;
 let init = false;
 
-logos.on('change', (newVal) => {
+rotation.on('change', (newVal) => {
   if (newVal && newVal.length && !init) {
     showNextLogo();
-    setInterval(showNextLogo, 10000);
     init = true;
   }
 });
 
 function showNextLogo() {
-  current.value = logos.value[index].url;
+  // If no logos to show, just wait 10s then check again.
+  // (should recode this to be smarter)
+  if (!rotation.value.length) {
+    setTimeout(showNextLogo, 10000);
+    return;
+  }
+
+  current.value = rotation.value[index].url;
+  setTimeout(showNextLogo, rotation.value[index].seconds * 1000);
   index += 1;
-  if (logos.value.length <= index) {
+  if (rotation.value.length <= index) {
     index = 0;
   }
 }

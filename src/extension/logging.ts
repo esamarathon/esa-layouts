@@ -13,6 +13,7 @@ const obsGameLayoutScene = bundleConfig.obs.names.scenes.gameLayout;
 let currentScene: string;
 let lastScene: string;
 let lastSponsorLogo: string | undefined;
+let streaming: boolean = false;
 
 // This will always be set due to there being a default in the configschema,
 // make sure that is correct!
@@ -22,9 +23,11 @@ const evtString = (
 
 obs.on('ConnectionOpened', async () => {
   try {
-    const data = await obs.send('GetCurrentScene');
+    const sceneData = await obs.send('GetCurrentScene');
+    const streamingData = await obs.send('GetStreamingStatus');
+    streaming = streamingData.streaming;
     lastScene = currentScene;
-    currentScene = data.name;
+    currentScene = sceneData.name;
     if (lastScene === currentScene) {
       return;
     }
@@ -49,6 +52,15 @@ obs.on('SwitchScenes', (data) => {
   checkSponsorLogoVisibility();
 });
 
+obs.on('StreamStarted', () => {
+  streaming = true;
+  checkSponsorLogoVisibility();
+});
+obs.on('StreamStopped', () => {
+  streaming = false;
+  logSponsorLogoChange();
+});
+
 // Currently also logs when the server starts up, do we need to change that?
 sc.runDataActiveRun.on('change', logRunChange);
 
@@ -63,7 +75,7 @@ sc.on('timerTeamUndidFinish', id => logTimerChange('team_undid_finish', id));
 
 // Currently check to see if the sponsor logo is visible is "hardcoded" to certain layouts.
 function checkSponsorLogoVisibility() {
-  if (currentScene) {
+  if (streaming && currentScene) {
     const scene = currentScene.toLowerCase();
     const intermission = bundleConfig.obs.names.scenes.intermission.toLowerCase();
     const gameLayout = bundleConfig.obs.names.scenes.gameLayout.toLowerCase();

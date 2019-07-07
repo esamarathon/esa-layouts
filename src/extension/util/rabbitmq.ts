@@ -73,7 +73,7 @@ function setupMqChannel(chan: amqplib.ConfirmChannel) {
   chan.assertExchange(ourExchange, 'topic', { durable: true, autoDelete: true });
 
   for (const topic of theirTopics) {
-    let queueName: string = `speedcontrol-${topic.name}`;
+    const queueName: string = `speedcontrol-${topic.name}`;
 
     chan.assertExchange(topic.exchange, 'topic', { durable: true, autoDelete: true });
 
@@ -84,7 +84,7 @@ function setupMqChannel(chan: amqplib.ConfirmChannel) {
       if (msg && msg.content) {
         mq.emit(topic.name, JSON.parse(msg.content.toString()));
         nodecg.log.debug(
-          `Received message from RabbitMQ %s: %s`,
+          'Received message from RabbitMQ %s: %s',
           topic.name, msg.content.toString(),
         );
         chan.ack(msg as amqplib.Message);
@@ -109,7 +109,7 @@ export function send(key: string, data: object) {
     ourExchange,
     key,
     Buffer.from(JSON.stringify(data)),
-    { persistent: true }
+    { persistent: true },
   );
   queueLog(key, JSON.stringify(data));
 }
@@ -117,7 +117,7 @@ export function send(key: string, data: object) {
 // Used for debugging.
 function queueLog(key: string, data: string) {
   nodecg.log.debug(
-    `Sending message to RabbitMQ with routing key %s: %s`,
+    'Sending message to RabbitMQ with routing key %s: %s',
     key, data,
   );
 }

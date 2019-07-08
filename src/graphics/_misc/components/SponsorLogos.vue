@@ -30,7 +30,7 @@ export default {
     current.on('change', (newVal) => {
       if (newVal) {
         this.show = true;
-        this.imgSrc = newVal;
+        this.imgSrc = newVal.url;
       }
     });
   },

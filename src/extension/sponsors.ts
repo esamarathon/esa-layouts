@@ -1,10 +1,11 @@
-import { SponsorLogoRotation } from '../../schemas';
+import clone from 'clone';
+import { CurrentSponsorLogo, SponsorLogoRotation } from '../../schemas';
 import * as nodecgApiContext from './util/nodecg-api-context';
 
 // This stuff is done in an extension so it survives reloads/game layout changes.
 
 const nodecg = nodecgApiContext.get();
-const current = nodecg.Replicant('currentSponsorLogo', { persistent: false });
+const current = nodecg.Replicant<CurrentSponsorLogo>('currentSponsorLogo', { persistent: false });
 const rotation = nodecg.Replicant<SponsorLogoRotation>('sponsorLogoRotation');
 let index = 0;
 let init = false;
@@ -29,7 +30,7 @@ function showNextLogo() {
     return;
   }
 
-  current.value = rotation.value[index].url;
+  current.value = clone(rotation.value[index]);
   setTimeout(showNextLogo, rotation.value[index].seconds * 1000);
   index += 1;
   if (rotation.value.length <= index) {

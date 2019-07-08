@@ -16,7 +16,10 @@
     <button @click="clear">
       Clear
     </button>
-    <button @click="save">
+    <button
+      :disabled="disableSave"
+      @click="save"
+    >
       Save
     </button>
   </div>
@@ -39,6 +42,7 @@ export default {
     return {
       show: false,
       rotation: [],
+      disableSave: false,
     };
   },
   mounted() {
@@ -53,6 +57,8 @@ export default {
     },
     save() {
       rotationRep.value = clone(this.rotation);
+      this.disableSave = true;
+      setTimeout(() => { this.disableSave = false; }, 2000);
     },
     addLogo(data) {
       this.rotation.push(data);

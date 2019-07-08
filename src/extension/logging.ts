@@ -1,4 +1,5 @@
 import speedcontrolUtil from 'speedcontrol-util';
+import { CurrentSponsorLogo } from '../../schemas';
 import * as nodecgApiContext from './util/nodecg-api-context';
 import { bundleConfig } from './util/nodecg-bundleconfig';
 import obs from './util/obs';
@@ -6,13 +7,16 @@ import { send as mqSend } from './util/rabbitmq';
 
 const nodecg = nodecgApiContext.get();
 const sc = new speedcontrolUtil(nodecg);
-const currentSponsorLogo = nodecg.Replicant<string>('currentSponsorLogo', { persistent: false });
+const currentSponsorLogo = nodecg.Replicant<CurrentSponsorLogo>(
+  'currentSponsorLogo',
+  { persistent: false },
+);
 
 const obsGameLayoutScene = bundleConfig.obs.names.scenes.gameLayout;
 
 let currentScene: string;
 let lastScene: string;
-let lastSponsorLogo: string | undefined;
+let lastSponsorLogoSum: string | undefined;
 let streaming: boolean = false;
 
 // This will always be set due to there being a default in the configschema,
@@ -144,15 +148,17 @@ function logRunChange() {
   );
 }
 
-function logSponsorLogoChange(logo?: string) {
+function logSponsorLogoChange(logo?: CurrentSponsorLogo) {
   // Don't log if the logo didn't actually change.
-  if (lastSponsorLogo !== logo) {
-    lastSponsorLogo = logo;
+  const currentSum = (logo) ? logo.sum : undefined;
+  if (lastSponsorLogoSum !== currentSum) {
+    lastSponsorLogoSum = currentSum;
 
     mqSend(
       'sponsor.logo.changed',
       {
-        logo,
+        logo: (logo) ? logo.name : undefined,
+        length: (logo) ? logo.seconds : undefined,
         event: evtString,
         time: getTimeInfo(),
       },

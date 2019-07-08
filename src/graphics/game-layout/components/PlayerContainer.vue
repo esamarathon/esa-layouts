@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import clone from 'clone';
 import Vue from 'vue';
 import PlayerInfo from './PlayerInfo.vue';
 
@@ -48,9 +49,9 @@ export default {
       this.players.length = 0;
       const id = (this.teamId >= 0) ? this.teamId : 0;
       if (data.teams[id]) {
-        const { players } = data.teams[id];
+        const players = clone(data.teams[id].players);
         if (this.single) {
-          this.players.push(players.slice(0));
+          this.players.push(players);
         } else {
           players.forEach(player => this.players.push([player]));
         }

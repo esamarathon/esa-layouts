@@ -6,10 +6,11 @@
     <br>
     <logo-settings
       v-for="(logo, index) in rotation"
-      :key="index"
+      :key="`${index}${logo.seconds}${logo.sum}`"
       :data="logo"
       :index="index"
       @update-seconds="updateSeconds"
+      @change-logo="changeLogo"
     ></logo-settings>
     <br>
     <button @click="clear">
@@ -58,6 +59,29 @@ export default {
     },
     updateSeconds(index, seconds) {
       this.rotation[index].seconds = seconds;
+    },
+    changeLogo(index, action) {
+      switch (action) {
+      case 'del':
+        this.rotation.splice(index, 1);
+        break;
+      case 'up':
+        if (index <= 0) {
+          break;
+        } else {
+          this.rotation.splice(index - 1, 0, this.rotation.splice(index, 1)[0]);
+        }
+        break;
+      case 'down':
+        if (index >= this.rotation.length - 1) {
+          break;
+        } else {
+          this.rotation.splice(index + 1, 0, this.rotation.splice(index, 1)[0]);
+        }
+        break;
+      default:
+        break;
+      }
     },
   },
 };

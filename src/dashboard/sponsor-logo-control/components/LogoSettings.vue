@@ -1,5 +1,14 @@
 <template>
   <div class="LogoSettings">
+    <button @click="del">
+      ☓
+    </button>
+    <button @click="up">
+      ▲
+    </button>
+    <button @click="down">
+      ▼
+    </button>
     <span>
       {{ data.name }}
     </span>
@@ -34,6 +43,17 @@ export default {
   watch: {
     seconds(val) {
       this.$emit('update-seconds', this.index, val);
+    },
+  },
+  methods: {
+    del() {
+      this.$emit('change-logo', this.index, 'del');
+    },
+    up() {
+      this.$emit('change-logo', this.index, 'up');
+    },
+    down() {
+      this.$emit('change-logo', this.index, 'down');
     },
   },
 };

@@ -2,17 +2,26 @@
 <!-- It listens to the data from nodecg-speedcontrol and creates PlayerInfo component instances. -->
 
 <template>
-  <div class="PlayerContainer" />
+  <div class="PlayerContainer">
+    <player-info
+      v-for="(player, index) in players"
+      :key="index"
+      :players="player"
+      :player-slot="(teamId >= 0) ? teamId : -1"
+      :team-id="teamId"
+    ></player-info>
+  </div>
 </template>
 
 <script>
 import Vue from 'vue';
 import PlayerInfo from './PlayerInfo.vue';
 
-const PlayerInfoClass = Vue.extend(PlayerInfo);
-
 export default {
   name: 'PlayerContainer',
+  components: {
+    PlayerInfo,
+  },
   props: {
     teamId: {
       type: Number,
@@ -23,6 +32,11 @@ export default {
       default: false,
     },
   },
+  data() {
+    return {
+      players: [],
+    };
+  },
   mounted() {
     Vue.prototype.$sc.runDataActiveRun.on('change', this.updateData);
   },
@@ -31,28 +45,16 @@ export default {
   },
   methods: {
     updateData(data) {
-      while (this.$el.firstChild && this.$el.removeChild(this.$el.firstChild));
+      this.players.length = 0;
       const id = (this.teamId >= 0) ? this.teamId : 0;
       if (data.teams[id]) {
         const { players } = data.teams[id];
         if (this.single) {
-          this.addPlayer(players);
+          this.players.push(players.slice(0));
         } else {
-          players.forEach((player) => {
-            this.addPlayer(player);
-          });
+          players.forEach(player => this.players.push([player]));
         }
       }
-    },
-    addPlayer(players) {
-      const instance = new PlayerInfoClass({
-        propsData: {
-          players: (Array.isArray(players)) ? players.slice(0) : [players],
-          playerSlot: (this.teamId >= 0) ? this.teamId : -1,
-          teamId: this.teamId,
-        },
-      }).$mount();
-      this.$el.appendChild(instance.$el);
     },
   },
 };

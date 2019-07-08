@@ -33,7 +33,7 @@ export default {
   },
   watch: {
     seconds(val) {
-      // seconds updated
+      this.$emit('update-seconds', this.index, val);
     },
   },
 };

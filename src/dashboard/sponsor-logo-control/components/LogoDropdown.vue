@@ -22,8 +22,9 @@
 </template>
 
 <script>
+import clone from 'clone';
+
 const logos = nodecg.Replicant('assets:sponsor-logos');
-const rotation = nodecg.Replicant('sponsorLogoRotation');
 
 export default {
   name: 'LogoDropdown',
@@ -52,7 +53,7 @@ export default {
       if (this.selected) {
         const logoData = this.getDataBySum(this.selected);
         logoData.seconds = 60;
-        rotation.value.push(logoData);
+        this.$emit('add-logo', logoData);
       }
     },
     getDataBySum(sum) {
@@ -63,7 +64,7 @@ export default {
         }
       });
       if (data) {
-        data = JSON.parse(JSON.stringify(data));
+        data = clone(data);
       }
       return data;
     },

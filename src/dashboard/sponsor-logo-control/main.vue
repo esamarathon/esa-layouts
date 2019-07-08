@@ -1,21 +1,28 @@
 <template>
-  <div>
-    <logo-dropdown></logo-dropdown>
+  <div v-if="show">
+    <logo-dropdown
+      @add-logo="addLogo"
+    ></logo-dropdown>
     <br>
     <logo-settings
       v-for="(logo, index) in rotation"
-      :key="logo.sum"
+      :key="index"
       :data="logo"
       :index="index"
+      @update-seconds="updateSeconds"
     ></logo-settings>
     <br>
-    <button @click="debugClear">
-      DEBUG CLEAR
+    <button @click="clear">
+      Clear
+    </button>
+    <button @click="save">
+      Save
     </button>
   </div>
 </template>
 
 <script>
+import clone from 'clone';
 import LogoDropdown from './components/LogoDropdown.vue';
 import LogoSettings from './components/LogoSettings.vue';
 
@@ -29,17 +36,28 @@ export default {
   },
   data() {
     return {
+      show: false,
       rotation: [],
     };
   },
   mounted() {
-    rotationRep.on('change', (newVal) => {
-      this.rotation = newVal.slice(0);
+    NodeCG.waitForReplicants(rotationRep).then(() => {
+      this.rotation = clone(rotationRep.value);
+      this.show = true;
     });
   },
   methods: {
-    debugClear() {
-      nodecg.sendMessage('clearSponsorLogoRotation');
+    clear() {
+      this.rotation = [];
+    },
+    save() {
+      rotationRep.value = clone(this.rotation);
+    },
+    addLogo(data) {
+      this.rotation.push(data);
+    },
+    updateSeconds(index, seconds) {
+      this.rotation[index].seconds = seconds;
     },
   },
 };

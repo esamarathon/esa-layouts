@@ -12,7 +12,7 @@
 </template>
 
 <script>
-// import Vue from 'vue';
+const commentatorsRep = nodecg.Replicant('commentators');
 
 export default {
   name: 'Commentators',
@@ -20,12 +20,19 @@ export default {
     return {
       text: '',
       show: false,
+      commentators: [],
     };
   },
-  mounted() {
-    this.show = true;
-    this.text = 'zoton2, Planks, EdenalSDA, Ladaur';
-    // will need to access values here
+  watch: {
+    commentators(val) {
+      this.show = val.length > 0;
+      this.text = val.join(', ');
+    },
+  },
+  created() {
+    commentatorsRep.on('change', (newVal) => {
+      this.commentators = newVal.slice(0);
+    });
   },
 };
 </script>

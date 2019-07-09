@@ -82,6 +82,13 @@
         "file": "sponsor-logo-control.html",
         "workspace": "Scene Editing",
         "headerColor": "#c49215"
+      },
+      {
+        "name": "commentators",
+        "title": "Commentators",
+        "width": 2,
+        "file": "commentators.html",
+        "headerColor": "#c49215"
       }
     ],
     "graphics": [

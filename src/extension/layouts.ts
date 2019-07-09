@@ -1,11 +1,14 @@
 import speedcontrolUtil from 'speedcontrol-util';
+import { Commentators } from '../../schemas';
 import * as nodecgApiContext from './util/nodecg-api-context';
 import { bundleConfig } from './util/nodecg-bundleconfig';
 import obs from './util/obs';
+import { mq } from './util/rabbitmq';
 
 const nodecg = nodecgApiContext.get();
 const sc = new speedcontrolUtil(nodecg);
 const currentScene = nodecg.Replicant<string>('currentOBSScene'); // temp
+const commentators = nodecg.Replicant<Commentators>('commentators');
 
 interface GameLayoutChange {
   cssID: string;
@@ -116,5 +119,21 @@ nodecg.listenFor('captureChange', async (opts: GameLayoutChange) => {
         cropleft: crop.left,
       });
     } catch (err) {}
+  }
+});
+
+// When someone scans in on one of the big timer buttons.
+// Currently only used for commentators.
+mq.on('bigbutton-tag-scanned', (data) => {
+  const name = data.user.displayName;
+  if (!commentators.value.includes(name)) {
+    commentators.value.push(name);
+  }
+});
+
+// Reset the commentators when the run changes.
+sc.runDataActiveRun.on('change', (newVal, oldVal) => {
+  if (!newVal || (newVal && oldVal && oldVal.id !== newVal.id)) {
+    commentators.value.length = 0;
   }
 });

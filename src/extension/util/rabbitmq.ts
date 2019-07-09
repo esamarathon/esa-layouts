@@ -123,19 +123,23 @@ function queueLog(key: string, data: string) {
 }
 
 function buildMQURL(rabbitmq: RabbitMQConfig) {
-  let url = `${rabbitmq.protocol}://`;
-  if (rabbitmq.username) {
-    url = `${url}${rabbitmq.username}`;
-  }
-  if (rabbitmq.username && rabbitmq.password) {
-    url = `${url}:`;
-  }
-  if (rabbitmq.password) {
-    url = `${url}${rabbitmq.password}`;
-  }
-  url = `${url}@${rabbitmq.hostname}`;
+  let url = `${rabbitmq.protocol}://${rabbitmq.hostname}`;
+
   if (rabbitmq.vhost) {
-    url = `${url}/${rabbitmq.vhost}`;
+    url += `/${rabbitmq.vhost}`;
   }
-  return url;
+
+  if (!rabbitmq.username && !rabbitmq.password)
+  {
+    return { url: url } as any;
+  }
+  else
+  {
+    return { url: url, connectionOptions: {
+      credentials: amqplib.credentials.plain(
+        rabbitmq.username as string,
+        rabbitmq.password as string
+      )
+    }} as any;
+  }
 }

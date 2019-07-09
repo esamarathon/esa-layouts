@@ -131,15 +131,15 @@ function buildMQURL(rabbitmq: RabbitMQConfig) {
 
   if (!rabbitmq.username && !rabbitmq.password)
   {
-    return { url: url } as any;
+    return { url } as any;
   }
   else
   {
-    return { url: url, connectionOptions: {
+    return { url, connectionOptions: {
       credentials: amqplib.credentials.plain(
         rabbitmq.username as string,
-        rabbitmq.password as string
-      )
+        rabbitmq.password as string,
+      ),
     }} as any;
   }
 }

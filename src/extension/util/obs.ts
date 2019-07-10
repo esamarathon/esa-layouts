@@ -62,12 +62,10 @@ class OBSUtility extends obsWebsocketJs {
         item,
         visible: true,
         'scene-name': scene,
-        // @ts-ignore: See above.
         position: {
           x: position.x,
           y: position.y,
         },
-        // @ts-ignore: See above.
         bounds: {
           x: position.width,
           y: position.height,
@@ -78,6 +76,7 @@ class OBSUtility extends obsWebsocketJs {
           bottom: position.cropbottom,
           left: position.cropleft,
         },
+        scale: {},
       }).then(resolve).catch((err: { error: any; }) => {
         nodecg.log.warn(`Cannot setup OBS item [${scene}: ${item}]: ${err.error}`);
         reject();

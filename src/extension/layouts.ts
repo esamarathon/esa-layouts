@@ -133,7 +133,8 @@ mq.on('bigbutton-tag-scanned', (data) => {
 
 // Reset the commentators when the run changes.
 sc.runDataActiveRun.on('change', (newVal, oldVal) => {
-  if (!newVal || (newVal && oldVal && oldVal.id !== newVal.id)) {
+  if ((!newVal || (newVal && oldVal && oldVal.id !== newVal.id))
+  && currentScene.value !== obsGameLayoutScene) {
     commentators.value.length = 0;
   }
 });

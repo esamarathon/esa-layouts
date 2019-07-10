@@ -129,17 +129,14 @@ function buildMQURL(rabbitmq: RabbitMQConfig) {
     url += `/${rabbitmq.vhost}`;
   }
 
-  if (!rabbitmq.username && !rabbitmq.password)
-  {
+  if (!rabbitmq.username && !rabbitmq.password) {
     return { url } as any;
   }
-  else
-  {
-    return { url, connectionOptions: {
-      credentials: amqplib.credentials.plain(
+
+  return { url, connectionOptions: {
+    credentials: amqplib.credentials.plain(
         rabbitmq.username as string,
         rabbitmq.password as string,
       ),
-    }} as any;
-  }
+  }} as any;
 }

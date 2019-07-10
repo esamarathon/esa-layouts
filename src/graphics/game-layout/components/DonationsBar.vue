@@ -41,6 +41,7 @@ export default {
   @import url('../../_misc/components/FlexContainer.css');
 
   #DonationsBar {
+    background-color: rgba(0, 0, 0, 0.15);
     position: fixed;
     box-sizing: border-box;
     white-space: nowrap;

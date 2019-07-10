@@ -96,7 +96,7 @@ export default {
     left: 660px;
     top: 540px;
     width: 600px;
-    height: 415px;
+    height: 400px;
   }
 
   #InfoStorageBox1 {

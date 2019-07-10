@@ -4,5 +4,6 @@ export * from './currentSponsorLogo';
 export * from './donationTotal';
 export * from './emotes';
 export * from './prizes';
+export * from './recentDonations';
 export * from './songData';
 export * from './sponsorLogoRotation';

@@ -1,47 +1,38 @@
 <template>
-  <div
+  <transition-group
     id="DonationsBar"
+    name="donations"
+    tag="div"
     class="FlexContainer"
   >
-    <!--<div class="Header FlexContainer">
-      Donations
-    </div>-->
-    <div
-      id="DonationsContainer"
-      ref="DonationsContainer"
-      class="FlexContainer"
-    />
-  </div>
+    <donation-box
+      v-for="donation in donations"
+      :key="donation._id"
+      :name="donation.donor_visiblename"
+      :amount="donation.amount"
+    ></donation-box>
+  </transition-group>
 </template>
 
 <script>
-import Vue from 'vue';
 import DonationBox from './DonationBox.vue';
 
-const DonationBoxClass = Vue.extend(DonationBox);
+const recentDonations = nodecg.Replicant('recentDonations');
 
 export default {
   name: 'DonationsBar',
-  mounted() {
-    // fake donations coming in for testing
-    const names = ['zoton2', 'Edenal', 'Ladaur', 'AuraBorea', 'Maral', 'trollbear', 'Planks', 'English_Ben', 'RebelDragon95', 'KrazyRasmus'];
-    // setInterval(() => { this.addDonation('zoton2', 5); }, 2000);
-    for (let i = 0; i < 20; i += 1) {
-      const name = names[Math.floor(Math.random() * names.length)];
-      const amount = 20 + Math.floor(Math.random() * 80) + 10;
-      this.addDonation(name, amount);
-    }
+  components: {
+    DonationBox,
   },
-  methods: {
-    addDonation(name, amount) {
-      const instance = new DonationBoxClass({
-        propsData: {
-          name,
-          amount,
-        },
-      }).$mount();
-      this.$refs.DonationsContainer.prepend(instance.$el);
-    },
+  data() {
+    return {
+      donations: [],
+    };
+  },
+  created() {
+    recentDonations.on('change', (newVal) => {
+      this.donations = newVal.slice(0);
+    });
   },
 };
 </script>
@@ -50,24 +41,8 @@ export default {
   @import url('../../_misc/components/FlexContainer.css');
 
   #DonationsBar {
-    box-sizing: border-box;
     position: fixed;
-    justify-content: flex-start;
-  }
-
-  #DonationsBar > .Header {
-    font-size: 28px;
-    background-color: var(--border-colour);
-    color: var(--font-colour-inverted);
-    height: 100%;
-    text-align: center;
-    line-height: 100%;
-    padding: 0 15px;
-    margin-right: 3px;
-  }
-
-  #DonationsBar > #DonationsContainer {
-    height: 100%;
+    box-sizing: border-box;
     white-space: nowrap;
     overflow: hidden;
     justify-content: flex-start;
@@ -75,5 +50,34 @@ export default {
 
   #DonationsBar >>> .DonationBox:nth-of-type(n+2) {
     margin-left: 3px;
+  }
+
+  /* Put some fancy text behind donation bar. */
+  #DonationsBar:after {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    content: "Donations";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    box-sizing: border-box;
+    padding-right: 20px;
+    font-size: 30px;
+    color: grey;
+  }
+
+  .donations-enter-active {
+    transition: all 1s;
+  }
+  .donations-enter, .donations-leave-to {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  .donations-move {
+    transition: transform 1s;
   }
 </style>

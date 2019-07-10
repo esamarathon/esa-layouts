@@ -1,5 +1,5 @@
 import needle from 'needle';
-import { DonationTotal } from '../../schemas';
+import { DonationTotal, RecentDonations } from '../../schemas';
 import * as nodecgApiContext from './util/nodecg-api-context';
 import { bundleConfig } from './util/nodecg-bundleconfig';
 import { mq } from './util/rabbitmq';
@@ -21,6 +21,7 @@ export let cookies: needle.NeedleResponse['cookies'];
 export const eventInfo: EventInfo[] = [];
 export const streamEvtNumber = bundleConfig.tracker.streamEvent - 1;
 const donationTotal = nodecg.Replicant<DonationTotal>('donationTotal');
+const recentDonations = nodecg.Replicant<RecentDonations>('recentDonations');
 
 init();
 async function init() {
@@ -160,6 +161,10 @@ mq.on('donation-fully-processed', (data) => {
   if (data.event === eventInfo[streamEvtNumber].short) {
     nodecg.log.info('Received new donation with ID %s.', data._id);
     nodecg.sendMessage('newDonation', data);
+    if (data.amount >= 20) {
+      recentDonations.value.unshift(data);
+      recentDonations.value.length = Math.min(recentDonations.value.length, 20);
+    }
   }
 });
 

@@ -46,6 +46,7 @@ export default {
   @import url('../../../_misc/components/FlexContainer.css');
 
   #GenericMessage {
+    font-weight: 500;
     font-size: var(--font-size);
     text-align: center;
   }

@@ -16,7 +16,8 @@ export default {
   name: 'Total',
   data() {
     return {
-      total: 0,
+      init: false,
+      total: -1,
       tweenedTotal: 0,
     };
   },
@@ -27,7 +28,12 @@ export default {
   },
   watch: {
     total(val) {
-      TweenLite.to(this.$data, 1, { tweenedTotal: val });
+      if (this.init) {
+        TweenLite.to(this.$data, 1, { tweenedTotal: val });
+      } else {
+        this.tweenedTotal = this.total;
+        this.init = true;
+      }
     },
   },
   mounted() {

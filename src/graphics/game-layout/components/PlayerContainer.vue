@@ -5,7 +5,7 @@
   <div class="PlayerContainer">
     <player-info
       v-for="(player, index) in players"
-      :key="index"
+      :key="`${index}${Date.now()}`"
       :players="player"
       :player-slot="(teamId >= 0) ? teamId : -1"
       :team-id="teamId"

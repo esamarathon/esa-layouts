@@ -1,21 +1,16 @@
 <template>
   <div
-    id="Logo"
+    id="RotatingLogos"
     class="FlexContainer"
   >
-    <img
-      id="Cube"
-      src="../logo.png"
-    >
     <div
-      id="TextWrapper"
+      id="LogoWrapper"
       class="FlexContainer"
     >
       <transition name="fade">
         <img
-          :key="text"
-          :src="text"
-          class="Text"
+          :key="logo"
+          :src="logo"
         >
       </transition>
     </div>
@@ -26,23 +21,23 @@
 // eslint-disable-next-line import/extensions
 import { serverBus } from '../main.js';
 
-const normal = require('../normal-logo-text.png');
-const hashtag = require('../hashtag-logo-text.png');
+const hashtag = require('../hashtag-text.png');
+const afLogo = require('../alzheimerfonden.png');
 
 export default {
-  name: 'Logo',
+  name: 'RotatingLogos',
   data() {
     return {
-      text: normal,
+      logo: hashtag,
       ticks: 0,
     };
   },
   mounted() {
     serverBus.$on('tick', () => {
       this.ticks += 1;
-      if ((this.text === normal && this.ticks === this.calcTicks(50))
-      || (this.text === hashtag && this.ticks === this.calcTicks(10))) {
-        this.text = (this.text === normal) ? hashtag : normal;
+      if ((this.logo === afLogo && this.ticks === this.calcTicks(15))
+      || (this.logo === hashtag && this.ticks === this.calcTicks(45))) {
+        this.logo = (this.logo === afLogo) ? hashtag : afLogo;
         this.ticks = 0;
       }
     });
@@ -58,22 +53,20 @@ export default {
 <style scoped>
   @import url('../../_misc/components/FlexContainer.css');
 
-  #Logo {
+  #RotatingLogos {
     height: 100%;
-    padding: 0 7px;
-  }
-
-  #Cube {
     padding-right: 7px;
   }
 
-  #TextWrapper {
+  #LogoWrapper {
     position: relative;
-    width: 291px; /* Width of the text images, currently needing to be set manually. */
+    width: 230px;
+    height: 100%;
   }
 
-  #TextWrapper > img {
+  #LogoWrapper > img {
     position: absolute;
+    max-width: 100%;
   }
 
   .fade-enter-active, .fade-leave-active {

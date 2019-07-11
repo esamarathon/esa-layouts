@@ -3,7 +3,8 @@
     id="Omnibar"
     class="FlexContainer"
   >
-    <logo></logo>
+    <static-logo></static-logo>
+    <rotating-logos></rotating-logos>
     <divider></divider>
     <total></total>
     <divider></divider>
@@ -14,7 +15,8 @@
 </template>
 
 <script>
-import Logo from './components/Logo.vue';
+import StaticLogo from './components/StaticLogo.vue';
+import RotatingLogos from './components/RotatingLogos.vue';
 import Total from './components/Total.vue';
 import Ticker from './components/Ticker.vue';
 import Clock from './components/Clock.vue';
@@ -23,7 +25,8 @@ import Divider from './components/Divider.vue';
 export default {
   name: 'Omnibar',
   components: {
-    Logo,
+    StaticLogo,
+    RotatingLogos,
     Total,
     Ticker,
     Clock,

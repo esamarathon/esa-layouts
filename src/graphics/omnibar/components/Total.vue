@@ -3,10 +3,7 @@
     id="Total"
     class="FlexContainer"
   >
-    <img src="../alzheimerfonden.png">
-    <span>
-      ${{ animatedTotal }}
-    </span>
+    ${{ animatedTotal }}
   </div>
 </template>
 
@@ -49,11 +46,7 @@ export default {
     padding: 0 10px;
     font-size: 40px;
     font-weight: 500;
-  }
-
-  #Total > span {
-    padding-left: 10px;
-    min-width: 70px;
+    min-width: 50px;
     text-align: center;
   }
 </style>

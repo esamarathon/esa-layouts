@@ -54,14 +54,12 @@ export default {
   @import url('../../_misc/components/FlexContainer.css');
 
   #RotatingLogos {
-    height: 100%;
     padding-right: 7px;
   }
 
   #LogoWrapper {
     position: relative;
     width: 230px;
-    height: 100%;
   }
 
   #LogoWrapper > img {

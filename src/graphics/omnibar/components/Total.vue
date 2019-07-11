@@ -42,7 +42,6 @@ export default {
   @import url('../../_misc/components/FlexContainer.css');
 
   #Total {
-    height: 100%;
     padding: 0 10px;
     font-size: 40px;
     font-weight: 500;

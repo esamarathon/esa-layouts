@@ -20,7 +20,6 @@ export default {
   @import url('../../_misc/components/FlexContainer.css');
 
   #StaticLogo {
-    height: 100%;
     padding: 0 7px;
   }
 </style>

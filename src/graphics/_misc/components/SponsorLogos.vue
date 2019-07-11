@@ -40,8 +40,6 @@ export default {
 <style scoped>
   @import url('../../_misc/components/FlexContainer.css');
 
-  /* Some of these values may need moving to the layout files. */
-
   #SponsorLogoBox {
     flex: 1; /* We *should* be inside a flex box! */
     width: 100%;

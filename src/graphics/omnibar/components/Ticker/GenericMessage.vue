@@ -1,6 +1,7 @@
 <template>
   <div
     id="GenericMessage"
+    class="FlexContainer"
     :style="cssProps"
   >
     {{ normalisedData.msg }}
@@ -46,6 +47,7 @@ export default {
   @import url('../../../_misc/components/FlexContainer.css');
 
   #GenericMessage {
+    height: 100%;
     font-weight: 500;
     font-size: var(--font-size);
     text-align: center;

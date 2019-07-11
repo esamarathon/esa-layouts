@@ -22,6 +22,7 @@ export const eventInfo: EventInfo[] = [];
 export const streamEvtNumber = bundleConfig.tracker.streamEvent - 1;
 const donationTotal = nodecg.Replicant<DonationTotal>('donationTotal');
 const recentDonations = nodecg.Replicant<RecentDonations>('recentDonations');
+const evtShortRep = nodecg.Replicant<string>('evtShort');
 
 init();
 async function init() {
@@ -53,6 +54,7 @@ async function init() {
     // Get initial total from API and set an interval as a fallback.
     updateDonationTotalFromAPI();
     setInterval(updateDonationTotalFromAPI, 60000);
+    evtShortRep.value = eventInfo[streamEvtNumber].short;
 
     require('./tracker-bids');
     require('./tracker-prizes');

@@ -10,7 +10,7 @@
         :is="currentComponent.name"
         :key="timestamp"
         :data="currentComponent.data"
-        @end="changeMessage"
+        @end="canChange = true"
       ></component>
     </transition>
   </div>
@@ -20,6 +20,8 @@
 // eslint-disable-next-line import/extensions
 import { serverBus } from '../main.js';
 import GenericMessage from './Ticker/GenericMessage.vue';
+
+const evtShort = nodecg.Replicant('evtShort');
 
 export default {
   name: 'Ticker',
@@ -31,30 +33,58 @@ export default {
       },
       timestamp: Date.now(),
       canChange: false,
+      messageTypes: [
+        this.esaPromo(),
+        this.charityPromo(),
+        this.otherStreamPromo(),
+        this.teamPromo(),
+        this.donationURL(),
+        this.shirts(),
+      ],
     };
   },
   mounted() {
     serverBus.$on('tick', () => {
       if (this.canChange) {
-        // TODO: more logic to change message
-
-        // this needs to run whenever you want to transition
-        // this.timestamp = Date.now();
-
         this.canChange = false;
+        this.showNextMsg();
       }
     });
 
-    this.currentComponent = {
-      name: GenericMessage,
-      data: {
-        msg: 'This is European Speedrunner Assembly Summer 2019',
-      },
-    };
+    this.showNextMsg();
   },
   methods: {
-    changeMessage() {
-      this.canChange = true;
+    showNextMsg() {
+      const rand = this.messageTypes[Math.floor(Math.random() * this.messageTypes.length)];
+      this.currentComponent = rand;
+      this.timestamp = Date.now();
+    },
+    esaPromo() {
+      return this.genericMsg('This is European Speedrunner Assembly Summer 2019');
+    },
+    charityPromo() {
+      return this.genericMsg('#ESASummer19 benefits the Swedish Alzheimer\'s Foundation');
+    },
+    otherStreamPromo() {
+      const channel = nodecg.bundleConfig.tracker.streamEvent > 1 ? 'esa' : 'esamarathon2';
+      return this.genericMsg(`Watch more great runs over @ twitch.tv/${channel}`);
+    },
+    teamPromo() {
+      return this.genericMsg('Check out our Twitch team @ twitch.tv/team/esa!');
+    },
+    donationURL() {
+      return this.genericMsg(`Donate @ donations.esamarathon.com/donate/${evtShort.value}`);
+    },
+    shirts() {
+      return this.genericMsg('Message about shirts TBD');
+    },
+    genericMsg(string) {
+      return {
+        name: GenericMessage,
+        data: {
+          msg: string,
+        },
+      };
     },
   },
 };

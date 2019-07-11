@@ -3,7 +3,7 @@
     id="GenericMessage"
     :style="cssProps"
   >
-    {{ data.msg }}
+    {{ normalisedData.msg }}
   </div>
 </template>
 
@@ -25,13 +25,19 @@ export default {
   computed: {
     cssProps() {
       return {
-        '--font-size': `${this.data.size}px`,
+        '--font-size': `${this.normalisedData.size}px`,
       };
+    },
+    normalisedData() {
+      return Object.assign({
+        size: 33,
+        time: 25,
+      }, this.data);
     },
   },
   mounted() {
     // Removing 1 second so if time is divisble by 5, we don't need to wait ages for the next tick.
-    setTimeout(() => this.$emit('end'), (this.data.time - 1) * 1000);
+    setTimeout(() => this.$emit('end'), (this.normalisedData.time - 1) * 1000);
   },
 };
 </script>

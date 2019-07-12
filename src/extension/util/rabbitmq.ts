@@ -24,11 +24,14 @@ interface RabbitMQConfig {
   vhost: string | undefined;
 }
 
+const eventShort: string = getCurrentEventShort();
+
 // exchanges we need to listen/publish on.
 const ourExchange = 'cg';
 const theirTopics = [
-  { name: 'evt-donation-total', exchange: 'tracker', key: 'donation_total.updated' },
-  { name: 'donation-fully-processed', exchange: 'tracker', key: 'donation.*.fully_processed' },
+  { name: 'evt-donation-total', exchange: 'tracker', key: '*.donation_total.updated' },
+  { name: 'donation-fully-processed', exchange: 'tracker',
+    key: `${eventShort}.donation.*.fully_processed` },
   { name: 'new-screened-tweet', exchange: 'moderation', key: 'screened.tweet' },
   { name: 'new-screened-sub', exchange: 'moderation', key: 'screened.sub' },
   { name: 'bigbutton-tag-scanned', exchange: 'bigbutton', key: '*.tag_scanned' },
@@ -38,7 +41,6 @@ const theirTopics = [
 
 const nodecg = nodecgApiContext.get();
 export const mq: MQEmitter = new EventEmitter();
-const eventShort: string = getCurrentEventShort();
 let mqChan: amqpConnectionManager.ChannelWrapper;
 
 if (bundleConfig.rabbitmq.enable) {

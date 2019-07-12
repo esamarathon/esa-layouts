@@ -12,6 +12,7 @@ interface MQEmitter extends EventEmitter {
   on(event: 'new-screened-sub', listener: (data: any) => void): this;
   on(event: 'bigbutton-tag-scanned', listener: (data: any) => void): this;
   on(event: 'bigbutton-pressed', listener: (data: any) => void): this;
+  on(event: 'run-changed', listener: (data: any) => void): this;
 
   on(event: string, listener: Function): this;
 }
@@ -33,6 +34,7 @@ const theirTopics = [
   { name: 'new-screened-sub', exchange: 'moderation', key: 'screened.sub' },
   { name: 'bigbutton-tag-scanned', exchange: 'bigbutton', key: '*.tag_scanned' },
   { name: 'bigbutton-pressed', exchange: 'bigbutton', key: '*.pressed' },
+  { name: 'run-changed', exchange: ourExchange, key: '*.run.changed' },
 ];
 
 const nodecg = nodecgApiContext.get();

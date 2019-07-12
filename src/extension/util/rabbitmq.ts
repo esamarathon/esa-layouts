@@ -82,18 +82,26 @@ function setupMqChannel(chan: amqplib.ConfirmChannel) {
     chan.bindQueue(queueName, topic.exchange, topic.key);
 
     chan.consume(queueName, (msg) => {
-      if (msg && msg.content) {
-        mq.emit(topic.name, JSON.parse(msg.content.toString()));
-        nodecg.log.debug(
-          'Received message from RabbitMQ %s: %s',
-          topic.name, msg.content.toString(),
-        );
-        chan.ack(msg as amqplib.Message);
+      if (msg) {
+        if (msg.content && validateMqMsg(msg)) {
+          mq.emit(topic.name, JSON.parse(msg.content.toString()));
+          nodecg.log.debug(
+            'Received message from RabbitMQ %s: %s',
+            topic.name, msg.content.toString(),
+          );
+        }
+
+        chan.ack(msg);
       }
     }, { // tslint:disable-next-line: align
       noAck: false,
     });
   }
+}
+
+function validateMqMsg(msg: amqplib.Message) {
+  const eventShort = eventInfo[streamEvtNumber].short;
+  return msg.fields.exchange !== ourExchange || !msg.fields.routingKey.startsWith(`${eventShort}.`);
 }
 
 /**

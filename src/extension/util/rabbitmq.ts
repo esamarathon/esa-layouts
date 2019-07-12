@@ -3,6 +3,7 @@ import amqplib from 'amqplib';
 import { EventEmitter } from 'events';
 import * as nodecgApiContext from './nodecg-api-context';
 import { bundleConfig } from './nodecg-bundleconfig';
+import { eventInfo, streamEvtNumber } from '../tracker';
 
 interface MQEmitter extends EventEmitter {
   on(event: 'evt-donation-total', listener: (data: any) => void): this;
@@ -97,6 +98,7 @@ function setupMqChannel(chan: amqplib.ConfirmChannel) {
 
 /**
  * Used to send messages over the RabbitMQ connections.
+ * Automatically prepends the event name to the key.
  * @param key The routing key this message will be published with (topic exchange)
  * @param data The data that should be sent in this message.
  */
@@ -105,9 +107,10 @@ export function send(key: string, data: object) {
     nodecg.log.debug('Could not send MQ message as channel is not defined.');
     return;
   }
+  const eventShort = eventInfo[streamEvtNumber].short;
   mqChan.publish(
     ourExchange,
-    key,
+    `${eventShort}.${key}`,
     Buffer.from(JSON.stringify(data)),
     { persistent: true },
   );

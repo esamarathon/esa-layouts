@@ -74,7 +74,8 @@ function setupMqChannel(chan: amqplib.ConfirmChannel) {
   chan.assertExchange(ourExchange, 'topic', { durable: true, autoDelete: true });
 
   for (const topic of theirTopics) {
-    const queueName: string = `speedcontrol-${topic.name}`;
+    const eventShort = eventInfo[streamEvtNumber].short;
+    const queueName: string = `speedcontrol-${eventShort}-${topic.name}`;
 
     chan.assertExchange(topic.exchange, 'topic', { durable: true, autoDelete: true });
 

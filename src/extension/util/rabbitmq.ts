@@ -3,7 +3,6 @@ import amqplib from 'amqplib';
 import { EventEmitter } from 'events';
 import * as nodecgApiContext from './nodecg-api-context';
 import { bundleConfig } from './nodecg-bundleconfig';
-import { eventInfo, streamEvtNumber } from '../tracker';
 
 interface MQEmitter extends EventEmitter {
   on(event: 'evt-donation-total', listener: (data: any) => void): this;
@@ -39,6 +38,7 @@ const theirTopics = [
 
 const nodecg = nodecgApiContext.get();
 export const mq: MQEmitter = new EventEmitter();
+const eventShort: string = getCurrentEventShort();
 let mqChan: amqpConnectionManager.ChannelWrapper;
 
 if (bundleConfig.rabbitmq.enable) {
@@ -76,7 +76,6 @@ function setupMqChannel(chan: amqplib.ConfirmChannel) {
   chan.assertExchange(ourExchange, 'topic', { durable: true, autoDelete: true });
 
   for (const topic of theirTopics) {
-    const eventShort = eventInfo[streamEvtNumber].short;
     const queueName: string = `speedcontrol-${eventShort}-${topic.name}`;
 
     chan.assertExchange(topic.exchange, 'topic', { durable: true, autoDelete: true });
@@ -103,7 +102,6 @@ function setupMqChannel(chan: amqplib.ConfirmChannel) {
 }
 
 function validateMqMsg(msg: amqplib.Message) {
-  const eventShort = eventInfo[streamEvtNumber].short;
   return msg.fields.exchange !== ourExchange || !msg.fields.routingKey.startsWith(`${eventShort}.`);
 }
 
@@ -118,7 +116,6 @@ export function send(key: string, data: object) {
     nodecg.log.debug('Could not send MQ message as channel is not defined.');
     return;
   }
-  const eventShort = eventInfo[streamEvtNumber].short;
   mqChan.publish(
     ourExchange,
     `${eventShort}.${key}`,
@@ -153,4 +150,11 @@ function buildMQURL(rabbitmq: RabbitMQConfig) {
         rabbitmq.password as string,
       ),
   }} as any;
+}
+
+function getCurrentEventShort() {
+  if (!Array.isArray(bundleConfig.tracker.events)) {
+    return bundleConfig.tracker.events as string;
+  }
+  return bundleConfig.tracker.events[bundleConfig.tracker.streamEvent - 1];
 }

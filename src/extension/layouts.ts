@@ -8,6 +8,8 @@ import { mq } from './util/rabbitmq';
 const nodecg = nodecgApiContext.get();
 const sc = new speedcontrolUtil(nodecg);
 const currentScene = nodecg.Replicant<string>('currentOBSScene'); // temp
+const currentLayout = nodecg.Replicant<string>('currentLayout'); // schema this!
+const currentLayoutOverridden = nodecg.Replicant<boolean>('currentLayoutOverridden');
 const commentators = nodecg.Replicant<Commentators>('commentators');
 
 interface GameLayoutChange {
@@ -131,10 +133,25 @@ mq.on('bigbutton-tag-scanned', (data) => {
   }
 });
 
-// Reset the commentators when the run changes.
 sc.runDataActiveRun.on('change', (newVal, oldVal) => {
+  // Reset the commentators when the run changes and not on the game layout scene.
   if ((!newVal || (newVal && oldVal && oldVal.id !== newVal.id))
-  && currentScene.value !== obsGameLayoutScene) {
+  && currentScene.value.includes(obsGameLayoutScene)) {
     commentators.value.length = 0;
+  }
+
+  // Change the game layout based on information supplied via the run data.
+  if (newVal) {
+    if (oldVal && currentLayoutOverridden.value && newVal.id !== oldVal.id) {
+      currentLayoutOverridden.value = false;
+    }
+
+    if (!currentLayoutOverridden.value && (!oldVal || newVal.id !== oldVal.id)) {
+      const layoutCode = (
+        newVal.customData && newVal.customData.layout
+        ) ? newVal.customData.layout : '4x3-1p';
+
+      currentLayout.value = `/${layoutCode}`;
+    }
   }
 });

@@ -18,6 +18,7 @@
 <script>
 const currentLayout = nodecg.Replicant('currentLayout');
 const layouts = nodecg.Replicant('layouts');
+const overridden = nodecg.Replicant('currentLayoutOverridden');
 
 export default {
   name: 'GameLayoutOverride',
@@ -29,8 +30,12 @@ export default {
     };
   },
   watch: {
-    selected(val) {
-      currentLayout.value = val;
+    selected(newVal, oldVal) {
+      // Only set if value is actually different than what we have.
+      if (newVal !== currentLayout.value && oldVal && newVal !== oldVal) {
+        overridden.value = true;
+        currentLayout.value = newVal;
+      }
     },
   },
   mounted() {

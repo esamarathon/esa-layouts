@@ -3,7 +3,6 @@ import amqplib from 'amqplib';
 import { EventEmitter } from 'events';
 import * as nodecgApiContext from './nodecg-api-context';
 import { bundleConfig } from './nodecg-bundleconfig';
-import { eventInfo, streamEvtNumber } from '../tracker';
 
 interface MQEmitter extends EventEmitter {
   on(event: 'evt-donation-total', listener: (data: any) => void): this;
@@ -12,6 +11,7 @@ interface MQEmitter extends EventEmitter {
   on(event: 'new-screened-sub', listener: (data: any) => void): this;
   on(event: 'bigbutton-tag-scanned', listener: (data: any) => void): this;
   on(event: 'bigbutton-pressed', listener: (data: any) => void): this;
+  on(event: 'run-changed', listener: (data: any) => void): this;
 
   on(event: string, listener: Function): this;
 }
@@ -24,15 +24,19 @@ interface RabbitMQConfig {
   vhost: string | undefined;
 }
 
+const eventShort: string = getCurrentEventShort();
+
 // exchanges we need to listen/publish on.
 const ourExchange = 'cg';
 const theirTopics = [
-  { name: 'evt-donation-total', exchange: 'tracker', key: 'donation_total.updated' },
-  { name: 'donation-fully-processed', exchange: 'tracker', key: 'donation.*.fully_processed' },
+  { name: 'evt-donation-total', exchange: 'tracker', key: '*.donation_total.updated' },
+  { name: 'donation-fully-processed', exchange: 'tracker',
+    key: `${eventShort}.donation.*.fully_processed` },
   { name: 'new-screened-tweet', exchange: 'moderation', key: 'screened.tweet' },
   { name: 'new-screened-sub', exchange: 'moderation', key: 'screened.sub' },
   { name: 'bigbutton-tag-scanned', exchange: 'bigbutton', key: '*.tag_scanned' },
   { name: 'bigbutton-pressed', exchange: 'bigbutton', key: '*.pressed' },
+  { name: 'run-changed', exchange: ourExchange, key: '*.run.changed' },
 ];
 
 const nodecg = nodecgApiContext.get();
@@ -74,7 +78,7 @@ function setupMqChannel(chan: amqplib.ConfirmChannel) {
   chan.assertExchange(ourExchange, 'topic', { durable: true, autoDelete: true });
 
   for (const topic of theirTopics) {
-    const queueName: string = `speedcontrol-${topic.name}`;
+    const queueName: string = `speedcontrol-${eventShort}-${topic.name}`;
 
     chan.assertExchange(topic.exchange, 'topic', { durable: true, autoDelete: true });
 
@@ -82,18 +86,25 @@ function setupMqChannel(chan: amqplib.ConfirmChannel) {
     chan.bindQueue(queueName, topic.exchange, topic.key);
 
     chan.consume(queueName, (msg) => {
-      if (msg && msg.content) {
-        mq.emit(topic.name, JSON.parse(msg.content.toString()));
-        nodecg.log.debug(
-          'Received message from RabbitMQ %s: %s',
-          topic.name, msg.content.toString(),
-        );
-        chan.ack(msg as amqplib.Message);
+      if (msg) {
+        if (msg.content && validateMqMsg(msg)) {
+          mq.emit(topic.name, JSON.parse(msg.content.toString()));
+          nodecg.log.debug(
+            'Received message from RabbitMQ %s: %s',
+            topic.name, msg.content.toString(),
+          );
+        }
+
+        chan.ack(msg);
       }
     }, { // tslint:disable-next-line: align
       noAck: false,
     });
   }
+}
+
+function validateMqMsg(msg: amqplib.Message) {
+  return msg.fields.exchange !== ourExchange || !msg.fields.routingKey.startsWith(`${eventShort}.`);
 }
 
 /**
@@ -107,7 +118,6 @@ export function send(key: string, data: object) {
     nodecg.log.debug('Could not send MQ message as channel is not defined.');
     return;
   }
-  const eventShort = eventInfo[streamEvtNumber].short;
   mqChan.publish(
     ourExchange,
     `${eventShort}.${key}`,
@@ -142,4 +152,11 @@ function buildMQURL(rabbitmq: RabbitMQConfig) {
         rabbitmq.password as string,
       ),
   }} as any;
+}
+
+function getCurrentEventShort() {
+  if (!Array.isArray(bundleConfig.tracker.events)) {
+    return bundleConfig.tracker.events as string;
+  }
+  return bundleConfig.tracker.events[bundleConfig.tracker.streamEvent - 1];
 }

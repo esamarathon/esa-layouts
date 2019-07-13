@@ -114,7 +114,16 @@
         "volume": { "type": "number", "default": 10 }
       },
       "required": ["enable", "address", "port", "volume"]
+    },
+    "tts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enable": { "type": "boolean", "default": false },
+        "altVoiceAPI": { "type": "string", "default": "" }
+      },
+      "required": ["enable", "altVoiceAPI"]
     }
   },
-  "required": ["streamdeck", "rabbitmq", "obs", "tracker", "fcb", "mpd"]
+  "required": ["streamdeck", "rabbitmq", "obs", "tracker", "fcb", "mpd", "tts"]
 }

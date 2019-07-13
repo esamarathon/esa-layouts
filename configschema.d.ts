@@ -62,4 +62,8 @@ export interface Configschema {
     port: number;
     volume: number;
   };
+  tts: {
+    enable: boolean;
+    altVoiceAPI: string;
+  };
 }

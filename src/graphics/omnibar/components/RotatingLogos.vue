@@ -18,9 +18,6 @@
 </template>
 
 <script>
-// eslint-disable-next-line import/extensions
-import { serverBus } from '../main.js';
-
 const hashtag = require('../hashtag-text.png');
 const afLogo = require('../alzheimerfonden.png');
 
@@ -29,22 +26,16 @@ export default {
   data() {
     return {
       logo: hashtag,
-      ticks: 0,
     };
   },
   mounted() {
-    serverBus.$on('tick', () => {
-      this.ticks += 1;
-      if ((this.logo === afLogo && this.ticks === this.calcTicks(15))
-      || (this.logo === hashtag && this.ticks === this.calcTicks(45))) {
-        this.logo = (this.logo === afLogo) ? hashtag : afLogo;
-        this.ticks = 0;
-      }
-    });
+    this.changeLogo();
   },
   methods: {
-    calcTicks(seconds) {
-      return seconds / 5;
+    changeLogo() {
+      this.logo = (this.logo === afLogo) ? hashtag : afLogo;
+      const time = (this.logo === afLogo) ? 15 : 45;
+      setTimeout(this.changeLogo, time * 1000);
     },
   },
 };

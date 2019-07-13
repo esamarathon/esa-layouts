@@ -10,15 +10,13 @@
         :is="currentComponent.name"
         :key="timestamp"
         :data="currentComponent.data"
-        @end="canChange = true"
+        @end="showNextMsg"
       ></component>
     </transition>
   </div>
 </template>
 
 <script>
-// eslint-disable-next-line import/extensions
-import { serverBus } from '../main.js';
 import GenericMessage from './Ticker/GenericMessage.vue';
 
 const evtShort = nodecg.Replicant('evtShort');
@@ -32,7 +30,6 @@ export default {
         data: {},
       },
       timestamp: Date.now(),
-      canChange: false,
       messageTypes: [
         this.esaPromo(),
         this.charityPromo(),
@@ -44,11 +41,6 @@ export default {
     };
   },
   mounted() {
-    serverBus.$on('tick', () => {
-      if (this.canChange) {
-        this.canChange = false;
-        this.showNextMsg();
-      }
     });
 
     this.showNextMsg();

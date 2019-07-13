@@ -94,6 +94,11 @@
     ],
     "graphics": [
       {
+        "file": "intermission.html",
+        "width": 1920,
+        "height": 1080
+      },
+      {
         "file": "intermission-hosts.html",
         "width": 1920,
         "height": 1080

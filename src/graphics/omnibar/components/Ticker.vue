@@ -32,7 +32,14 @@ export default {
       },
       timestamp: Date.now(),
       otherChannel: nodecg.bundleConfig.tracker.streamEvent > 1 ? 'esa' : 'esamarathon2',
-      messageTypes: [
+      messageTypes: [],
+    };
+  },
+  mounted() {
+    NodeCG.waitForReplicants(evtShort).then(() => {
+      // Puts copies of the objects the functions return
+      // into an array for easy random-ness access.
+      this.messageTypes = [
         this.esaPromo(),
         this.charityPromo(),
         this.otherStreamPromo(),
@@ -40,11 +47,8 @@ export default {
         this.teamPromo(),
         this.donationURL(),
         this.shirts(),
-      ],
-    };
-  },
-  mounted() {
-    NodeCG.waitForReplicants(evtShort).then(() => {
+      ];
+
       this.showNextMsg();
     });
   },

@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="otherStreamInfo"
     id="OtherStreamInfo"
     class="FlexContainer"
   >

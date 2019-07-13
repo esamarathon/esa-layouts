@@ -110,7 +110,7 @@ function logSceneSwitch(name: string, action: string = 'start') {
   const gameSceneSuffix: string = isGameScene ? '.gamescene' : '';
 
   mqSend(
-    `obs.scene.${safeName}.${evtString}${gameSceneSuffix}`,
+    `obs.scene.${safeName}.${action}${gameSceneSuffix}`,
     {
       action,
       event: evtString,

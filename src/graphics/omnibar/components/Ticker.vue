@@ -18,6 +18,7 @@
 
 <script>
 import GenericMessage from './Ticker/GenericMessage.vue';
+import OtherStreamInfo from './Ticker/OtherStreamInfo.vue';
 
 const evtShort = nodecg.Replicant('evtShort');
 
@@ -30,10 +31,12 @@ export default {
         data: {},
       },
       timestamp: Date.now(),
+      otherChannel: nodecg.bundleConfig.tracker.streamEvent > 1 ? 'esa' : 'esamarathon2',
       messageTypes: [
         this.esaPromo(),
         this.charityPromo(),
         this.otherStreamPromo(),
+        this.otherStreamInfo(),
         this.teamPromo(),
         this.donationURL(),
         this.shirts(),
@@ -41,9 +44,9 @@ export default {
     };
   },
   mounted() {
+    NodeCG.waitForReplicants(evtShort).then(() => {
+      this.showNextMsg();
     });
-
-    this.showNextMsg();
   },
   methods: {
     showNextMsg() {
@@ -58,8 +61,15 @@ export default {
       return this.genericMsg('#ESASummer19 benefits the Swedish Alzheimer\'s Foundation');
     },
     otherStreamPromo() {
-      const channel = nodecg.bundleConfig.tracker.streamEvent > 1 ? 'esa' : 'esamarathon2';
-      return this.genericMsg(`Watch more great runs over @ twitch.tv/${channel}`);
+      return this.genericMsg(`Watch more great runs over @ twitch.tv/${this.otherChannel}`);
+    },
+    otherStreamInfo() {
+      return {
+        name: OtherStreamInfo,
+        data: {
+          otherChannel: this.otherChannel,
+        },
+      };
     },
     teamPromo() {
       return this.genericMsg('Check out our Twitch team @ twitch.tv/team/esa!');

@@ -3,6 +3,7 @@ export * from './commentators';
 export * from './currentSponsorLogo';
 export * from './donationTotal';
 export * from './emotes';
+export * from './otherStreamInfo';
 export * from './prizes';
 export * from './recentDonations';
 export * from './songData';

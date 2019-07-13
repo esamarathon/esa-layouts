@@ -1,5 +1,5 @@
 import needle from 'needle';
-import { DonationTotal, RecentDonations } from '../../schemas';
+import { DonationTotal, OtherStreamInfo, RecentDonations } from '../../schemas';
 import * as nodecgApiContext from './util/nodecg-api-context';
 import { bundleConfig } from './util/nodecg-bundleconfig';
 import { mq } from './util/rabbitmq';
@@ -23,6 +23,7 @@ export const streamEvtNumber = bundleConfig.tracker.streamEvent - 1;
 const donationTotal = nodecg.Replicant<DonationTotal>('donationTotal');
 const recentDonations = nodecg.Replicant<RecentDonations>('recentDonations');
 const evtShortRep = nodecg.Replicant<string>('evtShort');
+const otherStreamInfo = nodecg.Replicant<OtherStreamInfo>('otherStreamInfo');
 
 init();
 async function init() {
@@ -160,19 +161,18 @@ mq.on('evt-donation-total', (data) => {
 
 // When a new donation is fully processed on the tracker, this is fired.
 mq.on('donation-fully-processed', (data) => {
-  if (data.event === eventInfo[streamEvtNumber].short) {
-    nodecg.log.info('Received new donation with ID %s.', data._id);
-    nodecg.sendMessage('newDonation', data);
-    if (data.amount >= 20) {
-      recentDonations.value.unshift(data);
-      recentDonations.value.length = Math.min(recentDonations.value.length, 20);
-    }
+  nodecg.log.info('Received new donation with ID %s.', data._id);
+  nodecg.sendMessage('newDonation', data);
+  if (data.amount >= 20) {
+    recentDonations.value.unshift(data);
+    recentDonations.value.length = Math.min(recentDonations.value.length, 20);
   }
 });
 
 // Is this tracker stuff? Living here for now.
 mq.on('new-screened-sub', data => nodecg.sendMessage('newSub', data));
 mq.on('new-screened-tweet', data => nodecg.sendMessage('newTweet', data));
+mq.on('run-changed', (data) => { otherStreamInfo.value = data.run; });
 
 function loginToTracker():Promise<any> {
   return new Promise(async (resolve, reject) => {

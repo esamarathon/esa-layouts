@@ -17,10 +17,16 @@
 </template>
 
 <script>
+import Vue from 'vue';
+import SpeedcontrolUtil from 'speedcontrol-util';
+
 import GenericMessage from './Ticker/GenericMessage.vue';
+import UpcomingRun from './Ticker/UpcomingRun.vue';
 import OtherStreamInfo from './Ticker/OtherStreamInfo.vue';
 
 const evtShort = nodecg.Replicant('evtShort');
+const otherStreamInfo = nodecg.Replicant('otherStreamInfo');
+Vue.prototype.$sc = new SpeedcontrolUtil(nodecg);
 
 export default {
   name: 'Ticker',
@@ -36,7 +42,12 @@ export default {
     };
   },
   mounted() {
-    NodeCG.waitForReplicants(evtShort).then(() => {
+    NodeCG.waitForReplicants(
+      evtShort,
+      otherStreamInfo,
+      Vue.prototype.$sc.runDataActiveRun,
+      Vue.prototype.$sc.runDataArray,
+    ).then(() => {
       // Puts copies of the objects the functions return
       // into an array for easy random-ness access.
       this.messageTypes = [
@@ -44,6 +55,7 @@ export default {
         this.charityPromo(),
         this.otherStreamPromo(),
         this.otherStreamInfo(),
+        this.upcomingRun(),
         this.teamPromo(),
         this.donationURL(),
         this.shirts(),
@@ -74,6 +86,9 @@ export default {
           otherChannel: this.otherChannel,
         },
       };
+    },
+    upcomingRun() {
+      return { name: UpcomingRun };
     },
     teamPromo() {
       return this.genericMsg('Check out our Twitch team @ twitch.tv/team/esa!');

@@ -37,8 +37,7 @@ export default {
     },
   },
   mounted() {
-    // Removing 1 second so if time is divisble by 5, we don't need to wait ages for the next tick.
-    setTimeout(() => this.$emit('end'), (this.normalisedData.time - 1) * 1000);
+    setTimeout(() => this.$emit('end'), this.normalisedData.time * 1000);
   },
 };
 </script>

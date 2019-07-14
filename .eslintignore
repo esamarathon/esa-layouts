@@ -1,10 +1,10 @@
 # Ignore built files.
-./dashboard/
-./extension/
-./graphics/
+/dashboard/
+/extension/
+/graphics/
 
 # Ignore the Stream Deck plugin (for now).
-./streamdeck-plugin/
+/streamdeck-plugin/
 
 # Using TSLint for TypeScript.
 **/*.ts

@@ -18,6 +18,7 @@
     "build:extension": "trash extension && npx tsc -b tsconfig.json",
     "bundle": "trash graphics && trash dashboard && node script/bundle.js",
     "start": "node ../..",
+    "tslint": "npx tslint -c tslint.json --project tsconfig.json --force",
     "typeschemas": "node script/typeschemas.js",
     "watch": "run-p watch:*",
     "watch:browser": "npm run bundle",

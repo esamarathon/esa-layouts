@@ -43,8 +43,8 @@ async function getAvailableVoices() {
       try {
         const resp = await needle('get', 'https://taskinoz.com/gdq/api/');
         speak({
-          name: 'Anonymous',
           amount,
+          name: 'Anonymous',
           comment: resp.body,
         });
       } catch (err) {

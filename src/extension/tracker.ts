@@ -59,6 +59,7 @@ async function init() {
 
     require('./tracker-bids');
     require('./tracker-prizes');
+    require('./tracker-donations');
   } catch (err) {
     nodecg.log.warn('Error setting up tracker, retrying in 60 seconds.');
     setTimeout(init, 60000);

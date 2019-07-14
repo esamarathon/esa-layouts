@@ -1,7 +1,6 @@
 <template>
   <div
     v-if="show"
-    id="App"
   >
     <select v-model="selected">
       <option

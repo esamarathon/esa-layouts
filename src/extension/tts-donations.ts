@@ -9,8 +9,8 @@ if (!bundleConfig.tts.enable || !bundleConfig.tts.altVoiceAPI) {
 }
 
 const nodecg = nodecgApiContext.get();
-const voices: { [k: string]: any } = {};
-const availableVoices = nodecg.Replicant<{ [k: string]: any } >('ttsVoices');
+const voices: any[] = [];
+const availableVoices = nodecg.Replicant<any[]>('ttsVoices', { defaultValue: [] });
 const chosenVoice = nodecg.Replicant<string>('ttsChosenVoice');
 
 getAvailableVoices();
@@ -21,21 +21,38 @@ async function getAvailableVoices() {
     Object.keys(voiceList).forEach((code) => {
       // Only use voices using the Wavenet tech and that are English based.
       if (voiceList[code].languageCode.includes('en-') && code.includes('Wavenet')) {
-        voices[code] = {
+        voices.push({
+          code,
           // tslint:disable-next-line: max-line-length
           name: `${voiceList[code].name} (${voiceList[code].languageName}, ${voiceList[code].gender})`,
-        };
+        });
       }
     });
 
     availableVoices.value = clone(voices);
 
     // Set the voice to a default if needed.
-    if (!voices[chosenVoice.value] || !chosenVoice.value) {
+    if (!chosenVoice.value) {
       chosenVoice.value = 'en-US-Wavenet-A';
     }
 
     nodecg.listenFor('ttsSpeak', speak);
+    nodecg.listenFor('ttsSpeakExample', async () => {
+      console.log('we gonna play example')
+      const amount = 100 * Math.random();
+
+      try {
+        const resp = await needle('get', 'https://taskinoz.com/gdq/api/');
+        speak({
+          name: 'Anonymous',
+          amount,
+          comment: resp.body,
+        });
+      } catch (err) {
+        console.log(err);
+        // silently drop for now
+      }
+    });
   } catch (err) {
     // silently drop for now
   }

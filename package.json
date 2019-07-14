@@ -90,6 +90,13 @@
         "width": 2,
         "file": "commentators.html",
         "headerColor": "#c49215"
+      },
+      {
+        "name": "tts-donation-control",
+        "title": "Text-To-Speech Donation Control",
+        "width": 3,
+        "file": "tts-donation-control.html",
+        "workspace": "Scene Editing"
       }
     ],
     "graphics": [

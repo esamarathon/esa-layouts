@@ -38,7 +38,6 @@ async function getAvailableVoices() {
 
     nodecg.listenFor('ttsSpeak', speak);
     nodecg.listenFor('ttsSpeakExample', async () => {
-      console.log('we gonna play example')
       const amount = 100 * Math.random();
 
       try {
@@ -49,7 +48,6 @@ async function getAvailableVoices() {
           comment: resp.body,
         });
       } catch (err) {
-        console.log(err);
         // silently drop for now
       }
     });

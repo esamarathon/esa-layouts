@@ -90,6 +90,16 @@ function connectToSDWS() {
 			connectToServerWS();
 		}
 
+		if (data.event === 'didReceiveSettings' && (data.action.includes('ttsdonations') || data.action.includes('donationread'))) {
+			let title = '';
+			if (data.action.includes('ttsdonations')) {
+				title = `Play\nDonation\n${data.payload.settings.slot + 1}`;
+			} else if (data.action.includes('donationread')) {
+				title = `Mark\nDonation\n${data.payload.settings.slot + 1}\nas Read`;
+			}
+			sdWS.send(JSON.stringify({ event: 'setTitle', context: data.context, payload: { title } }));
+		}
+
 		sendToServerWS('rawSD', data);
 	});
 }

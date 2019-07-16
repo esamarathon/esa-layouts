@@ -37,6 +37,9 @@ function connectToSDWS() {
 		console.info('Connection to Stream Deck software successful.');
 		sdWS.send(JSON.stringify({event: connectSocketData.registerEvent, uuid: connectSocketData.pluginUUID}));
 		sdWS.send(JSON.stringify({event: 'getGlobalSettings', context: connectSocketData.pluginUUID}));
+		if (typeof init === 'function') {
+			init();
+		}
 	}, {once: true});
 
 	sdWS.addEventListener('close', e => {
@@ -48,6 +51,10 @@ function connectToSDWS() {
 
 		if (data.event === 'didReceiveGlobalSettings') {
 			globalSettings = data.payload.settings;
+		}
+
+		if (data.event === 'didReceiveSettings' && typeof didReceiveSettings === 'function') {
+			didReceiveSettings(data);
 		}
 	});
 }

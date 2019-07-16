@@ -10,6 +10,7 @@ if (!bundleConfig.streamdeck.enable) {
 }
 
 const nodecg = nodecgApiContext.get();
+const donationsToRead = nodecg.Replicant<any[]>('donationsToRead', { defaultValue: [] });
 const sc = new speedcontrolUtil(nodecg);
 let initDone = false;
 
@@ -68,6 +69,29 @@ function init() {
     // com.esamarathon.streamdeck.twitchads
     if (data.action === 'com.esamarathon.streamdeck.twitchads') {
       obs.changeScene(nodecg.bundleConfig.obs.names.scenes.ads);
+    }
+
+    // com.esamarathon.streamdeck.ttsdonations
+    if (data.action === 'com.esamarathon.streamdeck.ttsdonations') {
+      const donation = (
+        data.payload.settings && data.payload.settings.slot
+      ) ? data.payload.settings.slot : 0;
+      const donationObj = donationsToRead.value[donation];
+      if (donationObj) {
+        nodecg.sendMessage('ttsSpeak', donationObj);
+        nodecg.sendMessage('markDonationAsRead', donationObj.id);
+      }
+    }
+
+    // com.esamarathon.streamdeck.donationread
+    if (data.action === 'com.esamarathon.streamdeck.donationread') {
+      const donation = (
+        data.payload.settings && data.payload.settings.slot
+      ) ? data.payload.settings.slot : 0;
+      const donationObj = donationsToRead.value[donation];
+      if (donationObj) {
+        nodecg.sendMessage('markDonationAsRead', donationObj.id);
+      }
     }
   });
 }

@@ -3,6 +3,7 @@
     id="Omnibar"
     class="FlexContainer"
   >
+    <t-t-s></t-t-s>
     <static-logo></static-logo>
     <rotating-logos></rotating-logos>
     <divider></divider>
@@ -15,6 +16,7 @@
 </template>
 
 <script>
+import TTS from './components/TTS.vue';
 import StaticLogo from './components/StaticLogo.vue';
 import RotatingLogos from './components/RotatingLogos.vue';
 import Total from './components/Total.vue';
@@ -25,6 +27,7 @@ import Divider from './components/Divider.vue';
 export default {
   name: 'Omnibar',
   components: {
+    TTS,
     StaticLogo,
     RotatingLogos,
     Total,

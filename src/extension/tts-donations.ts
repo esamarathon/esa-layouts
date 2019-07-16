@@ -62,5 +62,7 @@ async function speak(donation: any) {
 
   // tslint:disable-next-line: max-line-length
   const url = `${bundleConfig.tts.altVoiceAPI}?voice=${chosenVoice.value}&text=${encodeURIComponent(text)}`;
-  nodecg.log.debug(url);
+
+  nodecg.sendMessage('ttsToBeRead', url);
+  nodecg.log.debug('TTS URL: %s', url);
 }

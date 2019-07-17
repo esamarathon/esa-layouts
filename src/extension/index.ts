@@ -12,6 +12,7 @@ export = (nodecg: NodeCG) => {
   require('./timer');
   require('./logging');
   require('./sponsors');
+  require('./video-player');
   require('./tts-donations');
 
   return {

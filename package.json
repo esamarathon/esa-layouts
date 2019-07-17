@@ -98,6 +98,12 @@
         "width": 3,
         "file": "tts-donation-control.html",
         "workspace": "Scene Editing"
+      },
+      {
+        "name": "video-player-control",
+        "title": "Video Player Control",
+        "width": 3,
+        "file": "video-player-control.html"
       }
     ],
     "graphics": [
@@ -122,6 +128,11 @@
         "height": 80
       },
       {
+        "file": "video-player.html",
+        "width": 1920,
+        "height": 1080
+      },
+      {
         "file": "donations.html",
         "width": 1920,
         "height": 1080
@@ -142,6 +153,13 @@
           "jpeg",
           "png",
           "svg"
+        ]
+      },
+      {
+        "name": "videos",
+        "title": "Videos",
+        "allowedTypes": [
+          "mp4"
         ]
       }
     ]

@@ -11,6 +11,7 @@ const currentScene = nodecg.Replicant<string>('currentOBSScene'); // temp
 const currentLayout = nodecg.Replicant<string>('currentLayout'); // schema this!
 const currentLayoutOverridden = nodecg.Replicant<boolean>('currentLayoutOverridden');
 const commentators = nodecg.Replicant<Commentators>('commentators');
+let lastScene: string | undefined;
 
 interface GameLayoutChange {
   cssID: string;
@@ -48,6 +49,7 @@ sc.timer.on('change', (newVal, oldVal) => {
 });
 
 obs.on('SwitchScenes', (data) => {
+  lastScene = currentScene.value;
   currentScene.value = data['scene-name'];
 
   // Trigger Twitch ads when on the relevant scene.
@@ -63,6 +65,12 @@ obs.on('SwitchScenes', (data) => {
   } else {
     sc.disableTimerChanges();
   }
+});
+
+// Switch back to the last scene when the sponsor video finishes.
+nodecg.listenFor('videoFinished', () => {
+  if (!lastScene) return;
+  obs.changeScene(lastScene).catch((err) => {});
 });
 
 // Triggered when the game layout page is opened;

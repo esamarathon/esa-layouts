@@ -2,8 +2,8 @@
   <div>
     <h1>Unread Donations</h1>
     <div
-      id="None"
       v-if="!donations.length"
+      id="None"
     >
       None right now!
     </div>
@@ -38,7 +38,6 @@ export default {
   },
 };
 </script>
-
 
 <style>
   @import url('https://fonts.googleapis.com/css?family=Montserrat:600&subset=cyrillic,cyrillic-ext,latin-ext,vietnamese');

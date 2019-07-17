@@ -25,7 +25,7 @@ export default {
   name: 'RotatingLogos',
   data() {
     return {
-      logo: hashtag,
+      logo: undefined,
     };
   },
   mounted() {
@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     changeLogo() {
-      this.logo = (this.logo === afLogo) ? hashtag : afLogo;
+      this.logo = (this.logo !== hashtag) ? hashtag : afLogo;
       const time = (this.logo === afLogo) ? 15 : 45;
       setTimeout(this.changeLogo, time * 1000);
     },

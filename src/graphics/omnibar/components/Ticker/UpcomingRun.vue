@@ -5,7 +5,7 @@
     class="FlexContainer"
   >
     <div class="Line1">
-      Coming Up {{ when }}: {{ run.game }}
+      Coming up {{ when }}: {{ run.game }}
     </div>
     <div class="Line2">
       <span v-if="run.category">

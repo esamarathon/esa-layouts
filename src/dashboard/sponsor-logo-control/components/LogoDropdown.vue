@@ -36,7 +36,7 @@ export default {
     };
   },
   mounted() {
-    // Populates the dropdown when the layout list changes.
+    // Populates the dropdown when the list changes.
     logos.on('change', (newVal) => {
       this.options = {};
       if (newVal && newVal.length) {

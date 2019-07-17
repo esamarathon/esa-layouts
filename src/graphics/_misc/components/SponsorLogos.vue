@@ -38,7 +38,7 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../../_misc/components/FlexContainer.css');
+  @import url('./FlexContainer.css');
 
   #SponsorLogoBox {
     flex: 1; /* We *should* be inside a flex box! */

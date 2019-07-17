@@ -71,12 +71,12 @@
 </template>
 
 <script>
-import Capture from './components/Capture.vue';
+import Capture from '../_misc/components/Capture.vue';
 import Commentators from './components/Commentators.vue';
 import DonationsBar from './components/DonationsBar.vue';
 import GameExtraInfo from './components/GameExtraInfo.vue';
 import GameName from './components/GameName.vue';
-import InfoStorageBox from './components/InfoStorageBox.vue';
+import InfoStorageBox from '../_misc/components/InfoStorageBox.vue';
 import PlayerContainer from './components/PlayerContainer.vue';
 import SponsorLogos from '../_misc/components/SponsorLogos.vue';
 import Timer from './components/Timer.vue';

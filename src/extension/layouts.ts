@@ -40,7 +40,6 @@ const obsGroupKeys: { [key: string]: string } = {
 const obsGameLayoutScene = bundleConfig.obs.names.scenes.gameLayout;
 
 // nodecg-speedcontrol no longer sends forceRefreshIntermission so doing it here instead
-// TODO: check if we actually need this now as layouts are being remade.
 sc.timer.on('change', (newVal, oldVal) => {
   // Timer just finished.
   if (oldVal && oldVal.state !== 'finished' && newVal.state === 'finished') {

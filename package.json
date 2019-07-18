@@ -104,6 +104,13 @@
         "title": "Video Player Control",
         "width": 3,
         "file": "video-player-control.html"
+      },
+      {
+        "name": "intermission-control",
+        "title": "Intermission Control",
+        "width": 2,
+        "file": "intermission-control.html",
+        "workspace": "Scene Editing"
       }
     ],
     "graphics": [

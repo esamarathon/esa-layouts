@@ -24,6 +24,7 @@ import GenericMessage from './Ticker/GenericMessage.vue';
 import UpcomingRun from './Ticker/UpcomingRun.vue';
 import OtherStreamInfo from './Ticker/OtherStreamInfo.vue';
 import Prize from './Ticker/Prize.vue';
+import Bid from './Ticker/Bid.vue';
 
 const evtShort = nodecg.Replicant('evtShort');
 const otherStreamInfo = nodecg.Replicant('otherStreamInfo');
@@ -58,6 +59,7 @@ export default {
         this.otherStreamInfo(),
         this.upcomingRun(),
         this.prize(),
+        this.bid(),
         this.teamPromo(),
         this.donationURL(),
         this.shirts(),
@@ -94,6 +96,9 @@ export default {
     },
     prize() {
       return { name: Prize };
+    },
+    bid() {
+      return { name: Bid };
     },
     teamPromo() {
       return this.genericMsg('Check out our Twitch team @ twitch.tv/team/esa!');

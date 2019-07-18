@@ -23,6 +23,7 @@ import SpeedcontrolUtil from 'speedcontrol-util';
 import GenericMessage from './Ticker/GenericMessage.vue';
 import UpcomingRun from './Ticker/UpcomingRun.vue';
 import OtherStreamInfo from './Ticker/OtherStreamInfo.vue';
+import Prize from './Ticker/Prize.vue';
 
 const evtShort = nodecg.Replicant('evtShort');
 const otherStreamInfo = nodecg.Replicant('otherStreamInfo');
@@ -56,6 +57,7 @@ export default {
         this.otherStreamPromo(),
         this.otherStreamInfo(),
         this.upcomingRun(),
+        this.prize(),
         this.teamPromo(),
         this.donationURL(),
         this.shirts(),
@@ -89,6 +91,9 @@ export default {
     },
     upcomingRun() {
       return { name: UpcomingRun };
+    },
+    prize() {
+      return { name: Prize };
     },
     teamPromo() {
       return this.genericMsg('Check out our Twitch team @ twitch.tv/team/esa!');

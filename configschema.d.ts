@@ -66,4 +66,8 @@ export interface Configschema {
     enable: boolean;
     altVoiceAPI: string;
   };
+  twitchExt: {
+    enable: boolean;
+    token: string;
+  };
 }

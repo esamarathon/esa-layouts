@@ -14,6 +14,7 @@ export = (nodecg: NodeCG) => {
   require('./sponsors');
   require('./video-player');
   require('./tts-donations');
+  require('./twitch-ext');
 
   return {
     obs: require('./util/obs').default,

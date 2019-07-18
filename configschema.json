@@ -123,7 +123,16 @@
         "altVoiceAPI": { "type": "string", "default": "" }
       },
       "required": ["enable", "altVoiceAPI"]
+    },
+    "twitchExt": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enable": { "type": "boolean", "default": false },
+        "token": { "type": "string", "default": "" }
+      },
+      "required": ["enable", "token"]
     }
   },
-  "required": ["streamdeck", "rabbitmq", "obs", "tracker", "fcb", "mpd", "tts"]
+  "required": ["streamdeck", "rabbitmq", "obs", "tracker", "fcb", "mpd", "tts", "twitchExt"]
 }

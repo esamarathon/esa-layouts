@@ -29,7 +29,7 @@ export default {
   watch: {
     total(val) {
       if (this.init) {
-        TweenLite.to(this.$data, 1, { tweenedTotal: val });
+        TweenLite.to(this.$data, 5, { tweenedTotal: val });
       } else {
         this.tweenedTotal = this.total;
         this.init = true;

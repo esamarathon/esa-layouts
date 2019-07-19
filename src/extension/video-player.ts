@@ -7,7 +7,7 @@ const currentSum = nodecg.Replicant<string | undefined>('currentVideoSum');
 const currentObj = nodecg.Replicant<object | undefined>('currentVideoObj');
 
 currentSum.on('change', (newVal) => {
-  if (newVal && videos && videos.length) {
+  if (newVal && videos.value && videos.value.length) {
     currentObj.value = clone(findVideoBySum(newVal));
   } else {
     currentObj.value = undefined;

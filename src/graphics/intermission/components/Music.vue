@@ -13,7 +13,7 @@
 </template>
 
 <script>
-const song = nodecg.Replicant('song');
+const song = nodecg.Replicant('songData');
 
 export default {
   name: 'Music',

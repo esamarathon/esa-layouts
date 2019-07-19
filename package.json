@@ -168,6 +168,17 @@
         "allowedTypes": [
           "mp4"
         ]
+      },
+      {
+        "name": "intermission-slides",
+        "title": "Intermission Slide Images/Videos",
+        "allowedTypes": [
+          "jpg",
+          "jpeg",
+          "png",
+          "svg",
+          "mp4"
+        ]
       }
     ]
   },

@@ -13,6 +13,8 @@ const nodecg = nodecgApiContext.get();
 const donationsToRead = nodecg.Replicant<any[]>('donationsToRead', { defaultValue: [] });
 const sc = new speedcontrolUtil(nodecg);
 let initDone = false;
+let adEnds = 0;
+let twitchAdPlaying = false;
 
 streamDeck.on('init', () => {
   if (!initDone) { init(); }
@@ -45,6 +47,12 @@ function init() {
           break;
       }
     });
+
+    nodecg.listenFor('twitchAdStarted', 'nodecg-speedcontrol', (adInfo) => {
+      adEnds = Date.now() + adInfo.duration * 1000;
+      updateAdCountdown();
+      twitchAdPlaying = true;
+    });
   });
 
   streamDeck.on('keyUp', (data: any) => {
@@ -67,7 +75,7 @@ function init() {
     }
 
     // com.esamarathon.streamdeck.twitchads
-    if (data.action === 'com.esamarathon.streamdeck.twitchads') {
+    if (data.action === 'com.esamarathon.streamdeck.twitchads' && !twitchAdPlaying) {
       obs.changeScene(nodecg.bundleConfig.obs.names.scenes.ads);
     }
 
@@ -101,4 +109,29 @@ function setTextOnAllButtonsWithAction(action: string, text: string) {
   buttons.forEach((button) => {
     streamDeck.updateButtonText(button.context, text);
   });
+}
+
+function updateAdCountdown() {
+  const remainingAdTime = (adEnds - Date.now()) / 1000;
+  if (remainingAdTime > 0) {
+    const minutes = Math.floor(remainingAdTime / 60);
+    const seconds = Math.floor(remainingAdTime - minutes * 60);
+    const buttons = streamDeck.findButtonsWithAction('com.esamarathon.streamdeck.twitchads');
+    buttons.forEach((button) => {
+      streamDeck.updateButtonText(
+        button.context,
+        `Twitch Ad\nPlaying:\n${minutes}:${pad(seconds)}`,
+      );
+    });
+    setTimeout(updateAdCountdown, 1000);
+  } else {
+    adEnds = 0;
+    twitchAdPlaying = false;
+    const buttons = streamDeck.findButtonsWithAction('com.esamarathon.streamdeck.twitchads');
+    buttons.forEach(button => streamDeck.updateButtonText(button.context, 'STEP 1\nTWITCH AD'));
+  }
+}
+
+function pad(num: Number) {
+  return num.toString().padStart(2, '0');
 }

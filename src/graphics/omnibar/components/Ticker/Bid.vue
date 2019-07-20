@@ -115,7 +115,7 @@ export default {
         // beyond that theres a quadratic falloff
         let weight = Math.max(Math.min(10 * 60 * 1000 / (_bid.end_time - Date.now()), 1), 0) ** 2;
         if (_bid.id === this.lastBidID) weight = 0;
-        bidChoices.push({ _bid, weight });
+        bidChoices.push({ bid: _bid, weight });
         totalWeight += weight;
       });
       let randomValue = Math.random();

@@ -3,10 +3,12 @@
     id="SponsorLogoBox"
     class="FlexContainer"
   >
-    <div class="SponsorLogo FlexContainer">
+    <div
+      class="SponsorLogo FlexContainer"
+    >
       <transition name="fade">
         <img
-          v-if="show"
+          v-show="show"
           :key="imgSrc"
           :src="imgSrc"
         >
@@ -23,14 +25,17 @@ export default {
   data() {
     return {
       show: false,
-      imgSrc: '',
+      imgSrc: undefined,
     };
   },
   mounted() {
     current.on('change', (newVal) => {
-      if (newVal) {
+      if (newVal && newVal.url) {
         this.show = true;
         this.imgSrc = newVal.url;
+      } else {
+        this.show = false;
+        this.imgSrc = undefined;
       }
     });
   },

@@ -7,7 +7,7 @@
       v-for="(player, index) in players"
       :key="`${index}${Date.now()}`"
       :players="player"
-      :player-slot="(teamId >= 0) ? teamId : -1"
+      :player-slot="(teamId >= 0 && coop < 0) ? teamId : -1"
       :team-id="teamId"
     ></player-info>
   </div>
@@ -32,6 +32,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    coop: {
+      type: Number,
+      default: -1,
+    },
   },
   data() {
     return {
@@ -52,6 +56,8 @@ export default {
         const players = clone(data.teams[id].players);
         if (this.single) {
           this.players.push(players);
+        } else if (this.coop >= 0) {
+          this.players.push([players[this.coop]]);
         } else {
           players.forEach(player => this.players.push([player]));
         }

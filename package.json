@@ -143,6 +143,11 @@
         "file": "donations.html",
         "width": 1920,
         "height": 1080
+      },
+      {
+        "file": "host-dashboard.html",
+        "width": 1920,
+        "height": 1080
       }
     ],
     "mount": [

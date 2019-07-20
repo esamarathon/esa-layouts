@@ -19,6 +19,8 @@ let twitchAdPlaying = false;
 streamDeck.on('init', () => {
   if (!initDone) { init(); }
   initDone = true;
+  twitchAdPlaying = false;
+  adEnds = 0;
 
   // com.esamarathon.streamdeck.timer
   // Set default text on buttons.
@@ -46,12 +48,6 @@ function init() {
           streamDeck.updateButtonText(button.context, 'Reset\nTimer');
           break;
       }
-    });
-
-    nodecg.listenFor('twitchAdStarted', 'nodecg-speedcontrol', (adInfo) => {
-      adEnds = Date.now() + adInfo.duration * 1000;
-      updateAdCountdown();
-      twitchAdPlaying = true;
     });
   });
 
@@ -102,6 +98,12 @@ function init() {
       }
     }
   });
+
+  nodecg.listenFor('twitchAdStarted', 'nodecg-speedcontrol', (adInfo) => {
+    adEnds = Date.now() + adInfo.duration * 1000;
+    updateAdCountdown();
+    twitchAdPlaying = true;
+  });
 }
 
 function setTextOnAllButtonsWithAction(action: string, text: string) {
@@ -116,19 +118,15 @@ function updateAdCountdown() {
   if (remainingAdTime > 0) {
     const minutes = Math.floor(remainingAdTime / 60);
     const seconds = Math.floor(remainingAdTime - minutes * 60);
-    const buttons = streamDeck.findButtonsWithAction('com.esamarathon.streamdeck.twitchads');
-    buttons.forEach((button) => {
-      streamDeck.updateButtonText(
-        button.context,
-        `Twitch Ad\nPlaying:\n${minutes}:${pad(seconds)}`,
-      );
-    });
+    setTextOnAllButtonsWithAction(
+      'com.esamarathon.streamdeck.twitchads',
+      `Twitch Ad\nPlaying:\n${minutes}:${pad(seconds)}`,
+    );
     setTimeout(updateAdCountdown, 1000);
   } else {
     adEnds = 0;
     twitchAdPlaying = false;
-    const buttons = streamDeck.findButtonsWithAction('com.esamarathon.streamdeck.twitchads');
-    buttons.forEach(button => streamDeck.updateButtonText(button.context, 'STEP 1\nTWITCH AD'));
+    setTextOnAllButtonsWithAction('com.esamarathon.streamdeck.twitchads', 'STEP 1\nTWITCH AD');
   }
 }
 

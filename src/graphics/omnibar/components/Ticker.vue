@@ -107,7 +107,7 @@ export default {
       return this.genericMsg(`Donate @ donations.esamarathon.com/donate/${evtShort.value}`);
     },
     shirts() {
-      return this.genericMsg('Message about shirts TBD');
+      return this.genericMsg('Check out our Yetee shirts @ theyetee.com/esa!');
     },
     genericMsg(string) {
       return {

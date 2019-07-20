@@ -171,9 +171,18 @@ mq.on('donation-fully-processed', (data) => {
 });
 
 // Is this tracker stuff? Living here for now.
-mq.on('new-screened-sub', data => nodecg.sendMessage('newSub', data));
-mq.on('new-screened-tweet', data => nodecg.sendMessage('newTweet', data));
-// mq.on('new-screened-cheer', data => nodecg.sendMessage('newCheer', data));
+mq.on('new-screened-sub', (data) => {
+  nodecg.log.info('Received new subscriber.');
+  nodecg.sendMessage('newSub', data);
+});
+mq.on('new-screened-tweet', (data) => {
+  nodecg.log.info('Received new tweet.');
+  nodecg.sendMessage('newTweet', data);
+});
+mq.on('new-screened-cheer', (data) => {
+  nodecg.log.info('Received new cheer.');
+  nodecg.sendMessage('newCheer', data);
+});
 mq.on('run-changed', (data) => { otherStreamInfo.value = data.run; });
 
 function loginToTracker():Promise<any> {

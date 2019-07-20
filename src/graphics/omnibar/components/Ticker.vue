@@ -69,7 +69,7 @@ export default {
       nodecg.listenFor('newSub', data => newSubs.push(data));
       nodecg.listenFor('newTweet', data => newTweets.push(data));
       nodecg.listenFor('newDonation', data => newDonations.push(data));
-      nodecg.listenFor('newCheers', data => newCheers.push(data));
+      // nodecg.listenFor('newCheer', data => newCheers.push(data));
 
       // Puts copies of the objects the functions return
       // into an array for easy random-ness access.
@@ -93,16 +93,16 @@ export default {
     showNextMsg() {
       let currentComponent;
       if (newDonations.length) {
-        currentComponent = this.donationURL(newDonations[0]);
+        currentComponent = this.donation(newDonations[0]);
         newDonations.shift();
       } else if (newSubs.length) {
-        currentComponent = this.donationURL(newSubs[0]);
+        currentComponent = this.sub(newSubs[0]);
         newSubs.shift();
       } else if (newCheers.length) {
-        currentComponent = this.donationURL(newCheers[0]);
+        currentComponent = this.cheer(newCheers[0]);
         newCheers.shift();
       } else if (newTweets.length) {
-        currentComponent = this.donationURL(newTweets[0]);
+        currentComponent = this.tweet(newTweets[0]);
         newTweets.shift();
       } else {
         currentComponent = this.messageTypes[Math.floor(Math.random() * this.messageTypes.length)];

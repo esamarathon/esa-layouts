@@ -2,7 +2,9 @@
   <div
     v-capture-change
     class="Capture"
-  />
+  >
+    <slot />
+  </div>
 </template>
 
 <script>

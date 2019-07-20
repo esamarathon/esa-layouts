@@ -2,9 +2,11 @@
   <div id="Intermission">
     <logo></logo>
     <capture
-      id="CameraCapture1"
-      class="CameraCapture BorderTop BorderRight BorderBottom BorderLeft"
-    ></capture>
+      id="IntermissionCamera"
+      class="FlexContainer CameraCapture BorderTop BorderRight BorderBottom BorderLeft"
+    >
+      <ad-timer></ad-timer>
+    </capture>
     <info-storage-box
       id="SponsorLogo"
     >
@@ -38,6 +40,7 @@ import Music from './components/Music.vue';
 import Reader from './components/Reader.vue';
 import RunUpcoming from './components/RunUpcoming.vue';
 import Rotation from './components/Rotation.vue';
+import AdTimer from './components/AdTimer.vue';
 
 export default {
   name: 'Intermission',
@@ -50,6 +53,7 @@ export default {
     Reader,
     RunUpcoming,
     Rotation,
+    AdTimer,
   },
   data() {
     return {
@@ -90,7 +94,9 @@ export default {
     height: 259px;
   }
 
-  #CameraCapture1 {
+  #IntermissionCamera {
+    justify-content: flex-end;
+    align-items: flex-end;
     left: 30px;
     top: 370px;
     width: 655px;

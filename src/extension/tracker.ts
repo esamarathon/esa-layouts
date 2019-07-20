@@ -173,6 +173,7 @@ mq.on('donation-fully-processed', (data) => {
 // Is this tracker stuff? Living here for now.
 mq.on('new-screened-sub', data => nodecg.sendMessage('newSub', data));
 mq.on('new-screened-tweet', data => nodecg.sendMessage('newTweet', data));
+// mq.on('new-screened-cheer', data => nodecg.sendMessage('newCheer', data));
 mq.on('run-changed', (data) => { otherStreamInfo.value = data.run; });
 
 function loginToTracker():Promise<any> {

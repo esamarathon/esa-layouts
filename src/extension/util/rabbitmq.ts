@@ -9,6 +9,7 @@ interface MQEmitter extends EventEmitter {
   on(event: 'donation-fully-processed', listener: (data: any) => void): this;
   on(event: 'new-screened-tweet', listener: (data: any) => void): this;
   on(event: 'new-screened-sub', listener: (data: any) => void): this;
+  on(event: 'new-screened-cheer', listener: (data: any) => void): this;
   on(event: 'bigbutton-tag-scanned', listener: (data: any) => void): this;
   on(event: 'bigbutton-pressed', listener: (data: any) => void): this;
   on(event: 'run-changed', listener: (data: any) => void): this;

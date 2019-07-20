@@ -3,7 +3,7 @@
     <logo></logo>
     <capture
       id="CameraCapture1"
-      class="CameraCapture"
+      class="CameraCapture BorderTop BorderRight BorderBottom BorderLeft"
     ></capture>
     <info-storage-box
       id="SponsorLogo"

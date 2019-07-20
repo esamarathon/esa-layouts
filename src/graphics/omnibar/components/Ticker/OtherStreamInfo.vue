@@ -44,12 +44,14 @@ export default {
     };
   },
   created() {
+    const fallback = setTimeout(() => this.$emit('end'), 5000);
     NodeCG.waitForReplicants(otherStreamInfoRep).then(() => {
       // Skip if nothing to show.
       if (!otherStreamInfoRep.value) {
         this.$emit('end');
       } else {
         this.otherStreamInfo = clone(otherStreamInfoRep.value);
+        clearTimeout(fallback);
         setTimeout(() => this.$emit('end'), 25 * 1000);
       }
     });

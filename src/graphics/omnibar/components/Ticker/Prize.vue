@@ -36,11 +36,13 @@ export default {
     };
   },
   created() {
+    const fallback = setTimeout(() => this.$emit('end'), 5000);
     if (!prizes.value.length) {
       this.$emit('end');
     } else {
       const randNum = Math.floor(Math.random() * prizes.value.length);
       this.prize = clone(prizes.value[randNum]);
+      clearTimeout(fallback);
       setTimeout(() => this.$emit('end'), 25 * 1000);
     }
   },

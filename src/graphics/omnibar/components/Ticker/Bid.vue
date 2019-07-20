@@ -85,11 +85,13 @@ export default {
     }
   },
   mounted() {
+    const fallback = setTimeout(() => this.$emit('end'), 5000);
     const originalWidth = this.$parent.$el.clientWidth - 34;
     this.bid = bid;
     Vue.nextTick().then(() => {
       this.width = originalWidth;
       setTimeout(() => {
+        clearTimeout(fallback);
         const amountToScroll = this.$refs.Line2.scrollWidth - originalWidth;
         const timeToScroll = (amountToScroll * 13) / 1000;
         const timeToShow = (timeToScroll > 25) ? timeToScroll : 21;

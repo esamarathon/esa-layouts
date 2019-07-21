@@ -43,6 +43,7 @@ const routes = [
   { name: '16:9 2 Player (co-op)', path: '/16x9-2p-coop', component: Layouts.L_16x9_2p_CoOp },
   { name: '16:9 2 Player (bingo)', path: '/16x9-2p-bingo', component: Layouts.L_16x9_2p_Bingo },
   { name: '16:9 3 Player', path: '/16x9-3p', component: Layouts.L_16x9_3p },
+  { name: '16:9 4 Player (MonHun)', path: '/16x9-4p-monhun', component: Layouts.L_16x9_4p_MonHun },
   { name: 'GameBoy 1 Player', path: '/GB-1p', component: Layouts.L_GB_1p },
   { name: 'GBA 1 Player', path: '/GBA-1p', component: Layouts.L_GBA_1p },
   { name: '3DS 1 Player', path: '/3DS-1p', component: Layouts.L_3DS_1p },

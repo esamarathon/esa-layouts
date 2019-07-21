@@ -165,7 +165,7 @@ $(() => {
 	function formPlayerNamesString(runData) {
 		var namesArray = [];
 		var namesList = 'No Player(s)';
-		runData.teams.forEach(team => {
+		Array.prototype.forEach.call(runData.teams, team => {
 			var teamPlayerArray = [];
 			team.players.forEach(player => { teamPlayerArray.push(player.name); });
 			namesArray.push(teamPlayerArray.join(', '));
@@ -177,7 +177,7 @@ $(() => {
 	// Returns the total amount of players a run has.
 	function checkForTotalPlayers(runData) {
 		var amount = 0;
-		runData.teams.forEach(team => team.players.forEach(player => amount++));
+		Array.prototype.forEach.call(runData.teams, team => team.players.forEach(player => amount++));
 		return amount;
 	}
 

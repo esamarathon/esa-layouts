@@ -35,16 +35,6 @@ const newDonations = [];
 const newSubs = [];
 const newTweets = [];
 const newCheers = [];
-const entityMap = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;',
-  "'": '&#39;',
-  '/': '&#x2F;',
-  '`': '&#x60;',
-  '=': '&#x3D;',
-};
 
 export default {
   name: 'Ticker',
@@ -156,7 +146,7 @@ export default {
     },
     sub(subData) {
       const systemMsg = subData.message.tags['system-msg'].replace(/\\s/g, ' ');
-      const line1 = this.escapeHtml(systemMsg);
+      const line1 = systemMsg;
       const line2 = subData.message.trailing;
       return this.alert(line1, line2);
     },
@@ -168,7 +158,7 @@ export default {
     tweet(tweetData) {
       // Regex removes multiple spaces/newlines from tweets.
       let message = tweetData.message.full_text;
-      message = (message && message !== '') ? message.replace(/\s\s+|\n/g, ' ') : undefined;
+      message = (message) ? message.replace(/\s\s+|\n/g, ' ') : undefined;
 
       // Regex removes Twitter URL shortener links.
       message = message.replace(/https:\/\/t\.co\/\w+/g, (match) => {
@@ -179,13 +169,11 @@ export default {
         return '';
       });
 
-      const line1 = this.escapeHtml(tweetData.user.name);
+      const line1 = tweetData.user.name;
       const line2 = message;
       return this.alert(line1, line2);
     },
     alert(line1Text, line2Text) {
-      // const line2Checked = (line2Text) ? this.escapeHtml(line2Text.replace(/\s\s+|\n/g, ' ')) : undefined;
-
       return {
         name: Alert,
         data: {
@@ -204,9 +192,6 @@ export default {
     },
     formatUSD(amount) {
       return `$${amount.toFixed(2)}`;
-    },
-    escapeHtml(string) {
-      return String(string).replace(/[&<>"'`=/]/g, s => entityMap[s]);
     },
   },
 };

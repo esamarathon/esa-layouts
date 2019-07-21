@@ -10,6 +10,7 @@ const layouts = nodecg.Replicant('layouts'); // schema this!
 const currentLayout = nodecg.Replicant('currentLayout'); // schema this!
 // eslint-disable-next-line import/prefer-default-export
 export const serverBus = new Vue();
+let force = false;
 
 // This controls the player name -> Twitch username animation timings.
 let playerShowTwitchTO;
@@ -55,12 +56,18 @@ const router = new VueRouter({
 
 // Used to send when the layout is changed and make the correct clip-path.
 function layoutChanged(route) {
-  currentLayout.value = route.path;
+  const url = new URL(window.location.href);
+  force = url.searchParams.get('force');
+  if (!force) {
+    currentLayout.value = route.path;
+  }
   CutBackground();
 }
 
 currentLayout.on('change', (newVal) => {
-  if (newVal) {
+  const url = new URL(window.location.href);
+  force = url.searchParams.get('force');
+  if (newVal && !force) {
     router.push(newVal);
   }
 });

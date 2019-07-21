@@ -162,11 +162,13 @@ mq.on('evt-donation-total', (data) => {
 
 // When a new donation is fully processed on the tracker, this is fired.
 mq.on('donation-fully-processed', (data) => {
-  nodecg.log.info('Received new donation with ID %s.', data._id);
-  nodecg.sendMessage('newDonation', data);
-  if (data.amount >= 20) {
-    recentDonations.value.unshift(data);
-    recentDonations.value.length = Math.min(recentDonations.value.length, 20);
+  if (data.comment_state === 'APPROVED') {
+    nodecg.log.info('Received new donation with ID %s.', data._id);
+    nodecg.sendMessage('newDonation', data);
+    if (data.amount >= 20) {
+      recentDonations.value.unshift(data);
+      recentDonations.value.length = Math.min(recentDonations.value.length, 20);
+    }
   }
 });
 

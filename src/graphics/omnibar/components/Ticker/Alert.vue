@@ -49,10 +49,10 @@ export default {
     const fallback = setTimeout(() => this.$emit('end'), 5000);
     const originalWidth = this.$parent.$el.clientWidth - 34;
     this.line1 = this.data.line1Text;
-    this.line2 = this.data.line2Text;
-    if (!this.line2) {
+    if (!this.data.line2Text) {
       setTimeout(() => this.$emit('end'), 10 * 1000);
     } else {
+      this.line2 = this.data.line2Text;
       Vue.nextTick().then(() => {
         this.width = originalWidth;
         setTimeout(() => {

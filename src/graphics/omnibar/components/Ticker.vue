@@ -69,7 +69,7 @@ export default {
       nodecg.listenFor('newSub', data => newSubs.push(data));
       nodecg.listenFor('newTweet', data => newTweets.push(data));
       nodecg.listenFor('newDonation', data => newDonations.push(data));
-      // nodecg.listenFor('newCheer', data => newCheers.push(data));
+      nodecg.listenFor('newCheer', data => newCheers.push(data));
 
       // Puts copies of the objects the functions return
       // into an array for easy random-ness access.
@@ -184,13 +184,13 @@ export default {
       return this.alert(line1, line2);
     },
     alert(line1Text, line2Text) {
-      const line2Checked = (line2Text) ? this.escapeHtml(line2Text.replace(/\s\s+|\n/g, ' ')) : undefined;
+      // const line2Checked = (line2Text) ? this.escapeHtml(line2Text.replace(/\s\s+|\n/g, ' ')) : undefined;
 
       return {
         name: Alert,
         data: {
           line1Text,
-          line2Checked,
+          line2Text,
         },
       };
     },

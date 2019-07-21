@@ -24,6 +24,9 @@ const donationTotal = nodecg.Replicant<DonationTotal>('donationTotal');
 const recentDonations = nodecg.Replicant<RecentDonations>('recentDonations');
 const evtShortRep = nodecg.Replicant<string>('evtShort');
 const otherStreamInfo = nodecg.Replicant<OtherStreamInfo>('otherStreamInfo');
+const otherStreamInfoShow = nodecg.Replicant<boolean>(
+  'otherStreamInfoShow', { defaultValue: false },
+);
 
 init();
 async function init() {
@@ -186,6 +189,15 @@ mq.on('new-screened-cheer', (data) => {
   nodecg.sendMessage('newCheer', data);
 });
 mq.on('run-changed', (data) => { otherStreamInfo.value = data.run; });
+mq.on('game-scene-changed', (data) => {
+  if (data.event !== eventInfo[streamEvtNumber].short) {
+    if (data.action === 'start') {
+      otherStreamInfoShow.value = true;
+    } else if (data.action === 'end') {
+      otherStreamInfoShow.value = false;
+    }
+  }
+});
 
 function loginToTracker():Promise<any> {
   return new Promise(async (resolve, reject) => {

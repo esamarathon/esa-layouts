@@ -26,6 +26,7 @@ import Vue from 'vue';
 import clone from 'clone';
 
 const otherStreamInfoRep = nodecg.Replicant('otherStreamInfo');
+const otherStreamInfoShowRep = nodecg.Replicant('otherStreamInfoShow');
 
 export default {
   name: 'OtherStreamInfo',
@@ -45,9 +46,9 @@ export default {
   },
   created() {
     const fallback = setTimeout(() => this.$emit('end'), 5000);
-    NodeCG.waitForReplicants(otherStreamInfoRep).then(() => {
+    NodeCG.waitForReplicants(otherStreamInfoRep, otherStreamInfoShowRep).then(() => {
       // Skip if nothing to show.
-      if (!otherStreamInfoRep.value) {
+      if (!otherStreamInfoRep.value || !otherStreamInfoShowRep.value) {
         this.$emit('end');
       } else {
         this.otherStreamInfo = clone(otherStreamInfoRep.value);

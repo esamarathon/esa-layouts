@@ -51,7 +51,7 @@ export default {
   created() {
     const fallback = setTimeout(() => this.$emit('end'), 5000);
     if (!nextRunsCache.length) {
-      const nextRuns = this.sc.getNextRuns();
+      const nextRuns = sc.getNextRuns();
 
       // Skip if nothing to show.
       if (!nextRuns.length) {

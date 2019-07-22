@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import clone from 'clone';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import CutBackground from '../_misc/cut_bg';
 import Capture from '../_misc/components/Capture.vue';
@@ -70,7 +69,7 @@ export default {
   },
   methods: {
     refreshUpcomingRun() {
-      const nextRun = clone(this.sc.getNextRuns(1));
+      const nextRun = sc.getNextRuns(1);
       if (nextRun.length) {
         [this.nextRun] = nextRun;
       }

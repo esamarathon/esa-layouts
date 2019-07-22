@@ -11,7 +11,6 @@
 
 <script>
 import SpeedcontrolUtil from 'speedcontrol-util';
-import clone from 'clone';
 import RunUpcoming from './RunUpcoming.vue';
 
 const sc = new SpeedcontrolUtil(nodecg);
@@ -32,7 +31,7 @@ export default {
   },
   methods: {
     refreshUpcomingRuns() {
-      this.nextRuns = clone(this.sc.getNextRuns().slice(1, 4));
+      this.nextRuns = sc.getNextRuns().slice(1, 4);
     },
   },
 };

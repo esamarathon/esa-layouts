@@ -10,25 +10,20 @@
 </template>
 
 <script>
-import SpeedcontrolUtil from 'speedcontrol-util';
 import RunUpcoming from '../RunUpcoming.vue';
-
-const sc = new SpeedcontrolUtil(nodecg);
 
 export default {
   name: 'Rotation',
   components: {
     RunUpcoming,
   },
-  data() {
-    return {
-      nextRuns: [],
-    };
-  },
-  created() {
-    NodeCG.waitForReplicants(sc.runDataActiveRun).then(() => {
-      this.nextRuns = sc.getNextRuns().slice(1, 4);
-    });
+  props: {
+    nextRuns: {
+      type: Array,
+      default() {
+        return [];
+      },
+    },
   },
   mounted() {
     setTimeout(() => this.$emit('end'), 20 * 1000);

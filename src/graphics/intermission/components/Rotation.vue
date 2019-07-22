@@ -3,6 +3,7 @@
     <transition name="fade">
       <component
         :is="currentComponent"
+        :next-runs="nextRuns"
         @end="showNextMsg"
       >
       </component>
@@ -11,8 +12,11 @@
 </template>
 
 <script>
+import SpeedcontrolUtil from 'speedcontrol-util';
 import UpcomingRuns from './Rotation/UpcomingRuns.vue';
 import MediaSlide from './Rotation/MediaSlide.vue';
+
+const sc = new SpeedcontrolUtil(nodecg);
 
 export default {
   name: 'Rotation',
@@ -24,10 +28,15 @@ export default {
         MediaSlide,
       ],
       index: 0,
+      nextRuns: [],
     };
   },
   mounted() {
-    this.showNextMsg();
+    NodeCG.waitForReplicants(sc.runDataActiveRun).then(() => {
+      this.updateNextRuns();
+      this.showNextMsg();
+    });
+    nodecg.listenFor('forceRefreshIntermission', () => this.updateNextRuns());
   },
   methods: {
     showNextMsg() {
@@ -37,6 +46,9 @@ export default {
 
       this.currentComponent = this.componentArray[this.index];
       this.index += 1;
+    },
+    updateNextRuns() {
+      this.nextRuns = sc.getNextRuns().slice(1, 4);
     },
   },
 };

@@ -114,4 +114,14 @@ export default {
   .logo-list-move {
     transition: transform 0.2s;
   }
+
+  .logo-list-enter, .logo-list-leave-to
+  /* .logo-list-complete-leave-active below version 2.1.8 */ {
+    opacity: 0;
+    transition: transform 0.2s;
+    transition: opacity 0.2s;
+  }
+  .logo-list-leave-active {
+    position: absolute;
+  }
 </style>

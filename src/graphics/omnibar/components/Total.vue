@@ -3,7 +3,13 @@
     id="Total"
     class="FlexContainer"
   >
-    ${{ animatedTotal }}
+    <span
+      v-for="char in totalSplitString"
+      :key="char"
+      :class="(char === ',' ? 'Comma' : undefined)"
+    >
+      {{ char }}
+    </span>
   </div>
 </template>
 
@@ -19,12 +25,8 @@ export default {
       init: false,
       total: -1,
       tweenedTotal: 0,
+      totalSplitString: [],
     };
-  },
-  computed: {
-    animatedTotal() {
-      return this.tweenedTotal.toLocaleString('en-US', { maximumFractionDigits: 0 });
-    },
   },
   watch: {
     total(val) {
@@ -34,6 +36,10 @@ export default {
         this.tweenedTotal = this.total;
         this.init = true;
       }
+    },
+    tweenedTotal(val) {
+      const string = `$${val.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+      this.totalSplitString = string.split('');
     },
   },
   mounted() {
@@ -52,6 +58,18 @@ export default {
     font-size: 40px;
     font-weight: 500;
     min-width: 50px;
+    text-align: center;
+  }
+
+  /* Each character in the total is in a span; setting width so the numbers appear monospaced. */
+  #Total > span {
+    display: inline-block;
+    width: 0.45em;
+    text-align: center;
+  }
+  #Total > .Comma {
+    display: inline-block;
+    width: 0.22em;
     text-align: center;
   }
 </style>

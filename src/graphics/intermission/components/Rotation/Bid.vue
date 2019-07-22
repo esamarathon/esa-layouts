@@ -61,8 +61,7 @@ export default {
     };
   },
   mounted() {
-    // const chosenBid = this.getRandomBid();
-    const chosenBid = clone(bids.value[1]);
+    const chosenBid = this.getRandomBid();
 
     if (!chosenBid || !bids.value.length) {
       this.$emit('end');

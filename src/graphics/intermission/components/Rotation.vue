@@ -14,6 +14,8 @@
 <script>
 import SpeedcontrolUtil from 'speedcontrol-util';
 import UpcomingRuns from './Rotation/UpcomingRuns.vue';
+import Bid from './Rotation/Bid.vue';
+import Prize from './Rotation/Prize.vue';
 import MediaSlide from './Rotation/MediaSlide.vue';
 
 const sc = new SpeedcontrolUtil(nodecg);
@@ -25,6 +27,8 @@ export default {
       currentComponent: undefined,
       componentArray: [
         UpcomingRuns,
+        Bid,
+        Prize,
         MediaSlide,
       ],
       index: 0,

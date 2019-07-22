@@ -4,14 +4,16 @@
       @add-logo="addLogo"
     ></logo-dropdown>
     <br>
-    <logo-settings
-      v-for="(logo, index) in rotation"
-      :key="`${index}${logo.seconds}${logo.sum}`"
-      :data="logo"
-      :index="index"
-      @update-seconds="updateSeconds"
-      @change-logo="changeLogo"
-    ></logo-settings>
+    <transition-group name="logo-list">
+      <logo-settings
+        v-for="(logo, index) in rotation"
+        :key="`${logo.id}`"
+        :info="logo"
+        :index="index"
+        @update-seconds="updateSeconds"
+        @change-logo="changeLogo"
+      ></logo-settings>
+    </transition-group>
     <br>
     <button @click="clear">
       Clear
@@ -27,6 +29,7 @@
 
 <script>
 import clone from 'clone';
+import uuid from 'uuid/v4';
 import LogoDropdown from './components/LogoDropdown.vue';
 import LogoSettings from './components/LogoSettings.vue';
 
@@ -48,6 +51,11 @@ export default {
   mounted() {
     NodeCG.waitForReplicants(rotationRep).then(() => {
       this.rotation = clone(rotationRep.value);
+      this.rotation.forEach((item) => {
+        if (!item.id) {
+          item.id = uuid(); // eslint-disable-line no-param-reassign
+        }
+      });
       this.show = true;
     });
   },
@@ -61,12 +69,16 @@ export default {
       setTimeout(() => { this.disableSave = false; }, 2000);
     },
     addLogo(data) {
-      this.rotation.push(data);
+      const cloned = clone(data);
+      cloned.id = uuid();
+      this.rotation.push(cloned);
     },
     updateSeconds(index, seconds) {
       this.rotation[index].seconds = seconds;
     },
-    changeLogo(index, action) {
+    changeLogo(item, action) {
+      const index = this.rotation.indexOf(item);
+      if (index < 0) return;
       switch (action) {
       case 'del':
         this.rotation.splice(index, 1);
@@ -97,5 +109,9 @@ export default {
   .LogoSettings:nth-last-of-type(1) {
     border-bottom: solid 1px grey;
     padding: 5px;
+  }
+
+  .logo-list-move {
+    transition: transform 0.2s;
   }
 </style>

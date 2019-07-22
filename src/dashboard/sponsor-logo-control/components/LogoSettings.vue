@@ -10,7 +10,7 @@
       ▼
     </button>
     <span>
-      {{ data.name }}
+      {{ info.name }}
     </span>
     <input
       v-model="seconds"
@@ -28,7 +28,7 @@ export default {
       type: Number,
       default: 0,
     },
-    data: {
+    info: {
       type: Object,
       default() {
         return {};
@@ -37,7 +37,7 @@ export default {
   },
   data() {
     return {
-      seconds: this.data.seconds,
+      seconds: this.info.seconds,
     };
   },
   watch: {
@@ -47,13 +47,13 @@ export default {
   },
   methods: {
     del() {
-      this.$emit('change-logo', this.index, 'del');
+      this.$emit('change-logo', this.info, 'del');
     },
     up() {
-      this.$emit('change-logo', this.index, 'up');
+      this.$emit('change-logo', this.info, 'up');
     },
     down() {
-      this.$emit('change-logo', this.index, 'down');
+      this.$emit('change-logo', this.info, 'down');
     },
   },
 };
@@ -66,7 +66,7 @@ export default {
   }
 
   .Seconds {
-    width: 30px;
+    width: 50px;
     float: right;
   }
 </style>

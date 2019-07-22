@@ -34,7 +34,8 @@
     "needle": "^2.4.0",
     "obs-websocket-js": "^3.1.0",
     "speedcontrol-util": "github:speedcontrol/speedcontrol-util#dev",
-    "streamdeck-util": "^0.3.0"
+    "streamdeck-util": "^0.3.0",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@types/amqp-connection-manager": "^2.0.4",

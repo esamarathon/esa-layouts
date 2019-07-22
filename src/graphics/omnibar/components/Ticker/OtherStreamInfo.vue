@@ -14,8 +14,8 @@
       <span v-if="otherStreamInfo.system">
         ran on {{ otherStreamInfo.system }}
       </span>
-      <span v-if="sc.checkForTotalPlayers(otherStreamInfo) > 0">
-        with {{ sc.formPlayerNamesString(otherStreamInfo) }}
+      <span v-if="checkForTotalPlayers(otherStreamInfo) > 0">
+        with {{ formPlayerNamesString(otherStreamInfo) }}
       </span>
     </div>
   </div>
@@ -23,11 +23,9 @@
 
 <script>
 import clone from 'clone';
-import SpeedcontrolUtil from 'speedcontrol-util';
 
 const otherStreamInfoRep = nodecg.Replicant('otherStreamInfo');
 const otherStreamInfoShowRep = nodecg.Replicant('otherStreamInfoShow');
-const sc = new SpeedcontrolUtil(nodecg);
 
 export default {
   name: 'OtherStreamInfo',
@@ -42,7 +40,6 @@ export default {
   data() {
     return {
       otherStreamInfo: null,
-      sc,
     };
   },
   created() {
@@ -57,6 +54,28 @@ export default {
         setTimeout(() => this.$emit('end'), 25 * 1000);
       }
     });
+  },
+  methods: {
+    formPlayerNamesString(run) {
+      const namesArray = [];
+      let namesList = 'No Player(s)';
+      run.teams.forEach((team) => {
+        const teamPlayerArray = [];
+        team.players.forEach(player => teamPlayerArray.push(player.name));
+        namesArray.push(teamPlayerArray.join(', '));
+      });
+      if (namesList.length) {
+        namesList = namesArray.join(' vs. ');
+      }
+      return namesList;
+    },
+    checkForTotalPlayers(run) {
+      let amount = 0;
+      run.teams.forEach(team => team.players.forEach(() => {
+        amount += 1;
+      }));
+      return amount;
+    },
   },
 };
 </script>

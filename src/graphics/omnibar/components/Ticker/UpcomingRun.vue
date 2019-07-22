@@ -14,8 +14,8 @@
       <span v-if="run.system">
         ran on {{ run.system }}
       </span>
-      <span v-if="sc.checkForTotalPlayers(run) > 0">
-        with {{ sc.formPlayerNamesString(run) }}
+      <span v-if="checkForTotalPlayers(run) > 0">
+        with {{ formPlayerNamesString(run) }}
       </span>
     </div>
   </div>
@@ -44,7 +44,6 @@ export default {
   data() {
     return {
       run: null,
-      sc,
       when: '',
     };
   },
@@ -74,6 +73,28 @@ export default {
     nextRunsCache.splice(randNum, 1);
     clearTimeout(fallback);
     setTimeout(() => this.$emit('end'), 25 * 1000);
+  },
+  methods: {
+    formPlayerNamesString(run) {
+      const namesArray = [];
+      let namesList = 'No Player(s)';
+      run.teams.forEach((team) => {
+        const teamPlayerArray = [];
+        team.players.forEach(player => teamPlayerArray.push(player.name));
+        namesArray.push(teamPlayerArray.join(', '));
+      });
+      if (namesList.length) {
+        namesList = namesArray.join(' vs. ');
+      }
+      return namesList;
+    },
+    checkForTotalPlayers(run) {
+      let amount = 0;
+      run.teams.forEach(team => team.players.forEach(() => {
+        amount += 1;
+      }));
+      return amount;
+    },
   },
 };
 </script>

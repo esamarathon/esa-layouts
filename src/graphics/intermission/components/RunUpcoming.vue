@@ -23,8 +23,8 @@
         <span v-if="data.system">
           {{ data.system }}
         </span>
-        <span v-if="sc.checkForTotalPlayers(data) > 0">
-          {{ sc.formPlayerNamesString(data) }}
+        <span v-if="checkForTotalPlayers(data) > 0">
+          {{ formPlayerNamesString(data) }}
         </span>
         <span v-if="data.estimate">
           EST: {{ data.estimate }}
@@ -35,9 +35,6 @@
 </template>
 
 <script>
-import SpeedcontrolUtil from 'speedcontrol-util';
-
-const sc = new SpeedcontrolUtil(nodecg);
 
 export default {
   name: 'RunUpcoming',
@@ -53,10 +50,27 @@ export default {
       default: false,
     },
   },
-  data() {
-    return {
-      sc,
-    };
+  methods: {
+    formPlayerNamesString(run) {
+      const namesArray = [];
+      let namesList = 'No Player(s)';
+      run.teams.forEach((team) => {
+        const teamPlayerArray = [];
+        team.players.forEach(player => teamPlayerArray.push(player.name));
+        namesArray.push(teamPlayerArray.join(', '));
+      });
+      if (namesList.length) {
+        namesList = namesArray.join(' vs. ');
+      }
+      return namesList;
+    },
+    checkForTotalPlayers(run) {
+      let amount = 0;
+      run.teams.forEach(team => team.players.forEach(() => {
+        amount += 1;
+      }));
+      return amount;
+    },
   },
 };
 </script>

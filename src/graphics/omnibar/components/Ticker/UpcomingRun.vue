@@ -62,17 +62,17 @@ export default {
     }
 
     const randNum = Math.floor(Math.random() * nextRunsCache.length);
-    this.run = clone(nextRunsCache[randNum]);
-    if (this.run.scheduledS < (Date.now() / 1000)) {
+    if (nextRunsCache[randNum].scheduledS < (Date.now() / 1000)) {
       nextRunsCache.splice(randNum, 1);
       clearTimeout(fallback);
       this.$emit('end');
-      return;
+    } else {
+      this.run = clone(nextRunsCache[randNum]);
+      this.when = moment.unix(this.run.scheduledS).fromNow();
+      nextRunsCache.splice(randNum, 1);
+      clearTimeout(fallback);
+      setTimeout(() => this.$emit('end'), 25 * 1000);
     }
-    this.when = moment.unix(this.run.scheduledS).fromNow();
-    nextRunsCache.splice(randNum, 1);
-    clearTimeout(fallback);
-    setTimeout(() => this.$emit('end'), 25 * 1000);
   },
   methods: {
     formPlayerNamesString(run) {

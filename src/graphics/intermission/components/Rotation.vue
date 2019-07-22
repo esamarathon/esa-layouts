@@ -1,37 +1,42 @@
 <template>
   <div id="Rotation">
-    <run-upcoming
-      v-for="run in nextRuns"
-      :key="`${Date.now()}${run.id}`"
-      :data="run"
-      :when="true"
-    ></run-upcoming>
+    <transition name="fade">
+      <component
+        :is="currentComponent"
+        @end="showNextMsg"
+      >
+      </component>
+    </transition>
   </div>
 </template>
 
 <script>
-import SpeedcontrolUtil from 'speedcontrol-util';
-import RunUpcoming from './RunUpcoming.vue';
-
-const sc = new SpeedcontrolUtil(nodecg);
+import UpcomingRuns from './Rotation/UpcomingRuns.vue';
+import MediaSlide from './Rotation/MediaSlide.vue';
 
 export default {
   name: 'Rotation',
-  components: {
-    RunUpcoming,
-  },
   data() {
     return {
-      nextRuns: [],
+      currentComponent: undefined,
+      componentArray: [
+        UpcomingRuns,
+        MediaSlide,
+      ],
+      index: 0,
     };
   },
-  created() {
-    NodeCG.waitForReplicants(sc.runDataActiveRun).then(() => this.refreshUpcomingRuns());
-    nodecg.listenFor('forceRefreshIntermission', this.refreshUpcomingRuns);
+  mounted() {
+    this.showNextMsg();
   },
   methods: {
-    refreshUpcomingRuns() {
-      this.nextRuns = sc.getNextRuns().slice(1, 4);
+    showNextMsg() {
+      if (this.index >= this.componentArray.length) {
+        this.index = 0;
+      }
+
+      this.currentComponent = this.componentArray[this.index];
+      this.index += 1;
     },
   },
 };
@@ -40,8 +45,12 @@ export default {
 <style>
   #Rotation {
     position: fixed;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 1s;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
   }
 </style>

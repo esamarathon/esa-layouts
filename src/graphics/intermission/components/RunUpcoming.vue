@@ -5,11 +5,11 @@
   >
     <div class="Header">
       Coming Up
-      <span v-if="!when">
+      <span v-if="!data.when">
         Next
       </span>
       <span v-else>
-        Later
+        {{ formETAUntilRun() }}
       </span>
     </div>
     <div class="Body">
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 
 export default {
   name: 'RunUpcoming',
@@ -44,10 +45,6 @@ export default {
       default() {
         return undefined;
       },
-    },
-    when: {
-      type: Boolean,
-      default: false,
     },
   },
   methods: {
@@ -70,6 +67,10 @@ export default {
         amount += 1;
       }));
       return amount;
+    },
+    formETAUntilRun() {
+      const eta = moment.utc().second(0).to(moment.utc().second(this.data.when), true);
+      return `In about ${eta}`;
     },
   },
 };

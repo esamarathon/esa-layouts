@@ -52,7 +52,7 @@ export default {
       this.index += 1;
     },
     updateNextRuns() {
-      this.nextRuns = sc.getNextRuns().slice(1, 4);
+      this.nextRuns = sc.getNextRuns().slice(0, 4);
     },
   },
 };

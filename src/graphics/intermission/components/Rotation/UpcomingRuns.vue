@@ -13,7 +13,7 @@
 import RunUpcoming from '../RunUpcoming.vue';
 
 export default {
-  name: 'Rotation',
+  name: 'UpcomingRuns',
   components: {
     RunUpcoming,
   },
@@ -26,6 +26,10 @@ export default {
     },
   },
   mounted() {
+    if (!this.nextRuns.length) {
+      this.$emit('end');
+      return;
+    }
     setTimeout(() => this.$emit('end'), 20 * 1000);
   },
 };

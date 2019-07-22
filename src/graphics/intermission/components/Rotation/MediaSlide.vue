@@ -30,7 +30,7 @@
 import Vue from 'vue';
 
 const media = nodecg.Replicant('assets:intermission-slides');
-let index = 3;
+let index = 0;
 
 export default {
   name: 'MediaSlide',
@@ -43,6 +43,11 @@ export default {
   },
   mounted() {
     NodeCG.waitForReplicants(media).then(() => {
+      if (!media.value.length) {
+        this.$emit('end');
+        return;
+      }
+
       if (index >= media.value.length) {
         index = 0;
       }

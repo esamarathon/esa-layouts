@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import Vue from 'vue';
+import SpeedcontrolUtil from 'speedcontrol-util';
 import { serverBus } from '../main';
 
 const playerSoloImg = require('../../_misc/player-solo.png');
@@ -59,6 +59,8 @@ const playerImgNumbered = [
   playerImg3,
   playerImg4,
 ];
+
+const sc = new SpeedcontrolUtil(nodecg);
 
 export default {
   name: 'PlayerInfo',
@@ -107,10 +109,10 @@ export default {
     this.show = true;
   },
   mounted() {
-    Vue.prototype.$sc.timer.on('change', this.updateFinishTimer);
+    sc.timer.on('change', this.updateFinishTimer);
   },
   destroyed() {
-    Vue.prototype.$sc.timer.removeListener('change', this.updateFinishTimer);
+    sc.timer.removeListener('change', this.updateFinishTimer);
   },
   methods: {
     changePlayer(init) {

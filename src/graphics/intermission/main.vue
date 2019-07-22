@@ -16,7 +16,6 @@
       v-if="nextRun"
       id="ComingUpNext"
       :data="nextRun"
-      :sc="sc"
     ></run-upcoming>
     <rotation></rotation>
     <info-storage-box
@@ -42,6 +41,8 @@ import RunUpcoming from './components/RunUpcoming.vue';
 import Rotation from './components/Rotation.vue';
 import AdTimer from './components/AdTimer.vue';
 
+const sc = new SpeedcontrolUtil(nodecg);
+
 export default {
   name: 'Intermission',
   components: {
@@ -58,11 +59,10 @@ export default {
   data() {
     return {
       nextRun: undefined,
-      sc: new SpeedcontrolUtil(nodecg),
     };
   },
   created() {
-    NodeCG.waitForReplicants(this.sc.runDataActiveRun).then(() => this.refreshUpcomingRun());
+    NodeCG.waitForReplicants(sc.runDataActiveRun).then(() => this.refreshUpcomingRun());
     nodecg.listenFor('forceRefreshIntermission', this.refreshUpcomingRun);
   },
   mounted() {

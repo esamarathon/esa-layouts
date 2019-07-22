@@ -11,10 +11,6 @@ $(() => {
 	var bidHTML = $('<div class="bid"><span class="bidGame"></span><br><span class="bidName"></span></div>')
 	var runHTML = $('<div class="run"><span class="justMissed">YOU HAVE JUST WATCHED<br></span><span class="gameName"></span><br><span class="gameCategory"></span><br><span class="gameConsole"></span><br><span class="gameRunners"></span><br><span class="gameTime"></span><br><span class="gameFinal"></span></div>');
 
-	// Replicants
-	var emotes = nodecg.Replicant('emotes');
-	var runDataArray = nodecg.Replicant('runDataArray', 'nodecg-speedcontrol');
-
 	// Keep donation total updated.
 	var donationTotal = nodecg.Replicant('donationTotal');
 	donationTotal.on('change', newVal => {
@@ -213,16 +209,6 @@ $(() => {
 		var ctx = canvas.getContext('2d');
 		ctx.font = size + 'px "Barlow Condensed"'; /* Change if layout is changed. */
 		return ctx.measureText(text).width;
-	}
-
-	// Replaces emoticon names in a text string with imgs.
-	function replaceEmotes(text) {
-		var textSplit = text.split(' ');
-		for (var i = 0; i < textSplit.length; i++) {
-			if (emotes.value[textSplit[i]])
-				textSplit[i] = '<img class="emoji" draggable="false" alt="' + textSplit[i] + '" src="https://static-cdn.jtvnw.net/emoticons/v1/' + emotes.value[textSplit[i]].id + '/3.0">';
-		}
-		return textSplit.join(' ');
 	}
 
 	// Formats dollar amounts to the correct string.

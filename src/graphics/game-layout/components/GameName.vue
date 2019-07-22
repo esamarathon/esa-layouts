@@ -9,7 +9,9 @@
 </template>
 
 <script>
-import Vue from 'vue';
+import SpeedcontrolUtil from 'speedcontrol-util';
+
+const sc = new SpeedcontrolUtil(nodecg);
 
 export default {
   name: 'GameName',
@@ -20,10 +22,10 @@ export default {
     };
   },
   mounted() {
-    Vue.prototype.$sc.runDataActiveRun.on('change', this.updateData);
+    sc.runDataActiveRun.on('change', this.updateData);
   },
   destroyed() {
-    Vue.prototype.$sc.runDataActiveRun.removeListener('change', this.updateData);
+    sc.runDataActiveRun.removeListener('change', this.updateData);
   },
   methods: {
     updateData(runData) {

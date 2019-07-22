@@ -60,12 +60,9 @@ export default {
       let data;
       logos.value.forEach((logo) => {
         if (logo.sum === sum) {
-          data = logo;
+          data = clone(logo);
         }
       });
-      if (data) {
-        data = clone(data);
-      }
       return data;
     },
   },

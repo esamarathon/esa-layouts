@@ -35,6 +35,10 @@
 </template>
 
 <script>
+import SpeedcontrolUtil from 'speedcontrol-util';
+
+const sc = new SpeedcontrolUtil(nodecg);
+
 export default {
   name: 'RunUpcoming',
   props: {
@@ -48,12 +52,11 @@ export default {
       type: Boolean,
       default: false,
     },
-    sc: {
-      type: Object,
-      default() {
-        return undefined;
-      },
-    },
+  },
+  data() {
+    return {
+      sc,
+    };
   },
 };
 </script>

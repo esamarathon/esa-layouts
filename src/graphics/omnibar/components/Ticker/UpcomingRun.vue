@@ -22,12 +22,14 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import moment from 'moment';
 import clone from 'clone';
+import SpeedcontrolUtil from 'speedcontrol-util';
 
 // Stored outside of the export so it persists.
 let nextRunsCache = [];
+
+const sc = new SpeedcontrolUtil(nodecg);
 
 export default {
   name: 'UpcomingRun',
@@ -42,7 +44,7 @@ export default {
   data() {
     return {
       run: null,
-      sc: Vue.prototype.$sc,
+      sc,
       when: '',
     };
   },

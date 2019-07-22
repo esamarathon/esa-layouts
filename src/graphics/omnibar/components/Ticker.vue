@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import SpeedcontrolUtil from 'speedcontrol-util';
 
 import GenericMessage from './Ticker/GenericMessage.vue';
@@ -29,7 +28,7 @@ import Alert from './Ticker/Alert.vue';
 
 const evtShort = nodecg.Replicant('evtShort');
 const otherStreamInfo = nodecg.Replicant('otherStreamInfo');
-Vue.prototype.$sc = new SpeedcontrolUtil(nodecg);
+const sc = new SpeedcontrolUtil(nodecg);
 
 const newDonations = [];
 const newSubs = [];
@@ -53,8 +52,8 @@ export default {
     NodeCG.waitForReplicants(
       evtShort,
       otherStreamInfo,
-      Vue.prototype.$sc.runDataActiveRun,
-      Vue.prototype.$sc.runDataArray,
+      sc.runDataActiveRun,
+      sc.runDataArray,
     ).then(() => {
       nodecg.listenFor('newSub', data => newSubs.push(data));
       nodecg.listenFor('newTweet', data => newTweets.push(data));

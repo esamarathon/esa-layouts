@@ -11,7 +11,9 @@
 </template>
 
 <script>
-import Vue from 'vue';
+import SpeedcontrolUtil from 'speedcontrol-util';
+
+const sc = new SpeedcontrolUtil(nodecg);
 
 export default {
   name: 'Timer',
@@ -19,7 +21,7 @@ export default {
     return {
       show: false,
       time: '',
-      timer: Vue.prototype.$sc.timer,
+      timer: sc.timer,
       backupTimerTO: setTimeout(0),
       textColor: {
         color: 'white',

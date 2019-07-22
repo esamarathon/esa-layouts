@@ -4,7 +4,6 @@
       v-for="run in nextRuns"
       :key="`${Date.now()}${run.id}`"
       :data="run"
-      :sc="sc"
       :when="true"
     ></run-upcoming>
   </div>
@@ -15,6 +14,8 @@ import SpeedcontrolUtil from 'speedcontrol-util';
 import clone from 'clone';
 import RunUpcoming from './RunUpcoming.vue';
 
+const sc = new SpeedcontrolUtil(nodecg);
+
 export default {
   name: 'Rotation',
   components: {
@@ -23,11 +24,10 @@ export default {
   data() {
     return {
       nextRuns: [],
-      sc: new SpeedcontrolUtil(nodecg),
     };
   },
   created() {
-    NodeCG.waitForReplicants(this.sc.runDataActiveRun).then(() => this.refreshUpcomingRuns());
+    NodeCG.waitForReplicants(sc.runDataActiveRun).then(() => this.refreshUpcomingRuns());
     nodecg.listenFor('forceRefreshIntermission', this.refreshUpcomingRuns);
   },
   methods: {

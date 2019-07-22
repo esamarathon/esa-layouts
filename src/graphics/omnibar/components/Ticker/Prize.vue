@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import clone from 'clone';
 
 const prizes = nodecg.Replicant('prizes');
@@ -31,7 +30,6 @@ export default {
   },
   data() {
     return {
-      sc: Vue.prototype.$sc,
       prize: undefined,
     };
   },

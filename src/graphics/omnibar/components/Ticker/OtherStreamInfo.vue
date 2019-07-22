@@ -22,11 +22,12 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import clone from 'clone';
+import SpeedcontrolUtil from 'speedcontrol-util';
 
 const otherStreamInfoRep = nodecg.Replicant('otherStreamInfo');
 const otherStreamInfoShowRep = nodecg.Replicant('otherStreamInfoShow');
+const sc = new SpeedcontrolUtil(nodecg);
 
 export default {
   name: 'OtherStreamInfo',
@@ -41,7 +42,7 @@ export default {
   data() {
     return {
       otherStreamInfo: null,
-      sc: Vue.prototype.$sc,
+      sc,
     };
   },
   created() {

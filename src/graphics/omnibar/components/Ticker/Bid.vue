@@ -111,8 +111,8 @@ export default {
     getRandomBid() {
       const bidChoices = [];
       let totalWeight = 0;
-      const bidsCopy = clone(bids);
-      bidsCopy.value.forEach((_bid) => {
+      const bidsCopy = clone(bids.value);
+      bidsCopy.forEach((_bid) => {
         // anything within the next 10 minutes has a relative weight of 1,
         // beyond that theres a quadratic falloff
         let weight = Math.max(Math.min(10 * 60 * 1000 / (_bid.end_time - Date.now()), 1), 0) ** 2;

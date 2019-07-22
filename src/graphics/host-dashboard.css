@@ -24,7 +24,7 @@ body {
 	padding: 0 10px;
 }
 
-#donationTotalHeader, #prizesHeader, #bidsHeader, #scheduleHeader, #unReadDonationsHeader {
+#donationTotalHeader, #prizesHeader, #bidsHeader, #scheduleHeader, #unReadDonationsHeader, #videoHeader {
 	font-size: 45px;
 	text-align: center;
 }
@@ -73,4 +73,10 @@ body {
 
 .gameFinal:before {
 	content: 'FINAL TIME: '
+}
+
+#videoName {
+	font-size: 40px;
+	text-align: center;
+	font-style: italic;
 }

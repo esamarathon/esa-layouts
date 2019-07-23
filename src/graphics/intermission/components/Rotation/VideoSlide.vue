@@ -48,12 +48,11 @@ export default {
         return;
       }
 
-      if (index >= media.value.length) {
-        index = 0;
-      }
-
       let data;
       while (!this.video) {
+        if (index >= media.value.length) {
+          index = 0;
+        }
         data = media.value[index];
         this.src = data.url;
         this.video = data.ext.toLowerCase() === '.mp4';

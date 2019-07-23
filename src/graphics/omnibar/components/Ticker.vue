@@ -136,7 +136,7 @@ export default {
       return this.genericMsg('Check out our Yetee shirts @ theyetee.com/esa!');
     },
     twitchCharity() {
-      return this.genericMsg('Subscribe or cheer to support the charity.');
+      return this.genericMsg('Subscribe or cheer to support the charity!');
     },
     donation(donation) {
       const line1 = `New Donation: ${donation.donor_visiblename} (${this.formatUSD(parseFloat(donation.amount))})`;

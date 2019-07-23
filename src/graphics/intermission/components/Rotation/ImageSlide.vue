@@ -1,7 +1,7 @@
 <template>
   <div
     v-show="show"
-    id="MediaSlide"
+    id="ImageSlide"
   >
     <div
       v-if="video"
@@ -33,11 +33,11 @@ const media = nodecg.Replicant('assets:intermission-slides');
 let index = 0;
 
 export default {
-  name: 'MediaSlide',
+  name: 'ImageSlide',
   data() {
     return {
       src: undefined,
-      video: false,
+      video: true,
       show: false,
     };
   },
@@ -52,18 +52,16 @@ export default {
         index = 0;
       }
 
-      const data = media.value[index];
-      this.src = data.url;
-      this.video = data.ext.toLowerCase() === '.mp4';
-
-      this.show = true;
-      if (this.video) {
-        Vue.nextTick().then(() => this.playVideo());
-      } else {
-        setTimeout(() => this.$emit('end'), 20 * 1000);
+      let data;
+      while (this.video) {
+        data = media.value[index];
+        this.src = data.url;
+        this.video = data.ext.toLowerCase() === '.mp4';
+        index += 1;
       }
 
-      index += 1;
+      this.show = true;
+      setTimeout(() => this.$emit('end'), 20 * 1000);
     });
   },
   methods: {
@@ -80,7 +78,7 @@ export default {
 </script>
 
 <style scoped>
-  #MediaSlide {
+  #ImageSlide {
     position: absolute;
     display: flex;
     align-items: center;

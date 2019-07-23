@@ -30,7 +30,7 @@
       class="PlayerStorageBox"
     >
       <player-container
-        :team-id="0"
+        :team-index="0"
         single
       ></player-container>
     </info-storage-box>
@@ -39,7 +39,7 @@
       class="PlayerStorageBox"
     >
       <player-container
-        :team-id="1"
+        :team-index="1"
         single
       ></player-container>
     </info-storage-box>
@@ -48,7 +48,7 @@
       class="PlayerStorageBox"
     >
       <player-container
-        :team-id="2"
+        :team-index="2"
         single
       ></player-container>
     </info-storage-box>

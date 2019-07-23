@@ -7,8 +7,8 @@
       v-for="(player, index) in players"
       :key="`${index}${Date.now()}`"
       :players="player"
-      :player-slot="(teamId >= 0 && coop < 0) ? teamId : -1"
-      :team-id="teamId"
+      :player-slot="(teamIndex >= 0 && coop < 0) ? teamIndex : -1"
+      :team-index="teamIndex"
     ></player-info>
   </div>
 </template>
@@ -26,7 +26,7 @@ export default {
     PlayerInfo,
   },
   props: {
-    teamId: {
+    teamIndex: {
       type: Number,
       default: -1,
     },
@@ -53,7 +53,7 @@ export default {
   methods: {
     updateData(data) {
       this.players.length = 0;
-      const id = (this.teamId >= 0) ? this.teamId : 0;
+      const id = (this.teamIndex >= 0) ? this.teamIndex : 0;
       if (data.teams[id]) {
         const players = clone(data.teams[id].players);
         if (this.single) {

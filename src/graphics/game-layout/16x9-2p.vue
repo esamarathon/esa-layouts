@@ -19,7 +19,7 @@
     <!-- Information Storage (left) -->
     <info-storage-box id="InfoStorageBox1">
       <player-container
-        :team-id="0"
+        :team-index="0"
         single
       ></player-container>
       <sponsor-logos></sponsor-logos>
@@ -31,7 +31,7 @@
       class=""
     >
       <player-container
-        :team-id="1"
+        :team-index="1"
         single
       ></player-container>
       <commentators></commentators>

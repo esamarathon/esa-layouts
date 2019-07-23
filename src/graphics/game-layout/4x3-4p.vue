@@ -36,12 +36,12 @@
       </div>
       <player-container
         id="PlayerContainer1"
-        :team-id="0"
+        :team-index="0"
         single
       ></player-container>
       <player-container
         id="PlayerContainer2"
-        :team-id="1"
+        :team-index="1"
         single
       ></player-container>
     </info-storage-box>
@@ -49,12 +49,12 @@
     <info-storage-box id="InfoStorageBox2">
       <player-container
         id="PlayerContainer3"
-        :team-id="2"
+        :team-index="2"
         single
       ></player-container>
       <player-container
         id="PlayerContainer4"
-        :team-id="3"
+        :team-index="3"
         single
       ></player-container>
       <sponsor-logos></sponsor-logos>

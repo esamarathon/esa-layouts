@@ -61,6 +61,7 @@ const playerImgNumbered = [
 ];
 
 const sc = new SpeedcontrolUtil(nodecg);
+const runData = sc.runDataActiveRun;
 
 export default {
   name: 'PlayerInfo',
@@ -75,7 +76,7 @@ export default {
       type: Number,
       default: -1,
     },
-    teamId: {
+    teamIndex: {
       type: Number,
       default: 0,
     },
@@ -109,7 +110,10 @@ export default {
     this.show = true;
   },
   mounted() {
-    sc.timer.on('change', this.updateFinishTimer);
+    NodeCG.waitForReplicants(
+      sc.timer,
+      runData,
+    ).then(() => sc.timer.on('change', this.updateFinishTimer));
   },
   destroyed() {
     sc.timer.removeListener('change', this.updateFinishTimer);
@@ -132,8 +136,9 @@ export default {
       this.currentIcon = this.playerIcon;
     },
     updateFinishTimer(timer) {
-      if (this.playerSlot >= 0 && timer.teamFinishTimes[this.teamId]) {
-        this.finishTime = `[${timer.teamFinishTimes[this.teamId].time}]`;
+      const teamId = (runData && this.playerSlot >= 0) ? runData.value.teams[this.playerSlot].id : undefined;
+      if (teamId >= 0 && timer.teamFinishTimes[teamId]) {
+        this.finishTime = `[${timer.teamFinishTimes[teamId].time}]`;
       } else {
         this.finishTime = '';
       }

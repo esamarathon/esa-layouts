@@ -4,7 +4,11 @@
     class="FlexContainer"
   >
     <div class="Line1">
-      {{ line1 }}
+      <img
+        v-if="tweet"
+        class="TwitterLogo"
+        src="./twitter.png"
+      > {{ line1 }}
     </div>
     <div
       v-if="line2"
@@ -34,6 +38,7 @@ export default {
         return {
           line1Text: '',
           line2Text: '',
+          isTweet: false,
         };
       },
     },
@@ -43,12 +48,15 @@ export default {
       width: 0,
       line1: '',
       line2: '',
+      tweet: false,
     };
   },
   mounted() {
     const fallback = setTimeout(() => this.$emit('end'), 5000);
     const originalWidth = this.$parent.$el.clientWidth - 34;
     this.line1 = this.data.line1Text;
+    console.log(this.isTweet);
+    this.tweet = this.data.isTweet;
     if (!this.data.line2Text) {
       setTimeout(() => this.$emit('end'), 10 * 1000);
     } else {
@@ -95,4 +103,7 @@ export default {
     overflow: hidden;
   }
 
+  .Line1 > .TwitterLogo {
+    height: 1em;
+  }
 </style>

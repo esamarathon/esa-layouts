@@ -170,14 +170,15 @@ export default {
 
       const line1 = tweetData.user.name;
       const line2 = message;
-      return this.alert(line1, line2);
+      return this.alert(line1, line2, true);
     },
-    alert(line1Text, line2Text) {
+    alert(line1Text, line2Text, isTweet) {
       return {
         name: Alert,
         data: {
           line1Text,
           line2Text,
+          isTweet,
         },
       };
     },

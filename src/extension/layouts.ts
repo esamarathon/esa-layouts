@@ -38,6 +38,7 @@ const obsGroupKeys: { [key: string]: string } = {
   CameraCapture2: bundleConfig.obs.names.groups.cameraCapture2,
 };
 const obsGameLayoutScene = bundleConfig.obs.names.scenes.gameLayout;
+const obsIntermissionScene = bundleConfig.obs.names.scenes.intermission;
 
 // nodecg-speedcontrol no longer sends forceRefreshIntermission so doing it here instead
 sc.timer.on('change', (newVal, oldVal) => {
@@ -68,8 +69,7 @@ obs.on('SwitchScenes', (data) => {
 
 // Switch back to the last scene when the sponsor video finishes.
 nodecg.listenFor('videoFinished', () => {
-  if (!lastScene) return;
-  obs.changeScene(lastScene).catch((err) => {});
+  obs.changeScene(obsIntermissionScene).catch((err) => {});
 });
 
 // Triggered when the game layout page is opened;

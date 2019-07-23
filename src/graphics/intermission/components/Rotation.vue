@@ -16,7 +16,9 @@ import SpeedcontrolUtil from 'speedcontrol-util';
 import UpcomingRuns from './Rotation/UpcomingRuns.vue';
 import Bid from './Rotation/Bid.vue';
 import Prize from './Rotation/Prize.vue';
-import MediaSlide from './Rotation/MediaSlide.vue';
+import ImageSlide from './Rotation/ImageSlide.vue';
+import VideoSlide from './Rotation/VideoSlide.vue';
+import Twitch from './Rotation/Twitch.vue';
 
 const sc = new SpeedcontrolUtil(nodecg);
 
@@ -29,7 +31,31 @@ export default {
         UpcomingRuns,
         Bid,
         Prize,
-        MediaSlide,
+        Bid,
+        Twitch,
+        Prize,
+        ImageSlide,
+        Bid,
+        Prize,
+        UpcomingRuns,
+        Bid,
+        Twitch,
+        Prize,
+        Bid,
+        Prize,
+        ImageSlide,
+        Bid,
+        Twitch,
+        Prize,
+        UpcomingRuns,
+        Bid,
+        Prize,
+        Bid,
+        Twitch,
+        Prize,
+        VideoSlide,
+        Bid,
+        Prize,
       ],
       index: 0,
       nextRuns: [],

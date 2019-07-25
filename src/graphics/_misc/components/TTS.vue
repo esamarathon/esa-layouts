@@ -5,11 +5,15 @@
 <script>
 export default {
   name: 'TTS',
+  data() {
+    return {
+      audio: new Audio(),
+    };
+  },
   mounted() {
     nodecg.listenFor('ttsToBeRead', (url) => {
-      const audio = new Audio();
-      audio.src = url;
-      audio.play();
+      this.audio.src = url;
+      this.audio.play();
     });
   },
 };

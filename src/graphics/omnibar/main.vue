@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import TTS from './components/TTS.vue';
+import TTS from '../_misc/components/TTS.vue';
 import StaticLogo from './components/StaticLogo.vue';
 import RotatingLogos from './components/RotatingLogos.vue';
 import Total from './components/Total.vue';

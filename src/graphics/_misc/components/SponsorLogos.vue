@@ -8,7 +8,7 @@
     >
       <transition name="fade">
         <img
-          v-show="show"
+          v-if="show"
           :key="imgSrc"
           :src="imgSrc"
         >

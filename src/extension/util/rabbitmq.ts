@@ -38,7 +38,7 @@ const theirTopics = [
   { name: 'new-screened-tweet', exchange: 'moderation', key: 'screened.tweet' },
   { name: 'new-screened-sub', exchange: 'moderation', key: 'screened.sub' },
   { name: 'new-screened-cheer', exchange: 'moderation', key: 'screened.cheer' },
-  { name: 'new-screened-cheer', exchange: 'moderation', key: 'screened.crowdcontrol' },
+  { name: 'new-screened-crowdcontrol', exchange: 'moderation', key: 'screened.crowdcontrol' },
   { name: 'bigbutton-tag-scanned', exchange: 'bigbutton', key: '*.tag_scanned' },
   { name: 'bigbutton-pressed', exchange: 'bigbutton', key: '*.pressed' },
   { name: 'run-changed', exchange: ourExchange, key: '*.run.changed' },

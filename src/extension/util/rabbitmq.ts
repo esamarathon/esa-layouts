@@ -10,6 +10,7 @@ interface MQEmitter extends EventEmitter {
   on(event: 'new-screened-tweet', listener: (data: any) => void): this;
   on(event: 'new-screened-sub', listener: (data: any) => void): this;
   on(event: 'new-screened-cheer', listener: (data: any) => void): this;
+  on(event: 'new-screened-crowdcontrolexchange', listener: (data: any) => void): this;
   on(event: 'bigbutton-tag-scanned', listener: (data: any) => void): this;
   on(event: 'bigbutton-pressed', listener: (data: any) => void): this;
   on(event: 'run-changed', listener: (data: any) => void): this;
@@ -37,6 +38,7 @@ const theirTopics = [
   { name: 'new-screened-tweet', exchange: 'moderation', key: 'screened.tweet' },
   { name: 'new-screened-sub', exchange: 'moderation', key: 'screened.sub' },
   { name: 'new-screened-cheer', exchange: 'moderation', key: 'screened.cheer' },
+  { name: 'new-screened-cheer', exchange: 'moderation', key: 'screened.crowdcontrol' },
   { name: 'bigbutton-tag-scanned', exchange: 'bigbutton', key: '*.tag_scanned' },
   { name: 'bigbutton-pressed', exchange: 'bigbutton', key: '*.pressed' },
   { name: 'run-changed', exchange: ourExchange, key: '*.run.changed' },

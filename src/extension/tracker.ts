@@ -188,6 +188,10 @@ mq.on('new-screened-cheer', (data) => {
   nodecg.log.info('Received new cheer.');
   nodecg.sendMessage('newCheer', data);
 });
+mq.on('new-screened-crowdcontrolexchange', (data) => {
+  nodecg.log.info('Received new crowd control exchange.');
+  nodecg.sendMessage('newCrowdControlExchange', data);
+});
 mq.on('run-changed', (data) => { otherStreamInfo.value = data.run; });
 mq.on('game-scene-changed', (data) => {
   if (data.event !== eventInfo[streamEvtNumber].short) {

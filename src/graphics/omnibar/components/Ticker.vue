@@ -34,6 +34,7 @@ const newDonations = [];
 const newSubs = [];
 const newTweets = [];
 const newCheers = [];
+const newCrowdControlExchanges = [];
 
 export default {
   name: 'Ticker',
@@ -59,6 +60,7 @@ export default {
       nodecg.listenFor('newTweet', data => newTweets.push(data));
       nodecg.listenFor('newDonation', data => newDonations.push(data));
       nodecg.listenFor('newCheer', data => newCheers.push(data));
+      nodecg.listenFor('newCrowdControlExchange', data => newCrowdControlExchanges.push(data));
 
       // Puts copies of the objects the functions return
       // into an array for easy random-ness access.
@@ -82,7 +84,10 @@ export default {
   methods: {
     showNextMsg() {
       let currentComponent;
-      if (newDonations.length) {
+      if (newCrowdControlExchanges.length) {
+        currentComponent = this.crowdControl(newCrowdControlExchanges[0]);
+        newCrowdControlExchanges.shift();
+      } else if (newDonations.length) {
         currentComponent = this.donation(newDonations[0]);
         newDonations.shift();
       } else if (newSubs.length) {
@@ -138,6 +143,11 @@ export default {
     twitchCharity() {
       return this.genericMsg('Subscribe or cheer to support the charity!');
     },
+    crowdControl(exchange) {
+      const line1 = 'Crowd Control';
+      const line2 = exchange.message.trailing;
+      return this.alert(line1, line2, false, true);
+    },
     donation(donation) {
       const line1 = `New Donation: ${donation.donor_visiblename} (${this.formatUSD(parseFloat(donation.amount))})`;
       const line2 = donation.comment;
@@ -172,13 +182,14 @@ export default {
       const line2 = message;
       return this.alert(line1, line2, true);
     },
-    alert(line1Text, line2Text, isTweet) {
+    alert(line1Text, line2Text, isTweet, isCrowdControl) {
       return {
         name: Alert,
         data: {
           line1Text,
           line2Text,
           isTweet,
+          isCrowdControl,
         },
       };
     },

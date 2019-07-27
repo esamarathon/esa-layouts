@@ -8,7 +8,13 @@
         v-if="tweet"
         class="TwitterLogo"
         src="./twitter.png"
-      > {{ line1 }}
+      >
+      <img
+        v-if="crowdcontrol"
+        class="CrowdControlLogo"
+        src="./crowd-control.png"
+      >
+      {{ line1 }}
     </div>
     <div
       v-if="line2"
@@ -39,6 +45,7 @@ export default {
           line1Text: '',
           line2Text: '',
           isTweet: false,
+          isCrowdControl: false,
         };
       },
     },
@@ -49,14 +56,15 @@ export default {
       line1: '',
       line2: '',
       tweet: false,
+      crowdcontrol: false,
     };
   },
   mounted() {
     const fallback = setTimeout(() => this.$emit('end'), 5000);
     const originalWidth = this.$parent.$el.clientWidth - 34;
     this.line1 = this.data.line1Text;
-    console.log(this.isTweet);
     this.tweet = this.data.isTweet;
+    this.crowdcontrol = this.data.isCrowdControl;
     if (!this.data.line2Text) {
       setTimeout(() => this.$emit('end'), 10 * 1000);
     } else {
@@ -103,7 +111,9 @@ export default {
     overflow: hidden;
   }
 
-  .Line1 > .TwitterLogo {
-    height: 1em;
+  .Line1 > .TwitterLogo, .Line1 > .CrowdControlLogo {
+    height: 1.2em;
+    margin: 0 .05em 0 .1em;
+    vertical-align: -0.25em;
   }
 </style>

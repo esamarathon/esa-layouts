@@ -1,7 +1,14 @@
 <template>
-  <div id="Countdown">
-    <div
+  <div
       v-show="show"
+	  id="Countdown"
+	 >
+	<div
+		id="CountdownHeader"
+	>
+		Marathon starts in...
+	</div>
+    <div
       id="CountdownText"
     >
       <span v-if="hours">{{ pad(hours) }}:</span><span v-if="minutes">{{ pad(minutes) }}</span><span v-else>00</span>:<span v-if="seconds">{{ pad(seconds) }}</span><span v-else>00</span>
@@ -50,13 +57,21 @@ export default {
     width: 100%;
     height: 100vh;
   }
-
+  
   #Countdown {
     display: flex;
+	flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: 30vw;
     width: 100%;
     height: 100%;
+  }
+  
+   #CountdownHeader {
+	font-size: 12vw;
+  }
+  
+  #CountdownText {
+	font-size: 30vw;
   }
 </style>

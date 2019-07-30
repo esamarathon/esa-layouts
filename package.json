@@ -1,7 +1,7 @@
 {
   "name": "esa-layouts",
   "version": "1.0.0",
-  "description": "",
+  "description": "The on-screen graphics used during European Speedrunner Assembly (and other relevant) events.",
   "homepage": "https://github.com/esamarathon/esa-layouts#readme",
   "bugs": {
     "url": "https://github.com/esamarathon/esa-layouts/issues"
@@ -12,6 +12,9 @@
   },
   "license": "MIT",
   "author": "zoton2",
+  "contributors": [
+    "BtbN"
+  ],
   "scripts": {
     "build": "npm run build:extension && npm run build:browser",
     "build:browser": "trash .cache && cross-env NODE_ENV=production npm run bundle",

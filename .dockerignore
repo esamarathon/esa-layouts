@@ -1,0 +1,11 @@
+.git/
+.cache/
+node_modules/
+dashboard/
+extension/
+graphics/
+/streamdeck-plugin
+.gitignore
+Dockerfile
+.dockerignore
+transition.psd

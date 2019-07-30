@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:600&subset=cyrillic,cyrillic-ext,latin-ext,vietnamese');
+
+body {
+	height: 90vh;
+	width: 90hw;
+	font-family: 'Montserrat', sans-serif;
+	color: white;
+	background-color: #212121;
+	overflow: hidden;
+}
+
+#columnsWrapper {
+	height: inherit;
+	width: inherit;
+	display: flex;
+}
+
+.column {
+	height: inherit;
+	width: 33%;
+	display: flex;
+	align-items: center; /* Aligns horizontally centre. */
+	flex-direction: column;
+	padding: 0 10px;
+}
+
+#donationTotalHeader, #prizesHeader, #bidsHeader, #scheduleHeader, #unReadDonationsHeader, #videoHeader {
+	font-size: 45px;
+	text-align: center;
+}
+
+#donationTotal {
+	font-size: 100px;
+	padding-bottom: 30px;
+}
+
+#unReadDonationsContainer {
+	font-size: 40px;
+}
+
+#unReadDonationsContainer li {
+	padding-bottom: 20px;
+}
+
+#prizesContainer, #bidsContainer, #runsContainer, #unReadDonationsContainer {
+	width: 100%;
+}
+
+.prize:first-child, .bid:first-child, .run:first-child {
+	margin-top: 10px;
+	border-top: 5px solid white;
+}
+
+.prize, .bid, .run {
+	width: 100%;
+	font-size: 40px;
+	padding: 20px 0;
+	text-align: center;
+	border-bottom: 5px solid white;
+}
+
+.prizeName, .bidGame, .gameName {
+	font-size: 45px;
+}
+
+.bidName:after {
+	content: ':';
+}
+
+.gameTime:before {
+	content: 'ESTIMATE: '
+}
+
+.gameFinal:before {
+	content: 'FINAL TIME: '
+}
+
+#videoName {
+	font-size: 40px;
+	text-align: center;
+	font-style: italic;
+}

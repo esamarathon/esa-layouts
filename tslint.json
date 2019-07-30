@@ -1,0 +1,10 @@
+{
+    "defaultSeverity": "error",
+    "extends": "tslint-config-airbnb",
+    "jsRules": {},
+    "rules": {
+        "linebreak-style": [true, "LF"],
+        "indent": [true, "spaces", 2]
+    },
+    "rulesDirectory": []
+}

@@ -1,0 +1,207 @@
+{
+  "name": "esa-layouts",
+  "version": "1.0.0",
+  "description": "The on-screen graphics used during European Speedrunner Assembly (and other relevant) events.",
+  "homepage": "https://github.com/esamarathon/esa-layouts#readme",
+  "bugs": {
+    "url": "https://github.com/esamarathon/esa-layouts/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/esamarathon/esa-layouts.git"
+  },
+  "license": "MIT",
+  "author": "zoton2",
+  "contributors": [
+    "BtbN"
+  ],
+  "scripts": {
+    "build": "npm run build:extension && npm run build:browser",
+    "build:browser": "trash .cache && cross-env NODE_ENV=production npm run bundle",
+    "build:extension": "trash extension && npx tsc -b tsconfig.json",
+    "bundle": "trash graphics && trash dashboard && node script/bundle.js",
+    "start": "node ../..",
+    "tslint": "npx tslint -c tslint.json --project tsconfig.json --force",
+    "typeschemas": "node script/typeschemas.js",
+    "watch": "run-p watch:*",
+    "watch:browser": "npm run bundle",
+    "watch:extension": "trash extension && npx tsc -b tsconfig.json -w"
+  },
+  "dependencies": {
+    "amqp-connection-manager": "^3.0.0",
+    "amqplib": "^0.5.3",
+    "clone": "^2.1.2",
+    "gsap": "^2.1.3",
+    "moment": "^2.24.0",
+    "mpd": "^1.3.0",
+    "needle": "^2.4.0",
+    "obs-websocket-js": "^3.1.0",
+    "speedcontrol-util": "github:speedcontrol/speedcontrol-util#dev",
+    "streamdeck-util": "^0.3.0",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/amqp-connection-manager": "^2.0.4",
+    "@types/amqplib": "^0.5.13",
+    "@types/clone": "^0.1.30",
+    "@types/needle": "^2.0.4",
+    "@vue/component-compiler-utils": "^3.0.0",
+    "cross-env": "^5.2.0",
+    "eslint": "^6.0.1",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-vue": "^5.2.3",
+    "json-schema-to-typescript": "^6.1.3",
+    "nodecg": "^1.4.1",
+    "npm-run-all": "^4.1.5",
+    "parcel-bundler": "^1.12.3",
+    "trash-cli": "^3.0.0",
+    "tslint": "^5.18.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "typescript": "^3.5.3",
+    "vue": "^2.6.10",
+    "vue-hot-reload-api": "^2.3.3",
+    "vue-router": "^3.0.7",
+    "vue-template-compiler": "^2.6.10"
+  },
+  "alias": {
+    "vue": "./node_modules/vue/dist/vue.esm.js"
+  },
+  "nodecg": {
+    "compatibleRange": "^1.0.0",
+    "bundleDependencies": {
+      "nodecg-speedcontrol": "^1.0.0"
+    },
+    "dashboardPanels": [
+      {
+        "name": "game-layout-override",
+        "title": "Game Layout Override",
+        "width": 2,
+        "file": "game-layout-override.html",
+        "workspace": "Scene Editing",
+        "headerColor": "#c49215"
+      },
+      {
+        "name": "sponsor-logo-control",
+        "title": "Sponsor Logo Control",
+        "width": 5,
+        "file": "sponsor-logo-control.html",
+        "workspace": "Scene Editing",
+        "headerColor": "#c49215"
+      },
+      {
+        "name": "commentators",
+        "title": "Commentators",
+        "width": 2,
+        "file": "commentators.html",
+        "headerColor": "#c49215"
+      },
+      {
+        "name": "tts-donation-control",
+        "title": "Text-To-Speech Donation Control",
+        "width": 3,
+        "file": "tts-donation-control.html",
+        "workspace": "Scene Editing"
+      },
+      {
+        "name": "video-player-control",
+        "title": "Video Player Control",
+        "width": 3,
+        "file": "video-player-control.html"
+      },
+      {
+        "name": "intermission-control",
+        "title": "Intermission Control",
+        "width": 2,
+        "file": "intermission-control.html",
+        "workspace": "Scene Editing"
+      }
+    ],
+    "graphics": [
+      {
+        "file": "intermission.html",
+        "width": 1920,
+        "height": 1080
+      },
+      {
+        "file": "intermission-hosts.html",
+        "width": 1920,
+        "height": 1080
+      },
+      {
+        "file": "game-layout.html",
+        "width": 1920,
+        "height": 1080
+      },
+      {
+        "file": "omnibar.html",
+        "width": 1920,
+        "height": 80
+      },
+      {
+        "file": "video-player.html",
+        "width": 1920,
+        "height": 1080
+      },
+      {
+        "file": "countdown.html",
+        "width": 1920,
+        "height": 1080
+      },
+      {
+        "file": "donations.html",
+        "width": 1920,
+        "height": 1080
+      },
+      {
+        "file": "host-dashboard.html",
+        "width": 1920,
+        "height": 1080
+      },
+      {
+        "file": "tts-player.html",
+        "width": 1920,
+        "height": 1080
+      }
+    ],
+    "mount": [
+      {
+        "directory": "static",
+        "endpoint": "static"
+      }
+    ],
+    "assetCategories": [
+      {
+        "name": "sponsor-logos",
+        "title": "Sponsor Logos",
+        "allowedTypes": [
+          "jpg",
+          "jpeg",
+          "png",
+          "svg"
+        ]
+      },
+      {
+        "name": "videos",
+        "title": "Videos",
+        "allowedTypes": [
+          "mp4"
+        ]
+      },
+      {
+        "name": "intermission-slides",
+        "title": "Intermission Slide Images/Videos",
+        "allowedTypes": [
+          "jpg",
+          "jpeg",
+          "png",
+          "svg",
+          "mp4"
+        ]
+      }
+    ]
+  },
+  "vue": {
+    "runtimeCompiler": true
+  }
+}

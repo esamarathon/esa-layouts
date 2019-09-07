@@ -76,7 +76,7 @@ export default {
     },
     getNextRun() {
       const runIndex = this.findRunIndex();
-      return runDataArray.value.slice(runIndex + 1, 1);
+      return runDataArray.value.slice(runIndex + 1).slice(0, 1);
     },
     findRunIndex() {
       if (!runDataActiveRun.value) {

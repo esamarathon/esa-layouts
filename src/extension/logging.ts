@@ -121,7 +121,7 @@ function logSceneSwitch(name: string, action: string = 'start') {
   );
 }
 
-function logTimerChange(desc: string, teamID?: number) {
+function logTimerChange(desc: string, teamID?: string) {
   const teamFix: string = teamID ? `team.${teamID}.` : '';
 
   mqSend(

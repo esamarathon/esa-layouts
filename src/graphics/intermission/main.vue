@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import SpeedcontrolUtil from 'speedcontrol-util';
 import CutBackground from '../_misc/cut_bg';
 import Capture from '../_misc/components/Capture.vue';
 import SponsorLogos from '../_misc/components/SponsorLogos.vue';
@@ -40,7 +39,8 @@ import RunUpcoming from './components/RunUpcoming.vue';
 import Rotation from './components/Rotation.vue';
 import AdTimer from './components/AdTimer.vue';
 
-const sc = new SpeedcontrolUtil(nodecg);
+const runDataActiveRun = nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol');
+const runDataArray = nodecg.Replicant('runDataArray', 'nodecg-speedcontrol');
 
 export default {
   name: 'Intermission',
@@ -61,7 +61,7 @@ export default {
     };
   },
   created() {
-    NodeCG.waitForReplicants(sc.runDataActiveRun).then(() => this.refreshUpcomingRun());
+    NodeCG.waitForReplicants(runDataActiveRun, runDataArray).then(() => this.refreshUpcomingRun());
     nodecg.listenFor('forceRefreshIntermission', this.refreshUpcomingRun);
   },
   mounted() {
@@ -69,10 +69,20 @@ export default {
   },
   methods: {
     refreshUpcomingRun() {
-      const nextRun = sc.getNextRuns(1);
+      const nextRun = this.getNextRun();
       if (nextRun.length) {
         [this.nextRun] = nextRun;
       }
+    },
+    getNextRun() {
+      const runIndex = this.findRunIndex();
+      return runDataArray.value.slice(runIndex + 1, 1);
+    },
+    findRunIndex() {
+      if (!runDataActiveRun.value) {
+        return -1;
+      }
+      return runDataArray.value.findIndex(run => run.id === runDataActiveRun.value.id);
     },
   },
 };

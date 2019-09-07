@@ -9,10 +9,6 @@
 </template>
 
 <script>
-import SpeedcontrolUtil from 'speedcontrol-util';
-
-const sc = new SpeedcontrolUtil(nodecg);
-
 export default {
   name: 'GameExtraInfo',
   data() {
@@ -22,10 +18,12 @@ export default {
     };
   },
   mounted() {
-    sc.runDataActiveRun.on('change', this.updateData);
+    nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol')
+      .on('change', this.updateData);
   },
   destroyed() {
-    sc.runDataActiveRun.removeListener('change', this.updateData);
+    nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol')
+      .removeListener('change', this.updateData);
   },
   methods: {
     updateData(runData) {

@@ -1,5 +1,4 @@
 import clone from 'clone';
-import SpeedcontrolUtil from 'speedcontrol-util';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import CutBackground from '../_misc/cut_bg';
@@ -10,7 +9,6 @@ const layouts = nodecg.Replicant('layouts'); // schema this!
 const currentLayout = nodecg.Replicant('currentLayout'); // schema this!
 // eslint-disable-next-line import/prefer-default-export
 export const serverBus = new Vue();
-const sc = new SpeedcontrolUtil(nodecg);
 let force = false;
 
 // This controls the player name -> Twitch username animation timings.
@@ -27,7 +25,7 @@ function rotatePlayerInfo(init) {
     playerShowTwitchTO = setTimeout(rotatePlayerInfo, 45000);
   }
 }
-sc.runDataActiveRun.on('change', () => {
+nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol').on('change', () => {
   clearTimeout(playerShowTwitchTO);
   playerShowTwitch = false;
   rotatePlayerInfo(true);

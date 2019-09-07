@@ -14,11 +14,8 @@
 </template>
 
 <script>
-import SpeedcontrolUtil from 'speedcontrol-util';
 import clone from 'clone';
 import PlayerInfo from './PlayerInfo.vue';
-
-const sc = new SpeedcontrolUtil(nodecg);
 
 export default {
   name: 'PlayerContainer',
@@ -45,10 +42,12 @@ export default {
     };
   },
   mounted() {
-    sc.runDataActiveRun.on('change', this.updateData);
+    nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol')
+      .on('change', this.updateData);
   },
   destroyed() {
-    sc.runDataActiveRun.removeListener('change', this.updateData);
+    nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol')
+      .removeListener('change', this.updateData);
   },
   methods: {
     updateData(data) {

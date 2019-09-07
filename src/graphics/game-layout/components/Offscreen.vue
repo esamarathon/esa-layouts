@@ -12,10 +12,6 @@
 </template>
 
 <script>
-import SpeedcontrolUtil from 'speedcontrol-util';
-
-const sc = new SpeedcontrolUtil(nodecg);
-
 export default {
   name: 'Offscreen',
   data() {
@@ -32,12 +28,13 @@ export default {
     },
   },
   created() {
-    sc.runDataActiveRun.on('change', (newVal) => {
-      const players = newVal.teams[0].players.slice(4);
-      players.forEach((player) => {
-        this.players.push(player.name);
+    nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol')
+      .on('change', (newVal) => {
+        const players = newVal.teams[0].players.slice(4);
+        players.forEach((player) => {
+          this.players.push(player.name);
+        });
       });
-    });
   },
 };
 </script>

@@ -55,7 +55,6 @@ obs.on('SwitchScenes', (data) => {
   // Trigger Twitch ads when on the relevant scene.
   if (currentScene.value === bundleConfig.obs.names.scenes.ads) {
     // TODO: add this to speedcontrol-util.
-    // @ts-ignore: NodeCG not declaring this (yet).
     nodecg.sendMessageToBundle('twitchStartCommercial', 'nodecg-speedcontrol');
   }
 

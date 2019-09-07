@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import SpeedcontrolUtil from 'speedcontrol-util';
 import UpcomingRuns from './Rotation/UpcomingRuns.vue';
 import Bid from './Rotation/Bid.vue';
 import Prize from './Rotation/Prize.vue';
@@ -20,7 +19,8 @@ import ImageSlide from './Rotation/ImageSlide.vue';
 import VideoSlide from './Rotation/VideoSlide.vue';
 import Twitch from './Rotation/Twitch.vue';
 
-const sc = new SpeedcontrolUtil(nodecg);
+const runDataActiveRun = nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol');
+const runDataArray = nodecg.Replicant('runDataArray', 'nodecg-speedcontrol');
 
 export default {
   name: 'Rotation',
@@ -62,7 +62,7 @@ export default {
     };
   },
   mounted() {
-    NodeCG.waitForReplicants(sc.runDataActiveRun).then(() => {
+    NodeCG.waitForReplicants(runDataActiveRun, runDataArray).then(() => {
       this.updateNextRuns();
       this.showNextMsg();
     });
@@ -78,7 +78,17 @@ export default {
       this.index += 1;
     },
     updateNextRuns() {
-      this.nextRuns = sc.getNextRuns().slice(0, 4);
+      this.nextRuns = this.getNextRuns();
+    },
+    getNextRuns() {
+      const runIndex = this.findRunIndex();
+      return runDataArray.value.slice(runIndex + 1, 4);
+    },
+    findRunIndex() {
+      if (!runDataActiveRun.value) {
+        return -1;
+      }
+      return runDataArray.value.findIndex(run => run.id === runDataActiveRun.value.id);
     },
   },
 };

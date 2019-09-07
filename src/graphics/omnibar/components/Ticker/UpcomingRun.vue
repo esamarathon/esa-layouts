@@ -24,12 +24,12 @@
 <script>
 import moment from 'moment';
 import clone from 'clone';
-import SpeedcontrolUtil from 'speedcontrol-util';
 
 // Stored outside of the export so it persists.
 let nextRunsCache = [];
 
-const sc = new SpeedcontrolUtil(nodecg);
+const runDataActiveRun = nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol');
+const runDataArray = nodecg.Replicant('runDataArray', 'nodecg-speedcontrol');
 
 export default {
   name: 'UpcomingRun',
@@ -50,7 +50,7 @@ export default {
   created() {
     const fallback = setTimeout(() => this.$emit('end'), 5000);
     if (!nextRunsCache.length) {
-      const nextRuns = sc.getNextRuns();
+      const nextRuns = this.getNextRuns();
 
       // Skip if nothing to show.
       if (!nextRuns.length) {
@@ -94,6 +94,16 @@ export default {
         amount += 1;
       }));
       return amount;
+    },
+    getNextRuns() {
+      const runIndex = this.findRunIndex();
+      return runDataArray.value.slice(runIndex + 1, 4);
+    },
+    findRunIndex() {
+      if (!runDataActiveRun.value) {
+        return -1;
+      }
+      return runDataArray.value.findIndex(run => run.id === runDataActiveRun.value.id);
     },
   },
 };

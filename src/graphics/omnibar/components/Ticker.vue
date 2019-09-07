@@ -17,8 +17,6 @@
 </template>
 
 <script>
-import SpeedcontrolUtil from 'speedcontrol-util';
-
 import GenericMessage from './Ticker/GenericMessage.vue';
 import UpcomingRun from './Ticker/UpcomingRun.vue';
 import OtherStreamInfo from './Ticker/OtherStreamInfo.vue';
@@ -28,7 +26,8 @@ import Alert from './Ticker/Alert.vue';
 
 const evtShort = nodecg.Replicant('evtShort');
 const otherStreamInfo = nodecg.Replicant('otherStreamInfo');
-const sc = new SpeedcontrolUtil(nodecg);
+const runDataActiveRun = nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol');
+const runDataArray = nodecg.Replicant('runDataArray', 'nodecg-speedcontrol');
 
 const newDonations = [];
 const newSubs = [];
@@ -53,8 +52,8 @@ export default {
     NodeCG.waitForReplicants(
       evtShort,
       otherStreamInfo,
-      sc.runDataActiveRun,
-      sc.runDataArray,
+      runDataActiveRun,
+      runDataArray,
     ).then(() => {
       nodecg.listenFor('newSub', data => newSubs.push(data));
       nodecg.listenFor('newTweet', data => newTweets.push(data));

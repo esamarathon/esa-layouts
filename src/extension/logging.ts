@@ -71,11 +71,11 @@ sc.runDataActiveRun.on('change', logRunChange);
 sc.on('timerStarted', () => logTimerChange('started'));
 sc.on('timerPaused', () => logTimerChange('paused'));
 sc.on('timerResumed', () => logTimerChange('resumed'));
-sc.on('timerFinished', () => logTimerChange('finished'));
+sc.on('timerStopped', () => logTimerChange('finished'));
 sc.on('timerReset', () => logTimerChange('reset'));
 sc.on('timerEdited', () => logTimerChange('edited'));
-sc.on('timerTeamFinished', id => logTimerChange('team_finished', id));
-sc.on('timerTeamUndidFinish', id => logTimerChange('team_undid_finish', id));
+sc.on('timerTeamStopped', id => logTimerChange('team_finished', id));
+sc.on('timerTeamStopUndone', id => logTimerChange('team_undid_finish', id));
 
 // Currently check to see if the sponsor logo is visible is "hardcoded" to certain layouts.
 function checkSponsorLogoVisibility() {
@@ -122,15 +122,14 @@ function logSceneSwitch(name: string, action: string = 'start') {
 }
 
 function logTimerChange(desc: string, teamID?: number) {
-  const hasTeam: boolean = teamID !== undefined && teamID >= 0;
-  const teamFix: string = hasTeam ? `team.${teamID}.` : '';
+  const teamFix: string = teamID ? `team.${teamID}.` : '';
 
   mqSend(
     `timer.${teamFix}${desc}`,
     {
       desc,
       event: evtString,
-      teamID: hasTeam ? teamID : undefined,
+      teamID: teamID || undefined,
       timer: sc.timer.value,
       time: getTimeInfo(),
     },

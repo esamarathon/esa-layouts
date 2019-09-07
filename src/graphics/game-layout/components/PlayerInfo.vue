@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import SpeedcontrolUtil from 'speedcontrol-util';
 import { serverBus } from '../main';
 
 const playerSoloImg = require('../../_misc/player-solo.png');
@@ -60,8 +59,8 @@ const playerImgNumbered = [
   playerImg4,
 ];
 
-const sc = new SpeedcontrolUtil(nodecg);
-const runData = sc.runDataActiveRun;
+const runData = nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol');
+const timerRep = nodecg.Replicant('timer', 'nodecg-speedcontrol');
 
 export default {
   name: 'PlayerInfo',
@@ -111,12 +110,12 @@ export default {
   },
   mounted() {
     NodeCG.waitForReplicants(
-      sc.timer,
+      timerRep,
       runData,
-    ).then(() => sc.timer.on('change', this.updateFinishTimer));
+    ).then(() => timerRep.on('change', this.updateFinishTimer));
   },
   destroyed() {
-    sc.timer.removeListener('change', this.updateFinishTimer);
+    timerRep.removeListener('change', this.updateFinishTimer);
   },
   methods: {
     changePlayer(init) {

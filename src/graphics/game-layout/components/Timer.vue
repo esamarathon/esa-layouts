@@ -11,17 +11,13 @@
 </template>
 
 <script>
-import SpeedcontrolUtil from 'speedcontrol-util';
-
-const sc = new SpeedcontrolUtil(nodecg);
-
 export default {
   name: 'Timer',
   data() {
     return {
       show: false,
       time: '',
-      timer: sc.timer,
+      timer: nodecg.Replicant('timer', 'nodecg-speedcontrol'),
       backupTimerTO: setTimeout(0),
       textColor: {
         color: 'white',

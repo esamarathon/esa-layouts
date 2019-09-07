@@ -99,7 +99,7 @@ function init() {
     }
   });
 
-  nodecg.listenFor('twitchAdStarted', 'nodecg-speedcontrol', (adInfo) => {
+  nodecg.listenFor('twitchCommercialStarted', 'nodecg-speedcontrol', (adInfo) => {
     adEnds = Date.now() + adInfo.duration * 1000;
     updateAdCountdown();
     twitchAdPlaying = true;

@@ -19,7 +19,7 @@ export default {
     };
   },
   created() {
-    nodecg.listenFor('twitchAdStarted', 'nodecg-speedcontrol', (adInfo) => {
+    nodecg.listenFor('twitchCommercialStarted', 'nodecg-speedcontrol', (adInfo) => {
       this.show = true;
       this.adEnds = Date.now() + adInfo.duration * 1000;
       this.updateCountdown();

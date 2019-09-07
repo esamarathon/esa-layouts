@@ -56,7 +56,7 @@ obs.on('SwitchScenes', (data) => {
   if (currentScene.value === bundleConfig.obs.names.scenes.ads) {
     // TODO: add this to speedcontrol-util.
     // @ts-ignore: NodeCG not declaring this (yet).
-    nodecg.sendMessageToBundle('playTwitchAd', 'nodecg-speedcontrol');
+    nodecg.sendMessageToBundle('twitchStartCommercial', 'nodecg-speedcontrol');
   }
 
   // Enable/disable nodecg-speedcontrol timer changes if on/not on a game layout scene.

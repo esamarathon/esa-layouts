@@ -18,7 +18,7 @@
 </template>
 
 <script>
-const hashtag = require('../hashtag-text.png');
+const hashtag = require('../logo.png');
 const ymLogo = require('../youngminds.png');
 
 export default {
@@ -34,7 +34,7 @@ export default {
   methods: {
     changeLogo() {
       this.logo = (this.logo !== hashtag) ? hashtag : ymLogo;
-      const time = (this.logo === ymLogo) ? 15 : 15;
+      const time = (this.logo === ymLogo) ? 15 : 45;
       setTimeout(this.changeLogo, time * 1000);
     },
   },
@@ -45,12 +45,12 @@ export default {
   @import url('../../_misc/components/FlexContainer.css');
 
   #RotatingLogos {
-    padding-right: 7px;
+    padding: 0 15px;
   }
 
   #LogoWrapper {
     position: relative;
-    width: 230px;
+    width: 250px;
   }
 
   #LogoWrapper > img {

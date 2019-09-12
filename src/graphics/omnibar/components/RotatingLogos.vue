@@ -19,7 +19,7 @@
 
 <script>
 const hashtag = require('../hashtag-text.png');
-const afLogo = require('../alzheimerfonden.png');
+const ymLogo = require('../youngminds.png');
 
 export default {
   name: 'RotatingLogos',
@@ -33,8 +33,8 @@ export default {
   },
   methods: {
     changeLogo() {
-      this.logo = (this.logo !== hashtag) ? hashtag : afLogo;
-      const time = (this.logo === afLogo) ? 15 : 45;
+      this.logo = (this.logo !== hashtag) ? hashtag : ymLogo;
+      const time = (this.logo === ymLogo) ? 15 : 15;
       setTimeout(this.changeLogo, time * 1000);
     },
   },

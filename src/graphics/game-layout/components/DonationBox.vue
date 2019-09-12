@@ -32,18 +32,19 @@ export default {
   },
   created() {
     if (this.amount < 50) {
-      const shades = ['#301b4c', '#281643', '#502f59'];
+      const shades = ['#010d30'];
+      this.css.color = '#ffffff';
       const rand = Math.floor(Math.random() * shades.length);
       this.css['background-color'] = shades[rand];
     } else if (this.amount < 100 && this.amount >= 50) {
-      const shades = ['#f1d13f', '#fbd93f', '#e1c43c'];
+      const shades = ['#4d83aa'];
       const rand = Math.floor(Math.random() * shades.length);
       this.css['background-color'] = shades[rand];
-      this.css.color = '#604054';
+      this.css.color = '#ffffff';
       this.css['font-weight'] = 600;
     } else {
-      this.css['background-color'] = '#efbe00';
-      this.css.color = '#604054';
+      this.css['background-color'] = '#68b4ea';
+      this.css.color = '#353535';
       this.css['font-weight'] = 700;
       this.css['font-size'] = '33px';
     }

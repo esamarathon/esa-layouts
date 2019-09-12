@@ -195,7 +195,7 @@ export default {
   .PlayerInfoBox > .Flag > img {
     visibility: visible;
     position: absolute;
-    border: 2px solid var(--font-colour-inverted);
+    border: 2px solid #8ebcdd;
     height: calc(100% - 4px);
   }
 

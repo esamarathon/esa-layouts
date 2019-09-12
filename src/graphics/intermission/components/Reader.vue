@@ -72,7 +72,7 @@ export default {
 
   .Name > img {
     margin-left: 10px;
-    border: 2px solid var(--font-colour-inverted);
+    border: 2px solid #8ebcdd;
     height: calc(60% - 4px);
   }
 </style>

@@ -82,32 +82,11 @@
         "headerColor": "#c49215"
       },
       {
-        "name": "sponsor-logo-control",
-        "title": "Sponsor Logo Control",
-        "width": 5,
-        "file": "sponsor-logo-control.html",
-        "workspace": "Scene Editing",
-        "headerColor": "#c49215"
-      },
-      {
         "name": "commentators",
         "title": "Commentators",
         "width": 2,
         "file": "commentators.html",
         "headerColor": "#c49215"
-      },
-      {
-        "name": "tts-donation-control",
-        "title": "Text-To-Speech Donation Control",
-        "width": 3,
-        "file": "tts-donation-control.html",
-        "workspace": "Scene Editing"
-      },
-      {
-        "name": "video-player-control",
-        "title": "Video Player Control",
-        "width": 3,
-        "file": "video-player-control.html"
       },
       {
         "name": "intermission-control",
@@ -124,11 +103,6 @@
         "height": 1080
       },
       {
-        "file": "intermission-hosts.html",
-        "width": 1920,
-        "height": 1080
-      },
-      {
         "file": "game-layout.html",
         "width": 1920,
         "height": 1080
@@ -139,27 +113,7 @@
         "height": 80
       },
       {
-        "file": "video-player.html",
-        "width": 1920,
-        "height": 1080
-      },
-      {
-        "file": "countdown.html",
-        "width": 1920,
-        "height": 1080
-      },
-      {
-        "file": "donations.html",
-        "width": 1920,
-        "height": 1080
-      },
-      {
         "file": "host-dashboard.html",
-        "width": 1920,
-        "height": 1080
-      },
-      {
-        "file": "tts-player.html",
         "width": 1920,
         "height": 1080
       }
@@ -179,13 +133,6 @@
           "jpeg",
           "png",
           "svg"
-        ]
-      },
-      {
-        "name": "videos",
-        "title": "Videos",
-        "allowedTypes": [
-          "mp4"
         ]
       },
       {

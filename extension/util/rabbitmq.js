@@ -59,7 +59,7 @@ function rabbitInit() {
         },
     }).on('error', (err) => {
         nodecg.log.warn('RabbitMQ server channel error.');
-        nodecg.log.debug('RabbitMQ server connection error:', err);
+        nodecg.log.debug('RabbitMQ server channel error:', err);
     });
 }
 function setupMqChannel(chan) {

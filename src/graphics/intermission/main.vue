@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import clone from 'clone';
 import CutBackground from '../_misc/cut_bg';
 import Capture from '../_misc/components/Capture.vue';
 import SponsorLogos from '../_misc/components/SponsorLogos.vue';
@@ -76,13 +77,13 @@ export default {
     },
     getNextRun() {
       const runIndex = this.findRunIndex();
-      return runDataArray.value.slice(runIndex + 1).slice(0, 1);
+      return clone(runDataArray.value).slice(runIndex + 1).slice(0, 1);
     },
     findRunIndex() {
       if (!runDataActiveRun.value) {
         return -1;
       }
-      return runDataArray.value.findIndex(run => run.id === runDataActiveRun.value.id);
+      return clone(runDataArray.value).findIndex(run => run.id === runDataActiveRun.value.id);
     },
   },
 };

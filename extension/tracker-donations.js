@@ -7,6 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -14,15 +17,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const nodecgApiContext = __importStar(require("./util/nodecg-api-context"));
-const tracker_1 = require("./tracker");
-const nodecg_bundleconfig_1 = require("./util/nodecg-bundleconfig");
-const needle_1 = __importDefault(require("needle"));
 const clone_1 = __importDefault(require("clone"));
+const needle_1 = __importDefault(require("needle"));
+const tracker_1 = require("./tracker");
+const nodecgApiContext = __importStar(require("./util/nodecg-api-context"));
+const nodecg_bundleconfig_1 = require("./util/nodecg-bundleconfig");
 const nodecg = nodecgApiContext.get();
 const refreshTime = 10000; // 10s
 const apiURL = `https://${nodecg_bundleconfig_1.bundleConfig.tracker.address}/search`;

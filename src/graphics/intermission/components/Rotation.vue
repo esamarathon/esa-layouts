@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import clone from 'clone';
 import UpcomingRuns from './Rotation/UpcomingRuns.vue';
 import Bid from './Rotation/Bid.vue';
 import Prize from './Rotation/Prize.vue';
@@ -61,13 +62,13 @@ export default {
     },
     getNextRuns() {
       const runIndex = this.findRunIndex();
-      return runDataArray.value.slice(runIndex + 1).slice(0, 4);
+      return clone(runDataArray.value).slice(runIndex + 1).slice(0, 4);
     },
     findRunIndex() {
       if (!runDataActiveRun.value) {
         return -1;
       }
-      return runDataArray.value.findIndex(run => run.id === runDataActiveRun.value.id);
+      return clone(runDataArray.value).findIndex(run => run.id === runDataActiveRun.value.id);
     },
   },
 };

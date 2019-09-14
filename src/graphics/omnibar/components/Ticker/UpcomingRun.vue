@@ -97,13 +97,13 @@ export default {
     },
     getNextRuns() {
       const runIndex = this.findRunIndex();
-      return runDataArray.value.slice(runIndex + 1).slice(0, 4);
+      return clone(runDataArray).value.slice(runIndex + 1).slice(0, 4);
     },
     findRunIndex() {
       if (!runDataActiveRun.value) {
         return -1;
       }
-      return runDataArray.value.findIndex(run => run.id === runDataActiveRun.value.id);
+      return clone(runDataArray.value).findIndex(run => run.id === runDataActiveRun.value.id);
     },
   },
 };

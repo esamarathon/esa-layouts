@@ -113,7 +113,7 @@ async function updateDonationTotalFromAPI() {
   }
 }
 
-if (nodecg.bundleConfig.fcb && nodecg.bundleConfig.fcb.postKey) {
+if (nodecg.bundleConfig.fcb.enable) {
   nodecg.listenFor('updateFFZFollowing', 'nodecg-speedcontrol', updateFeaturedChannels);
 }
 

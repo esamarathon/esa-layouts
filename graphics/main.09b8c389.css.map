@@ -1,1 +1,0 @@
-{"version":3,"sources":["FlexContainer.css"],"names":[],"mappings":"6DAAA,eACE,YAAa,CACb,kBAAmB,CACnB,sBACF","file":"main.09b8c389.css","sourceRoot":"..\\src\\graphics","sourcesContent":[".FlexContainer {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}"]}

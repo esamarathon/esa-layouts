@@ -5,7 +5,8 @@ import { bundleConfig } from './util/nodecg-bundleconfig';
 const nodecg = nodecgApiContext.get();
 
 if (bundleConfig.twitchExt.enable && bundleConfig.twitchExt.token) {
-  nodecg.listenFor('ffzUpdateFeaturedChannels', 'nodecg-speedcontrol', setButtons);
+  // bad way of doing this, we need to change in the future
+  nodecg.listenFor('updateFeaturedChannels', 'nodecg-speedcontrol', setButtons);
 }
 
 async function setButtons(usernames: string[]) {

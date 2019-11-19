@@ -113,8 +113,9 @@ async function updateDonationTotalFromAPI() {
   }
 }
 
-if (nodecg.bundleConfig.fcb && nodecg.bundleConfig.fcb.postKey) {
-  nodecg.listenFor('updateFFZFollowing', 'nodecg-speedcontrol', updateFeaturedChannels);
+if (nodecg.bundleConfig.fcb.enable) {
+  // bad way of doing this, we need to change in the future
+  nodecg.listenFor('updateFeaturedChannels', 'nodecg-speedcontrol', updateFeaturedChannels);
 }
 
 // Used to update the featured channels on the bridge running on an external server.

@@ -7,33 +7,84 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "enable": { "type": "boolean", "default": true },
-        "port": { "type": "number", "default": 9091 },
-        "key": { "type": "string", "default": "DEFAULT_KEY" },
-        "debug": { "type": "boolean", "default": false }
+        "enable": {
+          "type": "boolean",
+          "default": true
+        },
+        "port": {
+          "type": "number",
+          "default": 9091
+        },
+        "key": {
+          "type": "string",
+          "default": "DEFAULT_KEY"
+        },
+        "debug": {
+          "type": "boolean",
+          "default": false
+        }
       },
-      "required": ["enable", "port", "key", "debug"]
+      "required": [
+        "enable",
+        "port",
+        "key",
+        "debug"
+      ]
     },
     "rabbitmq": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "enable": { "type": "boolean", "default": true },
-        "protocol": { "type": "string", "default": "amqps" },
-        "hostname": { "type": "string", "default": "mq.esamarathon.com" },
-        "username": { "type": "string", "default": "" },
-        "password": { "type": "string", "default": "" },
-        "vhost": { "type": "string", "default": "esa_prod" }
+        "enable": {
+          "type": "boolean",
+          "default": true
+        },
+        "protocol": {
+          "type": "string",
+          "default": "amqps"
+        },
+        "hostname": {
+          "type": "string",
+          "default": "mq.esamarathon.com"
+        },
+        "username": {
+          "type": "string",
+          "default": ""
+        },
+        "password": {
+          "type": "string",
+          "default": ""
+        },
+        "vhost": {
+          "type": "string",
+          "default": "esa_prod"
+        }
       },
-      "required": ["enable", "protocol", "hostname", "username", "password", "vhost"]
+      "required": [
+        "enable",
+        "protocol",
+        "hostname",
+        "username",
+        "password",
+        "vhost"
+      ]
     },
     "obs": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "enable": { "type": "boolean", "default": true },
-        "address": { "type": "string", "default": "localhost:4444" },
-        "password": { "type": "string", "default": "" },
+        "enable": {
+          "type": "boolean",
+          "default": true
+        },
+        "address": {
+          "type": "string",
+          "default": "localhost:4444"
+        },
+        "password": {
+          "type": "string",
+          "default": ""
+        },
         "names": {
           "type": "object",
           "additionalProperties": false,
@@ -42,45 +93,107 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {
-                "ads": { "type": "string", "default": "Intermission (ads)" },
-                "gameLayout": { "type": "string", "default": "Game Layout" },
-                "intermission": { "type": "string", "default": "Intermission" }
+                "ads": {
+                  "type": "string",
+                  "default": "Intermission (ads)"
+                },
+                "gameLayout": {
+                  "type": "string",
+                  "default": "Game Layout"
+                },
+                "intermission": {
+                  "type": "string",
+                  "default": "Intermission"
+                }
               },
-              "required": ["ads", "gameLayout", "intermission"]
+              "required": [
+                "ads",
+                "gameLayout",
+                "intermission"
+              ]
             },
             "groups": {
               "type": "object",
               "additionalProperties": false,
               "properties": {
-                "gameCapture1": { "type": "string", "default": "Game Capture 1" },
-                "gameCapture2": { "type": "string", "default": "Game Capture 2" },
-                "gameCapture3": { "type": "string", "default": "Game Capture 3" },
-                "gameCapture4": { "type": "string", "default": "Game Capture 4" },
-                "cameraCapture1": { "type": "string", "default": "Camera Capture 1" },
-                "cameraCapture2": { "type": "string", "default": "Camera Capture 2" }
+                "gameCapture1": {
+                  "type": "string",
+                  "default": "Game Capture 1"
+                },
+                "gameCapture2": {
+                  "type": "string",
+                  "default": "Game Capture 2"
+                },
+                "gameCapture3": {
+                  "type": "string",
+                  "default": "Game Capture 3"
+                },
+                "gameCapture4": {
+                  "type": "string",
+                  "default": "Game Capture 4"
+                },
+                "cameraCapture1": {
+                  "type": "string",
+                  "default": "Camera Capture 1"
+                },
+                "cameraCapture2": {
+                  "type": "string",
+                  "default": "Camera Capture 2"
+                }
               },
-              "required": ["gameCapture1", "gameCapture2", "gameCapture3", "gameCapture4", "cameraCapture1", "cameraCapture2"]
+              "required": [
+                "gameCapture1",
+                "gameCapture2",
+                "gameCapture3",
+                "gameCapture4",
+                "cameraCapture1",
+                "cameraCapture2"
+              ]
             }
           },
-          "required": ["scenes", "groups"]
+          "required": [
+            "scenes",
+            "groups"
+          ]
         }
       },
-      "required": ["enable", "address", "password", "names"]
+      "required": [
+        "enable",
+        "address",
+        "password",
+        "names"
+      ]
     },
     "tracker": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "enable": { "type": "boolean", "default": true },
-        "address": { "type": "string", "default": "donations.esamarathon.com" },
-        "username": { "type": "string", "default": "" },
-        "password": { "type": "string", "default": "" },
+        "enable": {
+          "type": "boolean",
+          "default": true
+        },
+        "address": {
+          "type": "string",
+          "default": "donations.esamarathon.com"
+        },
+        "username": {
+          "type": "string",
+          "default": ""
+        },
+        "password": {
+          "type": "string",
+          "default": ""
+        },
         "events": {
           "oneOf": [
-            { "type": "string" },
+            {
+              "type": "string"
+            },
             {
               "type": "array",
-              "items": { "type": "string" },
+              "items": {
+                "type": "string"
+              },
               "uniqueItems": true
             }
           ],
@@ -92,47 +205,111 @@
           "default": 1
         }
       },
-      "required": ["enable", "address", "username", "password", "events", "streamEvent"]
+      "required": [
+        "enable",
+        "address",
+        "username",
+        "password",
+        "events",
+        "streamEvent"
+      ]
     },
     "fcb": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "enable": { "type": "boolean", "default": false },
-        "address": { "type": "string", "default": "fcb.esamarathon.com" },
-        "postKey": { "type": "string", "default": "" }
+        "enable": {
+          "type": "boolean",
+          "default": false
+        },
+        "address": {
+          "type": "string",
+          "default": "fcb.esamarathon.com"
+        },
+        "postKey": {
+          "type": "string",
+          "default": ""
+        }
       },
-      "required": ["enable", "address", "postKey"]
+      "required": [
+        "enable",
+        "address",
+        "postKey"
+      ]
     },
     "mpd": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "enable": { "type": "boolean", "default": true },
-        "address": { "type": "string", "default": "localhost" },
-        "port": { "type": "number", "default": 6600 },
-        "volume": { "type": "number", "default": 10 }
+        "enable": {
+          "type": "boolean",
+          "default": true
+        },
+        "address": {
+          "type": "string",
+          "default": "localhost"
+        },
+        "port": {
+          "type": "number",
+          "default": 6600
+        },
+        "volume": {
+          "type": "number",
+          "default": 10
+        }
       },
-      "required": ["enable", "address", "port", "volume"]
+      "required": [
+        "enable",
+        "address",
+        "port",
+        "volume"
+      ]
     },
     "tts": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "enable": { "type": "boolean", "default": false },
-        "altVoiceAPI": { "type": "string", "default": "" }
+        "enable": {
+          "type": "boolean",
+          "default": false
+        },
+        "altVoiceAPI": {
+          "type": "string",
+          "default": ""
+        }
       },
-      "required": ["enable", "altVoiceAPI"]
+      "required": [
+        "enable",
+        "altVoiceAPI"
+      ]
     },
     "twitchExt": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "enable": { "type": "boolean", "default": false },
-        "token": { "type": "string", "default": "" }
+        "enable": {
+          "type": "boolean",
+          "default": false
+        },
+        "token": {
+          "type": "string",
+          "default": ""
+        }
       },
-      "required": ["enable", "token"]
+      "required": [
+        "enable",
+        "token"
+      ]
     }
   },
-  "required": ["streamdeck", "rabbitmq", "obs", "tracker", "fcb", "mpd", "tts", "twitchExt"]
+  "required": [
+    "streamdeck",
+    "rabbitmq",
+    "obs",
+    "tracker",
+    "fcb",
+    "mpd",
+    "tts",
+    "twitchExt"
+  ]
 }

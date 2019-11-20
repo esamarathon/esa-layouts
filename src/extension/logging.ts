@@ -75,7 +75,7 @@ sc.on('timerStopped', () => logTimerChange('finished'));
 sc.on('timerReset', () => logTimerChange('reset'));
 sc.on('timerEdited', () => logTimerChange('edited'));
 sc.on('timerTeamStopped', id => logTimerChange('team_finished', id));
-sc.on('timerTeamStopUndone', id => logTimerChange('team_undid_finish', id));
+sc.on('timerTeamUndone', id => logTimerChange('team_undid_finish', id));
 
 // Currently check to see if the sponsor logo is visible is "hardcoded" to certain layouts.
 function checkSponsorLogoVisibility() {

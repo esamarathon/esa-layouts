@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "autofix": "npx run-s autofix:*",
-    "autofix:browser": "npx eslint --fix --ext .js,.vue src/dashboard && npx eslint --fix --ext .js,.vue src/graphics",
+    "autofix:browser": "npx eslint --fix --ext .ts,.vue src/dashboard && npx eslint --fix --ext .js,.vue src/graphics && npx eslint --fix --ext .ts src/browser_shared",
     "autofix:extension": "npx eslint --fix --ext .ts,.js src/extension",
     "build": "npx run-s build:*",
     "build:browser": "npx cross-env NODE_ENV=production npx webpack",
@@ -59,6 +59,7 @@
     "eslint-plugin-vue": "^6.0.1",
     "fibers": "^4.0.2",
     "file-loader": "^4.2.0",
+    "fork-ts-checker-webpack-plugin": "^3.1.0",
     "globby": "^10.0.1",
     "gsap": "^2.1.3",
     "hard-source-webpack-plugin": "^0.13.1",

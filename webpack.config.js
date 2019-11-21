@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
@@ -12,7 +13,7 @@ const isProd = process.env.NODE_ENV === 'production';
 
 const config = (name) => {
   const entry = globby
-    .sync('*/main.js', {cwd: `src/${name}`})
+    .sync(`*/main.${name === 'dashboard' ? 'ts' : 'js'}`, {cwd: `src/${name}`})
     .reduce((prev, curr) => {
       prev[path.basename(path.dirname(curr))] = `./${curr}`;
       return prev;
@@ -78,6 +79,11 @@ const config = (name) => {
     plugins.push(    
       new VuetifyLoaderPlugin()
     );
+    plugins.push(
+      new ForkTsCheckerWebpackPlugin({
+        vue: true,
+      })
+    );
   }
   if (name === 'graphics') {
     plugins.push(
@@ -98,7 +104,7 @@ const config = (name) => {
       filename: 'js/[name].js',
     },
     resolve: {
-      extensions: ['.js', '.json'],
+      extensions: ['.js', '.ts', '.tsx', '.json'],
       alias: {
         vue: 'vue/dist/vue.esm.js',
       },
@@ -140,10 +146,35 @@ const config = (name) => {
           },
         },
         {
+          test: /\.svg?$/,
+          include: [
+            path.resolve(__dirname, `src/${name}/_misc/fonts`),
+          ],
+          loader: 'file-loader',
+          options: {
+            name: 'font/[name].[ext]',
+          },
+        },
+        {
           test: /\.(png|svg)?$/,
+          exclude: [
+            path.resolve(__dirname, `src/${name}/_misc/fonts`),
+          ],
           loader: 'file-loader',
           options: {
             name: 'img/[name]-[contenthash].[ext]',
+          },
+        },
+        {
+          test: /\.tsx?$/,
+          include: [
+            path.resolve(__dirname, 'src/dashboard'),
+            path.resolve(__dirname, 'src/browser_shared'),
+          ],
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true, // ForkTsCheckerWebpackPlugin will do type checking
+            appendTsSuffixTo: [/\.vue$/],
           },
         },
       ],

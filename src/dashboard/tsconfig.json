@@ -1,0 +1,6 @@
+{
+  "extends": "../../tsconfig.browser.json",
+  "exclude": [
+    "../graphics/**/*"
+  ]
+}

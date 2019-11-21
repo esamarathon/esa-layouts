@@ -2,7 +2,7 @@
   <div
     class="Logo FlexContainer"
   >
-    <img src="Logo.png">
+    <img src="./Logo.png">
   </div>
 </template>
 

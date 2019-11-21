@@ -1,7 +1,9 @@
 import clone from 'clone';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import '../_misc/common.css';
 import CutBackground from '../_misc/cut_bg';
+import '../_misc/defaults.css';
 import * as Layouts from './layout-list';
 
 Vue.use(VueRouter);

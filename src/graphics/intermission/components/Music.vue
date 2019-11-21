@@ -4,7 +4,7 @@
     class="Music FlexContainer"
   >
     <div class="MCat">
-      <img src="MCat_Logo.png">
+      <img src="./MCat_Logo.png">
     </div>
     <div class="Name">
       {{ name }}

@@ -40,13 +40,30 @@ const config = (name) => {
       new HardSourceWebpackPlugin(),
       new VueLoaderPlugin(),
       ...Object.keys(entry).map(
-        (entryName) =>
-          new HtmlWebpackPlugin({
-            filename: `${entryName}.html`,
-            chunks: [entryName],
-            title: entryName,
-            template: './template.html',
-          }),
+        (entryName) => {
+          if (entryName === 'intermission') {
+            return new HtmlWebpackPlugin({
+              filename: `${entryName}.html`,
+              chunks: [entryName],
+              title: entryName,
+              template: './intermission.html',
+            });
+          } else if (entryName === 'game-layout') {
+            return new HtmlWebpackPlugin({
+              filename: `${entryName}.html`,
+              chunks: [entryName],
+              title: entryName,
+              template: './game-layout.html',
+            });
+          } else {
+            return new HtmlWebpackPlugin({
+              filename: `${entryName}.html`,
+              chunks: [entryName],
+              title: entryName,
+              template: './template.html',
+            });
+          }
+        }
       ),
     ]
   );
@@ -82,6 +99,9 @@ const config = (name) => {
     },
     resolve: {
       extensions: ['.js', '.json'],
+      alias: {
+        vue: 'vue/dist/vue.esm.js',
+      },
     },
     module: {
       rules: [

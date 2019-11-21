@@ -4,7 +4,7 @@
     class="Reader FlexContainer"
   >
     <div class="Mic">
-      <img src="Mic.png">
+      <img src="./Mic.png">
     </div>
     <div class="Name FlexContainer">
       {{ name }}

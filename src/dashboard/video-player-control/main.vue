@@ -1,61 +1,47 @@
 <template>
-  <div
-    v-if="show"
-  >
-    Current Video:
-    <br>
-    <select v-model="selected">
-      <option
-        v-for="(option, name) in options"
-        :key="name"
-        :value="name"
-      >
-        {{ option }}
-      </option>
-    </select>
-  </div>
+  <v-app>
+    <v-radio-group
+      v-model="selected"
+      hide-details
+      class="pa-0 ma-0"
+    >
+      <v-radio
+        v-for="opt in options"
+        :key="opt.value"
+        :value="opt.value"
+        :label="opt.text"
+      ></v-radio>
+    </v-radio-group>
+  </v-app>
 </template>
 
 <script>
-const videos = nodecg.Replicant('assets:videos');
-const current = nodecg.Replicant('currentVideoSum');
-
 export default {
   name: 'VideoPlayerControl',
-  data() {
-    return {
-      show: false,
-      selected: '',
-      options: {},
-    };
-  },
-  watch: {
-    selected(val) {
-      current.value = val;
+  computed: {
+    selected: {
+      get() {
+        return this.$store.state.currentVideoSum;
+      },
+      set(val) {
+        this.$store.commit('updateCurrentVideoSum', val);
+      },
     },
-  },
-  mounted() {
-    videos.on('change', (newVal) => {
-      this.options = {};
-      if (newVal && newVal.length) {
-        this.show = true;
-        newVal.forEach((video) => {
-          this.options[video.sum] = video.name;
+    videos() {
+      return this.$store.state['assets:videos'];
+    },
+    options() {
+      const opts = [];
+      if (this.videos && this.videos.length) {
+        this.videos.forEach((video) => {
+          opts.push({
+            value: video.sum,
+            text: video.name,
+          });
         });
-      } else {
-        this.show = false;
       }
-    });
-
-    current.on('change', (newVal) => {
-      this.selected = newVal;
-    });
+      return opts;
+    },
   },
 };
 </script>
-
-<style>
-  select {
-    width: 100%;
-  }
-</style>

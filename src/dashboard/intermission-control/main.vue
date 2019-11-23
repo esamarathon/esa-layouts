@@ -1,20 +1,21 @@
 <template>
-  <div>
-    <button
+  <v-app>
+    <v-btn
       @click="send"
     >
       Force Refresh Intermission
-    </button>
-  </div>
+    </v-btn>
+  </v-app>
 </template>
 
-<script>
-export default {
-  name: 'IntermissionControl',
-  methods: {
-    send() {
-      nodecg.sendMessage('forceRefreshIntermission');
-    },
-  },
-};
+<script lang="ts">
+import { Vue, Component, Emit } from 'vue-property-decorator';
+@Component
+export default class IntermissionControl extends Vue {
+  @Emit()
+  // eslint-disable-next-line class-methods-use-this
+  send(): void {
+    nodecg.sendMessage('forceRefreshIntermission');
+  }
+}
 </script>

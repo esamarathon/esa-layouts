@@ -134,7 +134,7 @@
       {
         "name": "intermission-control",
         "title": "Intermission Control",
-        "width": 2,
+        "width": 3,
         "file": "intermission-control.html",
         "workspace": "Scene Editing"
       }

@@ -1,27 +1,42 @@
 <template>
-  <div>
-    <ul>
-      <li
+  <v-app>
+    <v-card>
+      <v-list-item
         v-for="name in commentators"
         :key="name"
+        :height="15"
       >
-        {{ name }}
-      </li>
-    </ul>
-    <input
-      id="ManualAddInput"
-      v-model="nameEntry"
-      placeholder="Enter Name Here"
-      @keyup.enter="add"
+        <v-list-item-content>
+          <v-list-item-title>
+            {{ name }}
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-card>
+    <div class="d-flex">
+      <v-text-field
+        v-model="nameEntry"
+        label="Enter Name Here"
+        hide-details
+        filled
+        :spellcheck="false"
+        @keyup.enter="add"
+      ></v-text-field>
+      <v-btn
+        height="56px"
+        :style="{ 'min-width': '0', 'margin-left': '5px' }"
+        @click="add"
+      >
+        <v-icon>mdi-check</v-icon>
+      </v-btn>
+    </div>
+    <v-btn
+      :style="{ 'margin-top': '10px' }"
+      @click="clear"
     >
-    <button @click="add">
-      Manual Add
-    </button>
-    <br><br>
-    <button @click="clear">
       Manual Clear
-    </button>
-  </div>
+    </v-btn>
+  </v-app>
 </template>
 
 <script>
@@ -51,9 +66,3 @@ export default {
   },
 };
 </script>
-
-<style>
-  #ManualAddInput {
-    width: 120px;
-  }
-</style>

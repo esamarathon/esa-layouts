@@ -1,62 +1,56 @@
 <template>
-  <div
-    v-if="show"
-  >
-    <select v-model="selected">
-      <option
-        v-for="(option, name) in options"
-        :key="name"
-        :value="name"
+  <v-app>
+    <div
+      v-if="!options.length"
+    >
+      <em>"Game Layout" graphic must be open.</em>
+    </div>
+    <div v-else>
+      <v-radio-group
+        v-model="selected"
+        hide-details
+        class="pa-0 ma-0"
       >
-        {{ option }}
-      </option>
-    </select>
-  </div>
+        <v-radio
+          v-for="opt in options"
+          :key="opt.value"
+          :value="opt.value"
+          :label="opt.text"
+        ></v-radio>
+      </v-radio-group>
+    </div>
+  </v-app>
 </template>
 
 <script>
-const currentLayout = nodecg.Replicant('currentLayout');
-const layouts = nodecg.Replicant('layouts');
-const overridden = nodecg.Replicant('currentLayoutOverridden');
-
 export default {
   name: 'GameLayoutOverride',
-  data() {
-    return {
-      show: false,
-      selected: '',
-      options: {},
-    };
-  },
-  watch: {
-    selected(newVal, oldVal) {
-      // Only set if value is actually different than what we have.
-      if (newVal !== currentLayout.value && oldVal && newVal !== oldVal) {
-        overridden.value = true;
-        currentLayout.value = newVal;
-      }
+  computed: {
+    selected: {
+      get() {
+        return this.$store.state.currentLayout;
+      },
+      set(val) {
+        this.$store.commit('updateCurrentLayout', val);
+      },
     },
-  },
-  mounted() {
-    // Populates the dropdown when the layout list changes.
-    layouts.on('change', (newVal) => {
-      this.options = {};
-      if (newVal && newVal.length) {
-        this.show = true;
-        newVal.forEach((layout) => {
+    layouts() {
+      return this.$store.state.layouts;
+    },
+    options() {
+      const opts = [];
+      if (this.layouts && this.layouts.length) {
+        this.layouts.forEach((layout) => {
           if (layout.name) {
-            this.options[layout.path] = layout.name;
+            opts.push({
+              value: layout.path,
+              text: layout.name,
+            });
           }
         });
-      } else {
-        this.show = false;
       }
-    });
-
-    // Changes the selected option if the layout has been changed.
-    currentLayout.on('change', (newVal) => {
-      this.selected = newVal;
-    });
+      return opts;
+    },
   },
 };
 </script>

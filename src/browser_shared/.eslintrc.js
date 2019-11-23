@@ -1,3 +1,3 @@
 module.exports = {
-	extends: ['../../.eslintrc.browser.js'],
+	extends: ['../../.eslintrc.browser.dashboard.js'],
 }

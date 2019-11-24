@@ -24,7 +24,7 @@ export default {
     return {
       init: false,
       total: -1,
-      tweenedTotal: 0,
+      tweenedTotal: -1,
       totalSplitString: [],
     };
   },

@@ -19,7 +19,7 @@
 
 <script>
 const hashtag = require('../hashtag-text.png');
-const afLogo = require('../alzheimerfonden.png');
+const afLogo = require('../movember.png');
 
 export default {
   name: 'RotatingLogos',
@@ -50,7 +50,7 @@ export default {
 
   #LogoWrapper {
     position: relative;
-    width: 230px;
+    width: 163px;
   }
 
   #LogoWrapper > img {

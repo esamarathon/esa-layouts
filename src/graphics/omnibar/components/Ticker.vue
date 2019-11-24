@@ -66,15 +66,15 @@ export default {
       this.messageTypes = [
         this.esaPromo(),
         this.charityPromo(),
-        this.otherStreamPromo(),
-        this.otherStreamInfo(),
+        // this.otherStreamPromo(),
+        // this.otherStreamInfo(),
         this.upcomingRun(),
         this.prize(),
         this.bid(),
         this.teamPromo(),
         this.donationURL(),
-        this.shirts(),
-        this.twitchCharity(),
+        // this.shirts(),
+        // this.twitchCharity(),
       ];
 
       this.showNextMsg();
@@ -105,10 +105,10 @@ export default {
       this.timestamp = Date.now();
     },
     esaPromo() {
-      return this.genericMsg('This is European Speedrunner Assembly Summer 2019');
+      return this.genericMsg('This is European Speedrunner Assembly @ DreamHack Winter 2019');
     },
     charityPromo() {
-      return this.genericMsg('#ESASummer19 benefits the Swedish Alzheimer\'s Foundation');
+      return this.genericMsg('ESA @ #DHW19 benefits The Movember Foundation');
     },
     otherStreamPromo() {
       return this.genericMsg(`Watch more great runs over @ twitch.tv/${this.otherChannel}`);

@@ -9,10 +9,10 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Emit } from 'vue-property-decorator';
+import { Vue, Component } from 'vue-property-decorator';
+
 @Component
 export default class IntermissionControl extends Vue {
-  @Emit()
   // eslint-disable-next-line class-methods-use-this
   send(): void {
     nodecg.sendMessage('forceRefreshIntermission');

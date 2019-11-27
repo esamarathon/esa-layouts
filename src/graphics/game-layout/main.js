@@ -97,7 +97,7 @@ function setUpVueApp() {
 NodeCG.waitForReplicants(layouts).then(() => {
   layouts.value = clone(routes);
   window.onunload = () => {
-    layouts.value = {};
+    layouts.value = [];
   };
   // Check if we're open in OBS, if not we don't want to do OBS stuff.
   if (window.obsstudio) {

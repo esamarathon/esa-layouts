@@ -22,35 +22,38 @@
   </v-app>
 </template>
 
-<script>
-export default {
-  name: 'GameLayoutOverride',
-  computed: {
-    selected: {
-      get() {
-        return this.$store.state.currentLayout;
-      },
-      set(val) {
-        this.$store.commit('updateCurrentLayout', val);
-      },
-    },
-    layouts() {
-      return this.$store.state.layouts;
-    },
-    options() {
-      const opts = [];
-      if (this.layouts && this.layouts.length) {
-        this.layouts.forEach((layout) => {
-          if (layout.name) {
-            opts.push({
-              value: layout.path,
-              text: layout.name,
-            });
-          }
-        });
-      }
-      return opts;
-    },
-  },
-};
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import { State, Mutation } from 'vuex-class';
+import { Layouts, CurrentLayout } from 'schemas';
+import { UpdateCurrentLayout } from './store';
+
+@Component
+export default class extends Vue {
+  @State layouts!: Layouts;
+  @State currentLayout!: CurrentLayout;
+  @Mutation updateCurrentLayout!: UpdateCurrentLayout;
+
+  get selected(): CurrentLayout {
+    return this.currentLayout;
+  }
+  set selected(val) {
+    this.updateCurrentLayout(val);
+  }
+
+  get options(): { value?: string; text: string }[] {
+    const opts: { value?: string; text: string }[] = [];
+    if (this.layouts && this.layouts.length) {
+      this.layouts.forEach((layout) => {
+        if (layout.name) {
+          opts.push({
+            value: layout.path,
+            text: layout.name,
+          });
+        }
+      });
+    }
+    return opts;
+  }
+}
 </script>

@@ -39,30 +39,23 @@
   </v-app>
 </template>
 
-<script>
-const commentatorsRep = nodecg.Replicant('commentators');
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import { State, Mutation } from 'vuex-class';
+import { Commentators } from 'schemas';
+import { ClearCommentators, AddCommentator } from './store';
 
-export default {
-  name: 'Commentators',
-  data() {
-    return {
-      commentators: [],
-      nameEntry: '',
-    };
-  },
-  created() {
-    commentatorsRep.on('change', (newVal) => {
-      this.commentators = newVal.slice(0);
-    });
-  },
-  methods: {
-    clear() {
-      commentatorsRep.value.length = 0;
-    },
-    add() {
-      commentatorsRep.value.push(this.nameEntry);
-      this.nameEntry = '';
-    },
-  },
-};
+@Component
+export default class extends Vue {
+  nameEntry = '';
+
+  @State commentators!: Commentators;
+  @Mutation('clearCommentators') clear!: ClearCommentators;
+  @Mutation addCommentator!: AddCommentator;
+
+  add(): void {
+    this.addCommentator(this.nameEntry);
+    this.nameEntry = '';
+  }
+}
 </script>

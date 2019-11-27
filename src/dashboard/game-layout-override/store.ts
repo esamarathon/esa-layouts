@@ -29,11 +29,8 @@ const store = new Vuex.Store({
     },
     /* Mutations to replicants start */
     updateCurrentLayout(state, code): void {
-      if (typeof reps.currentLayout.value !== 'undefined'
-      && typeof reps.currentLayoutOverridden.value !== 'undefined') {
-        reps.currentLayout.value = code;
-        reps.currentLayoutOverridden.value = true;
-      }
+      reps.currentLayout.value = code;
+      reps.currentLayoutOverridden.value = true;
     },
     /* Mutations to replicants end */
   },

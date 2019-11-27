@@ -28,9 +28,7 @@ const store = new Vuex.Store({
     },
     /* Mutations to replicants start */
     updateCurrentVideo(state, sum): void {
-      if (typeof reps.currentVideoSum.value !== 'undefined') {
-        reps.currentVideoSum.value = sum;
-      }
+      reps.currentVideoSum.value = sum;
     },
     /* Mutations to replicants end */
   },

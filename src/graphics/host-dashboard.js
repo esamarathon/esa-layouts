@@ -76,6 +76,7 @@ $(() => {
 	
   var runDataArray = nodecg.Replicant('runDataArray', 'nodecg-speedcontrol');
   var runDataActiveRun = nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol');
+  var runDataActiveRunSurrounding = nodecg.Replicant('runDataActiveRunSurrounding', 'nodecg-speedcontrol');
   var runFinishTimes = nodecg.Replicant('runFinishTimes', 'nodecg-speedcontrol');
   var runFinishTimesInit = false;
   var runDataActiveRunInit = false;
@@ -104,8 +105,8 @@ $(() => {
         var runElement = runHTML.clone();
         if (i === -1) {
           $('.justMissed', runElement).show();
-          if (runFinishTimes.value[runDataActiveRun.value.id-1]) {
-            $('.gameFinal', runElement).html(runFinishTimes.value[runDataActiveRun.value.id-1]);
+          if (runFinishTimes.value[runDataActiveRunSurrounding.value.previous]) {
+            $('.gameFinal', runElement).html(runFinishTimes.value[runDataActiveRunSurrounding.value.previous].time);
             $('.gameFinal', runElement).show();
           }
         }

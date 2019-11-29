@@ -83,7 +83,7 @@ export default {
       if (!runDataActiveRun.value) {
         return -1;
       }
-      return runDataArray.value.findIndex(run => run.id === runDataActiveRun.value.id);
+      return clone(runDataArray.value).findIndex(run => run.id === runDataActiveRun.value.id);
     },
   },
 };

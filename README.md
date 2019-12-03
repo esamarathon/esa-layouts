@@ -59,6 +59,8 @@ If needed, this bundle can interface with an instance of the [featured-channels-
 
 Here's a list of events this bundle has been used at so far.
 
+* ESA @ DreamHack Winter 2019
+* UKSG Autumn 2019
 * ESA Summer 2019 (including some streams on [SpeedGaming](https://www.twitch.tv/speedgaming) during the event).
 * UKSG Summer 2019
 

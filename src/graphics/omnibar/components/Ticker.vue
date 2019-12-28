@@ -75,6 +75,8 @@ export default {
         this.donationURL(),
         // this.shirts(),
         // this.twitchCharity(),
+        this.esaBtRL(),
+        this.esaWinter20(),
       ];
 
       this.showNextMsg();
@@ -101,14 +103,15 @@ export default {
       } else {
         currentComponent = this.messageTypes[Math.floor(Math.random() * this.messageTypes.length)];
       }
-      this.currentComponent = currentComponent;
+      // this.currentComponent = currentComponent;
+      this.currentComponent = this.esaBtRL();
       this.timestamp = Date.now();
     },
     esaPromo() {
-      return this.genericMsg('This is European Speedrunner Assembly @ DreamHack Winter 2019');
+      return this.genericMsg('This is European Speedrunner Assembly @ Vinterspelen 20');
     },
     charityPromo() {
-      return this.genericMsg('ESA @ #DHW19 benefits The Movember Foundation');
+      return this.genericMsg('ESA @ Vinterspelen 20 benefits Save the Children');
     },
     otherStreamPromo() {
       return this.genericMsg(`Watch more great runs over @ twitch.tv/${this.otherChannel}`);
@@ -141,6 +144,12 @@ export default {
     },
     twitchCharity() {
       return this.genericMsg('Subscribe or cheer to support the charity!');
+    },
+    esaBtRL() {
+      return this.genericMsg('Don\'t miss ESA Break the Record: LIVE, 31st Jan - 2nd Feb 2020! - breaktherecordlive.com');
+    },
+    esaWinter20() {
+      return this.genericMsg('Can\'t get enough of speedrunning? Then look forward to ESA Winter 2020: 15th - 22th February!');
     },
     crowdControl(exchange) {
       const line1 = 'Crowd Control';

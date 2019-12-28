@@ -7,6 +7,11 @@
       id="Cube"
       src="../logo.png"
     >
+    <img
+      id="StC"
+      src="../savethechildren.png"
+      :style="{ 'padding-left': '10px' }"
+    >
   </div>
 </template>
 

@@ -4,24 +4,24 @@ Stuff not in this file (yet):
 **/
 
 :root {
-  --border-colour: #c54f00;
-  --font-colour: white;
+  --border-colour: #41245b;
+  --font-colour: #fff073;
   --font-colour-secondary: #b7b7b7;
   --font-colour-inverted: white; /* Inverted is a bad name. */
   --icon-colour-inversion: invert(1); /* Default is black, invert for white. */
-  --commentators-bg-colour: #c54f0075;
+  --commentators-bg-colour: #41245b75;
   --timer-colour: var(--font-colour);
   --timer-paused-colour: var(--font-colour-secondary);
-  --timer-finish-colour: #c54f00;
+  --timer-finish-colour: var(--font-colour-inverted);
 }
 
 #Background {
   /*content: url('./background-blue.png');*/
-  background-color: #293A4D;
+  background-color: #19171c;
 }
 
 #Omnibar {
   /*background-image: url('../omnibar/background-gradient.png');*/
-  background-color: #222C3C;
+  background-color: #251540;
   color: white;
 }

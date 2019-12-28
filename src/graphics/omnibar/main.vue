@@ -5,7 +5,6 @@
   >
     <t-t-s></t-t-s>
     <static-logo></static-logo>
-    <rotating-logos></rotating-logos>
     <divider></divider>
     <total></total>
     <divider></divider>
@@ -18,7 +17,6 @@
 <script>
 import TTS from '../_misc/components/TTS.vue';
 import StaticLogo from './components/StaticLogo.vue';
-import RotatingLogos from './components/RotatingLogos.vue';
 import Total from './components/Total.vue';
 import Ticker from './components/Ticker.vue';
 import Clock from './components/Clock.vue';
@@ -29,7 +27,6 @@ export default {
   components: {
     TTS,
     StaticLogo,
-    RotatingLogos,
     Total,
     Ticker,
     Clock,

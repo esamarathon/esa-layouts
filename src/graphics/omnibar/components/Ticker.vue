@@ -103,8 +103,7 @@ export default {
       } else {
         currentComponent = this.messageTypes[Math.floor(Math.random() * this.messageTypes.length)];
       }
-      // this.currentComponent = currentComponent;
-      this.currentComponent = this.esaBtRL();
+      this.currentComponent = currentComponent;
       this.timestamp = Date.now();
     },
     esaPromo() {

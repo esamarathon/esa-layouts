@@ -1,8 +1,8 @@
-import * as nodecgApiContext from './util/nodecg-api-context';
-import { cookies, eventInfo, streamEvtNumber } from './tracker';
-import { bundleConfig } from './util/nodecg-bundleconfig';
-import needle from 'needle';
 import clone from 'clone';
+import needle from 'needle';
+import { cookies, eventInfo, streamEvtNumber } from './tracker';
+import * as nodecgApiContext from './util/nodecg-api-context';
+import { bundleConfig } from './util/nodecg-bundleconfig';
 
 const nodecg = nodecgApiContext.get();
 const refreshTime = 10000; // 10s

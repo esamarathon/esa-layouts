@@ -65,15 +65,12 @@ export default {
       this.messageTypes = [
         this.esaPromo(),
         this.charityPromo(),
-        this.otherStreamPromo(),
-        this.otherStreamInfo(),
         this.upcomingRun(),
         this.prize(),
         this.bid(),
         this.teamPromo(),
         this.donationURL(),
-        this.shirts(),
-        this.twitchCharity(),
+        this.esaNextEvent(),
       ];
 
       this.showNextMsg();
@@ -104,10 +101,10 @@ export default {
       this.timestamp = Date.now();
     },
     esaPromo() {
-      return this.genericMsg('This is European Speedrunner Assembly Winter 2020');
+      return this.genericMsg('This is United Kingdom Speedrunner Gathering Autumn 2019');
     },
     charityPromo() {
-      return this.genericMsg('#ESAWinter20 benefits Save the Children');
+      return this.genericMsg('#UKSGAutumn19 benefits YoungMinds');
     },
     otherStreamPromo() {
       return this.genericMsg(`Watch more great runs over @ twitch.tv/${this.otherChannel}`);
@@ -140,6 +137,9 @@ export default {
     },
     twitchCharity() {
       return this.genericMsg('Subscribe or cheer to support the charity!');
+    },
+    esaNextEvent() {
+      return this.genericMsg('Can\'t get enough of speedrunning? Then look forward to ESA Winter 2020: 15th - 22th February!');
     },
     crowdControl(exchange) {
       const line1 = 'Crowd Control';

@@ -17,7 +17,6 @@
 
 <script>
 import TTS from '../_misc/components/TextToSpeech.vue';
-import StaticLogo from './components/StaticLogo.vue';
 import RotatingLogos from './components/RotatingLogos.vue';
 import Total from './components/Total.vue';
 import Ticker from './components/Ticker.vue';
@@ -28,7 +27,6 @@ export default {
   name: 'Omnibar',
   components: {
     TTS,
-    StaticLogo,
     RotatingLogos,
     Total,
     Ticker,

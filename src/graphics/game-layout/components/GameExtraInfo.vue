@@ -29,7 +29,7 @@ export default {
     updateData(runData) {
       if (runData) {
         this.show = true;
-        this.text = `${runData.category} / ${runData.system} / ${runData.estimate}`;
+        this.text = `${runData.category} / ${runData.estimate}`;
       } else {
         this.show = false;
       }

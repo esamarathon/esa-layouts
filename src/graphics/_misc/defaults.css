@@ -4,12 +4,12 @@ Stuff not in this file (yet):
 **/
 
 :root {
-  --border-colour: #41245b;
-  --font-colour: #fff073;
+  --border-colour: #4d83aa;
+  --font-colour: #8ebcdd;
   --font-colour-secondary: #b7b7b7;
   --font-colour-inverted: white; /* Inverted is a bad name. */
   --icon-colour-inversion: invert(1); /* Default is black, invert for white. */
-  --commentators-bg-colour: #41245b75;
+  --commentators-bg-colour: #4d83aa75;
   --timer-colour: var(--font-colour);
   --timer-paused-colour: var(--font-colour-secondary);
   --timer-finish-colour: var(--font-colour-inverted);
@@ -17,11 +17,11 @@ Stuff not in this file (yet):
 
 #Background {
   /*content: url('./background-blue.png');*/
-  background-color: #19171c;
+  background-color: #1c4762;
 }
 
 #Omnibar {
   /*background-image: url('../omnibar/background-gradient.png');*/
-  background-color: #41245b;
+  background-color: #011961;
   color: white;
 }

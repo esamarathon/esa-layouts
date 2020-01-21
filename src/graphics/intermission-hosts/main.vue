@@ -25,7 +25,7 @@ export default {
 <style>
   #IntermissionHosts {
     box-sizing: border-box;
-    color: white;
+    color: var(--font-colour-inverted);
     position: fixed;
     width: 1920px;
     height: 1000px;

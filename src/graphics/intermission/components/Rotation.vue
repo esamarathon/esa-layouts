@@ -18,7 +18,6 @@ import Bid from './Rotation/Bid.vue';
 import Prize from './Rotation/Prize.vue';
 import ImageSlide from './Rotation/ImageSlide.vue';
 import VideoSlide from './Rotation/VideoSlide.vue';
-// import Twitch from './Rotation/Twitch.vue';
 
 const runDataActiveRun = nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol');
 const runDataArray = nodecg.Replicant('runDataArray', 'nodecg-speedcontrol');
@@ -32,27 +31,11 @@ export default {
         UpcomingRuns,
         Bid,
         Prize,
-        Bid,
-        Prize,
         ImageSlide,
-        Bid,
-        Prize,
         UpcomingRuns,
-        Bid,
-        Prize,
-        Bid,
-        Prize,
-        ImageSlide,
-        Bid,
-        Prize,
-        UpcomingRuns,
-        Bid,
-        Prize,
         Bid,
         Prize,
         VideoSlide,
-        Bid,
-        Prize,
       ],
       index: 0,
       nextRuns: [],

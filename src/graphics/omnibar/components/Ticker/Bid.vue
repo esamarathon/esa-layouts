@@ -89,6 +89,9 @@ export default {
     const originalWidth = this.$parent.$el.clientWidth - 34;
     this.bid = bid;
     Vue.nextTick().then(() => {
+      if (!this.bid) {
+        return;
+      }
       this.width = originalWidth;
       setTimeout(() => {
         clearTimeout(fallback);

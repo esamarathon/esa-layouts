@@ -97,7 +97,7 @@ export default {
     },
     getNextRuns() {
       const runIndex = this.findRunIndex();
-      return clone(runDataArray).value.slice(runIndex + 1).slice(0, 4);
+      return clone(runDataArray.value).slice(runIndex + 1).slice(0, 4);
     },
     findRunIndex() {
       if (!runDataActiveRun.value) {

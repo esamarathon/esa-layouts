@@ -153,6 +153,7 @@ const config = (name) => {
           loader: 'file-loader',
           options: {
             name: 'font/[name].[ext]',
+            esModule: false,
           },
         },
         {
@@ -163,6 +164,7 @@ const config = (name) => {
           loader: 'file-loader',
           options: {
             name: 'img/[name]-[contenthash].[ext]',
+            esModule: false,
           },
         },
         {

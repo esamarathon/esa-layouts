@@ -50,9 +50,10 @@
 <script>
 import Vue from 'vue';
 import clone from 'clone';
-import { TweenLite, Linear } from 'gsap';
-// eslint-disable-next-line no-unused-vars
-import ScrollToPlugin from 'gsap/umd/ScrollToPlugin';
+import { gsap } from 'gsap';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+
+gsap.registerPlugin(ScrollToPlugin);
 
 const bids = nodecg.Replicant('bids');
 let bid;
@@ -94,9 +95,9 @@ export default {
         const amountToScroll = this.$refs.Line2.scrollWidth - originalWidth;
         const timeToScroll = (amountToScroll * 13) / 1000;
         const timeToShow = (timeToScroll > 25) ? timeToScroll : 21;
-        TweenLite.to(this.$refs.Line2, timeToShow, {
+        gsap.to(this.$refs.Line2, timeToShow, {
           scrollTo: { x: 'max' },
-          ease: Linear.easeNone,
+          ease: 'none',
           onComplete: () => {
             setTimeout(() => this.$emit('end'), 2 * 1000);
           },

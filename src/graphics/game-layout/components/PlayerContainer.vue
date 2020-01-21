@@ -51,9 +51,9 @@ export default {
   },
   methods: {
     updateData(data) {
-      this.players.length = 0;
+      this.players.splice(0, this.players.length);
       const id = (this.teamIndex >= 0) ? this.teamIndex : 0;
-      if (data.teams[id]) {
+      if (data && data.teams[id]) {
         const players = clone(data.teams[id].players);
         if (this.single) {
           this.players.push(players);

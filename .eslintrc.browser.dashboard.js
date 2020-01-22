@@ -28,6 +28,7 @@ module.exports = {
     'plugin:import/typescript',
   ],
   settings: {
+    'import/extensions': ['.js', '.jsx', '.ts', '.tsx'],
     'import/resolver': {
       node: {
         moduleDirectory: [
@@ -38,23 +39,18 @@ module.exports = {
     },
   },
   rules: {
+    'import/extensions': ['error', 'ignorePackages', {
+      js: 'never',
+      jsx: 'never',
+      ts: 'never',
+      tsx: 'never',
+    }],
     'import/no-extraneous-dependencies': ['error', {
       devDependencies: true, // Some places have dev deps imported where eslint complains.
       packageDir: ['.', '../..'], // Check for deps in NodeCG folder as well.
     }],
     'import/no-unresolved': [2, { caseSensitive: false }],
-    'vue/html-self-closing': ['error', {
-      html: {
-        component: 'never', // Transpiler(?) has issues with self closing components.
-      },
-    }],
     'max-len': ["error", { "code": 100 }],
     'lines-between-class-members': 'off',
-    // I legit think the 5 things below are broken, might be a typescript-eslint issue.
-    'vue/no-parsing-error': 'off',
-    'vue/valid-v-on': 'off',
-    'vue/valid-v-if': 'off',
-    'vue/valid-v-bind': 'off',
-    'vue/valid-v-model': 'off',
   }
 };

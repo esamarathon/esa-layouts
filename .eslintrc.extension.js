@@ -15,6 +15,7 @@ module.exports = {
     'plugin:import/typescript',
   ],
   settings: {
+    'import/extensions': ['.js', '.jsx', '.ts', '.tsx'],
     'import/resolver': {
       node: {
         moduleDirectory: [
@@ -25,12 +26,19 @@ module.exports = {
     },
   },
   rules: {
+    'import/extensions': ['error', 'ignorePackages', {
+      js: 'never',
+      jsx: 'never',
+      ts: 'never',
+      tsx: 'never',
+    }],
     'import/no-extraneous-dependencies': ['error', {
       devDependencies: true, // Some places have dev deps imported where eslint complains.
       packageDir: ['.', '../..'], // Check for deps in NodeCG folder as well.
     }],
     'import/no-unresolved': [2, { caseSensitive: false }],
     'max-len': ["error", { "code": 100 }],
+    'lines-between-class-members': 'off',
     '@typescript-eslint/ban-ts-ignore': 'off',
   },
 };

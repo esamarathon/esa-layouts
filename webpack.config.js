@@ -143,6 +143,7 @@ const config = (name) => {
           loader: 'file-loader',
           options: {
             name: 'font/[name].[ext]',
+            esModule: false,
           },
         },
         {

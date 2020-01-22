@@ -12,6 +12,7 @@ const currentLayout = nodecg.Replicant<string>('currentLayout'); // schema this!
 const currentLayoutOverridden = nodecg.Replicant<boolean>('currentLayoutOverridden');
 const commentators = nodecg.Replicant<Commentators>('commentators');
 let lastScene: string | undefined;
+let commercialTO: NodeJS.Timeout;
 
 interface GameLayoutChange {
   cssID: string;
@@ -40,13 +41,55 @@ const obsGroupKeys: { [key: string]: string } = {
 const obsGameLayoutScene = bundleConfig.obs.names.scenes.gameLayout;
 const obsIntermissionScene = bundleConfig.obs.names.scenes.intermission;
 
-// nodecg-speedcontrol no longer sends forceRefreshIntermission so doing it here instead
-sc.timer.on('change', (newVal, oldVal) => {
-  // Timer just finished.
-  if (oldVal && oldVal.state !== 'finished' && newVal.state === 'finished') {
-    nodecg.sendMessage('forceRefreshIntermission');
+/**
+ * Will attempt to play a commercial if >19 minutes is left for the run
+ * and the estimate is higher than 39 minutes.
+ */
+function playCommercial(): void {
+  const run = sc.getCurrentRun();
+  if (!run) {
+    return;
   }
+  const timeLeft = run && run.estimateS
+    ? (run.estimateS + 60) - (sc.timer.value.milliseconds / 1000) : 0;
+  if (run.estimateS && run.estimateS > (60 * (40 - 1)) && timeLeft > (60 * 20)) {
+    nodecg.sendMessageToBundle('twitchStartCommercial', 'nodecg-speedcontrol', { duration: 60 });
+    commercialTO = setTimeout(playCommercial, 1000 * 60 * 20);
+    nodecg.log.info('Twitch commercial triggered, will check again in 20 minutes');
+  } else {
+    nodecg.log.info('Twitch commercial does not need to be triggered,'
+      + ' will not check again for this run');
+  }
+}
+
+sc.on('timerStarted', () => {
+  clearTimeout(commercialTO);
+  nodecg.log.info('Will check if we can trigger a Twitch commercial in 20 minutes');
+  commercialTO = setTimeout(playCommercial, 1000 * 60 * 20);
 });
+
+sc.on('timerStopped', () => {
+  clearTimeout(commercialTO);
+  // nodecg-speedcontrol no longer sends forceRefreshIntermission so doing it here instead
+  nodecg.sendMessage('forceRefreshIntermission');
+});
+
+sc.on('timerReset', () => {
+  clearTimeout(commercialTO);
+});
+
+// If the timer has been recovered on start up,
+// need to make sure the commercial checking is going to run.
+if (sc.timer.value.state === 'running') {
+  const run = sc.getCurrentRun();
+  if (run) {
+    const cycleTime = (sc.timer.value.milliseconds / 1000) % (60 * 20);
+    const timeLeft = ((60 * 20) - cycleTime);
+    nodecg.log.info('Will check if we can trigger a Twitch commercial in'
+      + ` ~${Math.round(timeLeft / 60)} minutes`);
+    commercialTO = setTimeout(playCommercial, 1000 * timeLeft);
+  }
+}
 
 obs.on('SwitchScenes', (data) => {
   lastScene = currentScene.value;
@@ -55,7 +98,7 @@ obs.on('SwitchScenes', (data) => {
   // Trigger Twitch ads when on the relevant scene.
   if (currentScene.value === bundleConfig.obs.names.scenes.ads) {
     // TODO: add this to speedcontrol-util.
-    nodecg.sendMessageToBundle('twitchStartCommercial', 'nodecg-speedcontrol');
+    nodecg.sendMessageToBundle('twitchStartCommercial', 'nodecg-speedcontrol', { duration: 180 });
   }
 
   // Enable/disable nodecg-speedcontrol timer changes if on/not on a game layout scene.

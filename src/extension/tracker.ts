@@ -115,7 +115,7 @@ async function updateDonationTotalFromAPI() {
 
 if (nodecg.bundleConfig.fcb.enable) {
   // bad way of doing this, we need to change in the future
-  nodecg.listenFor('updateFeaturedChannels', 'nodecg-speedcontrol', updateFeaturedChannels);
+  nodecg.listenFor('repeaterFeaturedChannels', 'nodecg-speedcontrol', updateFeaturedChannels);
 }
 
 // Used to update the featured channels on the bridge running on an external server.

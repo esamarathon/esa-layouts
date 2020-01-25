@@ -17,7 +17,6 @@ import UpcomingRuns from './Rotation/UpcomingRuns.vue';
 import Bid from './Rotation/Bid.vue';
 import Prize from './Rotation/Prize.vue';
 import ImageSlide from './Rotation/ImageSlide.vue';
-import VideoSlide from './Rotation/VideoSlide.vue';
 
 const runDataActiveRun = nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol');
 const runDataArray = nodecg.Replicant('runDataArray', 'nodecg-speedcontrol');
@@ -32,10 +31,6 @@ export default {
         Bid,
         Prize,
         ImageSlide,
-        UpcomingRuns,
-        Bid,
-        Prize,
-        VideoSlide,
       ],
       index: 0,
       nextRuns: [],

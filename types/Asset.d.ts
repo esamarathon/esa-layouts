@@ -1,9 +1,9 @@
 export interface Asset {
-	base: string;
-	bundleName: string;
-	category: string;
-	ext: string;
-	name: string;
-	sum: string;
-	url: string;
+  base: string;
+  namespace: string;
+  category: string;
+  ext: string;
+  name: string;
+  sum: string;
+  url: string;
 }

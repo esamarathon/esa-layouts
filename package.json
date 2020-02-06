@@ -37,7 +37,8 @@
     "needle": "^2.4.0",
     "obs-websocket-js": "^4.0.0",
     "speedcontrol-util": "^0.4.0",
-    "streamdeck-util": "^0.3.2"
+    "streamdeck-util": "^0.3.2",
+    "xkeys": "^0.1.2"
   },
   "devDependencies": {
     "@mdi/font": "^4.8.95",

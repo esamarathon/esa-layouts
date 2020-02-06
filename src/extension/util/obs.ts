@@ -1,34 +1,20 @@
+import { Configschema } from 'configschema';
 import obsWebsocketJs from 'obs-websocket-js';
-import * as nodecgApiContext from './nodecg-api-context';
-
-interface ItemPosition {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  croptop: number;
-  cropright: number;
-  cropbottom: number;
-  cropleft: number;
-}
+import { ItemPosition } from 'types';
+import { get as nodecg } from './nodecg';
 
 // Extending the OBS library with some of our own functions.
 class OBSUtility extends obsWebsocketJs {
-  constructor() {
-    super();
-  }
-
   /**
    * Change to this OBS scene.
    * @param name Name of the scene.
    */
-  changeScene(name: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.send('SetCurrentScene', { 'scene-name': name }).then(resolve).catch((err) => {
-        nodecg.log.warn(`Cannot change OBS scene [${name}]: ${err.error}`);
-        reject();
-      });
-    });
+  async changeScene(name: string): Promise<void> {
+    try {
+      await this.send('SetCurrentScene', { 'scene-name': name });
+    } catch (err) {
+      nodecg().log.warn(`[OBS] Cannot change scene [${name}]: ${err.error}`);
+    }
   }
 
   /**
@@ -36,18 +22,17 @@ class OBSUtility extends obsWebsocketJs {
    * @param item Name of the item.
    * @param scene Name of the scene.
    */
-  hideItemInScene(item: string, scene: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      // @ts-ignore: Typings say we need to specify *everything* when we really don't.
-      this.send('SetSceneItemProperties', {
+  async hideItemInScene(item: string, scene: string): Promise<void> {
+    try {
+      // @ts-ignore: Typings say we need to specify more than we actually do.
+      await this.send('SetSceneItemProperties', {
         item,
         visible: false,
         'scene-name': scene,
-      }).then(resolve).catch((err: { error: any; }) => {
-        nodecg.log.warn(`Cannot hide OBS item [${scene}: ${item}]: ${err.error}`);
-        reject();
       });
-    });
+    } catch (err) {
+      nodecg().log.warn(`[OBS] Cannot hide item [${scene}: ${item}]: ${err.error}`);
+    }
   }
 
   /**
@@ -56,9 +41,9 @@ class OBSUtility extends obsWebsocketJs {
    * @param scene Name of the scene.
    * @param position Position details (x/y/width/height/cropping).
    */
-  setUpCaptureInScene(item: string, scene: string, position: ItemPosition): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.send('SetSceneItemProperties', {
+  async setUpCaptureInScene(item: string, scene: string, position: ItemPosition): Promise<void> {
+    try {
+      await this.send('SetSceneItemProperties', {
         item,
         visible: true,
         'scene-name': scene,
@@ -77,42 +62,41 @@ class OBSUtility extends obsWebsocketJs {
           left: position.cropleft,
         },
         scale: {},
-      }).then(resolve).catch((err: { error: any; }) => {
-        nodecg.log.warn(`Cannot setup OBS item [${scene}: ${item}]: ${err.error}`);
-        reject();
       });
-    });
+    } catch (err) {
+      nodecg().log.warn(`[OBS] Cannot setup item [${scene}: ${item}]: ${err.error}`);
+    }
+  }
+}
+const config = (nodecg().bundleConfig as Configschema).obs;
+const obs = new OBSUtility();
+const settings = {
+  address: config.address,
+  password: config.password,
+};
+
+async function connect(): Promise<void> {
+  try {
+    await obs.connect(settings);
+    nodecg().log.info('[OBS] Connection successful');
+  } catch (err) {
+    nodecg().log.warn('[OBS] Connection error');
+    nodecg().log.debug('[OBS] Connection error:', err);
   }
 }
 
-const nodecg = nodecgApiContext.get();
-const obs = new OBSUtility();
-const settings = {
-  address: nodecg.bundleConfig.obs.address,
-  password: nodecg.bundleConfig.obs.password,
-};
-
-if (nodecg.bundleConfig.obs.enable) {
-  nodecg.log.info('Setting up OBS connection.');
+if (config.enable) {
+  nodecg().log.info('[OBS] Setting up connection');
   connect();
   obs.on('ConnectionClosed', () => {
-    nodecg.log.warn('OBS connection lost, retrying in 5 seconds.');
+    nodecg().log.warn('[OBS] Connection lost, retrying in 5 seconds');
     setTimeout(connect, 5000);
   });
 
   // @ts-ignore: Pretty sure this emits an error.
   obs.on('error', (err) => {
-    nodecg.log.warn('OBS connection error.');
-    nodecg.log.debug('OBS connection error:', err);
-  });
-}
-
-function connect() {
-  obs.connect(settings).then(() => {
-    nodecg.log.info('OBS connection successful.');
-  }).catch((err) => {
-    nodecg.log.warn('OBS connection error.');
-    nodecg.log.debug('OBS connection error:', err);
+    nodecg().log.warn('[OBS] Connection error');
+    nodecg().log.debug('[OBS] Connection error:', err);
   });
 }
 

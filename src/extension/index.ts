@@ -1,8 +1,10 @@
-import { NodeCG } from 'nodecg/types/server';
-import * as nodecgApiContext from './util/nodecg-api-context';
+/* eslint-disable global-require */
 
-export = (nodecg: NodeCG) => {
-  nodecgApiContext.set(nodecg);
+import { NodeCG } from 'nodecg/types/server';
+import { set } from './util/nodecg';
+
+export = (nodecg: NodeCG): void => {
+  set(nodecg);
 
   require('./layouts');
   require('./emotes');

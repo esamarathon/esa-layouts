@@ -10,7 +10,7 @@ export = (nodecg: NodeCG): void => {
   require('./emotes');
   require('./tracker');
   require('./music');
-  require('./stream-deck-buttons');
+  require('./streamdeck-buttons');
   require('./timer');
   require('./logging');
   require('./sponsors');

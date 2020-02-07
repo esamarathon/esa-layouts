@@ -4,6 +4,7 @@ export * from './currentLayout';
 export * from './currentLayoutOverridden';
 export * from './currentSponsorLogo';
 export * from './currentVideoSum';
+export * from './donationsToRead';
 export * from './donationTotal';
 export * from './emotes';
 export * from './layouts';

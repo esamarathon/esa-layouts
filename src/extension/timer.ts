@@ -1,18 +1,11 @@
-import speedcontrolUtil from 'speedcontrol-util';
-import * as nodecgApiContext from './util/nodecg-api-context';
-import { bundleConfig } from './util/nodecg-bundleconfig';
+import SpeedcontrolUtil from 'speedcontrol-util';
+import { get as nodecg } from './util/nodecg';
 import { mq } from './util/rabbitmq';
 
-if (!bundleConfig.rabbitmq.enable) {
-  // @ts-ignore: Gonna do this anyway :)
-  return;
-}
-
-const nodecg = nodecgApiContext.get();
-const sc = new speedcontrolUtil(nodecg);
+const sc = new SpeedcontrolUtil(nodecg());
 
 // Controls the nodecg-speedcontrol timer when the big buttons are pressed.
-mq.on('bigbutton-pressed', (data: any) => {
+mq.on('bigbuttonPressed', (data) => {
   const buttonID = data.button_id - 1;
 
   // Make sure we're listening for the right message.
@@ -33,6 +26,9 @@ mq.on('bigbutton-pressed', (data: any) => {
       break;
     case 'finished':
       sc.resetTimer();
+      break;
+    default:
+      // Don't do anything
       break;
   }
 });

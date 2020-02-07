@@ -52,7 +52,7 @@ function init(): void {
     }
   });
 
-  sd.on('keyUp', (data: any) => {
+  sd.on('keyUp', (data) => {
     // com.esamarathon.streamdeck.timer
     // Controls the nodecg-speedcontrol timer when the button is pressed.
     // Currently the "Stop Timer" state only works if there's only 1 team.

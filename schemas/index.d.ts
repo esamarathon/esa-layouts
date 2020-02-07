@@ -6,7 +6,6 @@ export * from './currentSponsorLogo';
 export * from './currentVideoSum';
 export * from './donationsToRead';
 export * from './donationTotal';
-export * from './emotes';
 export * from './layouts';
 export * from './otherStreamInfo';
 export * from './prizes';

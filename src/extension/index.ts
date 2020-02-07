@@ -7,7 +7,6 @@ export = (nodecg: NodeCG): void => {
   set(nodecg);
 
   require('./layouts');
-  require('./emotes');
   require('./tracker');
   require('./music');
   require('./streamdeck-buttons');
@@ -17,8 +16,4 @@ export = (nodecg: NodeCG): void => {
   require('./video-player');
   require('./tts-donations');
   require('./twitch-ext');
-
-  return {
-    obs: require('./util/obs').default,
-  };
 };

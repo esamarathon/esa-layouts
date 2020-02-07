@@ -1,35 +1,36 @@
+import { Configschema } from 'configschema';
+import _ from 'lodash';
 import needle from 'needle';
 import { TwitchAPIData } from '../../../nodecg-speedcontrol/schemas';
-import * as nodecgApiContext from './util/nodecg-api-context';
-import { bundleConfig } from './util/nodecg-bundleconfig';
+import { get as nodecg } from './util/nodecg';
 
-const nodecg = nodecgApiContext.get();
-const apiData = nodecg.Replicant<TwitchAPIData>('twitchAPIData', 'nodecg-speedcontrol');
+const config = (nodecg().bundleConfig as Configschema).twitchExt;
+const apiData = nodecg().Replicant<TwitchAPIData>('twitchAPIData', 'nodecg-speedcontrol');
 
-if (bundleConfig.twitchExt.enable && bundleConfig.twitchExt.token) {
-  // bad way of doing this, we need to change in the future
-  apiData.on('change', (newVal, oldVal) => {
-    if (oldVal && newVal.featuredChannels.toString() !== oldVal.featuredChannels.toString()) {
-      setButtons(newVal.featuredChannels);
-    }
-  });
-}
-
-async function setButtons(usernames: string[]) {
-  const userString = (usernames.length) ? usernames.join(',') : '';
-  nodecg.log.info('Attempting to update Twitch extension "Featured Channels" information.');
+async function setChannels(usernames: string[]): Promise<void> {
+  nodecg().log.info('[Twitch Ext] Attempting to update');
   try {
     const resp = await needle(
       'get',
-      `https://api.furious.pro/featuredchannels/bot/${bundleConfig.twitchExt.token}/${userString}`,
+      `https://api.furious.pro/featuredchannels/bot/${config.token}/${usernames.join(',')}`,
     );
 
     if (resp.statusCode === 200) {
-      nodecg.log.info('Successfully updated Twitch extension "Featured Channels" information.');
+      nodecg().log.info('[Twitch Ext] Successfully updated');
     } else {
-      throw new Error('');
+      throw new Error(`Status Code ${resp.statusCode}`);
     }
   } catch (err) {
-    nodecg.log.warn('Error updating Twitch extension "Featured Channels" information.');
+    nodecg().log.warn('[Twitch Ext] Error updating');
+    nodecg().log.debug('[Twitch Ext] Error updating:', err);
   }
+}
+
+if (config.enable && config.token) {
+  // Poor way of doing this, should change in the future/include in nodecg-speedcontrol.
+  apiData.on('change', (newVal, oldVal) => {
+    if (oldVal && _.isEqual(_.sortBy(newVal.featuredChannels), _.sortBy(oldVal.featuredChannels))) {
+      setChannels(newVal.featuredChannels);
+    }
+  });
 }

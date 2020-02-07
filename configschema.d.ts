@@ -6,6 +6,9 @@
  */
 
 export interface Configschema {
+  xkeys: {
+    enable: boolean;
+  };
   streamdeck: {
     enable: boolean;
     port: number;

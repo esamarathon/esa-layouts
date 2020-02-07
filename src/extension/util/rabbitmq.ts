@@ -146,12 +146,12 @@ export function send(key: string, data: any): void {
     nodecg().log.debug('[RabbitMQ] Could not send message as channel is not defined');
     return;
   }
+  const dataStr = JSON.stringify(data);
   chan.publish(
     exchange,
     `${event}.${key}`,
-    Buffer.from(JSON.stringify(data)),
+    Buffer.from(dataStr),
     { persistent: true },
   );
-  nodecg().log.debug('[RabbitMQ] Sending message with routing key: %s: %s',
-    key, JSON.stringify(data));
+  nodecg().log.debug('[RabbitMQ] Sending message with routing key: %s: %s', key, dataStr);
 }

@@ -3,6 +3,8 @@ import obsWebsocketJs from 'obs-websocket-js';
 import { ItemPosition } from 'types';
 import { get as nodecg } from './nodecg';
 
+const config = (nodecg().bundleConfig as Configschema).obs;
+
 // Extending the OBS library with some of our own functions.
 class OBSUtility extends obsWebsocketJs {
   /**
@@ -10,6 +12,10 @@ class OBSUtility extends obsWebsocketJs {
    * @param name Name of the scene.
    */
   async changeScene(name: string): Promise<void> {
+    if (!config.enable) {
+      // OBS not enabled, don't even try to set.
+      return;
+    }
     try {
       await this.send('SetCurrentScene', { 'scene-name': name });
     } catch (err) {
@@ -23,6 +29,10 @@ class OBSUtility extends obsWebsocketJs {
    * @param scene Name of the scene.
    */
   async hideItemInScene(item: string, scene: string): Promise<void> {
+    if (!config.enable) {
+      // OBS not enabled, don't even try to set.
+      return;
+    }
     try {
       // @ts-ignore: Typings say we need to specify more than we actually do.
       await this.send('SetSceneItemProperties', {
@@ -42,6 +52,10 @@ class OBSUtility extends obsWebsocketJs {
    * @param position Position details (x/y/width/height/cropping).
    */
   async setUpCaptureInScene(item: string, scene: string, position: ItemPosition): Promise<void> {
+    if (!config.enable) {
+      // OBS not enabled, don't even try to set.
+      return;
+    }
     try {
       await this.send('SetSceneItemProperties', {
         item,
@@ -68,7 +82,7 @@ class OBSUtility extends obsWebsocketJs {
     }
   }
 }
-const config = (nodecg().bundleConfig as Configschema).obs;
+
 const obs = new OBSUtility();
 const settings = {
   address: config.address,

@@ -3,6 +3,19 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
+    "xkeys": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enable": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "required": [
+        "enable"
+      ]
+    },
     "streamdeck": {
       "type": "object",
       "additionalProperties": false,
@@ -303,6 +316,7 @@
     }
   },
   "required": [
+    "xkeys",
     "streamdeck",
     "rabbitmq",
     "obs",

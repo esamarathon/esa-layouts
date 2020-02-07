@@ -1,6 +1,9 @@
+import { Configschema } from 'configschema';
 import { EventEmitter } from 'events';
 import XKeysLib from 'xkeys';
 import { get as nodecg } from './nodecg';
+
+const config = (nodecg().bundleConfig as Configschema).xkeys;
 
 interface XKeys {
   on(event: 'down', listener: (keyIndex: string) => void): this;
@@ -14,13 +17,16 @@ class XKeys extends EventEmitter {
 
   constructor() {
     super();
-    this.connect();
+    if (config.enable) {
+      this.connect();
+    }
   }
 
   connect(): void {
     try {
+      nodecg().log.info('[XKeys] Setting up panel');
       this.panel = new XKeysLib();
-      nodecg().log.info('[XKeys] XKeys panel successfully found');
+      nodecg().log.info('[XKeys] Panel successfully found');
       this.panel.on('error', (err) => {
         nodecg().log.debug('[XKeys] Panel error:', err);
       });
@@ -60,11 +66,15 @@ class XKeys extends EventEmitter {
 
   setBacklight(keyIndex: number | string, on?: boolean,
     redLight?: boolean, flashing?: boolean): void {
-    if (this.panel) {
-      this.panel.setBacklight(keyIndex, on, redLight, flashing);
-    } else {
-      nodecg().log.warn(`[XKeys] Cannot set backlight on ${keyIndex}, panel not connected`);
+    if (!config.enable) {
+      // XKeys not enabled, don't even try to set.
+      return;
     }
+    if (!this.panel) {
+      nodecg().log.warn(`[XKeys] Cannot set backlight on ${keyIndex}, panel not connected`);
+      return;
+    }
+    this.panel.setBacklight(keyIndex, on, redLight, flashing);
   }
 }
 

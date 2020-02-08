@@ -16,4 +16,5 @@ export = (nodecg: NodeCG): void => {
   require('./video-player');
   require('./tts-donations');
   require('./twitch-ext');
+  require('./fcb');
 };

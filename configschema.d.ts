@@ -33,7 +33,7 @@ export interface Configschema {
         gameLayout: string;
         intermission: string;
       };
-      groups: {
+      sources: {
         gameCapture1: string;
         gameCapture2: string;
         gameCapture3: string;
@@ -67,7 +67,7 @@ export interface Configschema {
   };
   tts: {
     enable: boolean;
-    altVoiceAPI: string;
+    voiceAPI: string;
   };
   twitchExt: {
     enable: boolean;

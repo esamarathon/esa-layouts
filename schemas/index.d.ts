@@ -8,7 +8,7 @@ export * from './donationsToRead';
 export * from './donationTotal';
 export * from './layouts';
 export * from './notableDonations';
-export * from './otherStreamInfo';
+export * from './otherStreamData';
 export * from './prizes';
 export * from './songData';
 export * from './sponsorLogoRotation';

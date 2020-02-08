@@ -9,6 +9,7 @@ export = (nodecg: NodeCG): void => {
   require('./layouts');
   require('./tracker');
   require('./music');
+  require('./misc-data');
   require('./streamdeck-buttons');
   require('./timer');
   require('./logging');

@@ -1,12 +1,14 @@
 import { DonationsToRead } from 'schemas';
 import SpeedcontrolUtil from 'speedcontrol-util';
+import { markDonationAsRead } from './tracker-donations';
 import { padTimeNumber } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import sd from './util/streamdeck';
 
 const sc = new SpeedcontrolUtil(nodecg());
-const donationsToRead = nodecg().Replicant<DonationsToRead>('donationsToRead');
+const donationsToRead = nodecg()
+  .Replicant<DonationsToRead>('donationsToRead', { persistent: false });
 const defaultCommercialText = 'STEP 1\nTWITCH AD';
 const defaultTimerText = 'Start\nTimer';
 
@@ -82,13 +84,13 @@ function init(): void {
 
     // com.esamarathon.streamdeck.ttsdonations
     if (data.action === 'com.esamarathon.streamdeck.ttsdonations') {
-      const donation = (
+      const donationIndex = (
         data.payload.settings && data.payload.settings.slot
       ) ? data.payload.settings.slot : 0;
-      const donationObj = donationsToRead.value[donation];
-      if (donationObj) {
-        nodecg().sendMessage('ttsSpeak', donationObj);
-        nodecg().sendMessage('markDonationAsRead', donationObj.id);
+      const donation = donationsToRead.value[donationIndex];
+      if (donation) {
+        nodecg().sendMessage('ttsSpeak', donation);
+        markDonationAsRead(donation.id);
       }
     }
 
@@ -99,7 +101,7 @@ function init(): void {
       ) ? data.payload.settings.slot : 0;
       const donation = donationsToRead.value[donationIndex];
       if (donation) {
-        nodecg().sendMessage('markDonationAsRead', donation.id);
+        markDonationAsRead(donation.id);
       }
     }
   });

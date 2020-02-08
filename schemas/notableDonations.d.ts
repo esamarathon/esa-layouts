@@ -5,4 +5,4 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type RecentDonations = any[];
+export type NotableDonations = any[];

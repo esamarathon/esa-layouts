@@ -40,5 +40,6 @@ module.exports = {
     'max-len': ["error", { "code": 100 }],
     'lines-between-class-members': 'off',
     '@typescript-eslint/ban-ts-ignore': 'off',
+    'no-restricted-syntax': 'off',
   },
 };

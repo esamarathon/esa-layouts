@@ -1,84 +1,58 @@
+import { Configschema } from 'configschema';
 import moment from 'moment';
 import needle from 'needle';
-import { Prizes } from '../../schemas';
-import { cookies, eventInfo } from './tracker';
-import * as nodecgApiContext from './util/nodecg-api-context';
-import { bundleConfig } from './util/nodecg-bundleconfig';
+import { Prizes } from 'schemas';
+import { FormattedPrize, Prize } from 'types';
+import { eventInfo, getCookies } from './tracker';
+import { get as nodecg } from './util/nodecg';
 
-const nodecg = nodecgApiContext.get();
-const refreshTime = 60000; // Get bids every 60s.
-
-// Replicants.
-const prizes = nodecg.Replicant<Prizes>('prizes', { persistent: false });
-
-// Get the prizes from the API.
-updatePrizes();
-async function updatePrizes() {
-  try {
-    const resp = await needle(
-      'get',
-      // Prizes always from the first event specified.
-      // tslint:disable-next-line: max-line-length
-      `https://${bundleConfig.tracker.address}/search/?event=${eventInfo[0].id}&type=prize&state=ACCEPTED`,
-      {
-        cookies,
-      },
-    );
-    const currentPrizes = processRawPrizes(resp.body);
-    prizes.value = currentPrizes;
-    setTimeout(updatePrizes, refreshTime);
-  } catch (err) {
-    nodecg.log.warn('Error updating prizes.');
-    nodecg.log.debug('Error updating prizes:', err);
-    prizes.value = [];
-    setTimeout(updatePrizes, refreshTime);
-  }
-}
+const config = (nodecg().bundleConfig as Configschema).tracker;
+const storedPrizes = nodecg().Replicant<Prizes>('prizes', { persistent: false });
+const { id } = eventInfo[0]; // Prizes always from the first event specified.
+const refreshTime = 60 * 1000; // Get prizes every 60s.
 
 // Processes the response from the API above.
-function processRawPrizes(prizes: any) {
-  const prizesArray: any[] = [];
-
-  prizes.forEach((prize: any) => {
+function processRawPrizes(prizes: Prize[]): FormattedPrize[] {
+  return prizes.reduce((accumulator, prize) => {
     const formattedPrize = {
       id: prize.pk,
       name: prize.fields.name,
       provided: prize.fields.provider || 'Anonymous',
-      minimum_bid: parseFloat(prize.fields.minimumbid),
+      minimumBid: parseFloat(prize.fields.minimumbid),
       image: prize.fields.image,
-      start_timestamp: '',
-      end_timestamp: '',
+      startTimestamp: prize.fields.startrun__starttime || prize.fields.starttime,
+      endTimestamp: prize.fields.endrun__endtime || prize.fields.endtime,
     };
-
-    // If there's a start run, use it's starting time.
-    if (prize.fields.startrun) {
-      formattedPrize.start_timestamp = prize.fields.startrun__starttime;
-    } else if (prize.fields.starttime) {
-      formattedPrize.start_timestamp = prize.fields.starttime;
-    } else {
-      formattedPrize.start_timestamp = '';
-    }
-
-    // If there's an ending run, use it's end time.
-    if (prize.fields.endrun) {
-      formattedPrize.end_timestamp = prize.fields.endrun__endtime;
-    } else if (prize.fields.endtime) {
-      formattedPrize.end_timestamp = prize.fields.endtime;
-    } else {
-      formattedPrize.end_timestamp = '';
-    }
-
+    // Only add prize if applicable right now.
     const currentTimestamp = moment().unix();
-    const startTimestamp = moment(formattedPrize.start_timestamp).unix();
-    const endTimestamp = moment(formattedPrize.end_timestamp).unix();
-
-    // Prize not applicable right now, so don't add it.
-    if (currentTimestamp < startTimestamp || currentTimestamp > endTimestamp) {
-      return;
+    const startTimestamp = moment(formattedPrize.startTimestamp).unix();
+    const endTimestamp = moment(formattedPrize.endTimestamp).unix();
+    if (currentTimestamp > startTimestamp && currentTimestamp < endTimestamp) {
+      accumulator.push(formattedPrize);
     }
-
-    prizesArray.push(formattedPrize);
-  });
-
-  return prizesArray;
+    return accumulator;
+  }, [] as FormattedPrize[]);
 }
+
+// Get the prizes from the API.
+async function updatePrizes(): Promise<void> {
+  try {
+    const resp = await needle(
+      'get',
+      `https://${config.address}/search/?event=${id}&type=prize&state=ACCEPTED`,
+      {
+        cookies: getCookies(),
+      },
+    );
+    const currentPrizes = processRawPrizes(resp.body);
+    storedPrizes.value = currentPrizes;
+    setTimeout(updatePrizes, refreshTime);
+  } catch (err) {
+    nodecg().log.warn('[Tracker] Error updating prizes');
+    nodecg().log.debug('[Tracker] Error updating prizes:', err);
+    storedPrizes.value.length = 0; // Clear the array so we do not display incorrect information.
+    setTimeout(updatePrizes, refreshTime);
+  }
+}
+
+updatePrizes();

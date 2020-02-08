@@ -36,7 +36,7 @@ function processRawBids(bids: Bid[]): FormattedBid[] {
         war: bid.fields.istarget,
         allowUserOptions: bid.fields.istarget && bid.fields.allowuseroptions,
         options: [],
-        goal: (bid.fields.goal) ? parseFloat(bid.fields.goal) : 0,
+        goal: (bid.fields.goal) ? parseFloat(bid.fields.goal) : undefined,
       };
     }
   });

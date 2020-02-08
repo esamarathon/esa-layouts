@@ -5,4 +5,10 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type DonationsToRead = any[];
+export type DonationsToRead = {
+  id: number;
+  name: string;
+  amount: number;
+  comment?: string;
+  timestamp: string;
+}[];

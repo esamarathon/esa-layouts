@@ -1,4 +1,77 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
-  "type": "array"
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "number"
+      },
+      "name": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "total": {
+        "type": "number"
+      },
+      "game": {
+        "type": "string"
+      },
+      "category": {
+        "type": "string"
+      },
+      "endTime": {
+        "type": "number"
+      },
+      "war": {
+        "type": "boolean"
+      },
+      "allowUserOptions": {
+        "type": "boolean"
+      },
+      "options": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "number"
+            },
+            "parent": {
+              "type": "number"
+            },
+            "name": {
+              "type": "string"
+            },
+            "total": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "id",
+            "parent",
+            "name",
+            "total"
+          ]
+        }
+      },
+      "goal": {
+        "type": "number"
+      }
+    },
+    "required": [
+      "id",
+      "name",
+      "total",
+      "endTime",
+      "war",
+      "allowUserOptions",
+      "options"
+    ]
+  },
+  "default": []
 }

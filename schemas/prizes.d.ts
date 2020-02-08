@@ -5,4 +5,12 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type Prizes = any[];
+export type Prizes = {
+  id: number;
+  name: string;
+  provided?: string;
+  minimumBid: number;
+  image?: string;
+  startTimestamp?: string;
+  endTimestamp?: string;
+}[];

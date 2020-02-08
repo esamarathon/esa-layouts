@@ -25,12 +25,12 @@ export interface Bid {
 }
 
 export interface FormattedBid {
-  description: string;
   id: number;
   name: string;
+  description?: string;
   total: number;
-  game: string;
-  category: string;
+  game?: string;
+  category?: string;
   endTime: number;
   war: boolean;
   allowUserOptions: boolean;
@@ -40,7 +40,7 @@ export interface FormattedBid {
     name: string;
     total: number;
   }[];
-  goal: number;
+  goal?: number;
 }
 
 // The object from the tracker API.
@@ -64,9 +64,9 @@ export interface Prize {
 export interface FormattedPrize {
   id: number;
   name: string;
-  provided: string;
+  provided?: string;
   minimumBid: number;
-  image: string;
+  image?: string;
   startTimestamp?: string;
   endTimestamp?: string;
 }
@@ -88,6 +88,6 @@ export interface FormattedDonation {
   id: number;
   name: string;
   amount: number;
-  comment: string | undefined;
+  comment?: string;
   timestamp: string;
 }

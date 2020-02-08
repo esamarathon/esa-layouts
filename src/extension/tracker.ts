@@ -113,39 +113,6 @@ async function updateDonationTotalFromAPI() {
   }
 }
 
-if (nodecg.bundleConfig.fcb.enable) {
-  // bad way of doing this, we need to change in the future
-  nodecg.listenFor('repeaterFeaturedChannels', 'nodecg-speedcontrol', updateFeaturedChannels);
-}
-
-// Used to update the featured channels on the bridge running on an external server.
-async function updateFeaturedChannels(usernames: string[]) {
-  const postKey = nodecg.bundleConfig.fcb.postKey;
-  try {
-    const resp = await needle(
-      'post',
-      `https://${nodecg.bundleConfig.fcb.address}/featured_channels?key=${postKey}`,
-      JSON.stringify({
-        channels: usernames,
-      }),
-      {
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-        },
-      },
-    );
-
-    if (resp.statusCode === 200) {
-      nodecg.log.info('Successfully sent featured channels to FCB server.');
-    } else {
-      nodecg.log.warn('Failed to send featured channels to FCB server (%s).', resp.statusCode);
-    }
-  } catch (err) {
-    nodecg.log.warn('Failed to send featured channels to FCB server.');
-    nodecg.log.debug('Failed to send featured channels to FCB server:', err);
-  }
-}
-
 // When the donation total is updated, this is fired.
 mq.on('evt-donation-total', (data) => {
   let total = 0;

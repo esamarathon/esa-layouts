@@ -6,6 +6,10 @@
  */
 
 export interface Configschema {
+  event: {
+    shorts: string | [string] | [string, string];
+    thisEvent: number;
+  };
   xkeys: {
     enable: boolean;
   };
@@ -48,11 +52,6 @@ export interface Configschema {
     address: string;
     username: string;
     password: string;
-    events: string | string[];
-    /**
-     * If the 'event' has multiple tracker events, this a 1-indexed value of which one is applicable to this stream from the events array.
-     */
-    streamEvent: number;
   };
   fcb: {
     enable: boolean;

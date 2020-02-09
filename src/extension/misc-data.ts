@@ -1,12 +1,8 @@
-import { Configschema } from 'configschema';
 import { RunDataActiveRun } from '../../../nodecg-speedcontrol/schemas';
-import { eventInfo } from './tracker';
+import { getOtherStreamEventShort } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import { mq } from './util/rabbitmq';
 import { otherStreamData } from './util/replicants';
-
-const config = (nodecg().bundleConfig as Configschema).tracker;
-const { short } = eventInfo[config.streamEvent - 1] || {};
 
 // Screened data from our moderation tool.
 mq.on('newScreenedSub', (data) => {
@@ -29,13 +25,13 @@ mq.on('newScreenedCrowdControl', (data) => {
 // Information that should come from our 2nd stream.
 // Currently assumes only 1 other "event" going on at the time.
 mq.on('runChanged', (data) => {
-  if (short && data.event !== short) {
+  if (getOtherStreamEventShort() && getOtherStreamEventShort() === data.event) {
     otherStreamData.value.runData = data.run as RunDataActiveRun;
     nodecg().log.info('[Misc Data] Received modified run data from other stream');
   }
 });
 mq.on('gameSceneChanged', (data) => {
-  if (short && data.event !== short) {
+  if (getOtherStreamEventShort() && getOtherStreamEventShort() === data.event) {
     nodecg().log.info('[Misc Data] Received game scene change from other stream:', data.action);
     if (data.action === 'start') {
       otherStreamData.value.show = true;

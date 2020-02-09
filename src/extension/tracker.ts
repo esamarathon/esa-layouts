@@ -8,6 +8,7 @@ import { mq } from './util/rabbitmq';
 import { donationTotal, notableDonations } from './util/replicants';
 
 export const eventInfo: EventInfo[] = [];
+const eventConfig = (nodecg().bundleConfig as Configschema).event;
 const config = (nodecg().bundleConfig as Configschema).tracker;
 let cookies: NeedleResponse['cookies'];
 
@@ -151,7 +152,7 @@ async function init(): Promise<void> {
   }
   try {
     // Go through all events and compile the important info for them.
-    const events = (Array.isArray(config.events)) ? config.events : [config.events];
+    const events = (Array.isArray(eventConfig.shorts)) ? eventConfig.shorts : [eventConfig.shorts];
     for (const short of events) {
       const id = await getEventIDFromShort(short);
       eventInfo.push({

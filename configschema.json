@@ -3,6 +3,41 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "shorts": {
+          "$comment": "This/these must match the tracker, if that feature is enabled.",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true,
+              "minItems": 1,
+              "maxItems": 2
+            }
+          ],
+          "default": "EVENT_SHORT"
+        },
+        "thisEvent": {
+          "type": "number",
+          "$comment": "If the 'event' has multiple tracker events, this a 1-indexed value of which one is applicable to this stream from the shorts array.",
+          "minimum": 1,
+          "maximum": 2,
+          "default": 1
+        }
+      },
+      "required": [
+        "shorts",
+        "thisEvent"
+      ]
+    },
     "xkeys": {
       "type": "object",
       "additionalProperties": false,
@@ -196,35 +231,13 @@
         "password": {
           "type": "string",
           "default": "PASSWORD"
-        },
-        "events": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "uniqueItems": true
-            }
-          ],
-          "default": "EVENT_SHORT"
-        },
-        "streamEvent": {
-          "type": "number",
-          "description": "If the 'event' has multiple tracker events, this a 1-indexed value of which one is applicable to this stream from the events array.",
-          "default": 1
         }
       },
       "required": [
         "enable",
         "address",
         "username",
-        "password",
-        "events",
-        "streamEvent"
+        "password"
       ]
     },
     "fcb": {
@@ -316,6 +329,7 @@
     }
   },
   "required": [
+    "event",
     "xkeys",
     "streamdeck",
     "rabbitmq",

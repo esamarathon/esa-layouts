@@ -2,7 +2,7 @@ import { RunDataActiveRun } from '../../../nodecg-speedcontrol/schemas';
 import { getOtherStreamEventShort } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import { mq } from './util/rabbitmq';
-import { otherStreamData } from './util/replicants';
+import { commentators, otherStreamData } from './util/replicants';
 
 // Screened data from our moderation tool.
 mq.on('newScreenedSub', (data) => {
@@ -38,5 +38,14 @@ mq.on('gameSceneChanged', (data) => {
     } else if (data.action === 'end') {
       otherStreamData.value.show = false;
     }
+  }
+});
+
+// When someone scans in on one of the big timer buttons.
+// Currently only used for commentators.
+mq.on('bigbuttonTagScanned', (data) => {
+  const name = data.user.displayName;
+  if (!commentators.value.includes(name)) {
+    commentators.value.push(name);
   }
 });

@@ -173,15 +173,6 @@ nodecg.listenFor('captureChange', async (opts: GameLayoutChange) => {
   }
 });
 
-// When someone scans in on one of the big timer buttons.
-// Currently only used for commentators.
-mq.on('bigbutton-tag-scanned', (data) => {
-  const name = data.user.displayName;
-  if (!commentators.value.includes(name)) {
-    commentators.value.push(name);
-  }
-});
-
 sc.runDataActiveRun.on('change', (newVal, oldVal) => {
   // Reset the commentators when the run changes and not on the game layout scene.
   if ((!newVal || (newVal && oldVal && oldVal.id !== newVal.id))

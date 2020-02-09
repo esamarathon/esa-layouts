@@ -2,13 +2,12 @@
 
 import { Configschema } from 'configschema';
 import needle from 'needle';
-import { DonationsToRead } from 'schemas';
 import { Donation, FormattedDonation } from 'types';
 import { eventInfo, getCookies } from './tracker';
 import { get as nodecg } from './util/nodecg';
+import { donationsToRead } from './util/replicants';
 
 const config = (nodecg().bundleConfig as Configschema).tracker;
-const toRead = nodecg().Replicant<DonationsToRead>('donationsToRead', { persistent: false });
 const { id } = eventInfo[config.streamEvent - 1]; // Prizes always from the first event specified.
 const refreshTime = 10 * 1000; // Get donations every 10s.
 let updateTimeout: NodeJS.Timeout;
@@ -43,7 +42,7 @@ async function updateToReadDonations(): Promise<void> {
       },
     );
     const currentDonations = processToReadDonations(resp.body);
-    toRead.value = currentDonations;
+    donationsToRead.value = currentDonations;
   } catch (err) {
     nodecg().log.warn('[Tracker] Error updating to read donations');
     nodecg().log.debug('[Tracker] Error updating to read donations:', err);

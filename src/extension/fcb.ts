@@ -21,7 +21,6 @@ async function setChannels(usernames: string[]): Promise<void> {
         },
       },
     );
-
     if (resp.statusCode === 200) {
       nodecg().log.info('[FCB] Successfully sent channels');
     } else {

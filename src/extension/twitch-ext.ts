@@ -1,11 +1,10 @@
 import { Configschema } from 'configschema';
 import _ from 'lodash';
 import needle from 'needle';
-import { TwitchAPIData } from '../../../nodecg-speedcontrol/schemas';
 import { get as nodecg } from './util/nodecg';
+import { twitchAPIData } from './util/replicants';
 
 const config = (nodecg().bundleConfig as Configschema).twitchExt;
-const apiData = nodecg().Replicant<TwitchAPIData>('twitchAPIData', 'nodecg-speedcontrol');
 
 async function setChannels(usernames: string[]): Promise<void> {
   nodecg().log.info('[Twitch Ext] Attempting to update');
@@ -28,7 +27,7 @@ async function setChannels(usernames: string[]): Promise<void> {
 
 if (config.enable && config.token) {
   // Poor way of doing this, should change in the future/include in nodecg-speedcontrol.
-  apiData.on('change', (newVal, oldVal) => {
+  twitchAPIData.on('change', (newVal, oldVal) => {
     if (oldVal && _.isEqual(_.sortBy(newVal.featuredChannels), _.sortBy(oldVal.featuredChannels))) {
       setChannels(newVal.featuredChannels);
     }

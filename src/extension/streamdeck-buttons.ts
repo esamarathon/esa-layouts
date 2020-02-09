@@ -1,14 +1,12 @@
-import { DonationsToRead } from 'schemas';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { markDonationAsRead } from './tracker-donations';
 import { padTimeNumber } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
+import { donationsToRead } from './util/replicants';
 import sd from './util/streamdeck';
 
 const sc = new SpeedcontrolUtil(nodecg());
-const donationsToRead = nodecg()
-  .Replicant<DonationsToRead>('donationsToRead', { persistent: false });
 const defaultCommercialText = 'STEP 1\nTWITCH AD';
 const defaultTimerText = 'Start\nTimer';
 

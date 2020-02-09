@@ -1,19 +1,18 @@
 import { Configschema } from 'configschema';
 import moment from 'moment';
 import needle from 'needle';
-import { Prizes } from 'schemas';
 import { FormattedPrize, Prize } from 'types';
 import { eventInfo, getCookies } from './tracker';
 import { get as nodecg } from './util/nodecg';
+import { prizes } from './util/replicants';
 
 const config = (nodecg().bundleConfig as Configschema).tracker;
-const storedPrizes = nodecg().Replicant<Prizes>('prizes', { persistent: false });
 const { id } = eventInfo[0]; // Prizes always from the first event specified.
 const refreshTime = 60 * 1000; // Get prizes every 60s.
 
 // Processes the response from the API above.
-function processRawPrizes(prizes: Prize[]): FormattedPrize[] {
-  return prizes.reduce((accumulator, prize) => {
+function processRawPrizes(rawPrizes: Prize[]): FormattedPrize[] {
+  return rawPrizes.reduce((accumulator, prize) => {
     const formattedPrize = {
       id: prize.pk,
       name: prize.fields.name,
@@ -45,12 +44,12 @@ async function updatePrizes(): Promise<void> {
       },
     );
     const currentPrizes = processRawPrizes(resp.body);
-    storedPrizes.value = currentPrizes;
+    prizes.value = currentPrizes;
     setTimeout(updatePrizes, refreshTime);
   } catch (err) {
     nodecg().log.warn('[Tracker] Error updating prizes');
     nodecg().log.debug('[Tracker] Error updating prizes:', err);
-    storedPrizes.value.length = 0; // Clear the array so we do not display incorrect information.
+    prizes.value.length = 0; // Clear the array so we do not display incorrect information.
     setTimeout(updatePrizes, refreshTime);
   }
 }

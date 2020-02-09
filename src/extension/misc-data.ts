@@ -1,11 +1,10 @@
 import { Configschema } from 'configschema';
-import { OtherStreamData } from 'schemas';
 import { RunDataActiveRun } from '../../../nodecg-speedcontrol/schemas';
 import { eventInfo } from './tracker';
 import { get as nodecg } from './util/nodecg';
 import { mq } from './util/rabbitmq';
+import { otherStreamData } from './util/replicants';
 
-const otherStreamData = nodecg().Replicant<OtherStreamData>('otherStreamData');
 const config = (nodecg().bundleConfig as Configschema).tracker;
 const { short } = eventInfo[config.streamEvent - 1] || {};
 

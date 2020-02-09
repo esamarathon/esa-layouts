@@ -2,16 +2,14 @@
 
 import { Configschema } from 'configschema';
 import needle, { NeedleResponse } from 'needle';
-import { DonationTotal, NotableDonations } from 'schemas';
 import { EventInfo } from 'types';
 import { get as nodecg } from './util/nodecg';
 import { mq } from './util/rabbitmq';
+import { donationTotal, notableDonations } from './util/replicants';
 
 export const eventInfo: EventInfo[] = [];
 const config = (nodecg().bundleConfig as Configschema).tracker;
 let cookies: NeedleResponse['cookies'];
-const donationTotal = nodecg().Replicant<DonationTotal>('donationTotal');
-const notableDonations = nodecg().Replicant<NotableDonations>('notableDonations');
 
 /**
  * Returns tracker cookies, if set.

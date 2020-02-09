@@ -1,21 +1,20 @@
 import { Configschema } from 'configschema';
 import needle from 'needle';
-import { Bids } from 'schemas';
 import { Bid, FormattedBid } from 'types';
 import { eventInfo, getCookies } from './tracker';
 import { get as nodecg } from './util/nodecg';
+import { bids } from './util/replicants';
 
 const config = (nodecg().bundleConfig as Configschema).tracker;
-const storedBids = nodecg().Replicant<Bids>('bids', { persistent: false });
 const { id } = eventInfo[config.streamEvent - 1];
 const refreshTime = 60 * 1000; // Get bids every 60s.
 
 // Processes the response from the API.
-function processRawBids(bids: Bid[]): FormattedBid[] {
+function processRawBids(rawBids: Bid[]): FormattedBid[] {
   const parentBids: { [k: string]: FormattedBid } = {};
   const childBids: Bid[] = [];
 
-  bids.forEach((bid) => {
+  rawBids.forEach((bid) => {
     // Ignore denied/pending entries.
     if (bid.fields.state === 'DENIED' || bid.fields.state === 'PENDING') {
       return;
@@ -96,12 +95,12 @@ async function updateBids(): Promise<void> {
       },
     );
     const currentBids = processRawBids(resp.body);
-    storedBids.value = currentBids;
+    bids.value = currentBids;
     setTimeout(updateBids, refreshTime);
   } catch (err) {
     nodecg().log.warn('[Tracker] Error updating bids');
     nodecg().log.debug('[Tracker] Error updating bids:', err);
-    storedBids.value.length = 0; // Clear the array so we do not display incorrect information.
+    bids.value.length = 0; // Clear the array so we do not display incorrect information.
     setTimeout(updateBids, refreshTime);
   }
 }

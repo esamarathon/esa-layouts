@@ -8,7 +8,7 @@ import { get as nodecg } from './util/nodecg';
 import { donationsToRead } from './util/replicants';
 
 const config = (nodecg().bundleConfig as Configschema).tracker;
-const { id } = eventInfo[config.streamEvent - 1]; // Prizes always from the first event specified.
+const { id } = eventInfo[0]; // Prizes always from the first event.
 const refreshTime = 10 * 1000; // Get donations every 10s.
 let updateTimeout: NodeJS.Timeout;
 
@@ -46,7 +46,7 @@ async function updateToReadDonations(): Promise<void> {
   } catch (err) {
     nodecg().log.warn('[Tracker] Error updating to read donations');
     nodecg().log.debug('[Tracker] Error updating to read donations:', err);
-    toRead.value.length = 0; // Clear the array so we do not display incorrect information.
+    donationsToRead.value.length = 0; // Clear the array so we do not display incorrect information.
   }
   updateTimeout = setTimeout(updateToReadDonations, refreshTime);
 }

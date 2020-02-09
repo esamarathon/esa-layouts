@@ -5,8 +5,9 @@ import { eventInfo, getCookies } from './tracker';
 import { get as nodecg } from './util/nodecg';
 import { bids } from './util/replicants';
 
+const eventConfig = (nodecg().bundleConfig as Configschema).event;
 const config = (nodecg().bundleConfig as Configschema).tracker;
-const { id } = eventInfo[config.streamEvent - 1];
+const { id } = eventInfo[eventConfig.thisEvent - 1];
 const refreshTime = 60 * 1000; // Get bids every 60s.
 
 // Processes the response from the API.

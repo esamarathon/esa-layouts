@@ -48,6 +48,7 @@
     "@types/clone": "^0.1.30",
     "@types/lodash": "^4.14.149",
     "@types/needle": "^2.0.4",
+    "@types/uuid": "^3.4.7",
     "@typescript-eslint/eslint-plugin": "^2.19.0",
     "@typescript-eslint/parser": "^2.19.0",
     "@vue/component-compiler-utils": "^3.1.1",
@@ -84,6 +85,7 @@
     "vue-router": "^3.1.5",
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.11",
+    "vuedraggable": "^2.23.2",
     "vuetify": "^2.2.11",
     "vuetify-loader": "^1.4.3",
     "vuex": "^3.1.2",
@@ -109,7 +111,7 @@
       {
         "name": "sponsor-logo-control",
         "title": "Sponsor Logo Control",
-        "width": 5,
+        "width": 3,
         "file": "sponsor-logo-control.html",
         "workspace": "ESA",
         "headerColor": "#c49215"

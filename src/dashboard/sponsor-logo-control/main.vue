@@ -1,127 +1,144 @@
 <template>
-  <div v-if="show">
-    <logo-dropdown
-      @add-logo="addLogo"
-    ></logo-dropdown>
-    <br>
-    <transition-group name="logo-list">
-      <logo-settings
-        v-for="(logo, index) in rotation"
-        :key="`${logo.id}`"
-        :info="logo"
-        :index="index"
-        @update-seconds="updateSeconds"
-        @change-logo="changeLogo"
-      ></logo-settings>
-    </transition-group>
-    <br>
-    <button @click="clear">
-      Clear
-    </button>
-    <button
+  <v-app>
+    <v-toolbar-title>
+      Available Logos
+    </v-toolbar-title>
+    <v-card
+      v-if="!logos.length"
+      :style="{
+        'text-align': 'center',
+        padding: '5px',
+        'margin-top': '10px',
+        'font-style': 'italic',
+      }"
+    >
+      Add images in the "Assets" tab.
+    </v-card>
+    <draggable
+      v-else
+      :list="logos"
+      :group="{ name: 'logos', pull: 'clone', put: false }"
+      :sort="false"
+      :clone="cloneLogo"
+    >
+      <v-card
+        v-for="logo in logos"
+        :key="logo.sum"
+        :style="{ 'text-align': 'center', padding: '5px', 'margin-top': '10px' }"
+      >
+        {{ logo.name }}
+      </v-card>
+    </draggable>
+    <v-toolbar-title :style="{ 'margin-top': '20px' }">
+      Logo Rotation
+    </v-toolbar-title>
+    <v-card
+      v-if="!newRotation.length"
+      :style="{
+        'text-align': 'center',
+        padding: '5px',
+        'margin-top': '10px',
+        'font-style': 'italic',
+      }"
+    >
+      Drag logos from above to here to configure.
+    </v-card>
+    <draggable
+      v-model="newRotation"
+      group="logos"
+    >
+      <v-card
+        v-for="(logo, i) in newRotation"
+        :key="logo.id"
+        :style="{ 'text-align': 'center', padding: '5px', 'margin-top': '10px' }"
+        class="d-flex"
+      >
+        <div
+          class="flex-grow-1 d-flex align-center justify-start"
+          :style="{ 'padding-left': '5px' }"
+        >
+          {{ getAssetDetails(logo.sum).name }}
+        </div>
+        <v-text-field
+          v-model="logo.seconds"
+          class="pa-0 ma-0 flex-shrink-1"
+          type="number"
+          hide-details
+          dense
+          :style="{ 'max-width': '50px' }"
+          @input="parseSeconds(i)"
+        />
+        <v-icon
+          @click="remove(i)"
+        >
+          mdi-delete
+        </v-icon>
+      </v-card>
+    </draggable>
+    <v-btn
+      :loading="disableSave"
       :disabled="disableSave"
-      @click="save"
+      :style="{ 'margin-top': '20px' }"
+      @click="save()"
     >
       Save
-    </button>
-  </div>
+    </v-btn>
+  </v-app>
 </template>
 
-<script>
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import { State, Action, Mutation } from 'vuex-class';
+import Draggable from 'vuedraggable';
+import { Asset } from 'types';
 import clone from 'clone';
 import uuid from 'uuid/v4';
-import LogoDropdown from './components/LogoDropdown.vue';
-import LogoSettings from './components/LogoSettings.vue';
+import { SponsorLogos } from 'schemas';
+import { Save, UpdateNewRotation } from './store';
 
-const rotationRep = nodecg.Replicant('sponsorLogoRotation');
-
-export default {
-  name: 'SponsorLogoControl',
+@Component({
   components: {
-    LogoDropdown,
-    LogoSettings,
+    Draggable,
   },
-  data() {
+})
+export default class extends Vue {
+  @State logos!: Asset[];
+  @State settings!: SponsorLogos;
+  @State disableSave!: boolean;
+  @State('newRotation') newRotationState!: SponsorLogos['rotation'];
+  @Mutation updateNewRotation!: UpdateNewRotation;
+  @Action save!: Save;
+
+  get newRotation(): SponsorLogos['rotation'] {
+    return this.newRotationState;
+  }
+  set newRotation(val) {
+    this.updateNewRotation(val);
+  }
+
+  created(): void {
+    this.newRotation = clone(this.settings.rotation);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  cloneLogo(original: Asset): SponsorLogos['rotation'][0] {
     return {
-      show: false,
-      rotation: [],
-      disableSave: false,
+      id: uuid(),
+      sum: original.sum,
+      seconds: 60,
     };
-  },
-  mounted() {
-    NodeCG.waitForReplicants(rotationRep).then(() => {
-      this.rotation = clone(rotationRep.value);
-      this.rotation.forEach((item) => {
-        if (!item.id) {
-          item.id = uuid(); // eslint-disable-line no-param-reassign
-        }
-      });
-      this.show = true;
-    });
-  },
-  methods: {
-    clear() {
-      this.rotation = [];
-    },
-    save() {
-      rotationRep.value = clone(this.rotation);
-      this.disableSave = true;
-      setTimeout(() => { this.disableSave = false; }, 2000);
-    },
-    addLogo(data) {
-      const cloned = clone(data);
-      cloned.id = uuid();
-      this.rotation.push(cloned);
-    },
-    updateSeconds(index, seconds) {
-      this.rotation[index].seconds = seconds;
-    },
-    changeLogo(item, action) {
-      const index = this.rotation.indexOf(item);
-      if (index < 0) return;
-      switch (action) {
-      case 'del':
-        this.rotation.splice(index, 1);
-        break;
-      case 'up':
-        if (index <= 0) {
-          break;
-        } else {
-          this.rotation.splice(index - 1, 0, this.rotation.splice(index, 1)[0]);
-        }
-        break;
-      case 'down':
-        if (index >= this.rotation.length - 1) {
-          break;
-        } else {
-          this.rotation.splice(index + 1, 0, this.rotation.splice(index, 1)[0]);
-        }
-        break;
-      default:
-        break;
-      }
-    },
-  },
-};
+  }
+
+  getAssetDetails(sum: string): Asset | {} {
+    return this.logos.find((l) => l.sum === sum) || {};
+  }
+
+  parseSeconds(i: number): void {
+    this.newRotation[i].seconds = Number(this.newRotation[i].seconds);
+  }
+
+  remove(i: number): void {
+    this.newRotation.splice(i, 1);
+  }
+}
 </script>
-
-<style>
-  .LogoSettings:nth-last-of-type(1) {
-    border-bottom: solid 1px grey;
-    padding: 5px;
-  }
-
-  .logo-list-move {
-    transition: transform 0.2s;
-  }
-
-  .logo-list-enter, .logo-list-leave-to
-  /* .logo-list-complete-leave-active below version 2.1.8 */ {
-    opacity: 0;
-    transition: transform 0.2s;
-    transition: opacity 0.2s;
-  }
-  .logo-list-leave-active {
-    position: absolute;
-  }
-</style>

@@ -5,6 +5,11 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface CurrentSponsorLogo {
-  [k: string]: any;
+export interface SponsorLogos {
+  rotation: {
+    sum: string;
+    id: string;
+    seconds: number;
+  }[];
+  current?: string;
 }

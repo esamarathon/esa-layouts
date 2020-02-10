@@ -103,7 +103,7 @@
         "title": "Game Layout Override",
         "width": 2,
         "file": "game-layout-override.html",
-        "workspace": "esa-layouts",
+        "workspace": "ESA",
         "headerColor": "#c49215"
       },
       {
@@ -111,7 +111,7 @@
         "title": "Sponsor Logo Control",
         "width": 5,
         "file": "sponsor-logo-control.html",
-        "workspace": "esa-layouts",
+        "workspace": "ESA",
         "headerColor": "#c49215"
       },
       {
@@ -119,7 +119,7 @@
         "title": "Commentators",
         "width": 2,
         "file": "commentators.html",
-        "workspace": "esa-layouts",
+        "workspace": "ESA",
         "headerColor": "#c49215"
       },
       {
@@ -127,7 +127,7 @@
         "title": "Text-To-Speech Donation Control",
         "width": 3,
         "file": "tts-donation-control.html",
-        "workspace": "esa-layouts",
+        "workspace": "ESA",
         "headerColor": "#c49215"
       },
       {
@@ -135,7 +135,7 @@
         "title": "Video Player Control",
         "width": 3,
         "file": "video-player-control.html",
-        "workspace": "esa-layouts",
+        "workspace": "ESA",
         "headerColor": "#c49215"
       },
       {
@@ -143,7 +143,7 @@
         "title": "Intermission Control",
         "width": 3,
         "file": "intermission-control.html",
-        "workspace": "esa-layouts",
+        "workspace": "ESA",
         "headerColor": "#c49215"
       }
     ],

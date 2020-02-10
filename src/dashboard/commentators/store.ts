@@ -31,7 +31,8 @@ const store = new Vuex.Store({
       }
     },
     addCommentator(state, name): void {
-      if (typeof reps.commentators.value !== 'undefined') {
+      if (typeof reps.commentators.value !== 'undefined'
+        && !reps.commentators.value.includes(name)) {
         reps.commentators.value.push(name);
       }
     },

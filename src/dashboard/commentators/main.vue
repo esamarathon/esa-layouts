@@ -1,17 +1,30 @@
 <template>
   <v-app>
-    <v-card>
-      <v-list-item
-        v-for="name in commentators"
-        :key="name"
-        :height="15"
+    <v-card
+      :style="{ 'margin-bottom': '10px' }"
+      tile
+    >
+      <v-list
+        dense
+        disabled
       >
-        <v-list-item-content>
-          <v-list-item-title>
-            {{ name }}
-          </v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+        <v-list-item-group>
+          <template v-if="commentators.length">
+            <v-list-item
+              v-for="(name, i) in commentators"
+              :key="i"
+            >
+              {{ name }}
+            </v-list-item>
+          </template>
+          <v-list-item
+            v-else
+            :style="{ 'font-style': 'italic' } "
+          >
+            No commentators specified
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
     </v-card>
     <div class="d-flex">
       <v-text-field
@@ -21,7 +34,7 @@
         filled
         :spellcheck="false"
         @keyup.enter="add"
-      ></v-text-field>
+      />
       <v-btn
         height="56px"
         :style="{ 'min-width': '0', 'margin-left': '5px' }"

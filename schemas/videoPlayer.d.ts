@@ -5,4 +5,9 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type CurrentVideoSum = string | null;
+export interface VideoPlayer {
+  plays: {
+    [k: string]: number;
+  };
+  selected?: string;
+}

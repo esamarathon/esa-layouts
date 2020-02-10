@@ -1,6 +1,6 @@
 import clone from 'clone';
 import { ReplicantBrowser } from 'nodecg/types/browser';
-import { CurrentVideoSum } from 'schemas';
+import { VideoPlayer } from 'schemas';
 import { Asset } from 'types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
@@ -9,16 +9,17 @@ Vue.use(Vuex);
 
 // Replicants and their types
 const reps: {
-  currentVideoSum: ReplicantBrowser<CurrentVideoSum>;
+  videoPlayer: ReplicantBrowser<VideoPlayer>;
   videos: ReplicantBrowser<Asset[]>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
-  currentVideoSum: nodecg.Replicant('currentVideoSum'),
+  videoPlayer: nodecg.Replicant('videoPlayer'),
   videos: nodecg.Replicant('assets:videos'),
 };
 
 // Types for mutations below
-export type UpdateCurrentVideo = (sum: string | null) => void;
+export type UpdateSelectedVideo = (sum?: string) => void;
+export type UnselectVideo = () => void;
 
 const store = new Vuex.Store({
   state: {},
@@ -27,8 +28,20 @@ const store = new Vuex.Store({
       Vue.set(state, name, val);
     },
     /* Mutations to replicants start */
-    updateCurrentVideo(state, sum): void {
-      reps.currentVideoSum.value = sum;
+    updateSelectedVideo(state, sum): void {
+      if (typeof reps.videoPlayer.value !== 'undefined') {
+        reps.videoPlayer.value.selected = sum;
+        /* if (!reps.videoPlayer.value.plays[sum]) {
+          reps.videoPlayer.value.plays[sum] = 1;
+        } else {
+          reps.videoPlayer.value.plays[sum] += 1;
+        } */
+      }
+    },
+    unselectVideo(state): void {
+      if (typeof reps.videoPlayer.value !== 'undefined') {
+        reps.videoPlayer.value.selected = undefined;
+      }
     },
     /* Mutations to replicants end */
   },

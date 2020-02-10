@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "plays": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "default": 0
+      }
+    },
+    "selected": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "plays"
+  ]
+}

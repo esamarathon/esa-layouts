@@ -7,7 +7,7 @@
 
 export interface OtherStreamData {
   show: boolean;
-  runData?: {
+  runData: {
     game?: string;
     gameTwitch?: string;
     system?: string;
@@ -38,5 +38,5 @@ export interface OtherStreamData {
     };
     id: string;
     hash?: string;
-  };
+  } | null;
 }

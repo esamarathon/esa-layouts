@@ -1,3 +1,5 @@
+/* eslint-disable import/prefer-default-export */
+
 import { Configschema } from 'configschema';
 import moment from 'moment';
 import needle from 'needle';
@@ -7,7 +9,6 @@ import { get as nodecg } from './util/nodecg';
 import { prizes } from './util/replicants';
 
 const config = (nodecg().bundleConfig as Configschema).tracker;
-const { id } = eventInfo[0]; // Prizes always from the first event specified.
 const refreshTime = 60 * 1000; // Get prizes every 60s.
 
 // Processes the response from the API above.
@@ -38,7 +39,7 @@ async function updatePrizes(): Promise<void> {
   try {
     const resp = await needle(
       'get',
-      `https://${config.address}/search/?event=${id}&type=prize&state=ACCEPTED`,
+      `https://${config.address}/search/?event=${eventInfo[0].id}&type=prize&state=ACCEPTED`,
       {
         cookies: getCookies(),
       },
@@ -54,4 +55,6 @@ async function updatePrizes(): Promise<void> {
   }
 }
 
-updatePrizes();
+export function setup(): void {
+  updatePrizes();
+}

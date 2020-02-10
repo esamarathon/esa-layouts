@@ -7,8 +7,8 @@ import { eventInfo, getCookies } from './tracker';
 import { get as nodecg } from './util/nodecg';
 import { donationsToRead } from './util/replicants';
 
+const eventConfig = (nodecg().bundleConfig as Configschema).event;
 const config = (nodecg().bundleConfig as Configschema).tracker;
-const { id } = eventInfo[0]; // Prizes always from the first event.
 const refreshTime = 10 * 1000; // Get donations every 10s.
 let updateTimeout: NodeJS.Timeout;
 
@@ -36,7 +36,8 @@ async function updateToReadDonations(): Promise<void> {
   try {
     const resp = await needle(
       'get',
-      `https://${config.address}/search/?event=${id}&type=donation&feed=toread`,
+      `https://${config.address}/search/?event=${eventInfo[eventConfig.thisEvent - 1].id}`
+        + '&type=donation&feed=toread',
       {
         cookies: getCookies(),
       },
@@ -77,4 +78,6 @@ export async function markDonationAsRead(donationID: number): Promise<void> {
   updateToReadDonations();
 }
 
-updateToReadDonations();
+export function setup(): void {
+  updateToReadDonations();
+}

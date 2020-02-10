@@ -143,12 +143,14 @@ async function loginToTracker(): Promise<void> {
     if (!isFirstLogin) {
       setTimeout(loginToTracker, 60 * 1000);
     }
+    throw new Error('Could not log in successfully');
   }
 }
 
 async function init(): Promise<void> {
-  if (!eventInfo.length) {
+  if (!eventConfig.shorts.length) {
     nodecg().log.warn('[Tracker] No events found in configuration to query for');
+    return;
   }
   try {
     // Go through all events and compile the important info for them.
@@ -169,9 +171,9 @@ async function init(): Promise<void> {
     setInterval(updateDonationTotalFromAPI, 60 * 1000);
 
     /* eslint-disable global-require */
-    require('./tracker-bids');
-    require('./tracker-prizes');
-    require('./tracker-donations');
+    require('./tracker-bids').setup();
+    require('./tracker-prizes').setup();
+    require('./tracker-donations').setup();
     /* eslint-enable */
   } catch (err) {
     nodecg().log.warn('[Tracker] Error setting up');

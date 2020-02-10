@@ -1,4 +1,4 @@
-import { RunDataActiveRun } from '../../../nodecg-speedcontrol/schemas';
+import { RunData } from '../../../nodecg-speedcontrol/types';
 import { getOtherStreamEventShort } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import { mq } from './util/rabbitmq';
@@ -26,7 +26,7 @@ mq.on('newScreenedCrowdControl', (data) => {
 // Currently assumes only 1 other "event" going on at the time.
 mq.on('runChanged', (data) => {
   if (getOtherStreamEventShort() && getOtherStreamEventShort() === data.event) {
-    otherStreamData.value.runData = data.run as RunDataActiveRun;
+    otherStreamData.value.runData = data.run as RunData | null;
     nodecg().log.info('[Misc Data] Received modified run data from other stream');
   }
 });

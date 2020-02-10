@@ -1,3 +1,5 @@
+/* eslint-disable import/prefer-default-export */
+
 import { Configschema } from 'configschema';
 import needle from 'needle';
 import { Bid, FormattedBid } from 'types';
@@ -7,7 +9,6 @@ import { bids } from './util/replicants';
 
 const eventConfig = (nodecg().bundleConfig as Configschema).event;
 const config = (nodecg().bundleConfig as Configschema).tracker;
-const { id } = eventInfo[eventConfig.thisEvent - 1];
 const refreshTime = 60 * 1000; // Get bids every 60s.
 
 // Processes the response from the API.
@@ -90,7 +91,8 @@ async function updateBids(): Promise<void> {
   try {
     const resp = await needle(
       'get',
-      `https://${config.address}/search/?event=${id}&type=allbids&state=OPENED`,
+      `https://${config.address}/search/?event=${eventInfo[eventConfig.thisEvent - 1].id}`
+        + '&type=allbids&state=OPENED',
       {
         cookies: getCookies(),
       },
@@ -106,4 +108,6 @@ async function updateBids(): Promise<void> {
   }
 }
 
-updateBids();
+export function setup(): void {
+  updateBids();
+}

@@ -123,10 +123,10 @@
         "headerColor": "#c49215"
       },
       {
-        "name": "tts-donation-control",
-        "title": "Text-To-Speech Donation Control",
+        "name": "tts-control",
+        "title": "Text-To-Speech Control",
         "width": 3,
-        "file": "tts-donation-control.html",
+        "file": "tts-control.html",
         "workspace": "ESA",
         "headerColor": "#c49215"
       },

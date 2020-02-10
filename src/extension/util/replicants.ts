@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import { Bids, Commentators, CurrentLayout, CurrentLayoutOverridden, CurrentSponsorLogo, CurrentVideoSum, DonationsToRead, DonationTotal, Layouts, NotableDonations, OtherStreamData, Prizes, SongData, SponsorLogoRotation } from 'schemas'; // eslint-disable-line object-curly-newline
+import { Bids, Commentators, CurrentLayout, CurrentLayoutOverridden, CurrentSponsorLogo, CurrentVideoSum, DonationsToRead, DonationTotal, Layouts, NotableDonations, OtherStreamData, Prizes, SongData, SponsorLogoRotation, TtsVoices } from 'schemas'; // eslint-disable-line object-curly-newline
 import { Asset } from 'types';
 import { TwitchAPIData } from '../../../../nodecg-speedcontrol/schemas';
 import { get as nodecg } from './nodecg';
@@ -22,8 +22,7 @@ export const otherStreamData = nodecg().Replicant<OtherStreamData>('otherStreamD
 export const prizes = nodecg().Replicant<Prizes>('prizes', { persistent: false });
 export const songData = nodecg().Replicant<SongData>('songData', { persistent: false }); // DONE (?)
 export const sponsorLogoRotation = nodecg().Replicant<SponsorLogoRotation>('sponsorLogoRotation'); // TODO
-export const ttsChosenVoice = nodecg().Replicant<string>('ttsChosenVoice'); // TODO
-export const ttsVoices = nodecg().Replicant<any[]>('ttsVoices', { defaultValue: [] }); // TODO
+export const ttsVoices = nodecg().Replicant<TtsVoices>('ttsVoices');
 
 // nodecg-speedcontrol
 export const twitchAPIData = nodecg().Replicant<TwitchAPIData>('twitchAPIData', 'nodecg-speedcontrol');

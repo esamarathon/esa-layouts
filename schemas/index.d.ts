@@ -12,3 +12,4 @@ export * from './otherStreamData';
 export * from './prizes';
 export * from './songData';
 export * from './sponsorLogoRotation';
+export * from './ttsVoices';

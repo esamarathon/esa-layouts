@@ -1,4 +1,5 @@
 import SpeedcontrolUtil from 'speedcontrol-util';
+import { speak } from './text-to-speech';
 import { markDonationAsRead } from './tracker-donations';
 import { padTimeNumber } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
@@ -87,7 +88,7 @@ function init(): void {
       ) ? data.payload.settings.slot : 0;
       const donation = donationsToRead.value[donationIndex];
       if (donation) {
-        nodecg().sendMessage('ttsSpeak', donation);
+        speak(donation);
         markDonationAsRead(donation.id);
       }
     }

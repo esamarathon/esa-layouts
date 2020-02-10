@@ -153,6 +153,8 @@ async function init(): Promise<void> {
     return;
   }
   try {
+    nodecg().log.info('[Tracker] Setting up');
+
     // Go through all events and compile the important info for them.
     const events = (Array.isArray(eventConfig.shorts)) ? eventConfig.shorts : [eventConfig.shorts];
     for (const short of events) {

@@ -1,30 +1,29 @@
-// eslint-disable-next-line max-len, object-curly-newline
-import { Bids, Commentators, CurrentSponsorLogo, DonationsToRead, DonationTotal, NotableDonations, OtherStreamData, Prizes, SponsorLogoRotation } from 'schemas';
+/* eslint-disable max-len */
+
+import { Bids, Commentators, CurrentLayout, CurrentLayoutOverridden, CurrentSponsorLogo, CurrentVideoSum, DonationsToRead, DonationTotal, Layouts, NotableDonations, OtherStreamData, Prizes, SongData, SponsorLogoRotation } from 'schemas'; // eslint-disable-line object-curly-newline
+import { Asset } from 'types';
 import { TwitchAPIData } from '../../../../nodecg-speedcontrol/schemas';
 import { get as nodecg } from './nodecg';
 
-const rep = nodecg().Replicant;
-const noPer = { persistent: false };
-const sc = 'nodecg-speedcontrol';
-
-export const currentOBSScene = rep<string>('currentOBSScene');
-export const currentLayout = rep<string>('currentLayout');
-export const currentLayoutOverridden = rep<boolean>('currentLayoutOverridden');
-export const commentators = rep<Commentators>('commentators');
-export const currentSponsorLogo = rep<CurrentSponsorLogo>('currentSponsorLogo', noPer);
-export const otherStreamData = rep<OtherStreamData>('otherStreamData');
-export const songData = rep('songData', noPer);
-export const sponsorLogoRotation = rep<SponsorLogoRotation>('sponsorLogoRotation');
-export const donationsToRead = rep<DonationsToRead>('donationsToRead', noPer);
-export const bids = rep<Bids>('bids', noPer);
-export const prizes = rep<Prizes>('prizes', noPer);
-export const donationTotal = rep<DonationTotal>('donationTotal');
-export const notableDonations = rep<NotableDonations>('notableDonations');
-export const ttsVoices = rep<any[]>('ttsVoices', { defaultValue: [] });
-export const ttsChosenVoice = rep<string>('ttsChosenVoice');
-export const assetsVideos = rep<any[]>('assets:videos');
-export const currentVideoSum = rep<string | undefined>('currentVideoSum');
-export const currentVideoObj = rep<object | undefined>('currentVideoObj');
+export const assetsVideos = nodecg().Replicant<Asset[]>('assets:videos');
+export const bids = nodecg().Replicant<Bids>('bids', { persistent: false });
+export const commentators = nodecg().Replicant<Commentators>('commentators');
+export const currentLayout = nodecg().Replicant<CurrentLayout>('currentLayout'); // DONE (?)
+export const currentLayoutOverridden = nodecg().Replicant<CurrentLayoutOverridden>('currentLayoutOverridden'); // DONE (?)
+export const currentOBSScene = nodecg().Replicant<string>('currentOBSScene'); // TODO
+export const currentSponsorLogo = nodecg().Replicant<CurrentSponsorLogo>('currentSponsorLogo', { persistent: false }); // TODO
+export const currentVideoObj = nodecg().Replicant<object | undefined>('currentVideoObj'); // TODO
+export const currentVideoSum = nodecg().Replicant<CurrentVideoSum>('currentVideoSum'); // DONE (?)
+export const donationsToRead = nodecg().Replicant<DonationsToRead>('donationsToRead', { persistent: false });
+export const donationTotal = nodecg().Replicant<DonationTotal>('donationTotal');
+export const layouts = nodecg().Replicant<Layouts>('layouts'); // DONE (?)
+export const notableDonations = nodecg().Replicant<NotableDonations>('notableDonations'); // TODO
+export const otherStreamData = nodecg().Replicant<OtherStreamData>('otherStreamData');
+export const prizes = nodecg().Replicant<Prizes>('prizes', { persistent: false });
+export const songData = nodecg().Replicant<SongData>('songData', { persistent: false }); // DONE (?)
+export const sponsorLogoRotation = nodecg().Replicant<SponsorLogoRotation>('sponsorLogoRotation'); // TODO
+export const ttsChosenVoice = nodecg().Replicant<string>('ttsChosenVoice'); // TODO
+export const ttsVoices = nodecg().Replicant<any[]>('ttsVoices', { defaultValue: [] }); // TODO
 
 // nodecg-speedcontrol
-export const twitchAPIData = rep<TwitchAPIData>('twitchAPIData', sc);
+export const twitchAPIData = nodecg().Replicant<TwitchAPIData>('twitchAPIData', 'nodecg-speedcontrol');

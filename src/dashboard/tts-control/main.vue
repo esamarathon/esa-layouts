@@ -1,32 +1,40 @@
 <template>
   <v-app>
     <div
-      id="VoiceList"
-      :style="{
-        'max-height': '250px',
-        'overflow-y': 'scroll',
-      }"
+      v-if="!config.enable"
+      :style="{ 'font-style': 'italic' }"
     >
-      <v-radio-group
-        v-model="selected"
-        hide-details
+      This feature is not enabled.
+    </div>
+    <template v-else>
+      <div
+        id="VoiceList"
         :style="{
-          margin: '0px',
-          padding: '10px',
+          'max-height': '250px',
+          'overflow-y': 'auto',
         }"
       >
-        <v-radio
-          v-for="voice in voices.available"
-          :id="voice.code"
-          :key="voice.code"
-          :value="voice.code"
-          :label="voice.name"
-        />
-      </v-radio-group>
-    </div>
-    <v-btn @click="playExample">
-      Play Example Donation
-    </v-btn>
+        <v-radio-group
+          v-model="selected"
+          hide-details
+          :style="{
+            margin: '0px',
+            padding: '10px',
+          }"
+        >
+          <v-radio
+            v-for="voice in voices.available"
+            :id="voice.code"
+            :key="voice.code"
+            :value="voice.code"
+            :label="voice.name"
+          />
+        </v-radio-group>
+      </div>
+      <v-btn @click="playExample">
+        Play Example Donation
+      </v-btn>
+    </template>
   </v-app>
 </template>
 
@@ -36,12 +44,14 @@ import { State, Mutation } from 'vuex-class';
 // @ts-ignore: goTo isn't typed
 import goTo from 'vuetify/es5/services/goTo';
 import { TtsVoices } from 'schemas';
+import { Configschema } from 'configschema';
 import { UpdateSelectedVoice } from './store';
 
 @Component
 export default class extends Vue {
   @State voices!: TtsVoices;
   @Mutation updateSelectedVoice!: UpdateSelectedVoice;
+  config = (nodecg.bundleConfig as Configschema).tts;
 
   @Watch('voices')
   scrollToSelectedVoice(): void {

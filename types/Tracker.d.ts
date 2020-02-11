@@ -15,9 +15,9 @@ export interface Bid {
     description: string;
     name: string;
     total: string;
-    speedrun__name: string;
-    speedrun__category: string;
-    speedrun__endtime: string;
+    speedrun__name?: string;
+    speedrun__category?: string;
+    speedrun__endtime?: string;
     istarget: boolean;
     allowuseroptions: boolean;
     goal: string | null;

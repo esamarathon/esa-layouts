@@ -17,10 +17,12 @@ $(() => {
     donationTotalElement.html(formatDollarAmount(donationTotal.value, true));
 	});
 	
-	const video = nodecg.Replicant('currentVideoObj');
-	video.on('change', (newVal) => {
-		if (newVal) {
-			$('#videoName').text(newVal.name);
+	const videos = nodecg.Replicant('assets:videos');
+	const videoPlayer = nodecg.Replicant('videoPlayer');
+	videoPlayer.on('change', (newVal) => {
+    const video = videos.value.find((v) => v.sum === newVal.selected);
+		if (newVal.selected && video) {
+			$('#videoName').text(video.name);
 		} else {
 			$('#videoName').text('none currently');
 		}
@@ -34,8 +36,8 @@ $(() => {
       var prizeElement = prizeHTML.clone();
       $('.prizeName', prizeElement).html(prize.name);
       $('.prizeProvider', prizeElement).html(prize.provided);
-      $('.prizeMinDonation', prizeElement).html(formatDollarAmount(prize.minimum_bid));
-      $('.prizeEnd', prizeElement).html(moment(prize.end_timestamp).format('Do HH:mm'));
+      $('.prizeMinDonation', prizeElement).html(formatDollarAmount(prize.minimumBid));
+      $('.prizeEnd', prizeElement).html(moment(prize.endTimestamp).format('Do HH:mm'));
       prizesContainer.append(prizeElement);
     });
   });
@@ -63,7 +65,7 @@ $(() => {
             bidElement.append('<br>'+option.name+' ('+formatDollarAmount(option.total)+')')
           });
 					
-          if (bid.allow_user_options)
+          if (bid.allowUserOptions)
             bidElement.append('<br><i>Users can submit their own options.</i>')
         }
         else
@@ -232,7 +234,7 @@ $(() => {
 
   // calculate the time until the prize period ends and render it as a human readable string ("an hour", "20 minutes")
   function getPrizeTimeUntilString(prize) {
-    var timeUntil = moment(prize.end_timestamp).fromNow(true);
+    var timeUntil = moment(prize.endTimestamp).fromNow(true);
     timeUntil = timeUntil.replace('an ', ''); // Dirty fix for "Donate in the next an hour".
     timeUntil = timeUntil.replace('a ', ''); // Dirty fix for "Donate in the next a day".
     return timeUntil;

@@ -5,4 +5,12 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type NotableDonations = any[];
+export type NotableDonations = {
+  event: string;
+  _id: number;
+  donor_visiblename: string;
+  amount: number;
+  comment_state: string;
+  comment: string;
+  time_received: string;
+}[];

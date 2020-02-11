@@ -1,40 +1,57 @@
-import clone from 'clone';
-import { CurrentSponsorLogo, SponsorLogoRotation } from '../../schemas';
-import * as nodecgApiContext from './util/nodecg-api-context';
+import { get as nodecg } from './util/nodecg';
+import { sponsorLogos } from './util/replicants';
 
-// This stuff is done in an extension so it survives reloads/game layout changes.
+/**
+ * Get the length in milliseconds a sponsor logo should remain,
+ * -1000 if we cannot find it in the rotation.
+ * @param id ID of sponsor logo in rotation.
+ */
+function getLength(id: string): number {
+  return (sponsorLogos.value.rotation.find((i) => i.id === id)?.seconds || -1) * 1000;
+}
 
-const nodecg = nodecgApiContext.get();
-const current = nodecg.Replicant<CurrentSponsorLogo>('currentSponsorLogo', { persistent: false });
-const rotation = nodecg.Replicant<SponsorLogoRotation>('sponsorLogoRotation');
-let index = 0;
-let init = false;
+/**
+ * Get the index of the next sponsor logo in the rotation,
+ * 0 if for some reason nothing can be located correctly.
+ */
+function getNextIndex(): number {
+  const indexID = sponsorLogos.value.rotation
+    .findIndex((i) => i.id === sponsorLogos.value.current?.id);
+  return indexID >= 0 ? indexID + 1 : ((sponsorLogos.value.current?.index || -1) + 1);
+}
 
-rotation.on('change', (newVal) => {
-  if (newVal && newVal.length && !init) {
-    showNextLogo();
-    init = true;
-  }
-});
-
-nodecg.listenFor('clearSponsorLogoRotation', () => {
-  rotation.value.length = 0;
-});
-
-function showNextLogo() {
-  // If no logos to show, just wait 10s then check again.
-  // (should recode this to be smarter)
-  if (!rotation.value.length || !rotation.value[index]) {
-    current.value = {};
-    index = 0;
-    setTimeout(showNextLogo, 10000);
+/**
+ * Cycle to the next logo in the rotation, or set it to null if none available.
+ */
+function cycle(): void {
+  if (!sponsorLogos.value.rotation.length) {
+    nodecg().log.debug('[Sponsors] No logos in rotation to cycle to, will wait');
+    sponsorLogos.value.current = null;
     return;
   }
+  const index = (getNextIndex()) < sponsorLogos.value.rotation.length ? getNextIndex() : 0;
+  sponsorLogos.value.current = {
+    id: sponsorLogos.value.rotation[index].id,
+    sum: sponsorLogos.value.rotation[index].sum,
+    index,
+    timestamp: Date.now(),
+  };
+}
 
-  current.value = clone(rotation.value[index]);
-  setTimeout(showNextLogo, rotation.value[index].seconds * 1000);
-  index += 1;
-  if (rotation.value.length <= index) {
-    index = 0;
+/**
+ * This runs every second, all of the time.
+ */
+function update(): void {
+  if (!sponsorLogos.value.current) {
+    if (sponsorLogos.value.rotation.length) {
+      nodecg().log.debug('[Sponsors] Logos added to rotation, will cycle');
+      cycle();
+    }
+  } else if (sponsorLogos.value.current.timestamp
+      + getLength(sponsorLogos.value.current.id) <= Date.now()) {
+    nodecg().log.debug('[Sponsors] Current logo time finished, will cycle');
+    cycle();
   }
 }
+
+setInterval(update, 1000);

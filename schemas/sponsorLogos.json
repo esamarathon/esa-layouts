@@ -28,10 +28,40 @@
       "default": []
     },
     "current": {
-      "type": "string"
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "sum": {
+              "type": "string"
+            },
+            "index": {
+              "type": "number"
+            },
+            "timestamp": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "id",
+            "sum",
+            "index",
+            "timestamp"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     }
   },
   "required": [
-    "rotation"
+    "rotation",
+    "current"
   ]
 }

@@ -83,6 +83,30 @@
     >
       Save
     </v-btn>
+    <div
+      v-if="!settings.current"
+      :style="{
+        'text-align': 'center',
+        padding: '5px',
+        'margin-top': '10px',
+        'font-style': 'italic',
+      }"
+    >
+      No sponsor logo currently in rotation.
+    </div>
+    <div
+      v-else
+      :style="{
+        'text-align': 'center',
+        padding: '5px',
+        'margin-top': '10px',
+      }"
+    >
+      <span class="font-weight-bold">Current:</span>
+      {{ getAssetDetails(settings.current.sum).name }}
+      <br>(position {{ currentPosition }}/{{ settings.rotation.length }},
+      {{ timeLeft }}/{{ getLength(settings.current.id) }}s left)
+    </div>
   </v-app>
 </template>
 
@@ -108,6 +132,7 @@ export default class extends Vue {
   @State('newRotation') newRotationState!: SponsorLogos['rotation'];
   @Mutation updateNewRotation!: UpdateNewRotation;
   @Action save!: Save;
+  timeLeft = 0;
 
   get newRotation(): SponsorLogos['rotation'] {
     return this.newRotationState;
@@ -116,8 +141,23 @@ export default class extends Vue {
     this.updateNewRotation(val);
   }
 
+  getLength(id: string): number {
+    return this.settings.rotation.find((i) => i.id === id)?.seconds || 0;
+  }
+
+  updateTimeLeft(): void {
+    if (this.settings.current) {
+      this.timeLeft = Math.floor((this.settings.current.timestamp / 1000)
+        + this.getLength(this.settings.current.id) - (Date.now() / 1000));
+    } else {
+      this.timeLeft = 0;
+    }
+  }
+
   created(): void {
     this.newRotation = clone(this.settings.rotation);
+    this.updateTimeLeft();
+    setInterval(this.updateTimeLeft, 1000);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -127,6 +167,12 @@ export default class extends Vue {
       sum: original.sum,
       seconds: 60,
     };
+  }
+
+  get currentPosition(): number {
+    const indexID = this.settings.rotation
+      .findIndex((i) => i.id === this.settings.current?.id);
+    return indexID >= 0 ? indexID + 1 : ((this.settings.current?.index || -1) + 1);
   }
 
   getAssetDetails(sum: string): Asset | {} {

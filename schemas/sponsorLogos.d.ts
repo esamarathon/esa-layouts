@@ -11,5 +11,10 @@ export interface SponsorLogos {
     id: string;
     seconds: number;
   }[];
-  current?: string;
+  current: {
+    id: string;
+    sum: string;
+    index: number;
+    timestamp: number;
+  } | null;
 }

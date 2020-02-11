@@ -1,3 +1,3 @@
 module.exports = {
-	extends: ['../../.eslintrc.browser.graphics.js'],
+	extends: ['../../.eslintrc.browser.js'],
 }

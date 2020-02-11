@@ -38,7 +38,7 @@ const store = new Vuex.Store({
         } */
       }
     },
-    unselectVideo(state): void {
+    unselectVideo(): void {
       if (typeof reps.videoPlayer.value !== 'undefined') {
         reps.videoPlayer.value.selected = undefined;
       }

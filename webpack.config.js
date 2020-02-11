@@ -13,7 +13,7 @@ const isProd = process.env.NODE_ENV === 'production';
 
 const config = (name) => {
   const entry = globby
-    .sync(`*/main.${name === 'dashboard' ? 'ts' : 'js'}`, {cwd: `src/${name}`})
+    .sync('*/main.ts', {cwd: `src/${name}`})
     .reduce((prev, curr) => {
       prev[path.basename(path.dirname(curr))] = `./${curr}`;
       return prev;
@@ -66,6 +66,9 @@ const config = (name) => {
           }
         }
       ),
+      new ForkTsCheckerWebpackPlugin({
+        vue: true,
+      }),
     ]
   );
   if (isProd) {
@@ -78,11 +81,6 @@ const config = (name) => {
   if (name === 'dashboard') {
     plugins.push(    
       new VuetifyLoaderPlugin()
-    );
-    plugins.push(
-      new ForkTsCheckerWebpackPlugin({
-        vue: true,
-      })
     );
   }
   if (name === 'graphics') {
@@ -170,10 +168,6 @@ const config = (name) => {
         },
         {
           test: /\.tsx?$/,
-          include: [
-            path.resolve(__dirname, 'src/dashboard'),
-            path.resolve(__dirname, 'src/browser_shared'),
-          ],
           loader: 'ts-loader',
           options: {
             transpileOnly: true, // ForkTsCheckerWebpackPlugin will do type checking

@@ -2,41 +2,34 @@
   <div>
     <h1>Unread Donations</h1>
     <div
-      v-if="!donations.length"
+      v-if="!toRead.length"
       id="None"
     >
       None right now!
     </div>
     <donation
-      v-for="(donation, index) in donations"
+      v-for="(donation, index) in toRead"
       :key="donation.id"
       :data="donation"
       :index="index"
-    ></donation>
+    />
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import { DonationsToRead } from 'schemas';
 import Donation from './components/Donation.vue';
 
-const donationsToRead = nodecg.Replicant('donationsToRead');
-
-export default {
-  name: 'Donations',
+@Component({
   components: {
     Donation,
   },
-  data() {
-    return {
-      donations: [],
-    };
-  },
-  mounted() {
-    donationsToRead.on('change', (newVal) => {
-      this.donations = newVal.slice(0, 3);
-    });
-  },
-};
+})
+export default class extends Vue {
+  @State toRead!: DonationsToRead;
+}
 </script>
 
 <style>

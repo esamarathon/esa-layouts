@@ -12,22 +12,15 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Donation',
-  props: {
-    data: {
-      type: Object,
-      default() {
-        return {};
-      },
-    },
-    index: {
-      type: Number,
-      default: 0,
-    },
-  },
-};
+<script lang="ts">
+import { Vue, Component, Prop } from 'vue-property-decorator';
+import { FormattedDonation } from 'types';
+
+@Component
+export default class extends Vue {
+  @Prop(Object) readonly data!: FormattedDonation;
+  @Prop({ default: 0 }) readonly index!: number;
+}
 </script>
 
 <style scoped>

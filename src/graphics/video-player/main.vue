@@ -3,6 +3,11 @@
     <video
       v-show="videoSrc"
       ref="VideoPlayer"
+      :style="{
+        display: 'block',
+        width: '1920px',
+        height: '1080px'
+      }"
     >
       <source
         :src="videoSrc"
@@ -12,45 +17,61 @@
   </div>
 </template>
 
-<script>
-const current = nodecg.Replicant('currentVideoObj');
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import { State, Mutation } from 'vuex-class';
+import { VideoPlayer } from 'schemas';
+import { Asset } from 'types';
+import { UpdatePlayCount, UnselectVideo } from './store';
 
-export default {
-  name: 'VideoPlayer',
-  data() {
-    return {
-      videoSrc: undefined,
-    };
-  },
-  mounted() {
-    window.obsstudio.onActiveChange = (active) => {
-      if (active) {
-        this.playVideo();
-      } else {
-        this.stopVideo();
-      }
-    };
-  },
-  methods: {
-    playVideo() {
-      if (current.value) {
-        this.videoSrc = current.value.url;
-        this.$refs.VideoPlayer.load();
-        this.$refs.VideoPlayer.play();
-        this.$refs.VideoPlayer.addEventListener('ended', this.endOfVideo);
-      }
-    },
-    stopVideo() {
-      this.$refs.VideoPlayer.removeEventListener('ended', this.endOfVideo);
-      this.$refs.VideoPlayer.pause();
-      this.videoSrc = undefined;
-      this.$refs.VideoPlayer.load();
-    },
-    endOfVideo() {
-      nodecg.sendMessage('videoFinished');
-    },
-  },
-};
+@Component
+export default class extends Vue {
+  @State videos!: Asset[];
+  @State videoPlayer!: VideoPlayer;
+  @Mutation updatePlayCount!: UpdatePlayCount;
+  @Mutation unselectVideo!: UnselectVideo;
+  player!: HTMLVideoElement;
+  videoSrc: string | null = null;
+
+  playVideo(): void {
+    const video = this.videos.find((v) => v.sum === this.videoPlayer.selected);
+    if (this.videoPlayer.selected && video) {
+      this.videoSrc = video.url;
+      this.player.load();
+      this.player.play();
+      this.player.addEventListener('ended', this.videoEnded);
+    }
+  }
+
+  stopVideo(): void {
+    this.player.removeEventListener('ended', this.videoEnded);
+    this.player.pause();
+    this.videoSrc = null;
+    this.player.load();
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  videoEnded(): void {
+    this.updatePlayCount();
+    this.unselectVideo();
+    nodecg.sendMessage('videoPlayerFinished');
+  }
+
+  mounted(): void {
+    this.player = this.$refs.VideoPlayer as HTMLVideoElement;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const obs = (window as any).obsstudio;
+    if (obs) {
+      obs.onActiveChange = (active: boolean): void => {
+        if (active) {
+          this.playVideo();
+        } else {
+          this.stopVideo();
+        }
+      };
+    }
+  }
+}
 </script>
 
 <style>
@@ -59,11 +80,5 @@ export default {
     margin: 0;
     padding: 0;
     background-color: black;
-  }
-
-  video {
-    display: block;
-    width: 1920px;
-    height: 1080px;
   }
 </style>

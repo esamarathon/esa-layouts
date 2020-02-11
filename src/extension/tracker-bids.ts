@@ -33,7 +33,7 @@ function processRawBids(rawBids: Bid[]): FormattedBid[] {
         total: parseFloat(bid.fields.total),
         game: bid.fields.speedrun__name,
         category: bid.fields.speedrun__category,
-        endTime: Date.parse(bid.fields.speedrun__endtime),
+        endTime: Date.parse(bid.fields.speedrun__endtime) || 0,
         war: bid.fields.istarget,
         allowUserOptions: bid.fields.istarget && bid.fields.allowuseroptions,
         options: [],

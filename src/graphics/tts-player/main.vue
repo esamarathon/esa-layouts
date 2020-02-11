@@ -1,16 +1,17 @@
 <template>
   <div>
-    <t-t-s></t-t-s>
+    <text-to-speech />
   </div>
 </template>
 
-<script>
-import TTS from '../_misc/components/TTS.vue';
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import TextToSpeech from '../_misc/components/TextToSpeech.vue';
 
-export default {
-  name: 'TTSPlayer',
+@Component({
   components: {
-    TTS,
+    TextToSpeech,
   },
-};
+})
+export default class extends Vue {}
 </script>

@@ -1,5 +1,6 @@
 <template>
   <div id="Intermission">
+    <div id="Background"></div>
     <logo></logo>
     <capture
       id="IntermissionCamera"

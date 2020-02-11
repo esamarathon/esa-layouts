@@ -42,14 +42,7 @@ const config = (name) => {
       new VueLoaderPlugin(),
       ...Object.keys(entry).map(
         (entryName) => {
-          if (entryName === 'intermission') {
-            return new HtmlWebpackPlugin({
-              filename: `${entryName}.html`,
-              chunks: [entryName],
-              title: entryName,
-              template: './intermission.html',
-            });
-          } else if (entryName === 'game-layout') {
+          if (entryName === 'game-layout') {
             return new HtmlWebpackPlugin({
               filename: `${entryName}.html`,
               chunks: [entryName],

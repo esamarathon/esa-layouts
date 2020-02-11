@@ -1,12 +1,12 @@
 <template>
   <div
     v-if="show"
-    class="Reader FlexContainer"
+    class="Reader Flex"
   >
     <div class="Mic">
       <img src="./Mic.png">
     </div>
-    <div class="Name FlexContainer">
+    <div class="Name Flex">
       {{ name }}
       <img
         v-if="country"
@@ -43,8 +43,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../../_misc/components/FlexContainer.css');
-
   .Reader {
     flex-direction: row;
     justify-content: center;

@@ -1,8 +1,8 @@
-type Coor = [number, number];
-type BoxCoor = [Coor, Coor, Coor, Coor];
+export type Coor = [number, number];
+export type BoxCoor = [Coor, Coor, Coor, Coor];
 
 export const sortBoxCoor = (boxCoor: BoxCoor): Coor[] => {
-  boxCoor.sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]);
+  boxCoor.sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]));
   return [boxCoor[0], boxCoor[1], boxCoor[3], boxCoor[2], boxCoor[0]];
 };
 
@@ -21,10 +21,10 @@ export const makeCoors = (
   return res;
 };
 
-export const outputCss = (coors: Coor[]) => {
+export const outputCss = (coors: Coor[]): string => {
   const polygon = coors
-    .map(coor => coor.map(n => `${n}px`).join(' '))
+    .map((coor) => coor.map((n) => `${n}px`).join(' '))
     .join(', ');
-  const css = `clip-path: polygon(${polygon});`;
+  const css = `polygon(${polygon})`;
   return css;
 };

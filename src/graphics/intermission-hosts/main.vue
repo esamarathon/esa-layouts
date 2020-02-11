@@ -1,7 +1,7 @@
 <template>
   <div
     id="IntermissionHosts"
-    class="FlexContainer"
+    class="Flex"
   >
     <host-info pos="left"></host-info>
     <host-info pos="midleft"></host-info>
@@ -23,8 +23,6 @@ export default {
 </script>
 
 <style>
-  @import url('../_misc/components/FlexContainer.css');
-
   #IntermissionHosts {
     box-sizing: border-box;
     color: white;

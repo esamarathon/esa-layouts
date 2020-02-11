@@ -1,7 +1,7 @@
 <template>
   <div
     id="Alert"
-    class="FlexContainer"
+    class="Flex"
   >
     <div class="Line1">
       <img
@@ -92,8 +92,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../../../_misc/components/FlexContainer.css');
-
   #Alert {
     padding: 0 17px;
     height: 100%;

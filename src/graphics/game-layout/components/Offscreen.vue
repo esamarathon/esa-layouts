@@ -2,7 +2,7 @@
   <div
     v-if="show"
     id="OffscreenBox"
-    class="RunInfoBox FlexContainer"
+    class="RunInfoBox Flex"
   >
     <span class="Header">
       Offscreen:
@@ -41,7 +41,6 @@ export default {
 
 <style scoped>
   @import url('./RunInfoBox.css');
-  @import url('../../_misc/components/FlexContainer.css');
 
   #OffscreenBox {
     font-size: 25px;

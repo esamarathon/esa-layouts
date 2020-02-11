@@ -3,7 +3,7 @@
   <div
     v-if="show"
     id="TimerBox"
-    class="RunInfoBox FlexContainer"
+    class="RunInfoBox Flex"
     :style="textColor"
     v-html="time"
   />
@@ -83,8 +83,6 @@ export default {
 
 <style scoped>
   @import url('./RunInfoBox.css');
-  @import url('../../_misc/components/FlexContainer.css');
-
   #TimerBox {
     font-weight: 500;
     font-size: 100px;

@@ -1,7 +1,7 @@
 <template>
   <div
     id="Total"
-    class="FlexContainer"
+    class="Flex"
   >
     <span
       v-for="char in totalSplitString"
@@ -51,8 +51,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../../_misc/components/FlexContainer.css');
-
   #Total {
     padding: 0 10px;
     font-size: 40px;

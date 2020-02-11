@@ -18,7 +18,7 @@
       <commentators></commentators>
       <div
         id="InfoBox"
-        class="FlexContainer"
+        class="Flex"
       >
         <div
           id="GameInfo"
@@ -65,8 +65,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../_misc/components/FlexContainer.css');
-
   #GameCapture1 {
     left: 875px;
     top: 0px;

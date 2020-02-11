@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="show"
-    class="Music FlexContainer"
+    class="Music Flex"
   >
     <div class="MCat">
       <img src="./MCat_Logo.png">
@@ -37,8 +37,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../../_misc/components/FlexContainer.css');
-
   .Music {
     flex: 1;
     flex-direction: row;

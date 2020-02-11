@@ -2,6 +2,7 @@
 
 body {
   font-family: 'Barlow Condensed', sans-serif;
+  /* text-shadow: 2px 2px 2px black; */
   color: var(--font-colour);
   overflow: hidden;
   margin: 0;
@@ -14,14 +15,29 @@ body {
 }
 
 .BorderTop {
-  border-top: solid var(--border-colour) 3px;
+  border-top: 3px solid var(--border-colour);
 }
 .BorderRight {
-  border-right: solid var(--border-colour) 3px;
+  border-right: 3px solid var(--border-colour);
 }
 .BorderBottom {
-  border-bottom: solid var(--border-colour) 3px;
+  border-bottom: 3px solid var(--border-colour);
 }
 .BorderLeft {
-  border-left: solid var(--border-colour) 3px;
+  border-left: 3px solid var(--border-colour);
+}
+
+.Flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Fixed {
+  position: fixed;
+}
+
+.Capture {
+  box-sizing: border-box;
+  position: fixed;
 }

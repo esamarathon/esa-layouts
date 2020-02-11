@@ -2,7 +2,7 @@
   <div
     v-if="prize"
     id="Prize"
-    class="FlexContainer"
+    class="Flex"
   >
     <div class="Line1">
       Prize Available: {{ prize.name }}
@@ -58,8 +58,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../../../_misc/components/FlexContainer.css');
-
   #Prize {
     padding: 0 17px;
     height: 100%;

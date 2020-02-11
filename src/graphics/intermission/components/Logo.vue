@@ -1,6 +1,6 @@
 <template>
   <div
-    class="Logo FlexContainer"
+    class="Logo Flex"
   >
     <img src="./Logo.png">
   </div>
@@ -13,8 +13,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../../_misc/components/FlexContainer.css');
-
   .Logo {
     position: fixed;
   }

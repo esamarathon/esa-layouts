@@ -46,8 +46,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../../_misc/components/FlexContainer.css');
-
   #AdTimer {
     padding: 8px;
     font-size: 20px;

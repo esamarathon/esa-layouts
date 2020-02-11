@@ -29,7 +29,7 @@
       <offscreen></offscreen>
       <div
         id="GameInfo"
-        class="FlexContainer"
+        class="Flex"
       >
         <game-name></game-name>
         <game-extra-info></game-extra-info>

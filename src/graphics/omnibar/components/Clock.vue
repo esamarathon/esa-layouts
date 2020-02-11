@@ -1,7 +1,7 @@
 <template>
   <div
     id="Clock"
-    class="FlexContainer"
+    class="Flex"
   >
     {{ time }}
   </div>
@@ -32,8 +32,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../../_misc/components/FlexContainer.css');
-
   #Clock {
     font-size: 35px;
     width: 90px;

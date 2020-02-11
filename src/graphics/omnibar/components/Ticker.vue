@@ -208,8 +208,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../../_misc/components/FlexContainer.css');
-
   #Ticker {
     height: 100%;
     flex: 1;

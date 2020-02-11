@@ -3,7 +3,7 @@
     id="DonationsBar"
     name="donations"
     tag="div"
-    class="FlexContainer"
+    class="Flex"
   >
     <donation-box
       v-for="donation in donations"
@@ -38,8 +38,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../../_misc/components/FlexContainer.css');
-
   #DonationsBar {
     background-color: rgba(0, 0, 0, 0.15);
     position: fixed;

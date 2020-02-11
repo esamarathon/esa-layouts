@@ -5,7 +5,7 @@
 <template>
   <div
     v-if="show"
-    class="PlayerInfoBox RunInfoBox FlexContainer"
+    class="PlayerInfoBox RunInfoBox Flex"
   >
     <div class="currentIcon">
       <transition name="fade">
@@ -15,7 +15,7 @@
         >
       </transition>
     </div>
-    <div class="PlayerName FlexContainer">
+    <div class="PlayerName Flex">
       <transition name="fade">
         <div :key="text">
           <transition name="fade">
@@ -30,7 +30,7 @@
         </div>
       </transition>
     </div>
-    <div class="Flag FlexContainer">
+    <div class="Flag Flex">
       <transition name="fade">
         <img
           :key="players[index].country"
@@ -45,12 +45,12 @@
 <script>
 import { serverBus } from '../main';
 
-const playerSoloImg = require('../../_misc/player-solo.png');
-const twitchIconImg = require('../../_misc/twitch-icon.png');
-const playerImg1 = require('../../_misc/player-1.png');
-const playerImg2 = require('../../_misc/player-2.png');
-const playerImg3 = require('../../_misc/player-3.png');
-const playerImg4 = require('../../_misc/player-4.png');
+const playerSoloImg = require('../../_misc/PlayerIconSolo.png');
+const twitchIconImg = require('../../_misc/TwitchIcon.png');
+const playerImg1 = require('../../_misc/PlayerIcon1.png');
+const playerImg2 = require('../../_misc/PlayerIcon2.png');
+const playerImg3 = require('../../_misc/PlayerIcon3.png');
+const playerImg4 = require('../../_misc/PlayerIcon4.png');
 
 const playerImgNumbered = [
   playerImg1,
@@ -148,8 +148,6 @@ export default {
 
 <style scoped>
   @import url('./RunInfoBox.css');
-  @import url('../../_misc/components/FlexContainer.css');
-
   .PlayerInfoBox {
     background-color: var(--border-colour);
     color: var(--font-colour-inverted);

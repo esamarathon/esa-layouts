@@ -1,6 +1,6 @@
 <template>
   <div
-    class="DonationBox FlexContainer"
+    class="DonationBox Flex"
     :style="css"
   >
     ${{ amount }} [{{ name }}]
@@ -48,8 +48,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../../_misc/components/FlexContainer.css');
-
   .DonationBox {
     height: 100%;
     padding: 0 15px;

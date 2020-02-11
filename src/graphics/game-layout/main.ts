@@ -2,7 +2,7 @@ import clone from 'clone';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import '../_misc/common.css';
-import CutBackground from '../_misc/cut_bg';
+import { generateClipPath } from '../_misc/cut-background';
 import '../_misc/defaults.css';
 import * as Layouts from './layout-list';
 
@@ -64,7 +64,7 @@ function layoutChanged(route) {
   if (!force) {
     currentLayout.value = route.path;
   }
-  CutBackground();
+  const clipPath = generateClipPath();
 }
 
 currentLayout.on('change', (newVal) => {

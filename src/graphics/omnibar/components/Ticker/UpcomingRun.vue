@@ -2,7 +2,7 @@
   <div
     v-if="run"
     id="UpcomingRun"
-    class="FlexContainer"
+    class="Flex"
   >
     <div class="Line1">
       Coming up {{ when }}: {{ run.game }}
@@ -110,8 +110,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../../../_misc/components/FlexContainer.css');
-
   #UpcomingRun {
     padding: 0 17px;
     height: 100%;

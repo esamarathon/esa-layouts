@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="show"
-    class="HostInfo FlexContainer"
+    class="HostInfo Flex"
   >
     {{ name }}
     <img
@@ -52,8 +52,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../../_misc/components/FlexContainer.css');
-
   .HostInfo {
     background-color: rgba(0,0,0,0.5);
     height: 50px;

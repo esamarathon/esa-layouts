@@ -1,67 +1,34 @@
 <template>
   <div
-    id="SponsorLogoBox"
-    class="FlexContainer"
+    class="SponsorLogo Fixed Flex"
   >
-    <div
-      class="SponsorLogo FlexContainer"
-    >
-      <transition name="fade">
-        <img
-          v-if="show"
-          :key="imgSrc"
-          :src="imgSrc"
-        >
-      </transition>
-    </div>
+    <transition name="fade">
+      <img
+        v-if="current"
+        :key="current.id"
+        :src="current.url"
+      >
+    </transition>
   </div>
 </template>
 
-<script>
-const current = nodecg.Replicant('currentSponsorLogo', { persistent: false });
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import { SponsorLogos } from 'schemas';
 
-export default {
-  name: 'SponsorLogos',
-  data() {
-    return {
-      show: false,
-      imgSrc: undefined,
-    };
-  },
-  mounted() {
-    current.on('change', (newVal) => {
-      if (newVal && newVal.url) {
-        this.show = true;
-        this.imgSrc = newVal.url;
-      } else {
-        this.show = false;
-        this.imgSrc = undefined;
-      }
-    });
-  },
-};
+@Component
+export default class extends Vue {
+  // @State('sponsorLogos') current!: SponsorLogos;
+  current = null;
+}
 </script>
 
 <style scoped>
-  @import url('./FlexContainer.css');
-
-  #SponsorLogoBox {
-    flex: 1; /* We *should* be inside a flex box! */
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  #SponsorLogoBox > .SponsorLogo {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-  #SponsorLogoBox > .SponsorLogo > img {
+  .SponsorLogo > img {
     position: absolute;
     box-sizing: border-box;
-    padding: 30px;
+    padding: 60px;
     width: 100%;
     height: 100%;
     object-fit: contain;

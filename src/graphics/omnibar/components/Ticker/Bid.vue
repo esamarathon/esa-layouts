@@ -2,7 +2,7 @@
   <div
     v-if="bid"
     id="Bid"
-    class="FlexContainer"
+    class="Flex"
   >
     <div class="Line1">
       <span v-if="!bid.war">
@@ -143,8 +143,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../../../_misc/components/FlexContainer.css');
-
   #Bid {
     padding: 0 17px;
     height: 100%;

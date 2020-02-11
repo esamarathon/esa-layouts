@@ -34,7 +34,7 @@
     <info-storage-box id="InfoStorageBox3">
       <div
         id="GameInfo"
-        class="FlexContainer BorderRight BorderLeft"
+        class="Flex BorderRight BorderLeft"
       >
         <game-name></game-name>
         <game-extra-info></game-extra-info>

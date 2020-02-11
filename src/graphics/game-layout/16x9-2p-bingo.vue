@@ -43,7 +43,7 @@
     <info-storage-box id="InfoStorageBox4">
       <div
         id="GameInfo"
-        class="FlexContainer BorderBottom"
+        class="Flex BorderBottom"
       >
         <game-name></game-name>
         <game-extra-info></game-extra-info>

@@ -4,7 +4,7 @@
     <logo></logo>
     <capture
       id="IntermissionCamera"
-      class="FlexContainer CameraCapture BorderTop BorderRight BorderBottom BorderLeft"
+      class="Flex CameraCapture BorderTop BorderRight BorderBottom BorderLeft"
     >
       <ad-timer></ad-timer>
     </capture>
@@ -30,7 +30,7 @@
 
 <script>
 import clone from 'clone';
-import CutBackground from '../_misc/cut_bg';
+import { generateClipPath } from '../_misc/cut-background';
 import Capture from '../_misc/components/Capture.vue';
 import SponsorLogos from '../_misc/components/SponsorLogos.vue';
 import InfoStorageBox from '../_misc/components/InfoStorageBox.vue';
@@ -67,7 +67,7 @@ export default {
     nodecg.listenFor('forceRefreshIntermission', this.refreshUpcomingRun);
   },
   mounted() {
-    CutBackground();
+    const clipPath = generateClipPath();
   },
   methods: {
     refreshUpcomingRun() {

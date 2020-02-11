@@ -1,7 +1,7 @@
 <template>
   <div
     id="Omnibar"
-    class="FlexContainer"
+    class="Flex"
   >
     <t-t-s></t-t-s>
     <static-logo></static-logo>
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import TTS from '../_misc/components/TTS.vue';
+import TTS from '../_misc/components/TextToSpeech.vue';
 import StaticLogo from './components/StaticLogo.vue';
 import RotatingLogos from './components/RotatingLogos.vue';
 import Total from './components/Total.vue';
@@ -39,8 +39,6 @@ export default {
 </script>
 
 <style>
-  @import url('../_misc/components/FlexContainer.css');
-
   #Omnibar {
     position: fixed;
     width: 1920px;

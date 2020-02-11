@@ -1,7 +1,7 @@
 <template>
   <div
     id="StaticLogo"
-    class="FlexContainer"
+    class="Flex"
   >
     <img
       id="Cube"
@@ -17,8 +17,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../../_misc/components/FlexContainer.css');
-
   #StaticLogo {
     padding: 0 7px;
   }

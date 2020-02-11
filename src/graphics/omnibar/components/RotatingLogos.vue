@@ -1,11 +1,11 @@
 <template>
   <div
     id="RotatingLogos"
-    class="FlexContainer"
+    class="Flex"
   >
     <div
       id="LogoWrapper"
-      class="FlexContainer"
+      class="Flex"
     >
       <transition name="fade">
         <img
@@ -42,8 +42,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../../_misc/components/FlexContainer.css');
-
   #RotatingLogos {
     padding-right: 7px;
   }

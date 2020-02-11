@@ -2,7 +2,7 @@
   <div
     v-if="otherStreamInfo"
     id="OtherStreamInfo"
-    class="FlexContainer"
+    class="Flex"
   >
     <div class="Line1">
       Currently on @ twitch.tv/{{ data.otherChannel }}: {{ otherStreamInfo.game }}
@@ -81,8 +81,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../../../_misc/components/FlexContainer.css');
-
   #OtherStreamInfo {
     padding: 0 17px;
     height: 100%;

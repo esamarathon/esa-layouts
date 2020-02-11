@@ -1,7 +1,7 @@
 <template>
   <div
     id="GenericMessage"
-    class="FlexContainer"
+    class="Flex"
     :style="cssProps"
   >
     {{ normalisedData.msg }}
@@ -43,8 +43,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('../../../_misc/components/FlexContainer.css');
-
   #GenericMessage {
     height: 100%;
     font-weight: 500;

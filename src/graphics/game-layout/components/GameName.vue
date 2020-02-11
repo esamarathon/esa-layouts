@@ -2,7 +2,7 @@
   <div
     v-if="show"
     id="GameNameBox"
-    class="RunInfoBox FlexContainer"
+    class="RunInfoBox Flex"
   >
     {{ text }}
   </div>
@@ -40,7 +40,6 @@ export default {
 
 <style scoped>
   @import url('./RunInfoBox.css');
-  @import url('../../_misc/components/FlexContainer.css');
 
   #GameNameBox {
     font-weight: 500;

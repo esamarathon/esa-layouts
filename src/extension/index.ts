@@ -17,4 +17,5 @@ export = (nodecg: NodeCG): void => {
   require('./text-to-speech');
   require('./twitch-ext');
   require('./fcb');
+  require('./commercials');
 };

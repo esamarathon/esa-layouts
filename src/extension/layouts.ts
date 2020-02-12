@@ -44,24 +44,6 @@ sc.on('timerStopped', () => {
   nodecg.sendMessage('forceRefreshIntermission');
 });
 
-obs.on('SwitchScenes', (data) => {
-  lastScene = currentScene.value;
-  currentScene.value = data['scene-name'];
-
-  // Trigger Twitch ads when on the relevant scene.
-  if (currentScene.value === bundleConfig.obs.names.scenes.ads) {
-    // TODO: add this to speedcontrol-util.
-    nodecg.sendMessageToBundle('twitchStartCommercial', 'nodecg-speedcontrol', { duration: 180 });
-  }
-
-  // Enable/disable nodecg-speedcontrol timer changes if on/not on a game layout scene.
-  if (currentScene.value.includes(bundleConfig.obs.names.scenes.gameLayout)) {
-    sc.enableTimerChanges();
-  } else {
-    sc.disableTimerChanges();
-  }
-});
-
 // Triggered when the game layout page is opened;
 // we need to toggle the visibility to off for all captures.
 nodecg.listenFor('hideAllCaptures', async (value, ack) => {

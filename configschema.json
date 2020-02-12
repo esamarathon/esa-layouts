@@ -141,9 +141,9 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {
-                "ads": {
+                "commercials": {
                   "type": "string",
-                  "default": "Intermission (ads)"
+                  "default": "Intermission (commercials)"
                 },
                 "gameLayout": {
                   "type": "string",
@@ -155,7 +155,7 @@
                 }
               },
               "required": [
-                "ads",
+                "commercials",
                 "gameLayout",
                 "intermission"
               ]

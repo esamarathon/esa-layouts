@@ -33,7 +33,7 @@ export interface Configschema {
     password: string;
     names: {
       scenes: {
-        ads: string;
+        commercials: string;
         gameLayout: string;
         intermission: string;
       };

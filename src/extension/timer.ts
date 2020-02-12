@@ -1,7 +1,10 @@
+import { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { get as nodecg } from './util/nodecg';
+import obs from './util/obs';
 import { mq } from './util/rabbitmq';
 
+const config = (nodecg().bundleConfig as Configschema);
 const sc = new SpeedcontrolUtil(nodecg());
 
 // Controls the nodecg-speedcontrol timer when the big buttons are pressed.
@@ -30,5 +33,14 @@ mq.on('bigbuttonPressed', (data) => {
     default:
       // Don't do anything
       break;
+  }
+});
+
+// Enable/disable nodecg-speedcontrol timer changes if on/not on a game layout scene.
+obs.on('SwitchScenes', (data) => {
+  if (data['scene-name'].includes(config.obs.names.scenes.gameLayout)) {
+    sc.enableTimerChanges();
+  } else {
+    sc.disableTimerChanges();
   }
 });

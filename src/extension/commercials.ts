@@ -1,6 +1,9 @@
+import { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { get as nodecg } from './util/nodecg';
+import obs from './util/obs';
 
+const config = (nodecg().bundleConfig as Configschema);
 const sc = new SpeedcontrolUtil(nodecg());
 let commercialTO: NodeJS.Timeout;
 
@@ -37,6 +40,13 @@ sc.on('timerStopped', () => {
 
 sc.on('timerReset', () => {
   clearTimeout(commercialTO);
+});
+
+// Trigger a Twitch commercial when on the relevant scene.
+obs.on('SwitchScenes', (data) => {
+  if (data['scene-name'] === config.obs.names.scenes.commercials) {
+    sc.sendMessage('twitchStartCommercial', { duration: 180 });
+  }
 });
 
 // If the timer has been recovered on start up,

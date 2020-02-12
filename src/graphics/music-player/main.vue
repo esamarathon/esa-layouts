@@ -6,6 +6,7 @@
       volume="1"
     >
       <source
+        ref="MusicSource"
         :src="musicSrc"
         type="audio/mpeg"
       >
@@ -16,7 +17,6 @@
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
-import clone from 'clone';
 import { Asset } from 'types';
 import { UpdatePosition, UpdateFile, UpdatePlayingState, StateTypes, UpdatePausedState } from './store'; // eslint-disable-line object-curly-newline, max-len
 
@@ -32,6 +32,7 @@ export default class extends Vue {
   @Mutation updatePausedState!: UpdatePausedState;
   @State music!: Asset[];
   player!: HTMLAudioElement;
+  source!: HTMLSourceElement;
   musicSrc: string | null = null;
   defaultVolume = 0.2;
 
@@ -51,7 +52,9 @@ export default class extends Vue {
       this.player.currentTime = this.position;
     }
     if (!this.paused) {
-      this.player.play();
+      this.player.play().catch(() => {
+        // Did not play before new load
+      });
     }
   }
 
@@ -90,6 +93,7 @@ export default class extends Vue {
 
   mounted(): void {
     this.player = this.$refs.MusicPlayer as HTMLAudioElement;
+    this.source = this.$refs.MusicSource as HTMLSourceElement;
     this.player.volume = this.defaultVolume;
     if (this.music.length) {
       this.setup();
@@ -113,6 +117,10 @@ export default class extends Vue {
 
     this.player.addEventListener('ended', () => {
       this.updatePausedState(false);
+      this.onEnd();
+    });
+
+    this.source.addEventListener('error', () => {
       this.onEnd();
     });
 

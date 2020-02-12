@@ -6,6 +6,7 @@ export * from './donationsToRead';
 export * from './donationTotal';
 export * from './layouts';
 export * from './notableDonations';
+export * from './obsData';
 export * from './otherStreamData';
 export * from './prizes';
 export * from './songData';

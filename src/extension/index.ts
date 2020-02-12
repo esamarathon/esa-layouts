@@ -7,6 +7,7 @@ export = (nodecg: NodeCG): void => {
   set(nodecg);
 
   require('./layouts');
+  require('./obs-data');
   require('./tracker');
   require('./music');
   require('./misc-data');

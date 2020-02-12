@@ -105,3 +105,9 @@ export default class extends Vue {
   }
 }
 </script>
+
+<style>
+  .v-input--hide-details > .v-input__control > .v-input__slot {
+    margin-bottom: 2px !important;
+  }
+</style>

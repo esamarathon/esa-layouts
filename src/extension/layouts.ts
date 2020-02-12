@@ -62,11 +62,6 @@ obs.on('SwitchScenes', (data) => {
   }
 });
 
-// Switch back to the last scene when the sponsor video finishes.
-nodecg.listenFor('videoFinished', () => {
-  obs.changeScene(obsIntermissionScene).catch((err) => {});
-});
-
 // Triggered when the game layout page is opened;
 // we need to toggle the visibility to off for all captures.
 nodecg.listenFor('hideAllCaptures', async (value, ack) => {

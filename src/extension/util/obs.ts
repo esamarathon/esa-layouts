@@ -14,12 +14,13 @@ class OBSUtility extends obsWebsocketJs {
   async changeScene(name: string): Promise<void> {
     if (!config.enable) {
       // OBS not enabled, don't even try to set.
-      return;
+      throw new Error('No OBS connection available');
     }
     try {
       await this.send('SetCurrentScene', { 'scene-name': name });
     } catch (err) {
       nodecg().log.warn(`[OBS] Cannot change scene [${name}]: ${err.error}`);
+      throw err;
     }
   }
 
@@ -31,7 +32,7 @@ class OBSUtility extends obsWebsocketJs {
   async hideItemInScene(item: string, scene: string): Promise<void> {
     if (!config.enable) {
       // OBS not enabled, don't even try to set.
-      return;
+      throw new Error('No OBS connection available');
     }
     try {
       // @ts-ignore: Typings say we need to specify more than we actually do.
@@ -42,6 +43,7 @@ class OBSUtility extends obsWebsocketJs {
       });
     } catch (err) {
       nodecg().log.warn(`[OBS] Cannot hide item [${scene}: ${item}]: ${err.error}`);
+      throw err;
     }
   }
 
@@ -54,7 +56,7 @@ class OBSUtility extends obsWebsocketJs {
   async setUpCaptureInScene(item: string, scene: string, position: ItemPosition): Promise<void> {
     if (!config.enable) {
       // OBS not enabled, don't even try to set.
-      return;
+      throw new Error('No OBS connection available');
     }
     try {
       await this.send('SetSceneItemProperties', {
@@ -79,6 +81,7 @@ class OBSUtility extends obsWebsocketJs {
       });
     } catch (err) {
       nodecg().log.warn(`[OBS] Cannot setup item [${scene}: ${item}]: ${err.error}`);
+      throw err;
     }
   }
 }

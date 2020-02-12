@@ -3,6 +3,7 @@ import SpeedcontrolUtil from 'speedcontrol-util';
 import { RunData } from '../../../nodecg-speedcontrol/types';
 import { getOtherStreamEventShort } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
+import obs from './util/obs';
 import { mq } from './util/rabbitmq';
 import { commentators, obsData, otherStreamData } from './util/replicants';
 
@@ -11,19 +12,19 @@ const sc = new SpeedcontrolUtil(nodecg());
 
 // Screened data from our moderation tool.
 mq.on('newScreenedSub', (data) => {
-  nodecg().log.debug('[Misc Data] Received new subscriber');
+  nodecg().log.debug('[Misc] Received new subscriber');
   nodecg().sendMessage('newSub', data);
 });
 mq.on('newScreenedTweet', (data) => {
-  nodecg().log.debug('[Misc Data] Received new tweet');
+  nodecg().log.debug('[Misc] Received new tweet');
   nodecg().sendMessage('newTweet', data);
 });
 mq.on('newScreenedCheer', (data) => {
-  nodecg().log.debug('[Misc Data] Received new cheer');
+  nodecg().log.debug('[Misc] Received new cheer');
   nodecg().sendMessage('newCheer', data);
 });
 mq.on('newScreenedCrowdControl', (data) => {
-  nodecg().log.debug('[Misc Data] Received new crowd control message');
+  nodecg().log.debug('[Misc] Received new crowd control message');
   nodecg().sendMessage('newCrowdControl', data);
 });
 
@@ -31,12 +32,12 @@ mq.on('newScreenedCrowdControl', (data) => {
 mq.on('runChanged', (data) => {
   if (getOtherStreamEventShort() && getOtherStreamEventShort() === data.event) {
     otherStreamData.value.runData = data.run as RunData | null;
-    nodecg().log.debug('[Misc Data] Received modified run data from other stream');
+    nodecg().log.debug('[Misc] Received modified run data from other stream');
   }
 });
 mq.on('gameSceneChanged', (data) => {
   if (getOtherStreamEventShort() && getOtherStreamEventShort() === data.event) {
-    nodecg().log.debug('[Misc Data] Received game scene change from other stream:', data.action);
+    nodecg().log.debug('[Misc] Received game scene change from other stream:', data.action);
     if (data.action === 'start') {
       otherStreamData.value.show = true;
     } else if (data.action === 'end') {
@@ -51,7 +52,7 @@ mq.on('bigbuttonTagScanned', (data) => {
   const name = data.user.displayName;
   if (!commentators.value.includes(name)) {
     commentators.value.push(name);
-    nodecg().log.debug('[Misc Data] Added new commentator:', name);
+    nodecg().log.debug('[Misc] Added new commentator:', name);
   }
 });
 
@@ -60,6 +61,17 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
   if ((!newVal || (newVal && oldVal && oldVal.id !== newVal.id))
   && obsData.value.scene && !obsData.value.scene.includes(config.obs.names.scenes.gameLayout)) {
     commentators.value.length = 0;
-    nodecg().log.debug('[Misc Data] Cleared commentators');
+    nodecg().log.debug('[Misc] Cleared commentators');
+  }
+});
+
+// Switch back to the last scene when the sponsor video finishes.
+nodecg().listenFor('videoPlayerFinished', async () => {
+  try {
+    await obs.changeScene(config.obs.names.scenes.intermission);
+    nodecg().log.info('[Misc] Successfully returned to intermission after video finished');
+  } catch (err) {
+    nodecg().log.warn('[Misc] Could not return to intermission after video finished');
+    nodecg().log.debug('[Misc] Could not return to intermission after video finished:', err);
   }
 });

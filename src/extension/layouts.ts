@@ -38,58 +38,11 @@ const obsGroupKeys: { [key: string]: string } = {
   CameraCapture1: bundleConfig.obs.names.groups.cameraCapture1,
   CameraCapture2: bundleConfig.obs.names.groups.cameraCapture2,
 };
-const obsGameLayoutScene = bundleConfig.obs.names.scenes.gameLayout;
-const obsIntermissionScene = bundleConfig.obs.names.scenes.intermission;
 
-/**
- * Will attempt to play a commercial if >19 minutes is left for the run
- * and the estimate is higher than 39 minutes.
- */
-function playCommercial(): void {
-  const run = sc.getCurrentRun();
-  if (!run) {
-    return;
-  }
-  const timeLeft = run && run.estimateS
-    ? (run.estimateS + 60) - (sc.timer.value.milliseconds / 1000) : 0;
-  if (run.estimateS && run.estimateS > (60 * (40 - 1)) && timeLeft > (60 * 20)) {
-    nodecg.sendMessageToBundle('twitchStartCommercial', 'nodecg-speedcontrol', { duration: 60 });
-    commercialTO = setTimeout(playCommercial, 1000 * 60 * 20);
-    nodecg.log.info('Twitch commercial triggered, will check again in 20 minutes');
-  } else {
-    nodecg.log.info('Twitch commercial does not need to be triggered,'
-      + ' will not check again for this run');
-  }
-}
-
-sc.on('timerStarted', () => {
-  clearTimeout(commercialTO);
-  nodecg.log.info('Will check if we can trigger a Twitch commercial in 20 minutes');
-  commercialTO = setTimeout(playCommercial, 1000 * 60 * 20);
-});
-
+// nodecg-speedcontrol no longer sends forceRefreshIntermission so doing it here instead
 sc.on('timerStopped', () => {
-  clearTimeout(commercialTO);
-  // nodecg-speedcontrol no longer sends forceRefreshIntermission so doing it here instead
   nodecg.sendMessage('forceRefreshIntermission');
 });
-
-sc.on('timerReset', () => {
-  clearTimeout(commercialTO);
-});
-
-// If the timer has been recovered on start up,
-// need to make sure the commercial checking is going to run.
-if (sc.timer.value.state === 'running') {
-  const run = sc.getCurrentRun();
-  if (run) {
-    const cycleTime = (sc.timer.value.milliseconds / 1000) % (60 * 20);
-    const timeLeft = ((60 * 20) - cycleTime);
-    nodecg.log.info('Will check if we can trigger a Twitch commercial in'
-      + ` ~${Math.round(timeLeft / 60)} minutes`);
-    commercialTO = setTimeout(playCommercial, 1000 * timeLeft);
-  }
-}
 
 obs.on('SwitchScenes', (data) => {
   lastScene = currentScene.value;

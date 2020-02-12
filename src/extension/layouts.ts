@@ -127,12 +127,6 @@ nodecg.listenFor('captureChange', async (opts: GameLayoutChange) => {
 });
 
 sc.runDataActiveRun.on('change', (newVal, oldVal) => {
-  // Reset the commentators when the run changes and not on the game layout scene.
-  if ((!newVal || (newVal && oldVal && oldVal.id !== newVal.id))
-  && currentScene.value && !currentScene.value.includes(obsGameLayoutScene)) {
-    commentators.value.length = 0;
-  }
-
   // Change the game layout based on information supplied via the run data.
   if (newVal) {
     if (oldVal && currentLayoutOverridden.value && newVal.id !== oldVal.id) {

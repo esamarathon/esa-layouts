@@ -5,7 +5,9 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface SongData {
-  title: string;
+export interface MusicPlayer {
   playing: boolean;
+  paused: boolean;
+  sum?: string;
+  position?: number;
 }

@@ -194,6 +194,12 @@
         "file": "player-hud.html",
         "width": 800,
         "height": 480
+      },
+      {
+        "file": "music-player.html",
+        "width": 1920,
+        "height": 1080,
+        "singleInstance": true
       }
     ],
     "mount": [
@@ -229,6 +235,13 @@
           "png",
           "svg",
           "mp4"
+        ]
+      },
+      {
+        "name": "music",
+        "title": "Music Tracks",
+        "allowedTypes": [
+          "mp3"
         ]
       }
     ]

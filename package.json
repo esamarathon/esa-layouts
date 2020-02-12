@@ -189,6 +189,11 @@
         "file": "tts-player.html",
         "width": 1920,
         "height": 1080
+      },
+      {
+        "file": "player-hud.html",
+        "width": 800,
+        "height": 480
       }
     ],
     "mount": [

@@ -16,10 +16,23 @@
     },
     "position": {
       "type": "number"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "artist": {
+          "type": "string"
+        }
+      }
     }
   },
   "required": [
     "playing",
-    "paused"
+    "paused",
+    "metadata"
   ]
 }

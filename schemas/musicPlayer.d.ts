@@ -10,4 +10,8 @@ export interface MusicPlayer {
   paused: boolean;
   sum?: string;
   position?: number;
+  metadata: {
+    title?: string;
+    artist?: string;
+  };
 }

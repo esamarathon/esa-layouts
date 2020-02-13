@@ -18,7 +18,8 @@
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
 import { Asset } from 'types';
-import { UpdatePosition, UpdateFile, UpdatePlayingState, StateTypes, UpdatePausedState } from './store'; // eslint-disable-line object-curly-newline, max-len
+import jsmediatags from 'jsmediatags';
+import { UpdatePosition, UpdateFile, UpdatePlayingState, StateTypes, UpdatePausedState, UpdateMetadata } from './store'; // eslint-disable-line object-curly-newline, max-len
 
 @Component
 export default class extends Vue {
@@ -30,6 +31,7 @@ export default class extends Vue {
   @Mutation updateFile!: UpdateFile;
   @Mutation updatePlayingState!: UpdatePlayingState;
   @Mutation updatePausedState!: UpdatePausedState;
+  @Mutation updateMetadata!: UpdateMetadata;
   @State music!: Asset[];
   player!: HTMLAudioElement;
   source!: HTMLSourceElement;
@@ -45,15 +47,27 @@ export default class extends Vue {
   setup(): void {
     const prevSong = this.music.find((s) => s.sum === this.sum);
     const song = prevSong || this.pickSong();
-    this.musicSrc = song.url;
-    this.updateFile(song.sum);
-    this.player.load();
-    if (this.position && prevSong) {
-      this.player.currentTime = this.position;
-    }
-    if (!this.paused) {
-      this.player.play().catch(() => {
-        // Did not play before new load
+    if (song) {
+      this.musicSrc = song.url;
+      this.updateFile(song.sum);
+      this.player.load();
+      if (this.position && prevSong) {
+        this.player.currentTime = this.position;
+      }
+      if (!this.paused) {
+        this.player.play().catch(() => {
+          // Did not play before new load
+        });
+      }
+      // Get/store metadata.
+      jsmediatags.read(`${window.location.origin}${song.url}`, {
+        onSuccess: (tag: { tags: { title: string; artist: string }}) => {
+          this.updateMetadata({ title: tag.tags.title, artist: tag.tags.artist });
+        },
+        onError: () => {
+          // Did not load metadata
+          this.updateMetadata();
+        },
       });
     }
   }
@@ -67,6 +81,7 @@ export default class extends Vue {
     this.updatePosition();
     this.updateFile();
     this.updatePlayingState(false);
+    this.updateMetadata();
     if (this.music.length) {
       this.setup();
     } else {

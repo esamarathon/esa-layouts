@@ -1,39 +1,33 @@
 <template>
-  <div
-    v-if="show"
-    class="Music Flex"
-  >
+  <div class="Music Flex">
     <div class="MCat">
       <img src="./MCat_Logo.png">
     </div>
     <div class="Name">
-      {{ name }}
+      <template v-if="musicPlayer.playing">
+        <span v-if="musicPlayer.metadata.title">
+          {{ musicPlayer.metadata.title }}
+        </span>
+        <span v-if="musicPlayer.metadata.artist">
+          - {{ musicPlayer.metadata.artist }}
+        </span>
+      </template>
+      <template v-else>
+        No Track Playing
+      </template>
     </div>
   </div>
 </template>
 
-<script>
-const song = nodecg.Replicant('songData');
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import { MusicPlayer } from 'schemas';
 
-export default {
-  name: 'Music',
-  data() {
-    return {
-      show: false,
-      name: '',
-    };
-  },
-  mounted() {
-    song.on('change', (newVal) => {
-      if (newVal && newVal.playing) {
-        this.name = newVal.title;
-        this.show = true;
-      } else {
-        this.show = false;
-      }
-    });
-  },
-};
+@Component
+export default class extends Vue {
+  @State musicPlayer!: MusicPlayer;
+}
 </script>
 
 <style scoped>

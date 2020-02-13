@@ -1,6 +1,9 @@
 <template>
   <div id="Intermission">
-    <div id="Background"></div>
+    <div
+      id="Background"
+      :style="{ 'clip-path': clipPath }"
+    />
     <logo></logo>
     <capture
       id="IntermissionCamera"
@@ -60,6 +63,7 @@ export default {
   data() {
     return {
       nextRun: undefined,
+      clipPath: 'unset',
     };
   },
   created() {
@@ -67,7 +71,7 @@ export default {
     nodecg.listenFor('forceRefreshIntermission', this.refreshUpcomingRun);
   },
   mounted() {
-    const clipPath = generateClipPath();
+    this.clipPath = generateClipPath();
   },
   methods: {
     refreshUpcomingRun() {

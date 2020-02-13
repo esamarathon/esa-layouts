@@ -16,7 +16,7 @@
         {{ prize.name }} provided by {{ prize.provided }}
       </div>
       <div class="MinAmount">
-        Minimum donation amount: {{ formatUSD(prize.minimum_bid) }}
+        Minimum donation amount: {{ formatUSD(prize.minimumBid) }}
       </div>
       <div class="Deadline">
         Donate in the next {{ getPrizeTimeUntilString(prize) }}
@@ -52,7 +52,7 @@ export default {
       return `$${amount.toFixed(2)}`;
     },
     getPrizeTimeUntilString(prize) {
-      let timeUntil = moment(prize.end_timestamp).fromNow(true);
+      let timeUntil = moment(prize.endTimestamp).fromNow(true);
       timeUntil = timeUntil.replace('an ', ''); // Dirty fix for "Donate in the next an hour".
       timeUntil = timeUntil.replace('a ', ''); // Dirty fix for "Donate in the next a day".
       return timeUntil;

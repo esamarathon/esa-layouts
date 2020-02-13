@@ -17,6 +17,7 @@
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
+import { gsap } from 'gsap';
 import { Asset } from 'types';
 import jsmediatags from 'jsmediatags';
 import { UpdatePosition, UpdateFile, UpdatePlayingState, StateTypes, UpdatePausedState, UpdateMetadata } from './store'; // eslint-disable-line object-curly-newline, max-len
@@ -36,7 +37,9 @@ export default class extends Vue {
   player!: HTMLAudioElement;
   source!: HTMLSourceElement;
   musicSrc: string | null = null;
-  defaultVolume = 0.2;
+  defaultVolume = 0.2; // Will be replaced with an actual setting later.
+  currentVolume = 0;
+  onScene = false;
 
   pickSong(): Asset | undefined {
     // TODO: add logic so songs are not played too much
@@ -89,11 +92,34 @@ export default class extends Vue {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  @Watch('onScene')
+  onSceneChange(val: boolean) {
+    if (val) {
+      gsap.to(this, { currentVolume: this.defaultVolume, duration: 2 });
+    } else {
+      gsap.to(this, { currentVolume: 0, duration: 2 });
+    }
+  }
+
+  @Watch('currentVolume')
+  onVolumeChange(val: number): void {
+    this.player.volume = val;
+    if (val > 0 && this.paused) {
+      this.player.play().catch(() => {
+        // For some reason, playing did not work
+      });
+    } else if (val === 0 && !this.paused) {
+      this.player.pause();
+    }
+  }
+
   @Watch('music')
   onMusic(newVal: Asset[], oldVal: Asset[]): void {
     if (oldVal.length === 0 && newVal.length > 0) {
       // Don't re-setup if a song is already playing.
       if (!this.playing) {
+        this.updatePausedState(!this.onScene);
         this.setup();
       }
     } else if (oldVal.length > 0 && newVal.length === 0) {
@@ -109,10 +135,6 @@ export default class extends Vue {
   mounted(): void {
     this.player = this.$refs.MusicPlayer as HTMLAudioElement;
     this.source = this.$refs.MusicSource as HTMLSourceElement;
-    this.player.volume = this.defaultVolume;
-    if (this.music.length) {
-      this.setup();
-    }
 
     // Listener to update the time in the replicant.
     this.player.addEventListener('timeupdate', () => {
@@ -141,6 +163,24 @@ export default class extends Vue {
 
     window.addEventListener('beforeunload', () => {
       this.updatePlayingState(false);
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const obs = (window as any).obsstudio;
+    if (obs) {
+      obs.getCurrentScene((scene: { name: string }) => {
+        this.onScene = scene.name.endsWith('[M]');
+        this.updatePausedState(!this.onScene);
+        this.currentVolume = this.onScene ? this.defaultVolume : 0;
+        if (this.music.length) {
+          this.setup();
+        }
+      });
+    }
+
+    window.addEventListener('obsSceneChanged', (evt) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this.onScene = (evt as any).detail.name.endsWith('[M]');
     });
   }
 }

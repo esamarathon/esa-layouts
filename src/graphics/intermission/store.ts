@@ -1,6 +1,7 @@
 import clone from 'clone';
 import { ReplicantBrowser } from 'nodecg/types/browser';
-import { MusicPlayer } from 'schemas';
+import { MusicPlayer, SponsorLogos } from 'schemas';
+import { Asset } from 'types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
@@ -9,9 +10,13 @@ Vue.use(Vuex);
 // Replicants and their types
 const reps: {
   musicPlayer: ReplicantBrowser<MusicPlayer>;
+  sponsorLogoAssets: ReplicantBrowser<Asset[]>;
+  sponsorLogos: ReplicantBrowser<SponsorLogos>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
   musicPlayer: nodecg.Replicant('musicPlayer'),
+  sponsorLogoAssets: nodecg.Replicant('assets:sponsor-logos'),
+  sponsorLogos: nodecg.Replicant('sponsorLogos'),
 };
 
 const store = new Vuex.Store({

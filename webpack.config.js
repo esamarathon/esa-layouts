@@ -42,21 +42,12 @@ const config = (name) => {
       new VueLoaderPlugin(),
       ...Object.keys(entry).map(
         (entryName) => {
-          if (entryName === 'game-layout') {
-            return new HtmlWebpackPlugin({
-              filename: `${entryName}.html`,
-              chunks: [entryName],
-              title: entryName,
-              template: './game-layout.html',
-            });
-          } else {
-            return new HtmlWebpackPlugin({
-              filename: `${entryName}.html`,
-              chunks: [entryName],
-              title: entryName,
-              template: './template.html',
-            });
-          }
+          return new HtmlWebpackPlugin({
+            filename: `${entryName}.html`,
+            chunks: [entryName],
+            title: entryName,
+            template: './template.html',
+          });
         }
       ),
       new ForkTsCheckerWebpackPlugin({

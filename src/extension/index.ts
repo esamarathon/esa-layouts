@@ -6,16 +6,16 @@ import { set } from './util/nodecg';
 export = (nodecg: NodeCG): void => {
   set(nodecg);
 
-  require('./layouts');
   require('./obs-data');
+  require('./layouts');
   require('./tracker');
   require('./misc');
   require('./streamdeck-buttons');
   require('./timer');
-  require('./logging');
   require('./sponsors');
   require('./text-to-speech');
   require('./twitch-ext');
   require('./fcb');
   require('./commercials');
+  // require('./logging');
 };

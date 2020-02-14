@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <div
-      v-if="!options.length"
+      v-if="!gameLayouts.available.length"
     >
       <em>"Game Layout" graphic must be open.</em>
     </div>
@@ -12,11 +12,11 @@
         class="pa-0 ma-0"
       >
         <v-radio
-          v-for="opt in options"
-          :key="opt.value"
-          :value="opt.value"
-          :label="opt.text"
-        ></v-radio>
+          v-for="layout in gameLayouts.available"
+          :key="layout.code"
+          :value="layout.code"
+          :label="layout.name"
+        />
       </v-radio-group>
     </div>
   </v-app>
@@ -25,35 +25,19 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
-import { Layouts, CurrentLayout } from 'schemas';
-import { UpdateCurrentLayout } from './store';
+import { GameLayouts } from 'schemas';
+import { UpdateSelected } from './store';
 
 @Component
 export default class extends Vue {
-  @State layouts!: Layouts;
-  @State currentLayout!: CurrentLayout;
-  @Mutation updateCurrentLayout!: UpdateCurrentLayout;
+  @State gameLayouts!: GameLayouts;
+  @Mutation updateSelected!: UpdateSelected;
 
-  get selected(): CurrentLayout {
-    return this.currentLayout;
+  get selected(): GameLayouts['selected'] | undefined {
+    return this.gameLayouts.selected;
   }
   set selected(val) {
-    this.updateCurrentLayout(val);
-  }
-
-  get options(): { value?: string; text: string }[] {
-    const opts: { value?: string; text: string }[] = [];
-    if (this.layouts && this.layouts.length) {
-      this.layouts.forEach((layout) => {
-        if (layout.name) {
-          opts.push({
-            value: layout.path,
-            text: layout.name,
-          });
-        }
-      });
-    }
-    return opts;
+    this.updateSelected(val);
   }
 }
 </script>

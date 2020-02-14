@@ -1,20 +1,11 @@
-import speedcontrolUtil from 'speedcontrol-util';
-import { Commentators } from '../../schemas';
-import * as nodecgApiContext from './util/nodecg-api-context';
-import { bundleConfig } from './util/nodecg-bundleconfig';
-import obs from './util/obs';
-import { mq } from './util/rabbitmq';
+import SpeedcontrolUtil from 'speedcontrol-util';
+import { get as nodecg } from './util/nodecg';
+import { gameLayouts } from './util/replicants';
 
-const nodecg = nodecgApiContext.get();
-const sc = new speedcontrolUtil(nodecg);
-const currentScene = nodecg.Replicant<string>('currentOBSScene'); // temp
-const currentLayout = nodecg.Replicant<string>('currentLayout'); // schema this!
-const currentLayoutOverridden = nodecg.Replicant<boolean>('currentLayoutOverridden');
-const commentators = nodecg.Replicant<Commentators>('commentators');
-let lastScene: string | undefined;
-let commercialTO: NodeJS.Timeout;
+// const obsConfig = (nodecg().bundleConfig as Configschema).obs;
+const sc = new SpeedcontrolUtil(nodecg());
 
-interface GameLayoutChange {
+/* interface GameLayoutChange {
   cssID: string;
   cssClass: string;
   sizes: {
@@ -27,26 +18,27 @@ interface GameLayoutChange {
     bottom: number;
     left: number;
   } | null;
-}
+} */
 
 // CSS ID -> OBS group name mapping
-const obsGroupKeys: { [key: string]: string } = {
-  GameCapture1: bundleConfig.obs.names.groups.gameCapture1,
-  GameCapture2: bundleConfig.obs.names.groups.gameCapture2,
-  GameCapture3: bundleConfig.obs.names.groups.gameCapture3,
-  GameCapture4: bundleConfig.obs.names.groups.gameCapture4,
-  CameraCapture1: bundleConfig.obs.names.groups.cameraCapture1,
-  CameraCapture2: bundleConfig.obs.names.groups.cameraCapture2,
+/* const obsGroupKeys: { [key: string]: string } = {
+  GameCapture1: obsConfig.names.sources.gameCapture1,
+  GameCapture2: obsConfig.names.sources.gameCapture2,
+  GameCapture3: obsConfig.names.sources.gameCapture3,
+  GameCapture4: obsConfig.names.sources.gameCapture4,
+  CameraCapture1: obsConfig.names.sources.cameraCapture1,
+  CameraCapture2: obsConfig.names.sources.cameraCapture2,
 };
+const obsGameLayoutScene = obsConfig.names.scenes.gameLayout; */
 
-// nodecg-speedcontrol no longer sends forceRefreshIntermission so doing it here instead
+// nodecg-speedcontrol no longer sends forceRefreshIntermission so doing it here instead.
 sc.on('timerStopped', () => {
-  nodecg.sendMessage('forceRefreshIntermission');
+  nodecg().sendMessage('forceRefreshIntermission');
 });
 
 // Triggered when the game layout page is opened;
 // we need to toggle the visibility to off for all captures.
-nodecg.listenFor('hideAllCaptures', async (value, ack) => {
+/* nodecg().listenFor('hideAllCaptures', async (value, ack) => {
   const keyMap = Object.keys(obsGroupKeys).map((key) => {
     return obsGroupKeys[key];
   });
@@ -58,10 +50,10 @@ nodecg.listenFor('hideAllCaptures', async (value, ack) => {
   if (ack && !ack.handled) {
     ack(null);
   }
-});
+}); */
 
 // Triggered when the capture parts of the game layout in the browser move around.
-nodecg.listenFor('captureChange', async (opts: GameLayoutChange) => {
+/* nodecg().listenFor('captureChange', async (opts: GameLayoutChange) => {
   // If no sizes are specified, we want to disable it's visibility.
   if (!opts.sizes) {
     try {
@@ -101,21 +93,33 @@ nodecg.listenFor('captureChange', async (opts: GameLayoutChange) => {
       });
     } catch (err) {}
   }
-});
+}); */
 
+
+// Change the game layout based on information supplied via the run data.
+// TO SEE: Do we need "overridden" anymore, besides for informational purposes?
+let init = false;
 sc.runDataActiveRun.on('change', (newVal, oldVal) => {
-  // Change the game layout based on information supplied via the run data.
-  if (newVal) {
-    if (oldVal && currentLayoutOverridden.value && newVal.id !== oldVal.id) {
-      currentLayoutOverridden.value = false;
-    }
+  // This shouldn't trigger on initial start up, so should only happen on an *actual* run change.
+  if (newVal && init) {
+    // If we've changed to a new run, override the overridden value (heh).
+    gameLayouts.value.overridden = false;
 
-    if (!currentLayoutOverridden.value && (!oldVal || newVal.id !== oldVal.id)) {
-      const layoutCode = (
-        newVal.customData && newVal.customData.layout
-        ) ? newVal.customData.layout : '4x3-1p';
-
-      currentLayout.value = `/${layoutCode}`;
+    // If there's no old run or we changed to a different run, try to automatically set the layout.
+    if (!oldVal || newVal.id !== oldVal.id) {
+      const layout = gameLayouts.value.available.find((l) => l.code === newVal.customData.layout);
+      gameLayouts.value.selected = layout?.code;
+      if (newVal.customData.layout && !layout) {
+        nodecg().log.warn('[Layouts] Run specified game layout with code '
+          + `${newVal.customData.layout} but none available`);
+      } else if (newVal.customData.layout && layout) {
+        nodecg().log.info(`[Layouts] Game layout changed to ${layout.name} (${layout.code})`);
+      }
     }
+  } else if (!newVal && init) {
+    // If the active run is removed, return to selecting "nothing"
+    // (graphic will reselect the default).
+    delete gameLayouts.value.selected;
   }
+  init = true;
 });

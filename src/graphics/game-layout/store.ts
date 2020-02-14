@@ -16,6 +16,8 @@ const reps: {
 
 // Types for mutations below
 export type UpdateSelected = (code?: string) => void;
+export type UpdateList = (list: GameLayouts['available']) => void;
+export type ClearList = () => void;
 
 const store = new Vuex.Store({
   state: {},
@@ -27,7 +29,16 @@ const store = new Vuex.Store({
     updateSelected(state, code): void {
       if (typeof reps.gameLayouts.value !== 'undefined') {
         reps.gameLayouts.value.selected = code;
-        reps.gameLayouts.value.overridden = true;
+      }
+    },
+    updateList(state, list): void {
+      if (typeof reps.gameLayouts.value !== 'undefined') {
+        reps.gameLayouts.value.available = clone(list);
+      }
+    },
+    clearList(): void {
+      if (typeof reps.gameLayouts.value !== 'undefined') {
+        reps.gameLayouts.value.available.length = 0;
       }
     },
     /* Mutations to replicants end */

@@ -1,109 +1,131 @@
-import clone from 'clone';
+/* eslint-disable import/prefer-default-export */
+/* eslint no-new: off, @typescript-eslint/explicit-function-return-type: off */
+
+import { GameLayouts } from 'schemas';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import '../_misc/common.css';
-import { generateClipPath } from '../_misc/cut-background';
 import '../_misc/defaults.css';
-import * as Layouts from './layout-list';
+import * as List from './list';
+import App from './main.vue';
+import waitForReplicants from './store';
 
 Vue.use(VueRouter);
-const layouts = nodecg.Replicant('layouts'); // schema this!
-const currentLayout = nodecg.Replicant('currentLayout'); // schema this!
-// eslint-disable-next-line import/prefer-default-export
-export const serverBus = new Vue();
-let force = false;
-
-// This controls the player name -> Twitch username animation timings.
-let playerShowTwitchTO;
-let playerShowTwitch = false;
-function rotatePlayerInfo(init) {
-  if (!init) {
-    playerShowTwitch = !playerShowTwitch;
-    serverBus.$emit('playerShowTwitch', playerShowTwitch);
-  }
-  if (playerShowTwitch) {
-    playerShowTwitchTO = setTimeout(rotatePlayerInfo, 15000);
-  } else {
-    playerShowTwitchTO = setTimeout(rotatePlayerInfo, 45000);
-  }
-}
-nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol').on('change', () => {
-  clearTimeout(playerShowTwitchTO);
-  playerShowTwitch = false;
-  rotatePlayerInfo(true);
-});
 
 const routes = [
-  { name: '4:3 1 Player', path: '/4x3-1p', component: Layouts.L_4x3_1p },
-  { name: '4:3 2 Player', path: '/4x3-2p', component: Layouts.L_4x3_2p },
-  { name: '4:3 2 Player (co-op)', path: '/4x3-2p-coop', component: Layouts.L_4x3_2p_CoOp },
-  { name: '4:3 3 Player', path: '/4x3-3p', component: Layouts.L_4x3_3p },
-  { name: '4:3 4 Player', path: '/4x3-4p', component: Layouts.L_4x3_4p },
-  { name: '4:3 4 Player (co-op)', path: '/4x3-4p-coop', component: Layouts.L_4x3_4p_CoOp },
-  { name: '16:9 1 Player', path: '/16x9-1p', component: Layouts.L_16x9_1p },
-  { name: '16:9 2 Player', path: '/16x9-2p', component: Layouts.L_16x9_2p },
-  { name: '16:9 2 Player (co-op)', path: '/16x9-2p-coop', component: Layouts.L_16x9_2p_CoOp },
-  { name: '16:9 2 Player (bingo)', path: '/16x9-2p-bingo', component: Layouts.L_16x9_2p_Bingo },
-  { name: '16:9 3 Player', path: '/16x9-3p', component: Layouts.L_16x9_3p },
-  { name: '16:9 4 Player (MonHun)', path: '/16x9-4p-monhun', component: Layouts.L_16x9_4p_MonHun },
-  { name: 'GameBoy 1 Player', path: '/GB-1p', component: Layouts.L_GB_1p },
-  { name: 'GBA 1 Player', path: '/GBA-1p', component: Layouts.L_GBA_1p },
-  { name: '3DS 1 Player', path: '/3DS-1p', component: Layouts.L_3DS_1p },
-  { name: 'DS 1 Player', path: '/DS-1p', component: Layouts.L_DS_1p },
-  { path: '*', redirect: '/4x3-1p' },
+  {
+    name: '4:3 1 Player',
+    path: '/4x3-1p',
+    component: List.L_4x3_1p,
+  },
+  {
+    name: '4:3 2 Player',
+    path: '/4x3-2p',
+    component: List.L_4x3_2p,
+  },
+  {
+    name: '4:3 2 Player (co-op)',
+    path: '/4x3-2p-coop',
+    component: List.L_4x3_2p_CoOp,
+  },
+  {
+    name: '4:3 3 Player',
+    path: '/4x3-3p',
+    component: List.L_4x3_3p,
+  },
+  {
+    name: '4:3 4 Player',
+    path: '/4x3-4p',
+    component: List.L_4x3_4p,
+  },
+  {
+    name: '4:3 4 Player (co-op)',
+    path: '/4x3-4p-coop',
+    component: List.L_4x3_4p_CoOp,
+  },
+  {
+    name: '16:9 1 Player',
+    path: '/16x9-1p',
+    component: List.L_16x9_1p,
+  },
+  {
+    name: '16:9 2 Player',
+    path: '/16x9-2p',
+    component: List.L_16x9_2p,
+  },
+  {
+    name: '16:9 2 Player (co-op)',
+    path: '/16x9-2p-coop',
+    component: List.L_16x9_2p_CoOp,
+  },
+  {
+    name: '16:9 2 Player (bingo)',
+    path: '/16x9-2p-bingo',
+    component: List.L_16x9_2p_Bingo,
+  },
+  {
+    name: '16:9 3 Player',
+    path: '/16x9-3p',
+    component: List.L_16x9_3p,
+  },
+  {
+    name: '16:9 4 Player (MonHun)',
+    path: '/16x9-4p-monhun',
+    component: List.L_16x9_4p_MonHun,
+  },
+  {
+    name: 'GameBoy 1 Player',
+    path: '/GB-1p',
+    component: List.L_GB_1p,
+  },
+  {
+    name: 'GBA 1 Player',
+    path: '/GBA-1p',
+    component: List.L_GBA_1p,
+  },
+  {
+    name: '3DS 1 Player',
+    path: '/3DS-1p',
+    component: List.L_3DS_1p,
+  },
+  {
+    name: 'DS 1 Player',
+    path: '/DS-1p',
+    component: List.L_DS_1p,
+  },
+  {
+    path: '*',
+    redirect: '/4x3-1p',
+  },
 ];
 
 const router = new VueRouter({
   routes,
 });
 
-// Used to send when the layout is changed and make the correct clip-path.
-function layoutChanged(route) {
-  const url = new URL(window.location.href);
-  force = url.searchParams.get('force');
-  if (!force) {
-    currentLayout.value = route.path;
-  }
-  const clipPath = generateClipPath();
+// Collect list of available game layouts to add to replicant.
+function getAvailable(): GameLayouts['available'] {
+  return routes.reduce((accumulator, route) => {
+    if (route.name) {
+      accumulator.push({
+        name: route.name,
+        code: route.path.replace('/', ''),
+      });
+    }
+    return accumulator;
+  }, [] as GameLayouts['available']);
 }
 
-currentLayout.on('change', (newVal) => {
-  const url = new URL(window.location.href);
-  force = url.searchParams.get('force');
-  if (newVal && !force) {
-    router.push(newVal);
-  }
-});
+waitForReplicants().then((store) => {
+  store.commit('updateList', getAvailable());
+  window.addEventListener('beforeunload', () => {
+    store.commit('clearList');
+  });
 
-router.afterEach((to, from) => {
-  if (from.name) {
-    Vue.nextTick().then(() => {
-      layoutChanged(to);
-    }).catch(() => {});
-  }
-});
-
-function setUpVueApp() {
-  // eslint-disable-next-line no-unused-vars
-  const app = new Vue({
+  new Vue({
+    store,
     router,
-    mounted() {
-      // Initial route.
-      layoutChanged(this.$route);
-    },
-  }).$mount('#App');
-}
-
-NodeCG.waitForReplicants(layouts).then(() => {
-  layouts.value = clone(routes);
-  window.onunload = () => {
-    layouts.value = [];
-  };
-  // Check if we're open in OBS, if not we don't want to do OBS stuff.
-  if (window.obsstudio) {
-    // Will only set up Vue app once OBS is ready.
-    nodecg.sendMessage('hideAllCaptures').then(setUpVueApp).catch(() => {});
-  } else {
-    setUpVueApp();
-  }
+    el: '#App',
+    render: (h) => h(App),
+  });
 });

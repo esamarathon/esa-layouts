@@ -5,4 +5,11 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type CurrentLayoutOverridden = boolean;
+export interface GameLayouts {
+  available: {
+    name: string;
+    code: string;
+  }[];
+  selected?: string;
+  overridden: boolean;
+}

@@ -1,44 +1,53 @@
-import speedcontrolUtil from 'speedcontrol-util';
-import { CurrentSponsorLogo } from '../../schemas';
-import * as nodecgApiContext from './util/nodecg-api-context';
-import { bundleConfig } from './util/nodecg-bundleconfig';
+import { Configschema } from 'configschema';
+import SpeedcontrolUtil from 'speedcontrol-util';
+import { getCurrentEventShort } from './util/helpers';
+import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { send as mqSend } from './util/rabbitmq';
 
-const nodecg = nodecgApiContext.get();
-const sc = new speedcontrolUtil(nodecg);
-const currentSponsorLogo = nodecg.Replicant<CurrentSponsorLogo>(
-  'currentSponsorLogo',
-  { persistent: false },
-);
-
-const obsGameLayoutScene = bundleConfig.obs.names.scenes.gameLayout;
-
-let currentScene: string;
+const config = nodecg().bundleConfig as Configschema;
+const sc = new SpeedcontrolUtil(nodecg());
+const obsGameLayoutScene = config.obs.names.scenes.gameLayout;
+const event = getCurrentEventShort();
+let currentScene: string | undefined;
 let lastScene: string;
 let lastSponsorLogoSum: string | undefined;
-let streaming: boolean = false;
-
-// This will always be set due to there being a default in the configschema,
-// make sure that is correct!
-const evtString = (
-  Array.isArray(bundleConfig.tracker.events)
-) ? bundleConfig.tracker.events[bundleConfig.tracker.streamEvent - 1] : bundleConfig.tracker.events;
+let streaming = false;
 
 obs.on('ConnectionOpened', async () => {
   try {
-    const sceneData = await obs.send('GetCurrentScene');
     const streamingData = await obs.send('GetStreamingStatus');
+    const scene = await obs.send('GetCurrentScene');
     streaming = streamingData.streaming;
-    lastScene = currentScene;
-    currentScene = sceneData.name;
+    currentScene = scene.name;
+  } catch (err) {
+    // drop for now
+  }
+});
+obs.on('ConnectionClosed', () => {
+  currentScene = undefined;
+});
+obs.on('StreamStarted', () => {
+  streaming = true;
+  // log the logo change
+});
+obs.on('StreamStopped', () => {
+  streaming = false;
+  // log the logo change
+});
+obs.on('SwitchScenes', (data) => {
+  currentScene = data['scene-name'];
+});
+
+obs.on('ConnectionOpened', async () => {
+  try {
     if (lastScene === currentScene) {
       return;
     }
     if (lastScene) {
       logSceneSwitch(lastScene, 'end');
     }
-    logSceneSwitch(currentScene, 'start');
+    // logSceneSwitch(currentScene, 'start');
     checkSponsorLogoVisibility();
   } catch (err) {
     // silently drop it for now
@@ -46,7 +55,7 @@ obs.on('ConnectionOpened', async () => {
 });
 
 obs.on('SwitchScenes', (data) => {
-  lastScene = currentScene;
+  // lastScene = currentScene;
   currentScene = data['scene-name'];
   if (lastScene === currentScene) {
     return;
@@ -54,15 +63,6 @@ obs.on('SwitchScenes', (data) => {
   logSceneSwitch(lastScene, 'end');
   logSceneSwitch(currentScene, 'start');
   checkSponsorLogoVisibility();
-});
-
-obs.on('StreamStarted', () => {
-  streaming = true;
-  checkSponsorLogoVisibility();
-});
-obs.on('StreamStopped', () => {
-  streaming = false;
-  logSponsorLogoChange();
 });
 
 // Currently also logs when the server starts up, do we need to change that?
@@ -81,19 +81,19 @@ sc.on('timerTeamUndone', id => logTimerChange('team_undid_finish', id));
 function checkSponsorLogoVisibility() {
   if (streaming && currentScene) {
     const scene = currentScene.toLowerCase();
-    const intermission = bundleConfig.obs.names.scenes.intermission.toLowerCase();
-    const gameLayout = bundleConfig.obs.names.scenes.gameLayout.toLowerCase();
+    const intermission = config.obs.names.scenes.intermission.toLowerCase();
+    const gameLayout = config.obs.names.scenes.gameLayout.toLowerCase();
     if ((scene.includes(intermission) && !scene.includes('hosts')) || scene.includes(gameLayout)) {
-      logSponsorLogoChange(currentSponsorLogo.value);
+      // logSponsorLogoChange(currentSponsorLogo.value);
     } else {
-      logSponsorLogoChange();
+      // logSponsorLogoChange();
     }
   }
 }
 
-currentSponsorLogo.on('change', () => {
+/* currentSponsorLogo.on('change', () => {
   checkSponsorLogoVisibility();
-});
+}); */
 
 function getTimeInfo() {
   const nowDate: Date = new Date();
@@ -113,7 +113,7 @@ function logSceneSwitch(name: string, action: string = 'start') {
     `obs.scene.${safeName}.${action}${gameSceneSuffix}`,
     {
       action,
-      event: evtString,
+      event,
       scene: name,
       gameScene: isGameScene,
       time: getTimeInfo(),
@@ -128,7 +128,7 @@ function logTimerChange(desc: string, teamID?: string) {
     `timer.${teamFix}${desc}`,
     {
       desc,
-      event: evtString,
+      event: event,
       teamID: teamID || undefined,
       timer: sc.timer.value,
       time: getTimeInfo(),
@@ -140,14 +140,14 @@ function logRunChange() {
   mqSend(
     'run.changed',
     {
-      event: evtString,
+      event: event,
       run: sc.getCurrentRun(),
       time: getTimeInfo(),
     },
   );
 }
 
-function logSponsorLogoChange(logo?: CurrentSponsorLogo) {
+/* function logSponsorLogoChange(logo?: CurrentSponsorLogo) {
   // Don't log if the logo didn't actually change.
   const currentSum = (logo) ? logo.sum : undefined;
   if (lastSponsorLogoSum !== currentSum) {
@@ -158,9 +158,9 @@ function logSponsorLogoChange(logo?: CurrentSponsorLogo) {
       {
         logo: (logo) ? logo.name : undefined,
         length: (logo) ? logo.seconds : undefined,
-        event: evtString,
+        event: event,
         time: getTimeInfo(),
       },
     );
   }
-}
+} */

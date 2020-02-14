@@ -75,12 +75,24 @@ export default class extends Vue {
   @Mutation updateSelectedVideo!: UpdateSelectedVideo;
   @Mutation unselectVideo!: UnselectVideo;
 
+  @Watch('selected')
+  async scrollToSelectedVideo(): Promise<void> {
+    try {
+      await Vue.nextTick();
+      if (this.videoPlayer.selected) {
+        goTo(`#video-${this.videoPlayer.selected}`, { container: '#VideoList', offset: 25 });
+      } else {
+        goTo(0, { container: '#VideoList' });
+      }
+    } catch (err) {
+      // Not sure if this can error, but better be safe
+    }
+  }
+
   @Watch('videoPlayer')
-  scrollToSelectedVideo(): void {
-    if (this.videoPlayer.selected) {
-      goTo(`#video-${this.videoPlayer.selected}`, { container: '#VideoList', offset: 25 });
-    } else {
-      goTo(0, { container: '#VideoList' });
+  onVideoPlayerChange(): void {
+    if (this.sortedVideos.length) {
+      this.scrollToSelectedVideo();
     }
   }
 

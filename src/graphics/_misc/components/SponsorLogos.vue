@@ -24,8 +24,11 @@ export default class extends Vue {
   @State sponsorLogos!: SponsorLogos;
 
   get current(): { id: string; url: string} | undefined {
-    const asset = this.sponsorLogoAssets.find((s) => s.sum === this.sponsorLogos.current.sum);
-    return asset ? {
+    if (!this.sponsorLogoAssets) {
+      return undefined;
+    }
+    const asset = this.sponsorLogoAssets.find((s) => s.sum === this.sponsorLogos.current?.sum);
+    return asset && this.sponsorLogos.current ? {
       id: this.sponsorLogos.current.id,
       url: asset.url,
     } : undefined;

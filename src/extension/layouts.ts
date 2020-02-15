@@ -1,27 +1,15 @@
+/* eslint-disable no-await-in-loop */
+import { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { get as nodecg } from './util/nodecg';
-import { gameLayouts } from './util/replicants';
+import obs from './util/obs';
+import { capturePositions, gameLayouts } from './util/replicants';
 
-// const obsConfig = (nodecg().bundleConfig as Configschema).obs;
+const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 const sc = new SpeedcontrolUtil(nodecg());
 
-/* interface GameLayoutChange {
-  cssID: string;
-  cssClass: string;
-  sizes: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
-  } | null;
-} */
-
-// CSS ID -> OBS group name mapping
-/* const obsGroupKeys: { [key: string]: string } = {
+// CSS ID -> OBS source name mapping
+const obsSourceKeys: { [key: string]: string } = {
   GameCapture1: obsConfig.names.sources.gameCapture1,
   GameCapture2: obsConfig.names.sources.gameCapture2,
   GameCapture3: obsConfig.names.sources.gameCapture3,
@@ -29,72 +17,66 @@ const sc = new SpeedcontrolUtil(nodecg());
   CameraCapture1: obsConfig.names.sources.cameraCapture1,
   CameraCapture2: obsConfig.names.sources.cameraCapture2,
 };
-const obsGameLayoutScene = obsConfig.names.scenes.gameLayout; */
+const obsGameLayoutScene = obsConfig.names.scenes.gameLayout;
 
 // nodecg-speedcontrol no longer sends forceRefreshIntermission so doing it here instead.
 sc.on('timerStopped', () => {
   nodecg().sendMessage('forceRefreshIntermission');
 });
 
-// Triggered when the game layout page is opened;
-// we need to toggle the visibility to off for all captures.
-/* nodecg().listenFor('hideAllCaptures', async (value, ack) => {
-  const keyMap = Object.keys(obsGroupKeys).map((key) => {
-    return obsGroupKeys[key];
-  });
-  for await (const item of keyMap) {
-    try {
-      await obs.hideItemInScene(item, obsGameLayoutScene);
-    } catch (err) {}
-  }
-  if (ack && !ack.handled) {
-    ack(null);
-  }
-}); */
-
-// Triggered when the capture parts of the game layout in the browser move around.
-/* nodecg().listenFor('captureChange', async (opts: GameLayoutChange) => {
-  // If no sizes are specified, we want to disable it's visibility.
-  if (!opts.sizes) {
-    try {
-      await obs.hideItemInScene(obsGroupKeys[opts.cssID], obsGameLayoutScene);
-    } catch (err) {}
-  } else {
-    try {
-      const crop = { top: 0, right: 0, bottom: 0, left: 0 };
-      // If this is a camera, it may need cropping.
-      if (opts.cssClass === 'CameraCapture') {
-        // Cameras need cropping if not exactly 16:9.
-        // Bigger than 16:9 need top/bottom cropping.
-        // Smaller than 16:9 need left/right cropping.
-        const webcamAR = opts.sizes.width / opts.sizes.height;
-        if (webcamAR > (16 / 9)) {
-          const newHeight = 1920 / webcamAR;
-          const cropAmount = Math.floor((1080 - newHeight) / 2);
-          crop.top = cropAmount;
-          crop.bottom = cropAmount;
-        } else if (webcamAR < (16 / 9)) {
-          const newWidth = 1080 * webcamAR;
-          const cropAmount = Math.floor((1920 - newWidth) / 2);
-          crop.left = cropAmount;
-          crop.right = cropAmount;
-        }
-      }
-
-      await obs.setUpCaptureInScene(obsGroupKeys[opts.cssID], obsGameLayoutScene, {
-        x: opts.sizes.x,
-        y: opts.sizes.y,
-        width: opts.sizes.width,
-        height: opts.sizes.height,
-        croptop: crop.top,
-        cropright: crop.right,
-        cropbottom: crop.bottom,
-        cropleft: crop.left,
+/**
+ * Helper function used by modifyCaptures.
+ * Resets the scene item, then sets some properties if possible.
+ * @param scene Name of scene item is in
+ * @param item Name of item
+ * @param area Area object (as used in capturePositions): x, y, width, height
+ * @param crop Crop object: top, bottom, left, right
+ * @param visible If the source should be visible or not
+ */
+async function configureSceneItem(
+  scene: string,
+  item: string,
+  area?: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  },
+  crop?: {
+    top: number;
+    bottom: number;
+    left: number;
+    right: number;
+  },
+  visible?: boolean,
+): Promise<void> {
+  try {
+    if (area) {
+      await obs.send('ResetSceneItem', {
+        'scene-name': scene,
+        item,
       });
-    } catch (err) {}
+    }
+    // @ts-ignore: Typings say we need to specify more than we actually do.
+    await obs.send('SetSceneItemProperties', {
+      'scene-name': scene,
+      item,
+      visible: typeof visible !== 'undefined' ? visible : true,
+      position: (area) ? {
+        x: area.x,
+        y: area.y,
+      } : {},
+      bounds: (area) ? {
+        type: 'OBS_BOUNDS_STRETCH',
+        x: area.width,
+        y: area.height,
+      } : {},
+      crop: crop || {},
+    });
+  } catch (err) {
+    nodecg().log.warn('[Layouts] Cannot successfully configure scene item:', err);
   }
-}); */
-
+}
 
 // Change the game layout based on information supplied via the run data.
 // TO SEE: Do we need "overridden" anymore, besides for informational purposes?
@@ -122,4 +104,41 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
     delete gameLayouts.value.selected;
   }
   init = true;
+});
+
+capturePositions.on('change', async (val) => {
+  for (const key of Object.keys(obsSourceKeys)) {
+    const crop = {
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+    };
+    // If this is a camera, it may need cropping.
+    if (key.includes('Camera') && val['Game Layout'][key]) {
+      // Cameras need cropping if not exactly 16:9.
+      // Bigger than 16:9 need top/bottom cropping.
+      // Smaller than 16:9 need left/right cropping.
+      const webcamAR = val['Game Layout'][key].width / val['Game Layout'][key].height;
+      if (webcamAR > (16 / 9)) {
+        const newHeight = 1920 / webcamAR;
+        const cropAmount = Math.floor((1080 - newHeight) / 2);
+        crop.top = cropAmount;
+        crop.bottom = cropAmount;
+      } else if (webcamAR < (16 / 9)) {
+        const newWidth = 1080 * webcamAR;
+        const cropAmount = Math.floor((1920 - newWidth) / 2);
+        crop.left = cropAmount;
+        crop.right = cropAmount;
+      }
+    }
+
+    await configureSceneItem(
+      obsGameLayoutScene,
+      obsSourceKeys[key],
+      val['Game Layout'][key],
+      crop,
+      !!val['Game Layout'][key],
+    );
+  }
 });

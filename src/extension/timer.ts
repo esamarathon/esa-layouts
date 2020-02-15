@@ -17,6 +17,11 @@ mq.on('bigbuttonPressed', (data) => {
     return;
   }
 
+  // If the button was pressed more than 10s ago, ignore it.
+  if (data.time.unix < (Date.now() / 1000) - 10) {
+    return;
+  }
+
   // Note: the nodecg-speedcontrol bundle will check if it *can* do these actions,
   // we do not need to check that here.
   switch (sc.timer.value.state) {

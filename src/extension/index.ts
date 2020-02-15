@@ -3,7 +3,8 @@
 import { NodeCG } from 'nodecg/types/server';
 import { set } from './util/nodecg';
 
-export = (nodecg: NodeCG): void => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export = (nodecg: NodeCG): { obs: any } => {
   set(nodecg);
 
   require('./obs-data');
@@ -18,4 +19,8 @@ export = (nodecg: NodeCG): void => {
   require('./fcb');
   require('./commercials');
   // require('./logging');
+
+  return {
+    obs: require('./util/obs').default,
+  };
 };

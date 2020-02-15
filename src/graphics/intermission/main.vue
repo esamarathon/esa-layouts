@@ -11,7 +11,11 @@
     >
       <ad-timer></ad-timer>
     </capture>
-    <sponsor-logos id="SponsorLogos" />
+    <info-storage-box
+      id="SponsorLogo"
+    >
+      <sponsor-logos></sponsor-logos>
+    </info-storage-box>
     <run-upcoming
       v-if="nextRun"
       id="ComingUpNext"
@@ -98,7 +102,7 @@ export default {
     height: 276px;
   }
 
-  #SponsorLogos {
+  #SponsorLogo {
     left: 26px;
     top: 741px;
     width: 662px;

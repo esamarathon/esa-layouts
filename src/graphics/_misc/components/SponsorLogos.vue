@@ -1,14 +1,19 @@
 <template>
   <div
-    class="SponsorLogo Fixed Flex"
+    id="SponsorLogoBox"
+    class="Flex"
   >
-    <transition name="fade">
-      <img
-        v-if="current"
-        :key="current.id"
-        :src="current.url"
-      >
-    </transition>
+    <div
+      class="SponsorLogo Flex"
+    >
+      <transition name="fade">
+        <img
+          v-if="current"
+          :key="current.id"
+          :src="current.url"
+        >
+      </transition>
+    </div>
   </div>
 </template>
 
@@ -37,10 +42,23 @@ export default class extends Vue {
 </script>
 
 <style scoped>
-  .SponsorLogo > img {
+  #SponsorLogoBox {
+    flex: 1; /* We *should* be inside a flex box! */
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  #SponsorLogoBox > .SponsorLogo {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  #SponsorLogoBox > .SponsorLogo > img {
     position: absolute;
     box-sizing: border-box;
-    padding: 50px;
+    padding: 30px;
     width: 100%;
     height: 100%;
     object-fit: contain;

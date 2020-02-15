@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import { Bids, Commentators, DonationsToRead, DonationTotal, GameLayouts, MusicPlayer, NotableDonations, ObsData, OtherStreamData, Prizes, SponsorLogos, TtsVoices, VideoPlayer } from 'schemas'; // eslint-disable-line object-curly-newline
+import { Bids, CapturePositions, Commentators, DonationsToRead, DonationTotal, GameLayouts, MusicPlayer, NotableDonations, ObsData, OtherStreamData, Prizes, SponsorLogos, TtsVoices, VideoPlayer } from 'schemas'; // eslint-disable-line object-curly-newline
 import { Asset } from 'types';
 import { TwitchAPIData } from '../../../../nodecg-speedcontrol/schemas';
 import { get as nodecg } from './nodecg';
@@ -10,6 +10,7 @@ export const assetsMusic = nodecg().Replicant<Asset[]>('assets:music');
 export const assetsSponsorLogos = nodecg().Replicant<Asset[]>('assets:sponsor-logos');
 export const assetsVideos = nodecg().Replicant<Asset[]>('assets:videos');
 export const bids = nodecg().Replicant<Bids>('bids', { persistent: false });
+export const capturePositions = nodecg().Replicant<CapturePositions>('capturePositions');
 export const commentators = nodecg().Replicant<Commentators>('commentators');
 export const donationsToRead = nodecg().Replicant<DonationsToRead>('donationsToRead', { persistent: false });
 export const donationTotal = nodecg().Replicant<DonationTotal>('donationTotal');

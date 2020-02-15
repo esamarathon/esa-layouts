@@ -1,4 +1,5 @@
 export * from './bids';
+export * from './capturePositions';
 export * from './commentators';
 export * from './donationsToRead';
 export * from './donationTotal';

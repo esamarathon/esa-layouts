@@ -16,6 +16,7 @@ import { GameLayouts } from 'schemas';
 import { generateClipPath } from '../_misc/cut-background';
 import { ClearList, UpdateList, UpdateSelected } from './store';
 import { defaultCode } from './list';
+import { updateCapturePositionData } from '../_misc/update-capture-position-data';
 
 @Component
 export default class extends Vue {
@@ -42,6 +43,7 @@ export default class extends Vue {
     const code = route.path.replace('/', '').replace('*', '');
     this.updateSelected(code || defaultCode);
     this.clipPath = generateClipPath();
+    updateCapturePositionData('Game Layout');
   }
 
   mounted(): void {

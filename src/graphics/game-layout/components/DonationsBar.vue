@@ -17,7 +17,7 @@
 <script>
 import DonationBox from './DonationBox.vue';
 
-const recentDonations = nodecg.Replicant('recentDonations');
+const notableDonations = nodecg.Replicant('notableDonations');
 
 export default {
   name: 'DonationsBar',
@@ -30,7 +30,7 @@ export default {
     };
   },
   created() {
-    recentDonations.on('change', (newVal) => {
+    notableDonations.on('change', (newVal) => {
       this.donations = newVal.slice(0);
     });
   },

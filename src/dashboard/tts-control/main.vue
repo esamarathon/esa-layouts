@@ -55,7 +55,9 @@ export default class extends Vue {
 
   @Watch('voices')
   scrollToSelectedVoice(): void {
-    goTo(`#${this.voices.selected}`, { container: '#VoiceList', offset: 25 });
+    if (this.config.enable) {
+      goTo(`#${this.voices.selected}`, { container: '#VoiceList', offset: 25 });
+    }
   }
 
   // eslint-disable-next-line class-methods-use-this

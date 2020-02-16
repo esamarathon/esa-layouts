@@ -28,22 +28,33 @@ mq.on('bigbuttonPressed', (data) => {
     return;
   }
 
-  // Note: the nodecg-speedcontrol bundle will check if it *can* do these actions,
-  // we do not need to check that here.
-  switch (sc.timer.value.state) {
-    case 'stopped':
-    case 'paused':
-      sc.startTimer();
-      break;
-    case 'running':
-      sc.stopTimer(buttonID);
-      break;
-    case 'finished':
-      sc.resetTimer();
-      break;
-    default:
-      // Don't do anything
-      break;
+  // TO FIX!
+  // This shouldn't happen, but is?
+  if (!sc.timer.value) {
+    nodecg().log.warn('[Timer] nodecg-speedcontrol timer replicant has not been defined');
+    return;
+  }
+
+  try {
+    // Note: the nodecg-speedcontrol bundle will check if it *can* do these actions,
+    // we do not need to check that here.
+    switch (sc.timer.value.state) {
+      case 'stopped':
+      case 'paused':
+        sc.startTimer();
+        break;
+      case 'running':
+        sc.stopTimer(buttonID);
+        break;
+      case 'finished':
+        sc.resetTimer();
+        break;
+      default:
+        // Don't do anything
+        break;
+    }
+  } catch (err) {
+    // Drop for now
   }
 });
 

@@ -35,11 +35,11 @@
           >
             {{ option.name }} ({{ formatUSD(option.total) }})
           </span>
-          <span v-if="bid.allow_user_options">
+          <span v-if="bid.allowUserOptions">
             ...or you could submit your own idea!
           </span>
         </span>
-        <span v-else-if="bid.allow_user_options">
+        <span v-else-if="bid.allowUserOptions">
           No options submitted yet, be the first!
         </span>
       </span>
@@ -119,7 +119,7 @@ export default {
       bidsCopy.forEach((_bid) => {
         // anything within the next 10 minutes has a relative weight of 1,
         // beyond that theres a quadratic falloff
-        let weight = Math.max(Math.min(10 * 60 * 1000 / (_bid.end_time - Date.now()), 1), 0) ** 2;
+        let weight = Math.max(Math.min(10 * 60 * 1000 / (_bid.endTime - Date.now()), 1), 0) ** 2;
         if (_bid.id === this.lastBidID) weight = 0;
         bidChoices.push({ bid: _bid, weight });
         totalWeight += weight;

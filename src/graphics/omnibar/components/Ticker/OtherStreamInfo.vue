@@ -1,21 +1,21 @@
 <template>
   <div
-    v-if="otherStreamInfo"
+    v-if="otherStreamData && otherStreamData.runData"
     id="OtherStreamInfo"
     class="Flex"
   >
     <div class="Line1">
-      Currently on @ twitch.tv/{{ data.otherChannel }}: {{ otherStreamInfo.game }}
+      Currently on @ twitch.tv/{{ data.otherChannel }}: {{ otherStreamData.runData.game }}
     </div>
     <div class="Line2">
-      <span v-if="otherStreamInfo.category">
-        {{ otherStreamInfo.category }}
+      <span v-if="otherStreamData.runData.category">
+        {{ otherStreamData.runData.category }}
       </span>
-      <span v-if="otherStreamInfo.system">
-        ran on {{ otherStreamInfo.system }}
+      <span v-if="otherStreamData.runData.system">
+        ran on {{ otherStreamData.runData.system }}
       </span>
-      <span v-if="checkForTotalPlayers(otherStreamInfo) > 0">
-        with {{ formPlayerNamesString(otherStreamInfo) }}
+      <span v-if="checkForTotalPlayers(otherStreamData.runData) > 0">
+        with {{ formPlayerNamesString(otherStreamData.runData) }}
       </span>
     </div>
   </div>
@@ -24,8 +24,7 @@
 <script>
 import clone from 'clone';
 
-const otherStreamInfoRep = nodecg.Replicant('otherStreamInfo');
-const otherStreamInfoShowRep = nodecg.Replicant('otherStreamInfoShow');
+const otherStreamData = nodecg.Replicant('otherStreamData');
 
 export default {
   name: 'OtherStreamInfo',
@@ -39,17 +38,17 @@ export default {
   },
   data() {
     return {
-      otherStreamInfo: null,
+      otherStreamData: null,
     };
   },
   created() {
     const fallback = setTimeout(() => this.$emit('end'), 5000);
-    NodeCG.waitForReplicants(otherStreamInfoRep, otherStreamInfoShowRep).then(() => {
+    NodeCG.waitForReplicants(otherStreamData).then(() => {
       // Skip if nothing to show.
-      if (!otherStreamInfoRep.value || !otherStreamInfoShowRep.value) {
+      if (!otherStreamData.value || !otherStreamData.value.show) {
         this.$emit('end');
       } else {
-        this.otherStreamInfo = clone(otherStreamInfoRep.value);
+        this.otherStreamData = clone(otherStreamData.value);
         clearTimeout(fallback);
         setTimeout(() => this.$emit('end'), 25 * 1000);
       }

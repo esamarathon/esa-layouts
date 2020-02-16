@@ -73,7 +73,7 @@ function logSponsorLogoChange(logo?: SponsorLogos['rotation'][0]): void {
   const currentSum = (logo) ? logo.sum : undefined;
   if (lastSponsorLogoSum !== currentSum) {
     lastSponsorLogoSum = currentSum;
-    const name = assetsSponsorLogos.value.find((a) => a.sum === logo?.sum);
+    const name = assetsSponsorLogos.value.find((a) => a.sum === logo?.sum)?.name;
 
     mqSend(
       'sponsor.logo.changed',

@@ -52,7 +52,7 @@ export default {
   }
 
   /* Put some fancy text behind donation bar. */
-  #DonationsBar:after {
+  /* #DonationsBar:after {
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -67,7 +67,7 @@ export default {
     padding-right: 20px;
     font-size: 30px;
     color: grey;
-  }
+  } */
 
   .donations-enter-active {
     transition: all 1s;

@@ -18,8 +18,8 @@
 </template>
 
 <script>
-const hashtag = require('../hashtag-text.png');
-const afLogo = require('../movember.png');
+const hashtag = require('../logo-text.png');
+const afLogo = require('../savethechildren.png');
 
 export default {
   name: 'RotatingLogos',
@@ -48,7 +48,7 @@ export default {
 
   #LogoWrapper {
     position: relative;
-    width: 163px;
+    width: 300px;
   }
 
   #LogoWrapper > img {

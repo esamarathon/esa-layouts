@@ -23,9 +23,9 @@ import OtherStreamInfo from './Ticker/OtherStreamInfo.vue';
 import Prize from './Ticker/Prize.vue';
 import Bid from './Ticker/Bid.vue';
 import Alert from './Ticker/Alert.vue';
+import { getCurrentEventShort } from '../../_misc/helpers';
 
-const evtShort = nodecg.Replicant('evtShort');
-const otherStreamInfo = nodecg.Replicant('otherStreamInfo');
+const otherStreamData = nodecg.Replicant('otherStreamData');
 const runDataActiveRun = nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol');
 const runDataArray = nodecg.Replicant('runDataArray', 'nodecg-speedcontrol');
 
@@ -50,8 +50,7 @@ export default {
   },
   mounted() {
     NodeCG.waitForReplicants(
-      evtShort,
-      otherStreamInfo,
+      otherStreamData,
       runDataActiveRun,
       runDataArray,
     ).then(() => {
@@ -66,15 +65,15 @@ export default {
       this.messageTypes = [
         this.esaPromo(),
         this.charityPromo(),
-        // this.otherStreamPromo(),
-        // this.otherStreamInfo(),
+        this.otherStreamPromo(),
+        this.otherStreamInfo(),
         this.upcomingRun(),
         this.prize(),
         this.bid(),
         this.teamPromo(),
         this.donationURL(),
-        // this.shirts(),
-        // this.twitchCharity(),
+        // this.shirts(), THIS MAY BE NEEDED?
+        this.twitchCharity(),
       ];
 
       this.showNextMsg();
@@ -105,10 +104,10 @@ export default {
       this.timestamp = Date.now();
     },
     esaPromo() {
-      return this.genericMsg('This is European Speedrunner Assembly @ DreamHack Winter 2019');
+      return this.genericMsg('This is European Speedrunner Assembly Winter 2020');
     },
     charityPromo() {
-      return this.genericMsg('ESA @ #DHW19 benefits The Movember Foundation');
+      return this.genericMsg('#ESAWinter20 benefits Save the Children');
     },
     otherStreamPromo() {
       return this.genericMsg(`Watch more great runs over @ twitch.tv/${this.otherChannel}`);
@@ -134,9 +133,10 @@ export default {
       return this.genericMsg('Check out our Twitch team @ twitch.tv/team/esa!');
     },
     donationURL() {
-      return this.genericMsg(`Donate @ donations.esamarathon.com/donate/${evtShort.value}`);
+      return this.genericMsg(`Donate @ donations.esamarathon.com/donate/${getCurrentEventShort()}`);
     },
     shirts() {
+      // IF WE WANT THIS, URL IS DIFFERENT!
       return this.genericMsg('Check out our Yetee shirts @ theyetee.com/esa!');
     },
     twitchCharity() {

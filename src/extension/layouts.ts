@@ -107,7 +107,7 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
 });
 
 capturePositions.on('change', async (val) => {
-  if (!val && !val['Game Layout']) {
+  if (!val || !val['Game Layout']) {
     return;
   }
   for (const key of Object.keys(obsSourceKeys)) {

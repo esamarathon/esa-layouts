@@ -107,6 +107,9 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
 });
 
 capturePositions.on('change', async (val) => {
+  if (!val) {
+    return;
+  }
   for (const key of Object.keys(obsSourceKeys)) {
     const crop = {
       top: 0,

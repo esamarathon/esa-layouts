@@ -32,7 +32,7 @@ export default class extends Vue {
   tagScanned = false;
   scannedName = '';
   buttonID = '';
-  tagScanTimeout: number;
+  tagScanTimeout!: number;
 
   mounted(): void {
     nodecg.listenFor('bigbuttonTagScanned', (data) => {

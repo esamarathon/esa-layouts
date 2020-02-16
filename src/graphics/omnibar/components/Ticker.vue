@@ -59,7 +59,7 @@ export default {
       nodecg.listenFor('newTweet', data => newTweets.push(data));
       nodecg.listenFor('newDonation', data => newDonations.push(data));
       nodecg.listenFor('newCheer', data => newCheers.push(data));
-      nodecg.listenFor('newCrowdControlExchange', data => newCrowdControlExchanges.push(data));
+      nodecg.listenFor('newCrowdControl', data => newCrowdControlExchanges.push(data));
 
       // Puts copies of the objects the functions return
       // into an array for easy random-ness access.

@@ -34,8 +34,8 @@ function processRawBids(rawBids: Bid[]): FormattedBid[] {
         game: bid.fields.speedrun__name,
         category: bid.fields.speedrun__category,
         endTime: bid.fields.speedrun__endtime ? Date.parse(bid.fields.speedrun__endtime) : 0,
-        war: bid.fields.istarget,
-        allowUserOptions: bid.fields.istarget && bid.fields.allowuseroptions,
+        war: !bid.fields.istarget,
+        allowUserOptions: !bid.fields.istarget && bid.fields.allowuseroptions,
         options: [],
         goal: (bid.fields.goal) ? parseFloat(bid.fields.goal) : undefined,
       };

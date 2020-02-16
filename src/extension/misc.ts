@@ -69,7 +69,15 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
 // Switch back to the last scene when the sponsor video finishes.
 nodecg().listenFor('videoPlayerFinished', async () => {
   try {
-    await obs.changeScene(config.obs.names.scenes.intermission);
+    const sceneList = await obs.send('GetSceneList');
+    const scene = sceneList.scenes.find((s) => (
+      s.name.startsWith(config.obs.names.scenes.intermission)
+      && !s.name.startsWith(config.obs.names.scenes.commercials)));
+    if (scene) {
+      await obs.changeScene(scene.name);
+    } else {
+      throw new Error('Scene could not be found');
+    }
     nodecg().log.info('[Misc] Successfully returned to intermission after video finished');
   } catch (err) {
     nodecg().log.warn('[Misc] Could not return to intermission after video finished');

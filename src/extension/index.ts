@@ -18,7 +18,7 @@ export = (nodecg: NodeCG): { obs: any } => {
   require('./twitch-ext');
   require('./fcb');
   require('./commercials');
-  // require('./logging');
+  require('./logging');
 
   return {
     obs: require('./util/obs').default,

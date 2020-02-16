@@ -49,6 +49,7 @@ mq.on('gameSceneChanged', (data) => {
 // When someone scans in on one of the big timer buttons.
 // Currently only used for commentators.
 mq.on('bigbuttonTagScanned', (data) => {
+  nodecg().sendMessage('bigbuttonTagScanned', data);
   const name = data.user.displayName;
   if (!commentators.value.includes(name)) {
     commentators.value.push(name);

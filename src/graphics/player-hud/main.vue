@@ -1,11 +1,23 @@
 <template>
-  <div :class="`PlayerHUD ${donationsToRead.length ? 'ToRead' : ''}`">
-    <template v-if="!donationsToRead.length">
-      Donations Pending
-    </template>
-    <template v-else>
-      No Donations Currently
-    </template>
+  <div :class="`PlayerHUD ${donationsToRead.length || tagScanned ? 'Success' : ''}`">
+    <div
+      v-if="tagScanned"
+    >
+      Tag Scanned:
+      <br>{{ scannedName }}
+      <br>on button {{ buttonID }}
+    </div>
+    <div
+      v-else
+      :class="donationsToRead.length ? 'ToRead' : ''"
+    >
+      <template v-if="donationsToRead.length">
+        Time for donations? 😊
+      </template>
+      <template v-else>
+        No Donations Currently
+      </template>
+    </div>
   </div>
 </template>
 
@@ -17,6 +29,24 @@ import { Donation } from 'types';
 @Component
 export default class extends Vue {
   @State donationsToRead!: Donation;
+  tagScanned = false;
+  scannedName = '';
+  buttonID = '';
+  tagScanTimeout: number;
+
+  mounted(): void {
+    nodecg.listenFor('bigbuttonTagScanned', (data) => {
+      window.clearTimeout(this.tagScanTimeout);
+      this.tagScanned = true;
+      this.buttonID = data.flagcarrier.id;
+      this.scannedName = data.user.displayName;
+      this.tagScanTimeout = window.setTimeout(() => {
+        this.tagScanned = false;
+        this.buttonID = '';
+        this.scannedName = '';
+      }, 5000);
+    });
+  }
 }
 </script>
 
@@ -44,7 +74,7 @@ export default class extends Vue {
     font-size: 18vh;
   }
 
-  .ToRead {
+  .Success {
     background-color: rgb(0, 177, 15);
   }
 </style>

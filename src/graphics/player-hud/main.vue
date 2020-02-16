@@ -12,7 +12,7 @@
       :class="donationsToRead.length ? 'ToRead' : ''"
     >
       <template v-if="donationsToRead.length">
-        Time for donations? 😊
+        Donations Pending: {{ donationsToRead.length }}
       </template>
       <template v-else>
         No Donations Currently

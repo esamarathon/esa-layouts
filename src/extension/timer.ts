@@ -9,7 +9,8 @@ const sc = new SpeedcontrolUtil(nodecg());
 
 // Controls the nodecg-speedcontrol timer when the big buttons are pressed.
 mq.on('bigbuttonPressed', (data) => {
-  const buttonID = data.button_id - 1;
+  const run = sc.getCurrentRun();
+  const buttonID = (run && run.teams.length > 1) ? data.button_id - 1 : 0;
 
   // Make sure we're listening for the right message.
   // The message should *never* be used for anything else, but I like to be safe.
@@ -19,6 +20,11 @@ mq.on('bigbuttonPressed', (data) => {
 
   // If the button was pressed more than 10s ago, ignore it.
   if (data.time.unix < (Date.now() / 1000) - 10) {
+    return;
+  }
+
+  if (data.time.unix > (Date.now() / 1000) + 10) {
+    nodecg().log.warn('[Timer] Big button unix timestamp in the future, this is bad!');
     return;
   }
 

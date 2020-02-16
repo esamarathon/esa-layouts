@@ -44,10 +44,9 @@ mq.on('bigbuttonPressed', (data) => {
         sc.startTimer();
         break;
       case 'running':
-        sc.stopTimer(buttonID);
-        break;
-      case 'finished':
-        sc.resetTimer();
+        if (sc.timer.value.milliseconds > 10 * 1000) {
+          sc.stopTimer(buttonID);
+        }
         break;
       default:
         // Don't do anything

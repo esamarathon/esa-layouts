@@ -3,10 +3,7 @@
     v-show="show"
     id="VideoSlide"
   >
-    <div
-      v-if="video"
-      class="Video"
-    >
+    <div class="Video">
       <video
         ref="Video"
         muted
@@ -16,12 +13,6 @@
           type="video/mp4"
         >
       </video>
-    </div>
-    <div
-      v-else
-      class="Image"
-    >
-      <img :src="src">
     </div>
   </div>
 </template>
@@ -43,21 +34,18 @@ export default {
   },
   mounted() {
     NodeCG.waitForReplicants(media).then(() => {
-      if (!media.value.length) {
+      const videos = media.value.filter((v) => v.ext.toLowerCase() === '.mp4');
+      if (!videos.length) {
         this.$emit('end');
         return;
       }
 
-      let data;
-      while (!this.video) {
-        if (index >= media.value.length) {
-          index = 0;
-        }
-        data = media.value[index];
-        this.src = data.url;
-        this.video = data.ext.toLowerCase() === '.mp4';
-        index += 1;
+      if (index >= videos.length) {
+        index = 0;
       }
+      const data = videos[index];
+      this.src = data.url;
+      index += 1;
 
       this.show = true;
       Vue.nextTick().then(() => this.playVideo());

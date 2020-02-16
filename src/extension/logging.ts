@@ -94,7 +94,7 @@ function checkSponsorLogoVisibility(): void {
     const intermission = config.obs.names.scenes.intermission.toLowerCase();
     const gameLayout = config.obs.names.scenes.gameLayout.toLowerCase();
     if ((scene.includes(intermission) && !scene.includes('hosts')) || scene.includes(gameLayout)) {
-      const logo = sponsorLogos.value.rotation.find((l) => l.id === sponsorLogos.value.current?.id)
+      const logo = sponsorLogos.value.rotation.find((l) => l.id === sponsorLogos.value.current?.id);
       logSponsorLogoChange(logo);
     } else {
       logSponsorLogoChange();
@@ -120,6 +120,14 @@ obs.on('ConnectionOpened', async () => {
     const scene = await obs.send('GetCurrentScene');
     streaming = streamingData.streaming;
     currentScene = scene.name;
+    if (lastScene === currentScene) {
+      return;
+    }
+    if (lastScene) {
+      logSceneSwitch(lastScene, 'end');
+    }
+    logSceneSwitch(currentScene, 'start');
+    checkSponsorLogoVisibility();
   } catch (err) {
     // drop for now
   }
@@ -135,25 +143,6 @@ obs.on('StreamStopped', () => {
   streaming = false;
   checkSponsorLogoVisibility();
 });
-obs.on('SwitchScenes', (data) => {
-  currentScene = data['scene-name'];
-});
-
-obs.on('ConnectionOpened', async () => {
-  try {
-    if (lastScene === currentScene) {
-      return;
-    }
-    if (lastScene) {
-      logSceneSwitch(lastScene, 'end');
-    }
-    logSceneSwitch(currentScene, 'start');
-    checkSponsorLogoVisibility();
-  } catch (err) {
-    // silently drop it for now
-  }
-});
-
 obs.on('SwitchScenes', (data) => {
   lastScene = currentScene;
   currentScene = data['scene-name'];

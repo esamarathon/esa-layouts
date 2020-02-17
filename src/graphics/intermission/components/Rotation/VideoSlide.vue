@@ -28,7 +28,6 @@ export default {
   data() {
     return {
       src: undefined,
-      video: false,
       show: false,
     };
   },
@@ -75,13 +74,7 @@ export default {
     background-color: rgba(0,0,0,0.3);
   }
 
-  .Image, .Video {
-    width: 100%;
-    height: 100%;
-  }
-
-  .Image > img {
-    object-fit: contain;
+  .Video {
     width: 100%;
     height: 100%;
   }

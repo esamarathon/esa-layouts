@@ -3,24 +3,7 @@
     v-show="show"
     id="ImageSlide"
   >
-    <div
-      v-if="video"
-      class="Video"
-    >
-      <video
-        ref="Video"
-        muted
-      >
-        <source
-          :src="src"
-          type="video/mp4"
-        >
-      </video>
-    </div>
-    <div
-      v-else
-      class="Image"
-    >
+    <div class="Image">
       <img :src="src">
     </div>
   </div>
@@ -36,41 +19,27 @@ export default {
   data() {
     return {
       src: undefined,
-      video: true,
       show: false,
     };
   },
   mounted() {
     NodeCG.waitForReplicants(media).then(() => {
-      if (!media.value.length) {
+      const images = media.value.filter((v) => v.ext.toLowerCase() !== '.mp4');
+      if (!images.length) {
         this.$emit('end');
         return;
       }
 
-      let data;
-      while (this.video) {
-        if (index >= media.value.length) {
-          index = 0;
-        }
-        data = media.value[index];
-        this.src = data.url;
-        this.video = data.ext.toLowerCase() === '.mp4';
-        index += 1;
+      if (index >= images.length) {
+        index = 0;
       }
+      const data = images[index];
+      this.src = data.url;
+      index += 1;
 
       this.show = true;
       setTimeout(() => this.$emit('end'), 20 * 1000);
     });
-  },
-  methods: {
-    playVideo() {
-      this.$refs.Video.load();
-      this.$refs.Video.play();
-      this.$refs.Video.addEventListener('ended', this.endOfVideo, { once: true });
-    },
-    endOfVideo() {
-      this.$emit('end');
-    },
   },
 };
 </script>
@@ -86,18 +55,12 @@ export default {
     background-color: rgba(0,0,0,0.3);
   }
 
-  .Image, .Video {
+  .Image {
     width: 100%;
     height: 100%;
   }
 
   .Image > img {
-    object-fit: contain;
-    width: 100%;
-    height: 100%;
-  }
-
-  .Video > video {
     object-fit: contain;
     width: 100%;
     height: 100%;

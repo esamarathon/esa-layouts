@@ -1,3 +1,4 @@
+import { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { speak } from './text-to-speech';
 import { markDonationAsRead } from './tracker-donations';
@@ -7,6 +8,7 @@ import obs from './util/obs';
 import { donationsToRead } from './util/replicants';
 import sd from './util/streamdeck';
 
+const config = (nodecg().bundleConfig as Configschema);
 const sc = new SpeedcontrolUtil(nodecg());
 const defaultCommercialText = 'STEP 1\nTWITCH AD';
 const defaultTimerText = 'Start\nTimer';
@@ -53,7 +55,7 @@ function init(): void {
     }
   });
 
-  sd.on('keyUp', (data) => {
+  sd.on('keyUp', async (data) => {
     // com.esamarathon.streamdeck.timer
     // Controls the nodecg-speedcontrol timer when the button is pressed.
     // Currently the "Stop Timer" state only works if there's only 1 team.
@@ -77,8 +79,15 @@ function init(): void {
 
     // com.esamarathon.streamdeck.twitchads
     if (data.action === 'com.esamarathon.streamdeck.twitchads'
-      && sc.twitchCommercialTimer.value.secondsRemaining > 0) {
-      obs.changeScene(nodecg().bundleConfig.obs.names.scenes.ads);
+      && sc.twitchCommercialTimer.value.secondsRemaining <= 0) {
+      const sceneList = await obs.send('GetSceneList');
+      const scene = sceneList.scenes.find((s) => (
+        s.name.startsWith(config.obs.names.scenes.commercials)));
+      if (scene) {
+        await obs.changeScene(scene.name);
+      } else {
+        throw new Error('Scene could not be found');
+      }
     }
 
     // com.esamarathon.streamdeck.ttsdonations

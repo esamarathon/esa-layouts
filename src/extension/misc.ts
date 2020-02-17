@@ -1,7 +1,7 @@
 import { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { RunData } from '../../../nodecg-speedcontrol/types';
-import { getOtherStreamEventShort } from './util/helpers';
+import { getOtherStreamEventShort, getCurrentEventShort } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
@@ -51,7 +51,7 @@ mq.on('gameSceneChanged', (data) => {
 mq.on('bigbuttonTagScanned', (data) => {
   nodecg().sendMessage('bigbuttonTagScanned', data);
   const name = data.user.displayName;
-  if (!commentators.value.includes(name)) {
+  if (getCurrentEventShort() === data.flagcarrier.group && !commentators.value.includes(name)) {
     commentators.value.push(name);
     nodecg().log.debug('[Misc] Added new commentator:', name);
   }

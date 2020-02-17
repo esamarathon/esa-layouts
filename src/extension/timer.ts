@@ -9,12 +9,8 @@ const sc = new SpeedcontrolUtil(nodecg());
 
 // Controls the nodecg-speedcontrol timer when the big buttons are pressed.
 mq.on('bigbuttonPressed', (data) => {
-  const run = sc.getCurrentRun();
-  const buttonID = (run && run.teams.length > 1) ? data.button_id - 1 : 0;
-
-  // Make sure we're listening for the right message.
-  // The message should *never* be used for anything else, but I like to be safe.
-  if (!data.time && !data.button_message_count) {
+  // Only listen to this event on stream 1.
+  if (config.event.thisEvent !== 1) {
     return;
   }
 
@@ -23,17 +19,14 @@ mq.on('bigbuttonPressed', (data) => {
     return;
   }
 
+  // Stop/log warning if timestamp happens to be in the future.
   if (data.time.unix > (Date.now() / 1000) + 10) {
     nodecg().log.warn('[Timer] Big button unix timestamp in the future, this is bad!');
     return;
   }
 
-  // TO FIX!
-  // This shouldn't happen, but is?
-  if (!sc.timer.value) {
-    nodecg().log.warn('[Timer] nodecg-speedcontrol timer replicant has not been defined');
-    return;
-  }
+  const run = sc.getCurrentRun();
+  const buttonID = (run && run.teams.length > 1) ? data.button_id - 1 : 0;
 
   try {
     // Note: the nodecg-speedcontrol bundle will check if it *can* do these actions,

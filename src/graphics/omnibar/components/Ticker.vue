@@ -72,7 +72,7 @@ export default {
         this.bid(),
         this.teamPromo(),
         this.donationURL(),
-        // this.shirts(), THIS MAY BE NEEDED?
+        this.shirts(),
         this.twitchCharity(),
       ];
 
@@ -136,8 +136,7 @@ export default {
       return this.genericMsg(`Donate @ donations.esamarathon.com/donate/${getCurrentEventShort()}`);
     },
     shirts() {
-      // IF WE WANT THIS, URL IS DIFFERENT!
-      return this.genericMsg('Check out our Yetee shirts @ theyetee.com/esa!');
+      return this.genericMsg('Check out our merch @ speedrunstore.com!');
     },
     twitchCharity() {
       return this.genericMsg('Subscribe or cheer to support the charity!');

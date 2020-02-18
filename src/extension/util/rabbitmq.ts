@@ -61,7 +61,7 @@ const listenTopics = [
   {
     name: 'gameSceneChanged',
     exchange,
-    key: 'obs.scene.*.*.gamescene',
+    key: '*.obs.scene.*.*.gamescene',
   },
 ];
 

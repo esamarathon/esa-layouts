@@ -10,6 +10,7 @@
     <template v-else-if="donationsToRead.length">
       Donations Pending:
       <br>{{ donationsToRead.length }}
+      <br>Largest Unread Donation: {{ largestDonation }}
     </template>
     <template v-else-if="streamDeckData.playerHUDTriggerType">
       <template v-if="streamDeckData.playerHUDTriggerType === 'message'">
@@ -37,6 +38,12 @@ export default class extends Vue {
   scannedName = '';
   buttonID = '';
   tagScanTimeout!: number;
+
+  get largestDonation(): string {
+    return `$${this.donationsToRead
+      .reduce((prev, current) => ((prev > current.amount) ? prev : current.amount), 0)
+      .toFixed(2)}`;
+  }
 
   get backgroundClass(): string {
     if (this.tagScanned) {

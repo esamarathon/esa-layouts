@@ -4,8 +4,8 @@
     class="Flex"
   >
     <span
-      v-for="char in totalSplitString"
-      :key="char"
+      v-for="(char, i) in totalSplitString"
+      :key="i"
       :class="(char === ',' ? 'Comma' : undefined)"
     >
       {{ char }}

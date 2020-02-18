@@ -3,7 +3,7 @@ import { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { capturePositions, gameLayouts } from './util/replicants';
+import { capturePositions, gameLayouts, obsData, videoPlayer } from './util/replicants';
 
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 const sc = new SpeedcontrolUtil(nodecg());
@@ -143,5 +143,21 @@ capturePositions.on('change', async (val) => {
       crop,
       !!val['Game Layout'][key],
     );
+  }
+});
+
+// Switch to the video player scene if there is a selected video when intermission commercials end.
+sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
+  if (oldVal && oldVal.secondsRemaining > 0 && newVal.secondsRemaining <= 0
+    && videoPlayer.value.selected
+    && obsData.value.scene?.startsWith(obsConfig.names.scenes.commercials)) {
+    try {
+      await obs.changeScene(obsConfig.names.scenes.videoPlayer);
+    } catch (err) {
+      nodecg().log.warn('[Layouts] Could not switch to video player scene'
+        + ' after intermission commercials');
+      nodecg().log.debug('[Layouts] Could not switch to video player scene'
+      + ' after intermission commercials:', err);
+    }
   }
 });

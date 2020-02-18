@@ -152,12 +152,17 @@
                 "intermission": {
                   "type": "string",
                   "default": "Intermission"
+                },
+                "videoPlayer": {
+                  "type": "string",
+                  "default": "Video Player"
                 }
               },
               "required": [
                 "commercials",
                 "gameLayout",
-                "intermission"
+                "intermission",
+                "videoPlayer"
               ]
             },
             "sources": {

@@ -80,13 +80,11 @@ function init(): void {
     // com.esamarathon.streamdeck.twitchads
     if (data.action === 'com.esamarathon.streamdeck.twitchads'
       && sc.twitchCommercialTimer.value.secondsRemaining <= 0) {
-      const sceneList = await obs.send('GetSceneList');
-      const scene = sceneList.scenes.find((s) => (
-        s.name.startsWith(config.obs.names.scenes.commercials)));
-      if (scene) {
-        await obs.changeScene(scene.name);
-      } else {
-        throw new Error('Scene could not be found');
+      try {
+        await obs.changeScene(config.obs.names.scenes.commercials);
+      } catch (err) {
+        nodecg().log.warn('[Stream Deck Buttons] Could not run Twitch commercials');
+        nodecg().log.debug('[Stream Deck Buttons] Could not run Twitch commercials:', err);
       }
     }
 

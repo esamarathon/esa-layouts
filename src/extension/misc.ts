@@ -1,7 +1,7 @@
 import { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { RunData } from '../../../nodecg-speedcontrol/types';
-import { getOtherStreamEventShort, getCurrentEventShort } from './util/helpers';
+import { getCurrentEventShort, getOtherStreamEventShort } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
@@ -69,16 +69,8 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
 // Switch back to the last scene when the sponsor video finishes.
 nodecg().listenFor('videoPlayerFinished', async () => {
   try {
-    const sceneList = await obs.send('GetSceneList');
-    const scene = sceneList.scenes.find((s) => (
-      s.name.startsWith(config.obs.names.scenes.intermission)
-      && !s.name.startsWith(config.obs.names.scenes.commercials)));
-    if (scene) {
-      await obs.changeScene(scene.name);
-    } else {
-      throw new Error('Scene could not be found');
-    }
-    nodecg().log.info('[Misc] Successfully returned to intermission after video finished');
+    await obs.changeScene(config.obs.names.scenes.intermission,
+      config.obs.names.scenes.commercials);
   } catch (err) {
     nodecg().log.warn('[Misc] Could not return to intermission after video finished');
     nodecg().log.debug('[Misc] Could not return to intermission after video finished:', err);

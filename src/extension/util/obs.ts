@@ -10,16 +10,24 @@ class OBSUtility extends obsWebsocketJs {
   /**
    * Change to this OBS scene.
    * @param name Name of the scene.
+   * @param ignore Ignore scene if it has this name.
    */
-  async changeScene(name: string): Promise<void> {
+  async changeScene(name: string, ignore?: string): Promise<void> {
     if (!config.enable) {
       // OBS not enabled, don't even try to set.
       throw new Error('No OBS connection available');
     }
     try {
-      await this.send('SetCurrentScene', { 'scene-name': name });
+      const sceneList = await this.send('GetSceneList');
+      const scene = sceneList.scenes.find((s) => (
+        s.name.startsWith(name) && (!ignore || !s.name.startsWith(ignore))));
+      if (scene) {
+        await this.send('SetCurrentScene', { 'scene-name': scene.name });
+      } else {
+        throw new Error('Scene could not be found');
+      }
     } catch (err) {
-      nodecg().log.warn(`[OBS] Cannot change scene [${name}]: ${err.error}`);
+      nodecg().log.warn(`[OBS] Cannot change scene [${name}]: ${err.error || err}`);
       throw err;
     }
   }

@@ -44,7 +44,7 @@ export default {
         data: {},
       },
       timestamp: Date.now(),
-      otherChannel: nodecg.bundleConfig.tracker.streamEvent > 1 ? 'esa' : 'esamarathon2',
+      otherChannel: nodecg.bundleConfig.event.thisEvent > 1 ? 'esa' : 'esamarathon2',
       messageTypes: [],
     };
   },

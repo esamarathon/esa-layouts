@@ -36,7 +36,7 @@ mq.on('runChanged', (data) => {
   }
 });
 mq.on('gameSceneChanged', (data) => {
-  if (getOtherStreamEventShort() && getOtherStreamEventShort() === data.event) {
+  if (getOtherStreamEventShort() === data.event) {
     nodecg().log.debug('[Misc] Received game scene change from other stream:', data.action);
     if (data.action === 'start') {
       otherStreamData.value.show = true;

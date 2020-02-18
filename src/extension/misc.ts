@@ -30,7 +30,7 @@ mq.on('newScreenedCrowdControl', (data) => {
 
 // Information that should come from our 2nd stream.
 mq.on('runChanged', (data) => {
-  if (getOtherStreamEventShort() && getOtherStreamEventShort() === data.event) {
+  if (getOtherStreamEventShort() === data.event) {
     otherStreamData.value.runData = (data.run as RunData | undefined) || null;
     nodecg().log.debug('[Misc] Received modified run data from other stream');
   }

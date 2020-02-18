@@ -136,7 +136,7 @@ export default {
     },
     updateFinishTimer(timer) {
       const teamId = (runData && this.playerSlot >= 0) ? runData.value.teams[this.playerSlot].id : undefined;
-      if (teamId >= 0 && timer.teamFinishTimes[teamId]) {
+      if (teamId && timer.teamFinishTimes[teamId]) {
         this.finishTime = `[${timer.teamFinishTimes[teamId].time}]`;
       } else {
         this.finishTime = '';

@@ -10,5 +10,6 @@ export * from './obsData';
 export * from './otherStreamData';
 export * from './prizes';
 export * from './sponsorLogos';
+export * from './streamDeckData';
 export * from './ttsVoices';
 export * from './videoPlayer';

@@ -1,38 +1,55 @@
 <template>
-  <div :class="`PlayerHUD ${donationsToRead.length || tagScanned ? 'Success' : ''}`">
-    <div
-      v-if="tagScanned"
-    >
+  <div
+    :class="`PlayerHUD ${backgroundClass}`"
+  >
+    <template v-if="tagScanned">
       Tag Scanned:
       <br>{{ scannedName }}
       <br>on button {{ buttonID }}
-    </div>
-    <div
-      v-else
-      :class="donationsToRead.length ? 'ToRead' : ''"
-    >
-      <template v-if="donationsToRead.length">
-        Donations Pending: {{ donationsToRead.length }}
+    </template>
+    <template v-else-if="donationsToRead.length">
+      Donations Pending:
+      <br>{{ donationsToRead.length }}
+    </template>
+    <template v-else-if="streamDeckData.playerHUDTriggerType">
+      <template v-if="streamDeckData.playerHUDTriggerType === 'message'">
+        Any time
+        <br>for messages?
       </template>
-      <template v-else>
-        No Donations Currently
-      </template>
-    </div>
+    </template>
+    <template v-else>
+      Nothing currently
+      <br>to be read
+    </template>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Donation } from 'types';
+import { StreamDeckData, DonationsToRead } from 'schemas';
 
 @Component
 export default class extends Vue {
-  @State donationsToRead!: Donation;
+  @State donationsToRead!: DonationsToRead;
+  @State streamDeckData!: StreamDeckData;
   tagScanned = false;
   scannedName = '';
   buttonID = '';
   tagScanTimeout!: number;
+
+  get backgroundClass(): string {
+    if (this.tagScanned) {
+      return 'TagScanned';
+    }
+    if (this.donationsToRead.length) {
+      return 'DonationsToRead';
+    }
+    if (this.streamDeckData.playerHUDTriggerType) {
+      return 'MessageToRead';
+    }
+    return '';
+  }
 
   mounted(): void {
     nodecg.listenFor('bigbuttonTagScanned', (data) => {
@@ -74,7 +91,16 @@ export default class extends Vue {
     font-size: 18vh;
   }
 
-  .Success {
+  .TagScanned {
+    background-color: rgb(165, 0, 165);
+  }
+  .DonationsToRead {
     background-color: rgb(0, 177, 15);
+  }
+  .MessageToRead {
+    background-color: rgb(255, 208, 0);
+    color: black;
+    text-shadow: unset;
+    font-weight: 600;
   }
 </style>

@@ -5,7 +5,7 @@ import { markDonationAsRead } from './tracker-donations';
 import { padTimeNumber } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { donationsToRead } from './util/replicants';
+import { donationsToRead, streamDeckData } from './util/replicants';
 import sd from './util/streamdeck';
 
 const config = (nodecg().bundleConfig as Configschema);
@@ -110,6 +110,22 @@ function init(): void {
         markDonationAsRead(donation.id);
       }
     }
+
+    // com.esamarathon.streamdeck.playerhudtrigger-message
+    if (data.action.startsWith('com.esamarathon.streamdeck.playerhudtrigger')) {
+      const msgBtns = sd
+        .findButtonsWithAction('com.esamarathon.streamdeck.playerhudtrigger-message');
+      msgBtns.forEach((btn) => {
+        sd.updateButtonText(btn.context, 'Message\nTo Read');
+      });
+      if (streamDeckData.value.playerHUDTriggerType
+        && data.action.includes(streamDeckData.value.playerHUDTriggerType)) {
+        delete streamDeckData.value.playerHUDTriggerType;
+      } else if (data.action.includes('message')) {
+        sd.updateButtonText(data.context, '(ACTIVE)\nMessage\nTo Read');
+        streamDeckData.value.playerHUDTriggerType = 'message';
+      }
+    }
   });
 }
 
@@ -118,6 +134,9 @@ sd.on('init', () => {
   // Set default text on buttons.
   sd.setTextOnAllButtonsWithAction('com.esamarathon.streamdeck.timer', defaultTimerText);
   sd.setTextOnAllButtonsWithAction('com.esamarathon.streamdeck.twitchads', defaultCommercialText);
+
+  // Clearing this on initial connection for now for simplicity.
+  delete streamDeckData.value.playerHUDTriggerType;
 
   // Only run this code once every fresh start.
   if (!initTriggered) {

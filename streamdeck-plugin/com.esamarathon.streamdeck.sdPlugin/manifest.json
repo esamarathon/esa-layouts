@@ -63,6 +63,22 @@
       "Tooltip": "Tells the tracker to mark the selected donation as have being read.",
       "UUID": "com.esamarathon.streamdeck.donationread",
       "PropertyInspectorPath": "pi_donations.html"
+    },
+    {
+      "Name": "Player HUD Trigger - Message",
+      "Icon": "icons/actionIcon",
+      "States": [
+        {
+          "Image": "icons/actionDefaultImage",
+          "TitleAlignment": "middle",
+          "FontSize": "9",
+          "Title": "Message\nTo Read",
+          "ShowTitle": true
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Used to trigger certain messages to be displayed on the player HUD graphic.",
+      "UUID": "com.esamarathon.streamdeck.playerhudtrigger-message"
     }
   ],
   "Author": "zoton2",

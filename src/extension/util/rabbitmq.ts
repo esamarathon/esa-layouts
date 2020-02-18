@@ -93,7 +93,9 @@ async function setupChan(chan: ConfirmChannel): Promise<void> {
     chan.bindQueue(queueName, topic.exchange, topic.key);
     chan.consume(queueName, (msg) => {
       if (msg && msg.content && validateMsg(msg)) {
-        mq.emit(topic.name, JSON.parse(msg.content.toString()));
+        setTimeout(() => {
+          mq.emit(topic.name, JSON.parse(msg.content.toString()));
+        }, 0);
         nodecg().log.debug('[RabbitMQ] Received message from topic %s: %s',
           topic.name, msg.content.toString());
       }

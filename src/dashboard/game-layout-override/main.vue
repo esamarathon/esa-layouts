@@ -38,7 +38,7 @@
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
 // @ts-ignore: goTo isn't typed
-import goTo from 'vuetify/es5/services/goTo';
+import goTo from 'vuetify/es5/services/goto';
 import { GameLayouts } from 'schemas';
 import { UpdateSelected } from './store';
 

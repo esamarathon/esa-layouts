@@ -49,11 +49,13 @@ mq.on('gameSceneChanged', (data) => {
 // When someone scans in on one of the big timer buttons.
 // Currently only used for commentators.
 mq.on('bigbuttonTagScanned', (data) => {
-  nodecg().sendMessage('bigbuttonTagScanned', data);
-  const name = data.user.displayName;
-  if (getCurrentEventShort() === data.flagcarrier.group && !commentators.value.includes(name)) {
-    commentators.value.push(name);
-    nodecg().log.debug('[Misc] Added new commentator:', name);
+  if (getCurrentEventShort() === data.flagcarrier.group) {
+    const name = data.user.displayName;
+    nodecg().sendMessage('bigbuttonTagScanned', data);
+    if (!commentators.value.includes(name)) {
+      commentators.value.push(name);
+      nodecg().log.debug('[Misc] Added new commentator:', name);
+    }
   }
 });
 

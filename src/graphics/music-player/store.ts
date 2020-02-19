@@ -37,6 +37,7 @@ export interface StateTypes {
   history: {
     [k: string]: number;
   };
+  recent: string[];
 }
 
 /**
@@ -55,6 +56,7 @@ function updateReplicant(state: StateTypes): void {
         artist: state.metadata.artist,
       },
       history: clone(state.history),
+      recent: clone(state.recent),
     };
   }
 }
@@ -70,6 +72,7 @@ const store = new Vuex.Store({
       artist: undefined,
     },
     history: {},
+    recent: [],
   } as StateTypes,
   mutations: {
     setState(state, { name, val }): void {
@@ -100,6 +103,10 @@ const store = new Vuex.Store({
     updateHistory(state, sum: string): void {
       const count = state.history[sum] ? state.history[sum] + 1 : 1;
       Vue.set(state.history, sum, count);
+      const recent = clone(state.recent);
+      recent.push(sum);
+      recent.length = Math.min(recent.length, 10);
+      Vue.set(state, 'recent', clone(recent));
       updateReplicant(state);
     },
     /* Mutations to replicants end */
@@ -125,6 +132,7 @@ export default async function (): Promise<Store<StateTypes>> {
       Vue.set(store.state.metadata, 'title', reps.musicPlayer.value?.metadata.title);
       Vue.set(store.state.metadata, 'artist', reps.musicPlayer.value?.metadata.artist);
       Vue.set(store.state, 'history', clone(reps.musicPlayer.value?.history));
+      Vue.set(store.state, 'recent', clone(reps.musicPlayer.value?.recent));
     })
     .then(() => store);
 }

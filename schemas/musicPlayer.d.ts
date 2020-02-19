@@ -17,4 +17,5 @@ export interface MusicPlayer {
   history: {
     [k: string]: number;
   };
+  recent: string[];
 }

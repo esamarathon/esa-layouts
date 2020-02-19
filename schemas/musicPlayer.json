@@ -34,12 +34,20 @@
       "additionalProperties": {
         "type": "number"
       }
+    },
+    "recent": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
     }
   },
   "required": [
     "playing",
     "paused",
     "metadata",
-    "history"
+    "history",
+    "recent"
   ]
 }

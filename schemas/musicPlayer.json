@@ -28,11 +28,18 @@
           "type": "string"
         }
       }
+    },
+    "history": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number"
+      }
     }
   },
   "required": [
     "playing",
     "paused",
-    "metadata"
+    "metadata",
+    "history"
   ]
 }

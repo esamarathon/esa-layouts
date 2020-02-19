@@ -14,4 +14,7 @@ export interface MusicPlayer {
     title?: string;
     artist?: string;
   };
+  history: {
+    [k: string]: number;
+  };
 }

@@ -20,7 +20,7 @@ import { State, Mutation } from 'vuex-class';
 import { gsap } from 'gsap';
 import { Asset } from 'types';
 import jsmediatags from 'jsmediatags';
-import { UpdatePosition, UpdateFile, UpdatePlayingState, StateTypes, UpdatePausedState, UpdateMetadata } from './store'; // eslint-disable-line object-curly-newline, max-len
+import { UpdatePosition, UpdateFile, UpdatePlayingState, StateTypes, UpdatePausedState, UpdateMetadata, UpdateHistory } from './store'; // eslint-disable-line object-curly-newline, max-len
 
 @Component
 export default class extends Vue {
@@ -33,6 +33,7 @@ export default class extends Vue {
   @Mutation updatePlayingState!: UpdatePlayingState;
   @Mutation updatePausedState!: UpdatePausedState;
   @Mutation updateMetadata!: UpdateMetadata;
+  @Mutation updateHistory!: UpdateHistory;
   @State music!: Asset[];
   player!: HTMLAudioElement;
   source!: HTMLSourceElement;
@@ -56,6 +57,8 @@ export default class extends Vue {
       this.player.load();
       if (this.position && prevSong) {
         this.player.currentTime = this.position;
+      } else {
+        this.updateHistory(song.sum);
       }
       if (!this.paused) {
         this.player.play().catch(() => {

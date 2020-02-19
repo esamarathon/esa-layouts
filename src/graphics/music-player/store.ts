@@ -23,6 +23,7 @@ export type UpdatePausedState = (paused: boolean) => void;
 export type UpdateFile = (sum?: string) => void;
 export type UpdatePosition = (pos?: number) => void;
 export type UpdateMetadata = (val?: { title?: string; artist?: string }) => void;
+export type UpdateHistory = (sum: string) => void;
 
 export interface StateTypes {
   playing: boolean;
@@ -32,6 +33,9 @@ export interface StateTypes {
   metadata: {
     title?: string;
     artist?: string;
+  };
+  history: {
+    [k: string]: number;
   };
 }
 
@@ -50,6 +54,7 @@ function updateReplicant(state: StateTypes): void {
         title: state.metadata.title,
         artist: state.metadata.artist,
       },
+      history: clone(state.history),
     };
   }
 }
@@ -64,6 +69,7 @@ const store = new Vuex.Store({
       title: undefined,
       artist: undefined,
     },
+    history: {},
   } as StateTypes,
   mutations: {
     setState(state, { name, val }): void {
@@ -89,6 +95,12 @@ const store = new Vuex.Store({
     updateMetadata(state, { title, artist } = {}): void {
       Vue.set(state.metadata, 'title', title);
       Vue.set(state.metadata, 'artist', artist);
+      updateReplicant(state);
+    },
+    updateHistory(state, sum: string): void {
+      const count = state.history[sum] ? state.history[sum] + 1 : 1;
+      Vue.set(state.history, sum, count);
+      updateReplicant(state);
     },
     /* Mutations to replicants end */
   },
@@ -112,6 +124,7 @@ export default async function (): Promise<Store<StateTypes>> {
       Vue.set(store.state, 'position', reps.musicPlayer.value?.position);
       Vue.set(store.state.metadata, 'title', reps.musicPlayer.value?.metadata.title);
       Vue.set(store.state.metadata, 'artist', reps.musicPlayer.value?.metadata.artist);
+      Vue.set(store.state, 'history', clone(reps.musicPlayer.value?.history));
     })
     .then(() => store);
 }

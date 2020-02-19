@@ -106,7 +106,11 @@ const store = new Vuex.Store({
       const recent = clone(state.recent);
       recent.push(sum);
       recent.length = Math.min(recent.length, 10);
-      Vue.set(state, 'recent', clone(recent));
+      if (recent.length < (reps.music.value?.length || 0)) {
+        Vue.set(state, 'recent', clone(recent));
+      } else {
+        Vue.set(state, 'recent', recent.slice(1));
+      }
       updateReplicant(state);
     },
     /* Mutations to replicants end */

@@ -1,21 +1,18 @@
 <template>
   <div class="Music Flex">
-    <div class="MCat">
-      <img src="./MCat_Logo.png">
-    </div>
-    <div class="Name">
-      <template v-if="musicPlayer.playing">
+    <template v-if="musicPlayer.playing">
+      <div class="MCat">
+        <img src="./MCat_Logo.png">
+      </div>
+      <div class="Name">
         <span v-if="musicPlayer.metadata.title">
           {{ musicPlayer.metadata.title }}
         </span>
         <span v-if="musicPlayer.metadata.artist">
           - {{ musicPlayer.metadata.artist }}
         </span>
-      </template>
-      <template v-else>
-        No Track Playing
-      </template>
-    </div>
+      </div>
+    </template>
   </div>
 </template>
 

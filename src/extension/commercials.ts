@@ -8,6 +8,9 @@ const sc = new SpeedcontrolUtil(nodecg());
 let commercialTO: NodeJS.Timeout;
 
 function getCycleTime(): number {
+  if (config.event.thisEvent === 2) {
+    return 30 * 60;
+  }
   return (sc.timer.value.milliseconds > (59 * 60 * 1000) ? 15 : 20) * 60;
 }
 

@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <div
-      v-if="!sortedVideos.length"
+      v-if="!videos.length"
       :style="{
         'font-style': 'italic',
         'margin-bottom': '10px',
@@ -9,53 +9,64 @@
     >
       Add videos in the "Assets" tab.
     </div>
-    <div
-      v-else
-      id="VideoList"
-      :style="{
-        'max-height': '250px',
-        'overflow-y': 'auto',
-        'overflow-x': 'hidden',
-      }"
-    >
-      <v-radio-group
-        v-model="selected"
-        hide-details
+    <template v-else>
+      <v-text-field
+        v-model="searchTerm"
+        filled
+        clearable
+        label="Search..."
+        append-icon="mdi-magnify"
+        :messages="`
+          ${filteredVideos.length} video${filteredVideos.length === 1 ? '' : 's'} found.
+        `"
+      />
+      <div
+        id="VideoList"
         :style="{
-          margin: '0px',
-          padding: '10px',
+          'max-height': '250px',
+          'overflow-y': 'auto',
+          'overflow-x': 'hidden',
         }"
       >
-        <v-radio
-          v-for="video in sortedVideos"
-          :id="`video-${video.sum}`"
-          :key="video.sum"
-          :value="video.sum"
+        <v-radio-group
+          v-model="selected"
+          hide-details
+          :style="{
+            margin: '0px',
+            padding: '10px',
+          }"
         >
-          <template slot="label">
-            <div class="d-flex align-center">
-              <div
-                class="d-flex align-center"
-                :style="{ 'margin-right': '10px' }"
-              >
-                <v-icon>
-                  mdi-play
-                </v-icon>
-                <div :style="{ width: '25px', 'text-align': 'center' }">
-                  {{ playCount(video.sum) }}
+          <v-radio
+            v-for="video in filteredVideos"
+            :id="`video-${video.sum}`"
+            :key="video.sum"
+            :value="video.sum"
+          >
+            <template slot="label">
+              <div class="d-flex align-center">
+                <div
+                  class="d-flex align-center"
+                  :style="{ 'margin-right': '10px' }"
+                >
+                  <v-icon>
+                    mdi-play
+                  </v-icon>
+                  <div :style="{ width: '25px', 'text-align': 'center' }">
+                    {{ playCount(video.sum) }}
+                  </div>
+                </div>
+                <div>
+                  {{ video.name }}
                 </div>
               </div>
-              <div>
-                {{ video.name }}
-              </div>
-            </div>
-          </template>
-        </v-radio>
-      </v-radio-group>
-    </div>
-    <v-btn @click="unselectVideo">
-      Unselect Video
-    </v-btn>
+            </template>
+          </v-radio>
+        </v-radio-group>
+      </div>
+      <v-btn @click="unselectVideo">
+        Unselect Video
+      </v-btn>
+    </template>
   </v-app>
 </template>
 
@@ -74,6 +85,7 @@ export default class extends Vue {
   @State videoPlayer!: VideoPlayer;
   @Mutation updateSelectedVideo!: UpdateSelectedVideo;
   @Mutation unselectVideo!: UnselectVideo;
+  searchTerm: string | null = null;
 
   @Watch('selected')
   async scrollToSelectedVideo(): Promise<void> {
@@ -91,7 +103,7 @@ export default class extends Vue {
 
   @Watch('videoPlayer')
   onVideoPlayerChange(): void {
-    if (this.sortedVideos.length) {
+    if (this.filteredVideos.length) {
       this.scrollToSelectedVideo();
     }
   }
@@ -103,9 +115,15 @@ export default class extends Vue {
     this.updateSelectedVideo(val);
   }
 
-  get sortedVideos(): Asset[] {
-    return this.videos.map((video) => [this.playCount(video.sum), video])
-      .sort().map((video) => video[1] as Asset);
+  get filteredVideos(): Asset[] {
+    return this.videos
+      .filter((v) => {
+        const str = (this.searchTerm) ? this.searchTerm.toLowerCase() : '';
+        return !str || (str && v.name.toLowerCase().includes(str));
+      })
+      .map((video) => [this.playCount(video.sum), video])
+      .sort()
+      .map((video) => video[1] as Asset);
   }
 
   playCount(sum: string): number {

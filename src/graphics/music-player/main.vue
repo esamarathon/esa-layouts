@@ -61,7 +61,7 @@ export default class extends Vue {
       this.player.load();
       if (this.position && prevSong) {
         this.player.currentTime = this.position;
-      } else {
+      } else if (!prevSong) {
         this.updateHistory(song.sum);
       }
       if (!this.paused) {

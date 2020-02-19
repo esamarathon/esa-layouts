@@ -28,6 +28,8 @@ export default class extends Vue {
   @State paused!: StateTypes['paused'];
   @State position!: StateTypes['position'];
   @State sum!: StateTypes['sum'];
+  @State history!: StateTypes['history'];
+  @State recent!: StateTypes['recent'];
   @Mutation updatePosition!: UpdatePosition;
   @Mutation updateFile!: UpdateFile;
   @Mutation updatePlayingState!: UpdatePlayingState;
@@ -43,9 +45,11 @@ export default class extends Vue {
   onScene = false;
 
   pickSong(): Asset | undefined {
-    // TODO: add logic so songs are not played too much
-    const rand = Math.floor(Math.random() * this.music.length);
-    return this.music[rand];
+    const nonRecent = this.music.filter((m) => !this.recent.includes(m.sum));
+    const min = Math.min(...nonRecent.map((m) => this.history[m.sum] || 0));
+    const filtered = nonRecent.filter((m) => !this.history[m.sum] || this.history[m.sum] === min);
+    const rand = Math.floor(Math.random() * filtered.length);
+    return filtered[rand];
   }
 
   setup(): void {

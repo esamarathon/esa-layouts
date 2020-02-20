@@ -44,8 +44,9 @@ async function playCommercial(): Promise<void> {
 
 sc.on('timerStarted', () => {
   clearTimeout(commercialTO);
-  nodecg().log.info('[Commercial] Will check if we can trigger in 20 minutes');
-  commercialTO = setTimeout(playCommercial, 1000 * 60 * 20);
+  nodecg().log.info('[Commercial] Will check if we can trigger in'
+    + `${Math.floor(getCycleTime() / 60)} minutes`);
+  commercialTO = setTimeout(playCommercial, 1000 * 60 * getCycleTime());
 });
 
 sc.on('timerStopped', () => {

@@ -7,6 +7,9 @@ const config = (nodecg().bundleConfig as Configschema);
 const sc = new SpeedcontrolUtil(nodecg());
 let commercialTO: NodeJS.Timeout;
 
+/**
+ * Cycle time can change depending on which stream and current timer.
+ */
 function getCycleTime(): number {
   if (config.event.thisEvent === 2) {
     return 30 * 60;

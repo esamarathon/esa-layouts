@@ -24,8 +24,10 @@ mq.on('newScreenedCheer', (data) => {
   nodecg().sendMessage('newCheer', data);
 });
 mq.on('newScreenedCrowdControl', (data) => {
-  nodecg().log.debug('[Misc] Received new crowd control message');
-  nodecg().sendMessage('newCrowdControl', data);
+  if (config.event.thisEvent === 1) {
+    nodecg().log.debug('[Misc] Received new crowd control message');
+    nodecg().sendMessage('newCrowdControl', data);
+  }
 });
 
 // Information that should come from our 2nd stream.

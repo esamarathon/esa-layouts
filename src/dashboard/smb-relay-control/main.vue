@@ -92,7 +92,7 @@ export default class extends Vue {
   }
 
   get currentPlayerIndex(): number {
-    return (this.smbRelay.current >= 0) ? this.smbRelay.current : -1;
+    return (typeof this.smbRelay.current === 'number') ? this.smbRelay.current : -1;
   }
 
   get players(): SmbRelay['players'] {

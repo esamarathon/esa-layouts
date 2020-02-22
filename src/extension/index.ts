@@ -7,6 +7,7 @@ import { set } from './util/nodecg';
 export = (nodecg: NodeCG): { obs: any } => {
   set(nodecg);
 
+  require('./smb-relay');
   require('./obs-data');
   require('./layouts');
   require('./tracker');

@@ -3,6 +3,7 @@ import SpeedcontrolUtil from 'speedcontrol-util';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
+import { smbRelay } from './util/replicants';
 
 const config = (nodecg().bundleConfig as Configschema);
 const sc = new SpeedcontrolUtil(nodecg());
@@ -28,25 +29,32 @@ mq.on('bigbuttonPressed', (data) => {
   const run = sc.getCurrentRun();
   const buttonID = (run && run.teams.length > 1) ? data.button_id - 1 : 0;
 
-  try {
-    // Note: the nodecg-speedcontrol bundle will check if it *can* do these actions,
-    // we do not need to check that here.
-    switch (sc.timer.value.state) {
-      case 'stopped':
-      case 'paused':
-        sc.startTimer();
-        break;
-      case 'running':
-        if (sc.timer.value.milliseconds > 10 * 1000) {
-          sc.stopTimer(buttonID);
-        }
-        break;
-      default:
-        // Don't do anything
-        break;
+  // In the SMB relay, advance the player on button 2 press.
+  // Not exactly timer code, but going here for now.
+  if (data.button_id === 2 && run?.customData.id === '260e49dc5db49745a4640d81'
+    && typeof smbRelay.value.current === 'number') {
+    smbRelay.value.current += 1;
+  } else {
+    try {
+      // Note: the nodecg-speedcontrol bundle will check if it *can* do these actions,
+      // we do not need to check that here.
+      switch (sc.timer.value.state) {
+        case 'stopped':
+        case 'paused':
+          sc.startTimer();
+          break;
+        case 'running':
+          if (sc.timer.value.milliseconds > 10 * 1000) {
+            sc.stopTimer(buttonID);
+          }
+          break;
+        default:
+          // Don't do anything
+          break;
+      }
+    } catch (err) {
+      // Drop for now
     }
-  } catch (err) {
-    // Drop for now
   }
 });
 

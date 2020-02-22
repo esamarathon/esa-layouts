@@ -32,7 +32,8 @@ mq.on('bigbuttonPressed', (data) => {
   // In the SMB relay, advance the player on button 2 press.
   // Not exactly timer code, but going here for now.
   if (data.button_id === 2 && run?.customData.id === '260e49dc5db49745a4640d81'
-    && typeof smbRelay.value.current === 'number') {
+    && typeof smbRelay.value.current === 'number'
+    && smbRelay.value.current < smbRelay.value.players.length - 1) {
     smbRelay.value.current += 1;
   } else {
     try {

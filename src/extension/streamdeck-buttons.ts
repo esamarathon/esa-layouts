@@ -60,20 +60,26 @@ function init(): void {
     // Controls the nodecg-speedcontrol timer when the button is pressed.
     // Currently the "Stop Timer" state only works if there's only 1 team.
     if (data.action === 'com.esamarathon.streamdeck.timer') {
-      switch (sc.timer.value.state) {
-        case 'stopped':
-        case 'paused':
-          sc.startTimer();
-          break;
-        case 'running':
-          sc.stopTimer();
-          break;
-        case 'finished':
-          sc.resetTimer();
-          break;
-        default:
-          // Don't do anything
-          break;
+      try {
+        // Note: the nodecg-speedcontrol bundle will check if it *can* do these actions,
+        // we do not need to check that here.
+        switch (sc.timer.value.state) {
+          case 'stopped':
+          case 'paused':
+            sc.startTimer();
+            break;
+          case 'running':
+            sc.stopTimer();
+            break;
+          case 'finished':
+            sc.resetTimer();
+            break;
+          default:
+            // Don't do anything
+            break;
+        }
+      } catch (err) {
+        // Drop for now
       }
     }
 

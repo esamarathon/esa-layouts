@@ -116,7 +116,7 @@ import { State, Action, Mutation } from 'vuex-class';
 import Draggable from 'vuedraggable';
 import { Asset } from 'types';
 import clone from 'clone';
-import uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 import { SponsorLogos } from 'schemas';
 import { Save, UpdateNewRotation } from './store';
 

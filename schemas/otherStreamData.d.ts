@@ -37,6 +37,6 @@ export interface OtherStreamData {
       [k: string]: string;
     };
     id: string;
-    hash?: string;
+    externalID?: string;
   } | null;
 }

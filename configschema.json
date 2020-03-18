@@ -268,34 +268,6 @@
         "postKey"
       ]
     },
-    "mpd": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "enable": {
-          "type": "boolean",
-          "default": true
-        },
-        "address": {
-          "type": "string",
-          "default": "localhost"
-        },
-        "port": {
-          "type": "number",
-          "default": 6600
-        },
-        "volume": {
-          "type": "number",
-          "default": 10
-        }
-      },
-      "required": [
-        "enable",
-        "address",
-        "port",
-        "volume"
-      ]
-    },
     "tts": {
       "type": "object",
       "additionalProperties": false,
@@ -341,7 +313,6 @@
     "obs",
     "tracker",
     "fcb",
-    "mpd",
     "tts",
     "twitchExt"
   ]

@@ -59,12 +59,6 @@ export interface Configschema {
     address: string;
     postKey: string;
   };
-  mpd: {
-    enable: boolean;
-    address: string;
-    port: number;
-    volume: number;
-  };
   tts: {
     enable: boolean;
     voiceAPI: string;

@@ -36,7 +36,7 @@
     "moment": "^2.24.0",
     "needle": "^2.4.0",
     "obs-websocket-js": "^4.0.1",
-    "speedcontrol-util": "^0.4.1",
+    "speedcontrol-util": "github:speedcontrol/speedcontrol-util#dev-built",
     "streamdeck-util": "^0.3.3",
     "xkeys": "^0.1.2"
   },

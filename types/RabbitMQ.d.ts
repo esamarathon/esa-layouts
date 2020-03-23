@@ -13,7 +13,7 @@ export interface MQOpts {
 
 // All typings below are automatically generated from the mq-events, to be improved.
 
-export interface DonationTotalUpdated {
+interface DonationTotalUpdated {
   /**
    * Shorthand event string this total is for.
    */
@@ -24,7 +24,7 @@ export interface DonationTotalUpdated {
   new_total: number;
 }
 
-export interface DonationFullyProcessed {
+interface DonationFullyProcessed {
   /**
    * Shorthand event string this donation is for.
    */
@@ -55,7 +55,7 @@ export interface DonationFullyProcessed {
   time_received: string;
 }
 
-export interface BigButtonPressed {
+interface BigButtonPressed {
   /**
    * ID of the button
    */
@@ -79,7 +79,7 @@ export interface BigButtonPressed {
   };
 }
 
-export interface NewScreenedTweet {
+interface NewScreenedTweet {
   message: {
     /**
      * Contents of the tweet.
@@ -94,7 +94,7 @@ export interface NewScreenedTweet {
   };
 }
 
-export interface NewScreenedCheer {
+interface NewScreenedCheer {
   message: {
     /**
      * The message text.
@@ -117,7 +117,7 @@ export interface NewScreenedCheer {
   };
 }
 
-export interface NewScreenedCrowdControl {
+interface NewScreenedCrowdControl {
   message: {
     /**
      * The message that WarpWorldBot originally posted in Twitch chat.
@@ -134,7 +134,7 @@ export interface NewScreenedCrowdControl {
   [k: string]: any;
 }
 
-export interface NewScreenedSub {
+interface NewScreenedSub {
   message: {
     /**
      * The message following the system message.
@@ -153,7 +153,7 @@ export interface NewScreenedSub {
   };
 }
 
-export interface RunChanged {
+interface RunChanged {
   /**
    * Short name for the physical event this message was for, usually the same as the donation tracker.
    */
@@ -179,7 +179,7 @@ export interface RunChanged {
   };
 }
 
-export interface SceneChanged {
+interface SceneChanged {
   /**
    * Short name for the physical event this message was for, usually the same as the donation tracker.
    */
@@ -211,7 +211,7 @@ export interface SceneChanged {
   };
 }
 
-export interface TagScanned {
+interface TagScanned {
   flagcarrier: {
     /**
      * ID of the terminal that scanned the tag (BRB1, ...)

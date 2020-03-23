@@ -265,7 +265,7 @@ interface TagScanned {
   };
 }
 
-export interface MQEmitter extends EventEmitter {
+export interface MQEvents extends EventEmitter {
   on(event: 'donationTotalUpdated', listener: (data: DonationTotalUpdated) => void): this;
   on(event: 'donationFullyProcessed', listener: (data: DonationFullyProcessed) => void): this;
   on(event: 'newScreenedTweet', listener: (data: NewScreenedTweet) => void): this;

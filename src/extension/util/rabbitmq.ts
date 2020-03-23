@@ -2,14 +2,14 @@ import amqpConnectionManager, { AmqpConnectionManager, ChannelWrapper } from 'am
 import amqplib, { ConfirmChannel, Message } from 'amqplib';
 import { Configschema } from 'configschema';
 import { EventEmitter } from 'events';
-import { MQEmitter, MQOpts } from 'types';
+import { MQEvents, MQOpts } from 'types';
 import { getCurrentEventShort } from './helpers';
 import { get as nodecg } from './nodecg';
 
 const config = (nodecg().bundleConfig as Configschema).rabbitmq;
 const exchange = 'cg';
 const event = getCurrentEventShort();
-export const mq = new EventEmitter() as MQEmitter;
+export const evt = new EventEmitter() as MQEvents;
 
 // List of topics we are going to listen to.
 const listenTopics = [
@@ -94,7 +94,7 @@ async function setupChan(chan: ConfirmChannel): Promise<void> {
     chan.consume(queueName, (msg) => {
       if (msg && msg.content && validateMsg(msg)) {
         setTimeout(() => {
-          mq.emit(topic.name, JSON.parse(msg.content.toString()));
+          evt.emit(topic.name, JSON.parse(msg.content.toString()));
         }, 0);
         nodecg().log.debug('[RabbitMQ] Received message from topic %s: %s',
           topic.name, msg.content.toString());

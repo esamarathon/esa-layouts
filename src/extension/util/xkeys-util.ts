@@ -5,14 +5,14 @@ import { get as nodecg } from './nodecg';
 
 const config = (nodecg().bundleConfig as Configschema).xkeys;
 
-interface XKeys {
+interface XKeysClass {
   on(event: 'down', listener: (keyIndex: string) => void): this;
   on(event: 'up', listener: (keyIndex: string) => void): this;
   on(event: 'jog', listener: (position: number) => void): this;
   on(event: 'shuttle', listener: (position: number) => void): this;
 }
 
-class XKeys extends EventEmitter {
+class XKeysClass extends EventEmitter {
   panel!: XKeysLib;
 
   constructor() {
@@ -78,4 +78,4 @@ class XKeys extends EventEmitter {
   }
 }
 
-export default XKeys;
+export default XKeysClass;

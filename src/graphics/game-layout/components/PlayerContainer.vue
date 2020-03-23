@@ -61,7 +61,7 @@ export default {
       }
     },
     updateData(data) {
-      if (data.customData.id !== '260e49dc5db49745a4640d81') {
+      if (data && data.customData.id !== '260e49dc5db49745a4640d81') {
         this.relay = false;
         this.players.splice(0, this.players.length);
         const id = (this.teamIndex >= 0) ? this.teamIndex : 0;

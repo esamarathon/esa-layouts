@@ -3,7 +3,7 @@ import { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { capturePositions, gameLayouts, obsData, videoPlayer } from './util/replicants';
+import { capturePositions, gameLayouts, obsData, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
 
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 const sc = new SpeedcontrolUtil(nodecg());

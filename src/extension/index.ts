@@ -28,7 +28,6 @@ export = (nodecg: NodeCG): { obs: any } => {
   require('./text-to-speech');
   require('./twitch-ext');
   require('./fcb');
-  require('./commercial');
   require('./logging');
 
   return {

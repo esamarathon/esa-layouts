@@ -42,7 +42,7 @@ A browser based music player has been included; the graphic named `music-player.
 
 ### Automatic Twitch Commercials
 
-To have Twitch commercials play automatically when you switch to a set scene, name the scene `Intermission (commercials)` (this can be changed in the config).
+This bundle no longer triggers any commercials, this is now done by a separate bundle, [esa-commercials](https://github.com/esamarathon/esa-commercials).
 
 ### Featured Channels Bridge
 

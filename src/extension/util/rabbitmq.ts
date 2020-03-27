@@ -63,6 +63,11 @@ const listenTopics = [
     exchange,
     key: '*.obs.scene.*.*.gamescene',
   },
+  {
+    name: 'rvtServerStarted',
+    exchange: 'restreamviewertool',
+    key: `${event}.*.server.started`,
+  },
 ];
 
 function url(): string {

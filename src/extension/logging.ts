@@ -58,13 +58,20 @@ function logTimerChange(desc: string, teamID?: string): void {
 }
 
 function logRunChange(): void {
+  const run = sc.getCurrentRun();
+  const data = {
+    event,
+    run,
+    stream: [] as { channel: string }[],
+    time: getTimeInfo(),
+  };
+  if (run && run.teams.length && run.teams[0].players.length
+    && run.teams[0].players[0].social.twitch) {
+    data.stream.push({ channel: run.teams[0].players[0].social.twitch });
+  }
   mqSend(
     'run.changed',
-    {
-      event,
-      run: sc.getCurrentRun(),
-      time: getTimeInfo(),
-    },
+    data,
   );
 }
 

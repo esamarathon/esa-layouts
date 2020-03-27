@@ -70,7 +70,6 @@ export default {
         this.bid(),
         this.teamPromo(),
         this.donationURL(),
-        this.esaBtRL(),
         this.esaNextEvent(),
       ];
 
@@ -102,10 +101,10 @@ export default {
       this.timestamp = Date.now();
     },
     esaPromo() {
-      return this.genericMsg('This is United Kingdom Speedrunner Gathering Winter 2020');
+      return this.genericMsg('This is United Kingdom Speedrunner Gathering Spring 2020');
     },
     charityPromo() {
-      return this.genericMsg('#UKSGWinter2020 benefits YoungMinds');
+      return this.genericMsg('#UKSGSpring2020 benefits Crisis');
     },
     otherStreamPromo() {
       return this.genericMsg(`Watch more great runs over @ twitch.tv/${this.otherChannel}`);
@@ -143,7 +142,7 @@ export default {
       return this.genericMsg('Don\'t miss ESA Break the Record: LIVE, 31st Jan - 2nd Feb 2020! - breaktherecordlive.com');
     },
     esaNextEvent() {
-      return this.genericMsg('Can\'t get enough of speedrunning? Then look forward to ESA Winter 2020: 15th - 22th February!');
+      return this.genericMsg('Can\'t get enough of speedrunning? Then look forward to ESA Together 2020: 6th - 13th April!');
     },
     crowdControl(exchange) {
       const line1 = 'Crowd Control';

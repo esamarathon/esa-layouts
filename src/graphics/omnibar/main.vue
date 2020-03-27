@@ -4,9 +4,21 @@
     class="Flex"
   >
     <t-t-s></t-t-s>
-    <static-logo></static-logo>
-    <rotating-logos></rotating-logos>
+    <img
+      src="./logo.png"
+      :style="{
+        height: '60px',
+        padding: '0 15px',
+      }"
+    >
     <divider></divider>
+    <img
+      src="./crisis.png"
+      :style="{
+        height: '60px',
+        'padding-left': '10px',
+      }"
+    >
     <total></total>
     <divider></divider>
     <ticker></ticker>
@@ -17,7 +29,6 @@
 
 <script>
 import TTS from '../_misc/components/TextToSpeech.vue';
-import RotatingLogos from './components/RotatingLogos.vue';
 import Total from './components/Total.vue';
 import Ticker from './components/Ticker.vue';
 import Clock from './components/Clock.vue';
@@ -27,7 +38,6 @@ export default {
   name: 'Omnibar',
   components: {
     TTS,
-    RotatingLogos,
     Total,
     Ticker,
     Clock,

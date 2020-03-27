@@ -1,3 +1,5 @@
+/* eslint-disable import/prefer-default-export */
+
 import { Configschema } from 'configschema';
 import { SponsorLogos } from 'schemas';
 import SpeedcontrolUtil from 'speedcontrol-util';
@@ -57,7 +59,7 @@ function logTimerChange(desc: string, teamID?: string): void {
   );
 }
 
-function logRunChange(): void {
+export function logRunChange(): void {
   const run = sc.getCurrentRun();
   const data = {
     event,
@@ -65,10 +67,8 @@ function logRunChange(): void {
     stream: [] as { channel: string }[],
     time: getTimeInfo(),
   };
-  if (!restreamViewerTool.value.overridden
-    && run && run.teams.length && run.teams[0].players.length
-    && run.teams[0].players[0].social.twitch) {
-    data.stream = [{ channel: run.teams[0].players[0].social.twitch }];
+  if (restreamViewerTool.value.channel) {
+    data.stream = [{ channel: restreamViewerTool.value.channel }];
   }
   mqSend(
     'run.changed',

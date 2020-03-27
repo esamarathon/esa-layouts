@@ -1,4 +1,5 @@
 import SpeedcontrolUtil from 'speedcontrol-util';
+import { logRunChange } from './logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import * as mq from './util/rabbitmq';
@@ -37,14 +38,25 @@ mq.evt.on('rvtServerStarted', (data) => {
   configureVLCSource(`http://127.0.0.1:${data.port}`);
 });
 
+let init = false;
 sc.runDataActiveRun.on('change', (newVal, oldVal) => {
-  if (newVal?.id !== oldVal?.id) {
-    let channel;
+  if (init && newVal?.id !== oldVal?.id) {
     if (newVal && newVal.teams.length && newVal.teams[0].players.length
       && newVal.teams[0].players[0].social.twitch) {
-      channel = newVal.teams[0].players[0].social.twitch;
+      restreamViewerTool.value = {
+        channel: newVal.teams[0].players[0].social.twitch,
+        overridden: false,
+      };
+      logRunChange();
     }
-    restreamViewerTool.value.overridden = false;
-    restreamViewerTool.value.channel = channel;
   }
+  init = true;
+});
+
+nodecg().listenFor('rvtOverride', (channel: string) => {
+  restreamViewerTool.value = {
+    channel,
+    overridden: true,
+  };
+  logRunChange();
 });

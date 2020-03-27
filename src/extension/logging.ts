@@ -68,7 +68,7 @@ function logRunChange(): void {
   if (!restreamViewerTool.value.overridden
     && run && run.teams.length && run.teams[0].players.length
     && run.teams[0].players[0].social.twitch) {
-    data.stream.push({ channel: run.teams[0].players[0].social.twitch });
+    data.stream = [{ channel: run.teams[0].players[0].social.twitch }];
   }
   mqSend(
     'run.changed',

@@ -265,6 +265,42 @@ interface TagScanned {
   };
 }
 
+interface ServerStarted {
+  /**
+   * Short name for the physical event this message was for, usually the same as the donation tracker.
+   */
+  event: string;
+  /**
+   * Unique identifier for the instance of the running application.
+   */
+  uuid: string;
+  /**
+   * A 1-index based number for which slot the player tool is for.
+   */
+  playerID: number;
+  /**
+   * The name of the Twitch channel currently being served.
+   */
+  channel: string;
+  /**
+   * The port the server was started on. Currently it is assumed to be ran on the same computer, so assume it will be on localhost.
+   */
+  port: number;
+  /**
+   * Time the server was started.
+   */
+  time: {
+    /**
+     * Timestamp representation in the ISO 8601 format
+     */
+    iso: string;
+    /**
+     * Timestamp representation in seconds since the Unix epoch, including a fractional millisecond part
+     */
+    unix: number;
+  };
+}
+
 export interface MQEvents extends EventEmitter {
   on(event: 'donationTotalUpdated', listener: (data: DonationTotalUpdated) => void): this;
   on(event: 'donationFullyProcessed', listener: (data: DonationFullyProcessed) => void): this;
@@ -276,4 +312,5 @@ export interface MQEvents extends EventEmitter {
   on(event: 'bigbuttonPressed', listener: (data: BigButtonPressed) => void): this;
   on(event: 'runChanged', listener: (data: RunChanged) => void): this;
   on(event: 'gameSceneChanged', listener: (data: SceneChanged) => void): this;
+  on(event: 'rvtServerStarted', listener: (data: ServerStarted) => void): this;
 }

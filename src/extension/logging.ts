@@ -5,7 +5,7 @@ import { getCurrentEventShort } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { send as mqSend } from './util/rabbitmq';
-import { assetsSponsorLogos, sponsorLogos } from './util/replicants';
+import { assetsSponsorLogos, restreamViewerTool, sponsorLogos } from './util/replicants';
 
 const config = nodecg().bundleConfig as Configschema;
 const sc = new SpeedcontrolUtil(nodecg());
@@ -65,7 +65,8 @@ function logRunChange(): void {
     stream: [] as { channel: string }[],
     time: getTimeInfo(),
   };
-  if (run && run.teams.length && run.teams[0].players.length
+  if (!restreamViewerTool.value.overridden
+    && run && run.teams.length && run.teams[0].players.length
     && run.teams[0].players[0].social.twitch) {
     data.stream.push({ channel: run.teams[0].players[0].social.twitch });
   }

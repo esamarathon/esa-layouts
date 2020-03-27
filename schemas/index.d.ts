@@ -9,6 +9,7 @@ export * from './notableDonations';
 export * from './obsData';
 export * from './otherStreamData';
 export * from './prizes';
+export * from './restreamViewerTool';
 export * from './smbRelay';
 export * from './sponsorLogos';
 export * from './streamDeckData';

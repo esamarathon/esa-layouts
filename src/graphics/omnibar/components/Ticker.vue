@@ -142,7 +142,7 @@ export default {
       return this.genericMsg('Don\'t miss ESA Break the Record: LIVE, 31st Jan - 2nd Feb 2020! - breaktherecordlive.com');
     },
     esaNextEvent() {
-      return this.genericMsg('Can\'t get enough of speedrunning? Then look forward to ESA Together 2020: 6th - 13th April!');
+      return this.genericMsg('Can\'t get enough of speedrunning? Then look forward to ESA Together: 6th - 13th April 2020!');
     },
     crowdControl(exchange) {
       const line1 = 'Crowd Control';

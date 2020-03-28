@@ -2,7 +2,6 @@
   <div
     v-show="show"
     id="AdTimer"
-    class="BorderTop BorderLeft"
   >
     Twitch Ads Running: {{ time }}
   </div>
@@ -47,10 +46,13 @@ export default {
 
 <style scoped>
   #AdTimer {
+    position: fixed;
+    left: 30px;
+    top: 370px;
+    width: 655px;
     padding: 8px;
     font-size: 20px;
     background-color: rgba(0,0,0,0.3);
-    width: 200px;
     text-align: center;
   }
 </style>

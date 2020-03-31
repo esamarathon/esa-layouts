@@ -54,6 +54,7 @@ If needed, this bundle can interface with an instance of the [featured-channels-
 
 Here's a list of events this bundle has been used at so far, most recent first.
 
+* UKSG Spring 2020
 * ESA Winter 2020
 * UKSG Winter 2020
 * ESA @ Malmö Vinterspelen 2019

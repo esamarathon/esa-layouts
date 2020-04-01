@@ -28,6 +28,7 @@ module.exports = {
     'plugin:import/typescript',
   ],
   settings: {
+    'import/core-modules': ['nodecg/types/browser'],
     'import/extensions': ['.js', '.jsx', '.ts', '.tsx'],
     'import/resolver': {
       node: {
@@ -51,7 +52,7 @@ module.exports = {
       packageDir: ['.', '../..'], // Check for deps in NodeCG folder as well.
     }],
     'import/no-unresolved': [2, { caseSensitive: false }],
-    'max-len': ["error", { "code": 100 }],
+    'max-len': ['error', { 'code': 100 }],
     'lines-between-class-members': 'off',
     '@typescript-eslint/ban-ts-ignore': 'off',
     'no-restricted-syntax': 'off',

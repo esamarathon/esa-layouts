@@ -245,29 +245,6 @@
         "password"
       ]
     },
-    "fcb": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "enable": {
-          "type": "boolean",
-          "default": false
-        },
-        "address": {
-          "type": "string",
-          "default": "fcb.esamarathon.com"
-        },
-        "postKey": {
-          "type": "string",
-          "default": "POST_KEY"
-        }
-      },
-      "required": [
-        "enable",
-        "address",
-        "postKey"
-      ]
-    },
     "tts": {
       "type": "object",
       "additionalProperties": false,
@@ -312,7 +289,6 @@
     "rabbitmq",
     "obs",
     "tracker",
-    "fcb",
     "tts",
     "twitchExt"
   ]

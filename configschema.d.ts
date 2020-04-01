@@ -54,11 +54,6 @@ export interface Configschema {
     username: string;
     password: string;
   };
-  fcb: {
-    enable: boolean;
-    address: string;
-    postKey: string;
-  };
   tts: {
     enable: boolean;
     voiceAPI: string;

@@ -17,7 +17,6 @@ export = (nodecg: NodeCG): { obs: any } => {
       + 'have 1 event short at event.shorts');
   }
 
-  require('./smb-relay');
   require('./obs-data');
   require('./layouts');
   require('./tracker');

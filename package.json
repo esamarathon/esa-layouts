@@ -149,14 +149,6 @@
         "headerColor": "#c49215"
       },
       {
-        "name": "smb-relay-control",
-        "title": "SMB Relay Control",
-        "width": 2,
-        "file": "smb-relay-control.html",
-        "workspace": "ESA",
-        "headerColor": "#c49215"
-      },
-      {
         "name": "restream-viewer-tool",
         "title": "Restream Viewer Tool",
         "width": 2,

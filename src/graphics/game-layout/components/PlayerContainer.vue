@@ -39,30 +39,19 @@ export default {
   data() {
     return {
       players: [],
-      relay: false,
     };
   },
   mounted() {
     nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol')
       .on('change', this.updateData);
-    nodecg.Replicant('smbRelay')
-      .on('change', this.updateRelayPlayer);
   },
   destroyed() {
     nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol')
       .removeListener('change', this.updateData);
-    nodecg.Replicant('smbRelay')
-      .removeListener('change', this.updateRelayPlayer);
   },
   methods: {
-    updateRelayPlayer(data) {
-      if (this.relay) {
-        this.players = [[{ name: data.players[data.current], social: {} }]];
-      }
-    },
     updateData(data) {
-      if (data && data.customData.id !== '260e49dc5db49745a4640d81') {
-        this.relay = false;
+      if (data) {
         this.players.splice(0, this.players.length);
         const id = (this.teamIndex >= 0) ? this.teamIndex : 0;
         if (data && data.teams[id]) {
@@ -75,8 +64,6 @@ export default {
             players.forEach(player => this.players.push([player]));
           }
         }
-      } else {
-        this.relay = true;
       }
     },
   },

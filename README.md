@@ -46,7 +46,7 @@ This bundle no longer triggers any commercials, this is now done by a separate b
 
 ### Featured Channels Bridge
 
-If needed, this bundle can interface with an instance of the [featured-channels-bridge](https://github.com/esamarathon/featured-channels-bridge) script, if settings are specified in the config.
+This bundle no longer handles using this (if it was needed), this is now done by a separate bundle, [esa-featuredchannels](https://github.com/esamarathon/esa-featuredchannels).
 
 ## Other Information
 

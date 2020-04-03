@@ -7,7 +7,7 @@ import { getCurrentEventShort } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { send as mqSend } from './util/rabbitmq';
-import { assetsSponsorLogos, restreamViewerTool, sponsorLogos } from './util/replicants';
+import { assetsSponsorLogos, sponsorLogos } from './util/replicants';
 
 const config = nodecg().bundleConfig as Configschema;
 const sc = new SpeedcontrolUtil(nodecg());
@@ -64,12 +64,12 @@ export function logRunChange(): void {
   const data = {
     event,
     run,
-    stream: [] as { channel: string }[],
+    // stream: [] as { channel: string }[],
     time: getTimeInfo(),
   };
-  if (restreamViewerTool.value.channel) {
+  /* if (restreamViewerTool.value.channel) {
     data.stream = [{ channel: restreamViewerTool.value.channel }];
-  }
+  } */
   mqSend(
     'run.changed',
     data,

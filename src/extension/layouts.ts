@@ -5,6 +5,7 @@ import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { capturePositions, gameLayouts, obsData, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
 
+const evtConfig = (nodecg().bundleConfig as Configschema).event;
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 const sc = new SpeedcontrolUtil(nodecg());
 
@@ -107,7 +108,8 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
 });
 
 capturePositions.on('change', async (val) => {
-  if (!val || !val['Game Layout']) {
+  // Online marathons are not currently using the same OBS logic.
+  if (evtConfig.online || !val || !val['Game Layout']) {
     return;
   }
   for (const key of Object.keys(obsSourceKeys)) {

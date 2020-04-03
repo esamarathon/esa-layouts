@@ -31,11 +31,17 @@
           "minimum": 1,
           "maximum": 2,
           "default": 1
+        },
+        "online": {
+          "type": "boolean",
+          "$comment": "If this event is ran online and has no on-site presence.",
+          "default": false
         }
       },
       "required": [
         "shorts",
-        "thisEvent"
+        "thisEvent",
+        "online"
       ]
     },
     "xkeys": {
@@ -117,6 +123,29 @@
         "vhost"
       ]
     },
+    "restream": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enable": {
+          "type": "boolean",
+          "default": false
+        },
+        "address": {
+          "type": "string",
+          "default": "localhost:1235"
+        },
+        "key": {
+          "type": "string",
+          "default": "DEFAULT_KEY"
+        }
+      },
+      "required": [
+        "enable",
+        "address",
+        "key"
+      ]
+    },
     "obs": {
       "type": "object",
       "additionalProperties": false,
@@ -192,6 +221,10 @@
                 "cameraCapture2": {
                   "type": "string",
                   "default": "Camera Capture 2"
+                },
+                "restreamSource": {
+                  "type": "string",
+                  "default": "Restream Source"
                 }
               },
               "required": [
@@ -200,7 +233,8 @@
                 "gameCapture3",
                 "gameCapture4",
                 "cameraCapture1",
-                "cameraCapture2"
+                "cameraCapture2",
+                "restreamSource"
               ]
             }
           },
@@ -287,6 +321,7 @@
     "xkeys",
     "streamdeck",
     "rabbitmq",
+    "restream",
     "obs",
     "tracker",
     "tts",

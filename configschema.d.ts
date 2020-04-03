@@ -9,6 +9,7 @@ export interface Configschema {
   event: {
     shorts: string | [string] | [string, string];
     thisEvent: number;
+    online: boolean;
   };
   xkeys: {
     enable: boolean;
@@ -26,6 +27,11 @@ export interface Configschema {
     username: string;
     password: string;
     vhost: string;
+  };
+  restream: {
+    enable: boolean;
+    address: string;
+    key: string;
   };
   obs: {
     enable: boolean;
@@ -45,6 +51,7 @@ export interface Configschema {
         gameCapture4: string;
         cameraCapture1: string;
         cameraCapture2: string;
+        restreamSource: string;
       };
     };
   };

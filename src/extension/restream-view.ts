@@ -102,32 +102,53 @@ async function restartStream(): Promise<void> {
   }
 }
 
-async function configureVLCSource(url: string): Promise<void> {
+async function configureMediaSource(url: string): Promise<void> {
   try {
-    await obs.setSourceSettings(
-      obsConfig.names.sources.restreamSource,
-      'vlc_source',
-      /* eslint-disable @typescript-eslint/camelcase */
-      {
-        loop: true,
-        network_caching: 1000,
-        playback_behavior: 'always_play',
-        playlist: [
-          {
-            value: url,
-          },
-        ],
-        shuffle: false,
-        subtitle: 1,
-        subtitle_enable: false,
-        track: 1,
-      },
-      /* eslint-enable */
-    );
-    nodecg().log.info('[Restream] Successfully configured VLC source');
+    if (config.useVLCSourceType) {
+      nodecg().log.debug('[Restream] Using VLC source type instead of FFmpeg source type');
+      await obs.setSourceSettings(
+        obsConfig.names.sources.restreamSource,
+        'vlc_source',
+        /* eslint-disable @typescript-eslint/camelcase */
+        {
+          loop: true,
+          network_caching: 1000,
+          playback_behavior: 'always_play',
+          playlist: [
+            {
+              value: url,
+            },
+          ],
+          shuffle: false,
+          subtitle: 1,
+          subtitle_enable: false,
+          track: 1,
+        },
+        /* eslint-enable */
+      );
+    } else {
+      await obs.setSourceSettings(
+        obsConfig.names.sources.restreamSource,
+        'ffmpeg_source',
+        /* eslint-disable @typescript-eslint/camelcase */
+        {
+          buffering_mb: 2,
+          clear_on_media_end: false,
+          color_range: 0,
+          hw_decode: true,
+          input: 'http://localhost:1234',
+          input_format: '',
+          is_local_file: false,
+          restart_on_activate: false,
+          seekable: false,
+        },
+        /* eslint-enable */
+      );
+    }
+    nodecg().log.info('[Restream] Successfully configured media source');
   } catch (err) {
-    nodecg().log.warn('[Restream] Error configuring VLC source');
-    nodecg().log.debug('[Restream] Error configuring VLC source:', err);
+    nodecg().log.warn('[Restream] Error configuring media source');
+    nodecg().log.debug('[Restream] Error configuring media source:', err);
   }
 }
 
@@ -137,7 +158,7 @@ if (config.enable) {
 
   // Received when we need to tweak the OBS source for the stream.
   mq.evt.on('rvtServerStarted', (data) => {
-    configureVLCSource(`http://localhost:${data.port}`);
+    configureMediaSource(`http://localhost:${data.port}`);
   });
 
   // Start new stream when run changes but not on server (re)start.

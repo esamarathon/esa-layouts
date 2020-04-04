@@ -138,12 +138,17 @@
         "key": {
           "type": "string",
           "default": "DEFAULT_KEY"
+        },
+        "useVLCSourceType": {
+          "type": "boolean",
+          "default": true
         }
       },
       "required": [
         "enable",
         "address",
-        "key"
+        "key",
+        "useVLCSourceType"
       ]
     },
     "obs": {

@@ -1,5 +1,5 @@
 import { Configschema } from 'configschema';
-import needle, { NeedleResponse } from 'needle';
+import needle, { BodyData, NeedleHttpVerbs, NeedleResponse } from 'needle';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
@@ -10,14 +10,15 @@ const sc = new SpeedcontrolUtil(nodecg());
 const config = (nodecg().bundleConfig as Configschema).restream;
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 
-async function post(endpoint: string, data: { [k: string]: unknown }): Promise<NeedleResponse> {
+// eslint-disable-next-line max-len
+async function request(method: NeedleHttpVerbs, endpoint: string, data: BodyData = null): Promise<NeedleResponse> {
   try {
-    nodecg().log.debug(`[Restream] POST request processing on ${endpoint}`
-      + ` with data ${JSON.stringify(data)}`);
+    nodecg().log.debug(`[Restream] ${method.toUpperCase()} request processing on ${endpoint}${
+      (data) ? ` with data ${JSON.stringify(data)}` : ''}`);
     const resp = await needle(
-      'post',
+      method,
       `http://${config.address}${endpoint}?key=${config.key}`,
-      JSON.stringify(data),
+      data ? JSON.stringify(data) : null,
       {
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
@@ -26,38 +27,88 @@ async function post(endpoint: string, data: { [k: string]: unknown }): Promise<N
     );
     nodecg().log.debug('[Restream] Response from tool:', JSON.stringify(resp.body));
     if (resp.statusCode === 200) {
-      nodecg().log.debug(`[Restream] POST request successful on ${endpoint}`);
+      nodecg().log.debug(`[Restream] ${method.toUpperCase()} request successful on ${endpoint}`);
     } else {
       throw new Error(`Status code ${resp.statusCode}`);
     }
     return resp;
   } catch (err) {
-    nodecg().log.debug(`[Restream] POST request error on ${endpoint}:`, err);
+    nodecg().log.debug(`[Restream] ${method.toUpperCase()} request error on ${endpoint}:`, err);
     throw err;
   }
 }
 
-async function startStream(channel: string, overridden = false): Promise<void> {
+async function updateStatus(): Promise<void> {
   try {
-    const resp = await post('/start', { channel });
+    const resp = await request('get', '/status');
+    restreamViewerTool.value = {
+      channel: resp.body.channel || undefined,
+      overridden: restreamViewerTool.value.overridden,
+      lowLatency: resp.body.lowLatency ?? true,
+    };
+  } catch (err) {
+    nodecg().log.warn('[Restream] Error getting status');
+    nodecg().log.debug('[Restream] Error getting status:', err);
+  }
+}
+
+async function startStream(data: {
+  channel?: string; lowLatency?: boolean; overridden?: boolean;
+}): Promise<void> {
+  try {
+    const resp = await request('post', '/start', {
+      channel: data.channel || restreamViewerTool.value.channel,
+      lowLatency: data.lowLatency ?? restreamViewerTool.value.lowLatency,
+    });
     restreamViewerTool.value = {
       channel: resp.body.channel,
-      overridden,
+      overridden: data.overridden ?? false,
+      lowLatency: resp.body.lowLatency ?? true,
     };
-    nodecg().log.warn('[Restream] Successfully started stream');
+    nodecg().log.info('[Restream] Successfully started stream');
   } catch (err) {
     nodecg().log.warn('[Restream] Error starting stream');
     nodecg().log.debug('[Restream] Error starting stream:', err);
   }
 }
 
+async function stopStream(): Promise<void> {
+  try {
+    await request('post', '/stop');
+    restreamViewerTool.value = {
+      channel: undefined,
+      overridden: true,
+      lowLatency: restreamViewerTool.value.lowLatency,
+    };
+    nodecg().log.info('[Restream] Successfully stopped stream');
+  } catch (err) {
+    nodecg().log.warn('[Restream] Error stopping stream');
+    nodecg().log.debug('[Restream] Error stopping stream:', err);
+  }
+}
+
+async function restartStream(): Promise<void> {
+  try {
+    const resp = await request('post', '/restart');
+    restreamViewerTool.value = {
+      channel: resp.body.channel,
+      overridden: true,
+      lowLatency: resp.body.lowLatency ?? true,
+    };
+    nodecg().log.info('[Restream] Successfully restarted stream');
+  } catch (err) {
+    nodecg().log.warn('[Restream] Error restarting stream');
+    nodecg().log.debug('[Restream] Error restarting stream:', err);
+  }
+}
+
 async function configureVLCSource(url: string): Promise<void> {
   try {
-    // This assumes the source *is* a VLC Video Source.
-    await obs.send('SetSourceSettings', {
-      sourceName: obsConfig.names.sources.restreamSource,
+    await obs.setSourceSettings(
+      obsConfig.names.sources.restreamSource,
+      'vlc_source',
       /* eslint-disable @typescript-eslint/camelcase */
-      sourceSettings: {
+      {
         loop: true,
         network_caching: 1000,
         playback_behavior: 'always_play',
@@ -72,7 +123,7 @@ async function configureVLCSource(url: string): Promise<void> {
         track: 1,
       },
       /* eslint-enable */
-    });
+    );
     nodecg().log.info('[Restream] Successfully configured VLC source');
   } catch (err) {
     nodecg().log.warn('[Restream] Error configuring VLC source');
@@ -81,6 +132,9 @@ async function configureVLCSource(url: string): Promise<void> {
 }
 
 if (config.enable) {
+  updateStatus();
+  setInterval(updateStatus, 10 * 1000);
+
   // Received when we need to tweak the OBS source for the stream.
   mq.evt.on('rvtServerStarted', (data) => {
     configureVLCSource(`http://localhost:${data.port}`);
@@ -89,17 +143,33 @@ if (config.enable) {
   // Start new stream when run changes but not on server (re)start.
   let init = false;
   sc.runDataActiveRun.on('change', (newVal, oldVal) => {
-    if (init && newVal?.id !== oldVal?.id) {
-      if (newVal && newVal.teams.length && newVal.teams[0].players.length
-        && newVal.teams[0].players[0].social.twitch) {
-        startStream(newVal.teams[0].players[0].social.twitch);
-      }
+    if (init && newVal?.id !== oldVal?.id
+      && newVal && newVal.teams.length && newVal.teams[0].players.length
+      && newVal.teams[0].players[0].social.twitch) {
+      startStream({ channel: newVal.teams[0].players[0].social.twitch });
     }
     init = true;
   });
 
-  nodecg().listenFor('rvtOverride', async (channel: string) => {
-    await startStream(channel, true);
-    // maybe send a callback to the browser here?
+  // eslint-disable-next-line max-len
+  nodecg().listenFor('rvtOverride', async (data: { channel?: string; lowLatency?: boolean }, cb) => {
+    await startStream({ ...data, ...{ overridden: true } });
+    if (cb && !cb.handled) {
+      cb();
+    }
+  });
+
+  nodecg().listenFor('rvtRestart', async (data, cb) => {
+    await restartStream();
+    if (cb && !cb.handled) {
+      cb();
+    }
+  });
+
+  nodecg().listenFor('rvtStop', async (data, cb) => {
+    await stopStream();
+    if (cb && !cb.handled) {
+      cb();
+    }
   });
 }

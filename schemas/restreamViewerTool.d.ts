@@ -8,4 +8,5 @@
 export interface RestreamViewerTool {
   channel?: string;
   overridden: boolean;
+  lowLatency: boolean;
 }

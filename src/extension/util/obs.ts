@@ -1,6 +1,5 @@
 import { Configschema } from 'configschema';
 import obsWebsocketJs from 'obs-websocket-js';
-import { ItemPosition } from 'types';
 import { get as nodecg } from './nodecg';
 
 const config = (nodecg().bundleConfig as Configschema).obs;
@@ -33,62 +32,25 @@ class OBSUtility extends obsWebsocketJs {
   }
 
   /**
-   * Hide this item in the specified OBS scene.
-   * @param item Name of the item.
-   * @param scene Name of the scene.
+   * Modify a sources settings.
+   * @param sourceName Name of the source.
+   * @param sourceType Source type (has the be the internal name, not the display name).
+   * @param sourceSettings Settings you wish to pass to OBS to change.
    */
-  async hideItemInScene(item: string, scene: string): Promise<void> {
+  // eslint-disable-next-line max-len
+  async setSourceSettings(sourceName: string, sourceType: string, sourceSettings: {}): Promise<void> {
     if (!config.enable) {
       // OBS not enabled, don't even try to set.
       throw new Error('No OBS connection available');
     }
     try {
-      // @ts-ignore: Typings say we need to specify more than we actually do.
-      await this.send('SetSceneItemProperties', {
-        item,
-        visible: false,
-        'scene-name': scene,
+      await this.send('SetSourceSettings', {
+        sourceName,
+        sourceType,
+        sourceSettings,
       });
     } catch (err) {
-      nodecg().log.warn(`[OBS] Cannot hide item [${scene}: ${item}]: ${err.error}`);
-      throw err;
-    }
-  }
-
-  /**
-   * Set up game/camera capture in specified OBS scene; turns on, repositions and resizes.
-   * @param item Name of the item.
-   * @param scene Name of the scene.
-   * @param position Position details (x/y/width/height/cropping).
-   */
-  async setUpCaptureInScene(item: string, scene: string, position: ItemPosition): Promise<void> {
-    if (!config.enable) {
-      // OBS not enabled, don't even try to set.
-      throw new Error('No OBS connection available');
-    }
-    try {
-      await this.send('SetSceneItemProperties', {
-        item,
-        visible: true,
-        'scene-name': scene,
-        position: {
-          x: position.x,
-          y: position.y,
-        },
-        bounds: {
-          x: position.width,
-          y: position.height,
-        },
-        crop: {
-          top: position.croptop,
-          right: position.cropright,
-          bottom: position.cropbottom,
-          left: position.cropleft,
-        },
-        scale: {},
-      });
-    } catch (err) {
-      nodecg().log.warn(`[OBS] Cannot setup item [${scene}: ${item}]: ${err.error}`);
+      nodecg().log.warn(`[OBS] Cannot set source settings [${sourceName}]: ${err.error || err}`);
       throw err;
     }
   }

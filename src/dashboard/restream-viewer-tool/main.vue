@@ -81,7 +81,7 @@ export default class extends Vue {
   config = (nodecg.bundleConfig as Configschema).restream;
   applying = false;
   channelEntryFocused = false;
-  channelEntryFocusedTimeout;
+  channelEntryFocusedTimeout: number | undefined;
 
   @Watch('restreamViewerTool', { immediate: true })
   onRestreamViewerToolChanged(val: RestreamViewerTool): void {
@@ -93,8 +93,8 @@ export default class extends Vue {
 
   focusChannelEntry(): void {
     this.channelEntryFocused = true;
-    clearTimeout(this.channelEntryFocusedTimeout);
-    this.channelEntryFocusedTimeout = setTimeout(() => {
+    window.clearTimeout(this.channelEntryFocusedTimeout);
+    this.channelEntryFocusedTimeout = window.setTimeout(() => {
       (this.$refs.ChannelEntry as HTMLElement).blur();
       this.channelEntry = this.restreamViewerTool.channel || '';
     }, 5 * 1000);
@@ -102,7 +102,7 @@ export default class extends Vue {
 
   unfocusChannelEntry(): void {
     this.channelEntryFocused = false;
-    clearTimeout(this.channelEntryFocusedTimeout);
+    window.clearTimeout(this.channelEntryFocusedTimeout);
   }
 
   override(): void {

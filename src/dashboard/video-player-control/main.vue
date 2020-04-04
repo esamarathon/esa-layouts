@@ -4,7 +4,6 @@
       v-if="!videos.length"
       :style="{
         'font-style': 'italic',
-        'margin-bottom': '10px',
       }"
     >
       Add videos in the "Assets" tab.

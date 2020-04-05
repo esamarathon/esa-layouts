@@ -107,7 +107,7 @@ export default {
       return this.genericMsg('This is European Speedrunner Assembly Together');
     },
     charityPromo() {
-      return this.genericMsg('#ESATogether benefits European Speedrunner Assembly');
+      return this.genericMsg('#ESATogether benefits the European Speedrunner Assembly');
     },
     otherStreamPromo() {
       return this.genericMsg(`Watch more great runs over @ twitch.tv/${this.otherChannel}`);

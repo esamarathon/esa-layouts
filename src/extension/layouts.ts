@@ -148,12 +148,18 @@ capturePositions.on('change', async (val) => {
   }
 });
 
-// Switch to the video player scene if there is a selected video when intermission commercials end.
 sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
+  if (obsData.value.scene === obsConfig.names.scenes.commercials) {
+    obsData.value.disableTransitioning = newVal.secondsRemaining > 0;
+  }
+
+  // Switch to the video player scene if there is
+  // a selected video when intermission commercials end.
   if (oldVal && oldVal.secondsRemaining > 0 && newVal.secondsRemaining <= 0
     && videoPlayer.value.selected
     && obsData.value.scene?.startsWith(obsConfig.names.scenes.commercials)) {
     try {
+      obsData.value.disableTransitioning = true;
       await obs.changeScene(obsConfig.names.scenes.videoPlayer);
     } catch (err) {
       nodecg().log.warn('[Layouts] Could not switch to video player scene'
@@ -164,9 +170,22 @@ sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
   }
 });
 
+// Enable transitioning if we just changed to
+// the game layout or intermission (without commercials).
+obsData.on('change', (newVal, oldVal) => {
+  if (newVal.scene !== oldVal?.scene
+    && (newVal.scene?.startsWith(obsConfig.names.scenes.gameLayout)
+    || (newVal.scene?.startsWith(obsConfig.names.scenes.intermission)
+    || !newVal.scene?.startsWith(obsConfig.names.scenes.commercials)))) {
+    obsData.value.disableTransitioning = false;
+  }
+});
+
 nodecg().listenFor('obsChangeScene', async (name: string) => {
-  // Don't change scene if identical or we're currently transitioning.
-  if (obsData.value.scene === name && obsData.value.transitioning) {
+  // Don't change scene if identical, we're currently transitioning, or transitioning is disabled.
+  if (obsData.value.scene === name
+    || obsData.value.transitioning
+    || obsData.value.disableTransitioning) {
     return;
   }
   await obs.changeScene(name);

@@ -38,6 +38,7 @@ obs.on('ConnectionClosed', () => {
   obsData.value = {
     connected: false,
     sceneList: [],
+    disableTransitioning: obsData.value.disableTransitioning,
   };
   clearInterval(gameLayoutScreenshotInterval);
 });

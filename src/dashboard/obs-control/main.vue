@@ -82,7 +82,9 @@ export default class extends Vue {
   gameLayoutPreviewToggle = true;
 
   disableButton(scene: string): boolean {
-    return this.obsData.transitioning || scene === this.obsData.scene;
+    return this.obsData.transitioning
+    || scene === this.obsData.scene
+    || this.obsData.disableTransitioning;
   }
 
   // eslint-disable-next-line class-methods-use-this

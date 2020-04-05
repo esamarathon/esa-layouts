@@ -22,10 +22,15 @@
     },
     "gameLayoutScreenshot": {
       "type": "string"
+    },
+    "disableTransitioning": {
+      "type": "boolean",
+      "default": false
     }
   },
   "required": [
     "connected",
-    "sceneList"
+    "sceneList",
+    "disableTransitioning"
   ]
 }

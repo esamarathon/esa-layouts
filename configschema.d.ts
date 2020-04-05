@@ -32,7 +32,6 @@ export interface Configschema {
     enable: boolean;
     address: string;
     key: string;
-    useVLCSourceType: boolean;
   };
   obs: {
     enable: boolean;

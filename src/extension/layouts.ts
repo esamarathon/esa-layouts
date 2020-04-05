@@ -3,7 +3,7 @@ import { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { capturePositions, gameLayouts, obsData, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
+import { assetsVideos, capturePositions, gameLayouts, obsData, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
 
 const evtConfig = (nodecg().bundleConfig as Configschema).event;
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
@@ -19,9 +19,22 @@ const obsSourceKeys: { [key: string]: string } = {
   CameraCapture2: obsConfig.names.sources.cameraCapture2,
 };
 
-// nodecg-speedcontrol no longer sends forceRefreshIntermission so doing it here instead.
 sc.on('timerStopped', () => {
+  // nodecg-speedcontrol no longer sends forceRefreshIntermission so doing it here instead.
   nodecg().sendMessage('forceRefreshIntermission');
+
+  // Set the upcoming intermission video.
+  const run = sc.getCurrentRun();
+  if (run?.customData.intermission) {
+    const videoName = run.customData.intermission;
+    const asset = assetsVideos.value.find((v) => v.name === videoName);
+    if (asset) {
+      videoPlayer.value.selected = asset.sum;
+      nodecg().log.info(`[Layouts] Automatically set video player to ${videoName}`);
+    } else {
+      nodecg().log.warn(`[Layouts] Cannot automatically set video player to ${videoName}`);
+    }
+  }
 });
 
 /**

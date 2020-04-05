@@ -32,7 +32,7 @@ class OBS extends EventEmitter {
         this.emit('currentSceneChanged', this.currentScene);
         this.emit('sceneListChanged', this.sceneList);
         nodecg().log.warn('[OBS] Connection lost, retrying in 5 seconds');
-        setTimeout(this.connect, 5000);
+        setTimeout(() => this.connect(), 5000);
       });
 
       this.conn.on('SwitchScenes', (data) => {

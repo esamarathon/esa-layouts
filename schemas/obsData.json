@@ -12,6 +12,9 @@
     },
     "sceneList": {
       "type": "array",
+      "items": {
+        "type": "string"
+      },
       "default": []
     },
     "transitioning": {

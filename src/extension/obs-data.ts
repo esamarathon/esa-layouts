@@ -1,3 +1,4 @@
+import clone from 'clone';
 import { Configschema } from 'configschema';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
@@ -8,7 +9,7 @@ const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 let gameLayoutScreenshotInterval: NodeJS.Timeout;
 async function takeGameLayoutScreenshot(): Promise<void> {
   try {
-    const gameLayoutScreenshot = await obs.send('TakeSourceScreenshot', {
+    const gameLayoutScreenshot = await obs.conn.send('TakeSourceScreenshot', {
       sourceName: obsConfig.names.scenes.gameLayout,
       embedPictureFormat: 'png',
       height: 360,
@@ -19,13 +20,10 @@ async function takeGameLayoutScreenshot(): Promise<void> {
   }
 }
 
-obs.on('ConnectionOpened', async () => {
+obs.conn.on('ConnectionOpened', async () => {
   obsData.value.connected = true;
   try {
-    const sceneList = await obs.send('GetSceneList');
-    const streamingStatus = await obs.send('GetStreamingStatus');
-    obsData.value.scene = sceneList['current-scene'];
-    obsData.value.sceneList = sceneList.scenes.map((s) => s.name);
+    const streamingStatus = await obs.conn.send('GetStreamingStatus');
     obsData.value.streaming = streamingStatus.streaming;
     takeGameLayoutScreenshot();
     gameLayoutScreenshotInterval = setInterval(takeGameLayoutScreenshot, 1 * 1000);
@@ -34,7 +32,7 @@ obs.on('ConnectionOpened', async () => {
   }
 });
 
-obs.on('ConnectionClosed', () => {
+obs.conn.on('ConnectionClosed', () => {
   obsData.value = {
     connected: false,
     sceneList: [],
@@ -43,25 +41,23 @@ obs.on('ConnectionClosed', () => {
   clearInterval(gameLayoutScreenshotInterval);
 });
 
-obs.on('SwitchScenes', (data) => {
-  obsData.value.scene = data['scene-name'];
+obs.on('currentSceneChanged', (currentScene) => {
+  obsData.value.scene = currentScene;
 });
-
-obs.on('ScenesChanged', async () => {
-  const sceneList = await obs.send('GetSceneList');
-  obsData.value.sceneList = sceneList.scenes.map((s) => s.name);
+obs.on('sceneListChanged', (sceneList) => {
+  obsData.value.sceneList = clone(sceneList);
 });
 
 // This logic assumes the duration supplied is correct, which isn't always the case.
 // Not too important for now, a "TransitionEnd" event will be added in a later version.
 let transitioningTimeout: NodeJS.Timeout;
-obs.on('TransitionBegin', (data) => {
+obs.conn.on('TransitionBegin', (data) => {
   obsData.value.transitioning = true;
   clearTimeout(transitioningTimeout);
   transitioningTimeout = setTimeout(() => { obsData.value.transitioning = false; }, data.duration);
 });
 
-obs.on('Heartbeat', (data) => {
+obs.conn.on('Heartbeat', (data) => {
   if (typeof data.streaming === 'boolean') {
     obsData.value.streaming = data.streaming;
   }

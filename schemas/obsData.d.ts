@@ -8,7 +8,7 @@
 export interface ObsData {
   connected: boolean;
   scene?: string;
-  sceneList: any[];
+  sceneList: string[];
   transitioning?: boolean;
   streaming?: boolean;
   gameLayoutScreenshot?: string;

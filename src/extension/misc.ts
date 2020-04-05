@@ -5,7 +5,7 @@ import { getCurrentEventShort, getOtherStreamEventShort } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { evt } from './util/rabbitmq';
-import { commentators, obsData, otherStreamData } from './util/replicants';
+import { commentators, otherStreamData } from './util/replicants';
 
 const config = (nodecg().bundleConfig as Configschema);
 const sc = new SpeedcontrolUtil(nodecg());
@@ -64,7 +64,7 @@ evt.on('bigbuttonTagScanned', (data) => {
 // Reset the commentators when the run changes and not on the game layout scene.
 sc.runDataActiveRun.on('change', (newVal, oldVal) => {
   if ((!newVal || (newVal && oldVal && oldVal.id !== newVal.id))
-  && obsData.value.scene && !obsData.value.scene.includes(config.obs.names.scenes.gameLayout)) {
+  && !obs.isCurrentScene(config.obs.names.scenes.gameLayout)) {
     commentators.value.length = 0;
     nodecg().log.debug('[Misc] Cleared commentators');
   }

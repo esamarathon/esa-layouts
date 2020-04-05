@@ -122,10 +122,10 @@ sc.on('timerEdited', () => logTimerChange('edited'));
 sc.on('timerTeamStopped', (id) => logTimerChange('team_finished', id));
 sc.on('timerTeamUndone', (id) => logTimerChange('team_undid_finish', id));
 
-obs.on('ConnectionOpened', async () => {
+obs.conn.on('ConnectionOpened', async () => {
   try {
-    const streamingData = await obs.send('GetStreamingStatus');
-    const scene = await obs.send('GetCurrentScene');
+    const streamingData = await obs.conn.send('GetStreamingStatus');
+    const scene = await obs.conn.send('GetCurrentScene');
     streaming = streamingData.streaming;
     currentScene = scene.name;
     if (lastScene === currentScene) {
@@ -140,18 +140,18 @@ obs.on('ConnectionOpened', async () => {
     // drop for now
   }
 });
-obs.on('ConnectionClosed', () => {
+obs.conn.on('ConnectionClosed', () => {
   currentScene = '';
 });
-obs.on('StreamStarted', () => {
+obs.conn.on('StreamStarted', () => {
   streaming = true;
   checkSponsorLogoVisibility();
 });
-obs.on('StreamStopped', () => {
+obs.conn.on('StreamStopped', () => {
   streaming = false;
   checkSponsorLogoVisibility();
 });
-obs.on('SwitchScenes', (data) => {
+obs.conn.on('SwitchScenes', (data) => {
   lastScene = currentScene;
   currentScene = data['scene-name'];
   if (lastScene === currentScene) {

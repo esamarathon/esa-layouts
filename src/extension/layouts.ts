@@ -18,7 +18,6 @@ const obsSourceKeys: { [key: string]: string } = {
   CameraCapture1: obsConfig.names.sources.cameraCapture1,
   CameraCapture2: obsConfig.names.sources.cameraCapture2,
 };
-const obsGameLayoutScene = obsConfig.names.scenes.gameLayout;
 
 // nodecg-speedcontrol no longer sends forceRefreshIntermission so doing it here instead.
 sc.on('timerStopped', () => {
@@ -53,13 +52,13 @@ async function configureSceneItem(
 ): Promise<void> {
   try {
     if (area) {
-      await obs.send('ResetSceneItem', {
+      await obs.conn.send('ResetSceneItem', {
         'scene-name': scene,
         item,
       });
     }
     // @ts-ignore: Typings say we need to specify more than we actually do.
-    await obs.send('SetSceneItemProperties', {
+    await obs.conn.send('SetSceneItemProperties', {
       'scene-name': scene,
       item,
       visible: typeof visible !== 'undefined' ? visible : true,
@@ -139,7 +138,7 @@ capturePositions.on('change', async (val) => {
     }
 
     await configureSceneItem(
-      obsGameLayoutScene,
+      obsConfig.names.scenes.gameLayout,
       obsSourceKeys[key],
       val['Game Layout'][key],
       crop,
@@ -149,15 +148,14 @@ capturePositions.on('change', async (val) => {
 });
 
 sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
-  if (obsData.value.scene === obsConfig.names.scenes.commercials) {
+  if (obs.isCurrentScene(obsConfig.names.scenes.commercials)) {
     obsData.value.disableTransitioning = newVal.secondsRemaining > 0;
   }
 
   // Switch to the video player scene if there is
   // a selected video when intermission commercials end.
   if (oldVal && oldVal.secondsRemaining > 0 && newVal.secondsRemaining <= 0
-    && videoPlayer.value.selected
-    && obsData.value.scene?.startsWith(obsConfig.names.scenes.commercials)) {
+    && videoPlayer.value.selected && obs.isCurrentScene(obsConfig.names.scenes.commercials)) {
     try {
       obsData.value.disableTransitioning = true;
       await obs.changeScene(obsConfig.names.scenes.videoPlayer);
@@ -174,9 +172,8 @@ sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
 // the game layout or intermission (without commercials).
 obsData.on('change', (newVal, oldVal) => {
   if (newVal.scene !== oldVal?.scene
-    && (newVal.scene?.startsWith(obsConfig.names.scenes.gameLayout)
-    || (newVal.scene?.startsWith(obsConfig.names.scenes.intermission)
-    || !newVal.scene?.startsWith(obsConfig.names.scenes.commercials)))) {
+    && (obs.isCurrentScene(obsConfig.names.scenes.gameLayout)
+    || obs.isCurrentScene(obsConfig.names.scenes.intermission))) {
     obsData.value.disableTransitioning = false;
   }
 });

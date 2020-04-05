@@ -1,16 +1,102 @@
 import { Configschema } from 'configschema';
-import obsWebsocketJs from 'obs-websocket-js';
+import { EventEmitter } from 'events';
+import ObsWebsocketJs from 'obs-websocket-js';
 import { findBestMatch } from 'string-similarity';
 import { get as nodecg } from './nodecg';
 
 const config = (nodecg().bundleConfig as Configschema).obs;
 
-// Extending the OBS library with some of our own functions.
-class OBSUtility extends obsWebsocketJs {
+interface OBS {
+  on(event: 'currentSceneChanged', listener: (currentScene?: string) => void): this;
+  on(event: 'sceneListChanged', listener: (sceneList: string[]) => void): this;
+}
+
+class OBS extends EventEmitter {
+  conn = new ObsWebsocketJs();
+  currentScene: string | undefined;
+  sceneList: string [] = [];
+  settings = {
+    address: config.address,
+    password: config.password,
+  };
+
+  constructor() {
+    super();
+    if (config.enable) {
+      nodecg().log.info('[OBS] Setting up connection');
+      this.connect();
+
+      this.conn.on('ConnectionClosed', () => {
+        this.currentScene = undefined;
+        this.sceneList.length = 0;
+        this.emit('currentSceneChanged', this.currentScene);
+        this.emit('sceneListChanged', this.sceneList);
+        nodecg().log.warn('[OBS] Connection lost, retrying in 5 seconds');
+        setTimeout(this.connect, 5000);
+      });
+
+      this.conn.on('SwitchScenes', (data) => {
+        this.currentScene = data['scene-name'];
+        this.emit('currentSceneChanged', this.currentScene);
+      });
+
+      this.conn.on('ScenesChanged', async () => {
+        const scenes = await this.conn.send('GetSceneList');
+        this.sceneList = scenes.scenes.map((s) => s.name);
+      });
+
+      // @ts-ignore: Pretty sure this emits an error.
+      this.conn.on('error', (err) => {
+        nodecg().log.warn('[OBS] Connection error');
+        nodecg().log.debug('[OBS] Connection error:', err);
+      });
+    }
+  }
+
+  async connect(): Promise<void> {
+    try {
+      await this.conn.connect(this.settings);
+      await this.conn.send('SetHeartbeat', { enable: true });
+      const scenes = await this.conn.send('GetSceneList');
+      this.currentScene = scenes['current-scene'];
+      this.sceneList = scenes.scenes.map((s) => s.name);
+      this.emit('currentSceneChanged', this.currentScene);
+      this.emit('sceneListChanged', this.sceneList);
+      nodecg().log.info('[OBS] Connection successful');
+    } catch (err) {
+      nodecg().log.warn('[OBS] Connection error');
+      nodecg().log.debug('[OBS] Connection error:', err);
+    }
+  }
+
+  /**
+   * Find scene based on string; at least the start of the name should be supplied.
+   * @param name Name of scene, at least starting of name.
+   */
+  // eslint-disable-next-line class-methods-use-this
+  findScene(name: string): string | undefined {
+    let match: string | undefined;
+    const matches = this.sceneList.filter((s) => s.startsWith(name));
+    if (matches.length > 1) {
+      const bestMatches = findBestMatch(name, matches);
+      match = bestMatches.bestMatch.target;
+    } else if (matches.length === 0) {
+      [match] = matches;
+    }
+    return match;
+  }
+
+  /**
+   * Check if we are on a specified scene; at least the start of the name should be supplied.
+   * @param name Name of scene to check we are on, at least starting of name.
+   */
+  isCurrentScene(name: string): boolean {
+    return !!this.currentScene && this.currentScene === this.findScene(name);
+  }
+
   /**
    * Change to the OBS scene with the closest matched name.
    * @param name Name of the scene.
-   * @param ignore Ignore scene if it has this name.
    */
   async changeScene(name: string): Promise<void> {
     if (!config.enable) {
@@ -18,12 +104,9 @@ class OBSUtility extends obsWebsocketJs {
       throw new Error('No OBS connection available');
     }
     try {
-      const sceneList = await this.send('GetSceneList');
-      const scenes = sceneList.scenes.map((s) => s.name);
-      const match = findBestMatch(name, scenes);
-      // This rating threshold should be upped, but not too important right now.
-      if (match.bestMatch.rating > 0) {
-        await this.send('SetCurrentScene', { 'scene-name': match.bestMatch.target });
+      const scene = this.findScene(name);
+      if (scene) {
+        await this.conn.send('SetCurrentScene', { 'scene-name': scene });
       } else {
         throw new Error('Scene could not be found');
       }
@@ -46,7 +129,7 @@ class OBSUtility extends obsWebsocketJs {
       throw new Error('No OBS connection available');
     }
     try {
-      await this.send('SetSourceSettings', {
+      await this.conn.send('SetSourceSettings', {
         sourceName,
         sourceType,
         sourceSettings,
@@ -58,36 +141,5 @@ class OBSUtility extends obsWebsocketJs {
   }
 }
 
-const obs = new OBSUtility();
-const settings = {
-  address: config.address,
-  password: config.password,
-};
-
-async function connect(): Promise<void> {
-  try {
-    await obs.connect(settings);
-    obs.send('SetHeartbeat', { enable: true });
-    nodecg().log.info('[OBS] Connection successful');
-  } catch (err) {
-    nodecg().log.warn('[OBS] Connection error');
-    nodecg().log.debug('[OBS] Connection error:', err);
-  }
-}
-
-if (config.enable) {
-  nodecg().log.info('[OBS] Setting up connection');
-  connect();
-  obs.on('ConnectionClosed', () => {
-    nodecg().log.warn('[OBS] Connection lost, retrying in 5 seconds');
-    setTimeout(connect, 5000);
-  });
-
-  // @ts-ignore: Pretty sure this emits an error.
-  obs.on('error', (err) => {
-    nodecg().log.warn('[OBS] Connection error');
-    nodecg().log.debug('[OBS] Connection error:', err);
-  });
-}
-
+const obs = new OBS();
 export default obs;

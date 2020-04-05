@@ -170,10 +170,9 @@ sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
 
 // Enable transitioning if we just changed to
 // the game layout or intermission (without commercials).
-obsData.on('change', (newVal, oldVal) => {
-  if (newVal.scene !== oldVal?.scene
-    && (obs.isCurrentScene(obsConfig.names.scenes.gameLayout)
-    || obs.isCurrentScene(obsConfig.names.scenes.intermission))) {
+obs.on('currentSceneChanged', () => {
+  if (obs.isCurrentScene(obsConfig.names.scenes.gameLayout)
+    || obs.isCurrentScene(obsConfig.names.scenes.intermission)) {
     obsData.value.disableTransitioning = false;
   }
 });
@@ -185,5 +184,10 @@ nodecg().listenFor('obsChangeScene', async (name: string) => {
     || obsData.value.disableTransitioning) {
     return;
   }
-  await obs.changeScene(name);
+  try {
+    await obs.changeScene(name);
+  } catch (err) {
+    nodecg().log.warn('[Layouts] Could not change scene');
+    nodecg().log.debug('[Layouts] Could not change scene:', err);
+  }
 });

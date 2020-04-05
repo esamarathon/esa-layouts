@@ -83,7 +83,7 @@ class OBS extends EventEmitter {
     if (matches.length > 1) {
       const bestMatches = findBestMatch(name, matches);
       match = bestMatches.bestMatch.target;
-    } else if (matches.length === 0) {
+    } else if (matches.length === 1) {
       [match] = matches;
     }
     return match;

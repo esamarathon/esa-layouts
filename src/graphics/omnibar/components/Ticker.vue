@@ -65,15 +65,15 @@ export default {
       this.messageTypes = [
         this.esaPromo(),
         this.charityPromo(),
-        this.otherStreamPromo(),
-        this.otherStreamInfo(),
+        // this.otherStreamPromo(),
+        // this.otherStreamInfo(),
         this.upcomingRun(),
         this.prize(),
         this.bid(),
         this.teamPromo(),
         this.donationURL(),
         this.shirts(),
-        this.twitchCharity(),
+        // this.twitchCharity(),
       ];
 
       this.showNextMsg();
@@ -104,10 +104,10 @@ export default {
       this.timestamp = Date.now();
     },
     esaPromo() {
-      return this.genericMsg('This is European Speedrunner Assembly Winter 2020');
+      return this.genericMsg('This is European Speedrunner Assembly Together');
     },
     charityPromo() {
-      return this.genericMsg('#ESAWinter20 benefits Save the Children');
+      return this.genericMsg('#ESATogether benefits European Speedrunner Assembly');
     },
     otherStreamPromo() {
       return this.genericMsg(`Watch more great runs over @ twitch.tv/${this.otherChannel}`);

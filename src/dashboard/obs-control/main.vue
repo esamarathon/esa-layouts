@@ -45,20 +45,26 @@
       >
         {{ scene }}
       </v-btn>
-      <template v-if="obsData.gameLayoutScreenshot">
+      <template v-if="obsData.gameLayoutScreenshot && gameLayoutPreviewToggle">
         <div
           :style="{
             'font-style': 'italic',
             'margin': '15px 0 5px 0',
           }"
         >
-          Game Layout preview (refreshes every second):
+          "Game Layout" Preview (refreshes every second):
         </div>
         <img
           :src="obsData.gameLayoutScreenshot"
           :style="{ width: '100%' }"
         >
       </template>
+      <v-switch
+        v-model="gameLayoutPreviewToggle"
+        :style="{ 'margin-top': '10px' }"
+        hide-details
+        label="Toggle &quot;Game Layout&quot; Preview"
+      />
     </template>
   </v-app>
 </template>
@@ -73,6 +79,7 @@ import { Configschema } from 'configschema';
 export default class extends Vue {
   @State obsData!: ObsData;
   obsConfig = (nodecg.bundleConfig as Configschema).obs;
+  gameLayoutPreviewToggle = true;
 
   disableButton(scene: string): boolean {
     return this.obsData.transitioning || scene === this.obsData.scene;

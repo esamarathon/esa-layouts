@@ -163,3 +163,11 @@ sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
     }
   }
 });
+
+nodecg().listenFor('obsChangeScene', async (name: string) => {
+  // Don't change scene if identical or we're currently transitioning.
+  if (obsData.value.scene === name && obsData.value.transitioning) {
+    return;
+  }
+  await obs.changeScene(name);
+});

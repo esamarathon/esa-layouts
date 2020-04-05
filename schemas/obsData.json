@@ -9,9 +9,22 @@
     },
     "scene": {
       "type": "string"
+    },
+    "sceneList": {
+      "type": "array",
+      "default": []
+    },
+    "transitioning": {
+      "type": "boolean",
+      "default": false
+    },
+    "gameLayoutScreenshot": {
+      "type": "string"
     }
   },
   "required": [
-    "connected"
+    "connected",
+    "sceneList",
+    "transitioning"
   ]
 }

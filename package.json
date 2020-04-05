@@ -38,6 +38,7 @@
     "obs-websocket-js": "^4.0.1",
     "speedcontrol-util": "github:speedcontrol/speedcontrol-util#dev-built",
     "streamdeck-util": "^0.3.3",
+    "string-similarity": "^4.0.1",
     "xkeys": "^0.1.2"
   },
   "devDependencies": {
@@ -47,6 +48,7 @@
     "@types/clone": "^0.1.30",
     "@types/lodash": "^4.14.149",
     "@types/needle": "^2.0.4",
+    "@types/string-similarity": "^3.0.0",
     "@types/uuid": "^7.0.2",
     "@typescript-eslint/eslint-plugin": "^2.26.0",
     "@typescript-eslint/parser": "^2.26.0",

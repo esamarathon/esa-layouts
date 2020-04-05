@@ -73,8 +73,7 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
 // Switch back to the last scene when the video player finishes.
 nodecg().listenFor('videoPlayerFinished', async () => {
   try {
-    await obs.changeScene(config.obs.names.scenes.intermission,
-      config.obs.names.scenes.commercials);
+    await obs.changeScene(config.obs.names.scenes.intermission);
   } catch (err) {
     nodecg().log.warn('[Misc] Could not return to intermission after video finished');
     nodecg().log.debug('[Misc] Could not return to intermission after video finished:', err);

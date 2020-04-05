@@ -1,5 +1,6 @@
 import { Configschema } from 'configschema';
 import obsWebsocketJs from 'obs-websocket-js';
+import { findBestMatch } from 'string-similarity';
 import { get as nodecg } from './nodecg';
 
 const config = (nodecg().bundleConfig as Configschema).obs;
@@ -7,21 +8,22 @@ const config = (nodecg().bundleConfig as Configschema).obs;
 // Extending the OBS library with some of our own functions.
 class OBSUtility extends obsWebsocketJs {
   /**
-   * Change to this OBS scene.
+   * Change to the OBS scene with the closest matched name.
    * @param name Name of the scene.
    * @param ignore Ignore scene if it has this name.
    */
-  async changeScene(name: string, ignore?: string): Promise<void> {
+  async changeScene(name: string): Promise<void> {
     if (!config.enable) {
       // OBS not enabled, don't even try to set.
       throw new Error('No OBS connection available');
     }
     try {
       const sceneList = await this.send('GetSceneList');
-      const scene = sceneList.scenes.find((s) => (
-        s.name.startsWith(name) && (!ignore || !s.name.startsWith(ignore))));
-      if (scene) {
-        await this.send('SetCurrentScene', { 'scene-name': scene.name });
+      const scenes = sceneList.scenes.map((s) => s.name);
+      const match = findBestMatch(name, scenes);
+      // This rating threshold should be upped, but not too important right now.
+      if (match.bestMatch.rating > 0) {
+        await this.send('SetCurrentScene', { 'scene-name': match.bestMatch.target });
       } else {
         throw new Error('Scene could not be found');
       }

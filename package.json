@@ -97,9 +97,9 @@
     "webpack-livereload-plugin": "^2.3.0"
   },
   "nodecg": {
-    "compatibleRange": "^1.5.0",
+    "compatibleRange": "^1.6.0",
     "bundleDependencies": {
-      "nodecg-speedcontrol": "^2.0.0"
+      "nodecg-speedcontrol": "^2.1.0"
     },
     "dashboardPanels": [
       {

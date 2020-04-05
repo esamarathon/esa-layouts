@@ -24,7 +24,7 @@ export default {
   },
   mounted() {
     NodeCG.waitForReplicants(media).then(() => {
-      const images = media.value.filter((v) => v.ext.toLowerCase() !== '.mp4');
+      const images = media.value.filter((v) => v.ext.toLowerCase() !== '.mp4' && v.ext.toLowerCase() !== '.webm');
       if (!images.length) {
         this.$emit('end');
         return;

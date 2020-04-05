@@ -11,7 +11,7 @@
     >
       <source
         :src="videoSrc"
-        type="video/mp4"
+        :type="videoType"
       >
     </video>
   </div>
@@ -32,11 +32,17 @@ export default class extends Vue {
   @Mutation unselectVideo!: UnselectVideo;
   player!: HTMLVideoElement;
   videoSrc: string | null = null;
+  videoType: string | null = null;
 
   playVideo(): void {
     const video = this.videos.find((v) => v.sum === this.videoPlayer.selected);
     if (this.videoPlayer.selected && video) {
       this.videoSrc = video.url;
+      if (video.ext.toLowerCase() === '.webm') {
+        this.videoType = 'video/webm';
+      } else {
+        this.videoType = 'video/mp4';
+      }
       this.player.load();
       this.player.play();
       this.player.addEventListener('ended', this.videoEnded);

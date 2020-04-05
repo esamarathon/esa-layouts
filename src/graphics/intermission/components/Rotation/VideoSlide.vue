@@ -10,7 +10,7 @@
       >
         <source
           :src="src"
-          type="video/mp4"
+          :type="vidtype"
         >
       </video>
     </div>
@@ -28,12 +28,13 @@ export default {
   data() {
     return {
       src: undefined,
+      vidtype: undefined,
       show: false,
     };
   },
   mounted() {
     NodeCG.waitForReplicants(media).then(() => {
-      const videos = media.value.filter((v) => v.ext.toLowerCase() === '.mp4');
+      const videos = media.value.filter((v) => v.ext.toLowerCase() === '.mp4' || v.ext.toLowerCase() === '.webm');
       if (!videos.length) {
         this.$emit('end');
         return;
@@ -44,6 +45,11 @@ export default {
       }
       const data = videos[index];
       this.src = data.url;
+	  if (data.ext.toLowerCase() === '.webm') {
+	    this.vidtype = 'video/webm';
+	  } else {
+	    this.vidtype = 'video/mp4';
+	  }
       index += 1;
 
       this.show = true;

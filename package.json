@@ -239,7 +239,8 @@
         "name": "videos",
         "title": "Videos",
         "allowedTypes": [
-          "mp4"
+          "mp4",
+          "webm"
         ]
       },
       {
@@ -250,7 +251,8 @@
           "jpeg",
           "png",
           "svg",
-          "mp4"
+          "mp4",
+          "webm"
         ]
       },
       {

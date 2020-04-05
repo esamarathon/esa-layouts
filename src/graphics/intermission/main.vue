@@ -5,17 +5,12 @@
       :style="{ 'clip-path': clipPath }"
     />
     <logo></logo>
-    <capture
-      id="IntermissionCamera"
-      class="Flex CameraCapture BorderTop BorderRight BorderBottom BorderLeft"
-    >
-      <ad-timer></ad-timer>
-    </capture>
     <info-storage-box
       id="SponsorLogo"
     >
       <sponsor-logos></sponsor-logos>
     </info-storage-box>
+    <ad-timer></ad-timer>
     <run-upcoming
       v-if="nextRun"
       id="ComingUpNext"
@@ -34,7 +29,6 @@
 <script>
 import clone from 'clone';
 import { generateClipPath } from '../_misc/cut-background';
-import Capture from '../_misc/components/Capture.vue';
 import SponsorLogos from '../_misc/components/SponsorLogos.vue';
 import InfoStorageBox from '../_misc/components/InfoStorageBox.vue';
 import Logo from './components/Logo.vue';
@@ -52,7 +46,6 @@ export default {
   components: {
     SponsorLogos,
     InfoStorageBox,
-    Capture,
     Logo,
     Music,
     Reader,
@@ -104,18 +97,9 @@ export default {
 
   #SponsorLogo {
     left: 26px;
-    top: 741px;
+    top: 450px;
     width: 662px;
-    height: 259px;
-  }
-
-  #IntermissionCamera {
-    justify-content: flex-end;
-    align-items: flex-end;
-    left: 30px;
-    top: 370px;
-    width: 655px;
-    height: 368px;
+    height: 520px;
   }
 
   #ComingUpNext {

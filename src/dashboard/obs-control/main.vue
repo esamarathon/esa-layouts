@@ -13,6 +13,21 @@
       OBS connection currently disconnected.
     </div>
     <template v-else>
+      <div :style="{ 'margin-bottom': '5px' }">
+        Streaming Status:
+        <span
+          v-if="obsData.streaming"
+          :style="{ 'font-weight': 'bold', color: '#58CF00' }"
+        >
+          Connected
+        </span>
+        <span
+          v-else
+          :style="{ 'font-weight': 'bold', color: '#FF5F5C' }"
+        >
+          Disconnected
+        </span>
+      </div>
       <div
         :style="{
           'font-style': 'italic',

@@ -23,8 +23,10 @@ obs.on('ConnectionOpened', async () => {
   obsData.value.connected = true;
   try {
     const sceneList = await obs.send('GetSceneList');
+    const streamingStatus = await obs.send('GetStreamingStatus');
     obsData.value.scene = sceneList['current-scene'];
     obsData.value.sceneList = sceneList.scenes.map((s) => s.name);
+    obsData.value.streaming = streamingStatus.streaming;
     takeGameLayoutScreenshot();
     gameLayoutScreenshotInterval = setInterval(takeGameLayoutScreenshot, 1 * 1000);
   } catch (err) {
@@ -36,7 +38,6 @@ obs.on('ConnectionClosed', () => {
   obsData.value = {
     connected: false,
     sceneList: [],
-    transitioning: false,
   };
   clearInterval(gameLayoutScreenshotInterval);
 });
@@ -57,4 +58,10 @@ obs.on('TransitionBegin', (data) => {
   obsData.value.transitioning = true;
   clearTimeout(transitioningTimeout);
   transitioningTimeout = setTimeout(() => { obsData.value.transitioning = false; }, data.duration);
+});
+
+obs.on('Heartbeat', (data) => {
+  if (typeof data.streaming === 'boolean') {
+    obsData.value.streaming = data.streaming;
+  }
 });

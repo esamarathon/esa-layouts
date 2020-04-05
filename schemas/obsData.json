@@ -15,8 +15,10 @@
       "default": []
     },
     "transitioning": {
-      "type": "boolean",
-      "default": false
+      "type": "boolean"
+    },
+    "streaming": {
+      "type": "boolean"
     },
     "gameLayoutScreenshot": {
       "type": "string"
@@ -24,7 +26,6 @@
   },
   "required": [
     "connected",
-    "sceneList",
-    "transitioning"
+    "sceneList"
   ]
 }

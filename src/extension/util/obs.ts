@@ -65,6 +65,7 @@ const settings = {
 async function connect(): Promise<void> {
   try {
     await obs.connect(settings);
+    obs.send('SetHeartbeat', { enable: true });
     nodecg().log.info('[OBS] Connection successful');
   } catch (err) {
     nodecg().log.warn('[OBS] Connection error');

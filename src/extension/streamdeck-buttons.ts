@@ -66,13 +66,13 @@ function init(): void {
         switch (sc.timer.value.state) {
           case 'stopped':
           case 'paused':
-            sc.startTimer();
+            await sc.startTimer();
             break;
           case 'running':
-            sc.stopTimer();
+            await sc.stopTimer();
             break;
           case 'finished':
-            sc.resetTimer();
+            await sc.resetTimer();
             break;
           default:
             // Don't do anything

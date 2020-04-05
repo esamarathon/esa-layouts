@@ -8,7 +8,7 @@ const config = (nodecg().bundleConfig as Configschema);
 const sc = new SpeedcontrolUtil(nodecg());
 
 // Controls the nodecg-speedcontrol timer when the big buttons are pressed.
-evt.on('bigbuttonPressed', (data) => {
+evt.on('bigbuttonPressed', async (data) => {
   // Only listen to this event on stream 1.
   if (config.event.thisEvent !== 1) {
     return;
@@ -34,11 +34,11 @@ evt.on('bigbuttonPressed', (data) => {
     switch (sc.timer.value.state) {
       case 'stopped':
       case 'paused':
-        sc.startTimer();
+        await sc.startTimer();
         break;
       case 'running':
         if (sc.timer.value.milliseconds > 10 * 1000) {
-          sc.stopTimer(buttonID);
+          await sc.stopTimer(buttonID);
         }
         break;
       default:

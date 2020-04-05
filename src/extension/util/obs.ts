@@ -15,6 +15,7 @@ class OBS extends EventEmitter {
   conn = new ObsWebsocketJs();
   currentScene: string | undefined;
   sceneList: string [] = [];
+  connected = false;
   settings = {
     address: config.address,
     password: config.password,
@@ -27,6 +28,7 @@ class OBS extends EventEmitter {
       this.connect();
 
       this.conn.on('ConnectionClosed', () => {
+        this.connected = false;
         this.currentScene = undefined;
         this.sceneList.length = 0;
         this.emit('currentSceneChanged', this.currentScene);
@@ -56,6 +58,7 @@ class OBS extends EventEmitter {
   async connect(): Promise<void> {
     try {
       await this.conn.connect(this.settings);
+      this.connected = true;
       await this.conn.send('SetHeartbeat', { enable: true });
       const scenes = await this.conn.send('GetSceneList');
       this.currentScene = scenes['current-scene'];
@@ -99,7 +102,7 @@ class OBS extends EventEmitter {
    * @param name Name of the scene.
    */
   async changeScene(name: string): Promise<void> {
-    if (!config.enable) {
+    if (!config.enable || !this.connected) {
       // OBS not enabled, don't even try to set.
       throw new Error('No OBS connection available');
     }
@@ -124,7 +127,7 @@ class OBS extends EventEmitter {
    */
   // eslint-disable-next-line max-len
   async setSourceSettings(sourceName: string, sourceType: string, sourceSettings: {}): Promise<void> {
-    if (!config.enable) {
+    if (!config.enable || !this.connected) {
       // OBS not enabled, don't even try to set.
       throw new Error('No OBS connection available');
     }

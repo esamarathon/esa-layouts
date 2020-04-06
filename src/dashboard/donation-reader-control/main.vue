@@ -41,7 +41,7 @@ export default class extends Vue {
 
   @Watch('donationReader', { immediate: true })
   onDonationReaderChanged(val: DonationReader): void {
-    this.entry = val;
+    this.entry = val || '';
   }
 
   change(): void {

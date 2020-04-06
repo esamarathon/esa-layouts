@@ -16,7 +16,7 @@
     </div>
     <div class="StreamEmbed">
       <iframe
-        src="https://player.twitch.tv/?channel=esamarathon2&autoplay=true&muted=true"
+        src="https://player.twitch.tv/?channel=esamarathon&autoplay=true&muted=true"
         frameborder="0"
         scrolling="no"
         allowfullscreen="true"

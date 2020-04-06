@@ -27,9 +27,9 @@ async function setChannels(usernames: string[]): Promise<void> {
 
 if (config.enable && config.token) {
   // Poor way of doing this, should change in the future/include in nodecg-speedcontrol.
-  twitchAPIData.on('change', (newVal, oldVal) => {
-    if (oldVal && _.isEqual(_.sortBy(newVal.featuredChannels), _.sortBy(oldVal.featuredChannels))) {
-      setChannels(newVal.featuredChannels);
+  twitchAPIData.on('change', (newV, oldV) => {
+    if (oldV && !_.isEqual(_.sortBy(newV.featuredChannels), _.sortBy(oldV.featuredChannels))) {
+      setChannels(newV.featuredChannels);
     }
   });
 }

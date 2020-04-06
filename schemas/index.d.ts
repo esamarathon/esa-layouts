@@ -1,6 +1,7 @@
 export * from './bids';
 export * from './capturePositions';
 export * from './commentators';
+export * from './donationReader';
 export * from './donationsToRead';
 export * from './donationTotal';
 export * from './gameLayouts';

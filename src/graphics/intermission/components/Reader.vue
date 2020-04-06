@@ -8,16 +8,16 @@
     </div>
     <div class="Name Flex">
       {{ name }}
-      <img
+      <!--<img
         v-if="country"
         :src="`/bundles/esa-layouts/static/flags/${country}.png`"
-      >
+      >-->
     </div>
   </div>
 </template>
 
 <script>
-const users = nodecg.Replicant('users', 'speedcontrol-flagcarrier');
+const donationReader = nodecg.Replicant('donationReader');
 
 export default {
   name: 'Reader',
@@ -29,11 +29,10 @@ export default {
     };
   },
   mounted() {
-    users.on('change', (newVal) => {
-      if (newVal && newVal.donations && newVal.donations.reader) {
-        this.name = newVal.donations.reader.display_name;
-        this.country = newVal.donations.reader.country_code;
+    donationReader.on('change', (newVal) => {
+      if (newVal) {
         this.show = true;
+        this.name = newVal;
       } else {
         this.show = false;
       }

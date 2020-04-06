@@ -165,6 +165,14 @@
         "file": "obs-control.html",
         "workspace": "ESA",
         "headerColor": "#c49215"
+      },
+      {
+        "name": "donation-reader-control",
+        "title": "Donation Reader Control",
+        "width": 2,
+        "file": "donation-reader-control.html",
+        "workspace": "ESA",
+        "headerColor": "#c49215"
       }
     ],
     "graphics": [

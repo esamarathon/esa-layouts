@@ -218,6 +218,11 @@
         "width": 1920,
         "height": 1080,
         "singleInstance": true
+      },
+      {
+        "file": "twitch-players.html",
+        "width": 1920,
+        "height": 1080
       }
     ],
     "mount": [

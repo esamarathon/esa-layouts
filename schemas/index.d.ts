@@ -14,4 +14,5 @@ export * from './restreamViewerTool';
 export * from './sponsorLogos';
 export * from './streamDeckData';
 export * from './ttsVoices';
+export * from './twitchSubscribers';
 export * from './videoPlayer';

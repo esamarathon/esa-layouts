@@ -28,6 +28,7 @@ export = (nodecg: NodeCG): { obs: any } => {
   require('./text-to-speech');
   require('./twitch-ext');
   require('./logging');
+  require('./twitch-subs');
 
   return {
     obs: require('./util/obs').default,

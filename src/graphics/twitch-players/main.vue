@@ -1,22 +1,33 @@
 <template>
-  <div>
-    <div class="StreamEmbed">
-      <template v-if="config.enable && playerStream">
+  <div :style="{ display: 'flex', width: '100%', height: '100vh' }">
+    <div :style="{ flex: '1' }">
+      <div class="StreamEmbed">
+        <template v-if="config.enable && playerStream">
+          <iframe
+            :src="`https://player.twitch.tv/?channel=${playerStream}&autoplay=true&muted=true`"
+            frameborder="0"
+            scrolling="no"
+            allowfullscreen="true"
+            :style="{ width: '100%', height: '100%' }"
+          />
+        </template>
+        <template v-else>
+          Player Stream Unavailable
+        </template>
+      </div>
+      <div class="StreamEmbed">
         <iframe
-          :src="`https://player.twitch.tv/?channel=${playerStream}&autoplay=true&muted=true`"
+          src="https://player.twitch.tv/?channel=esamarathon&autoplay=true&muted=true"
           frameborder="0"
           scrolling="no"
           allowfullscreen="true"
           :style="{ width: '100%', height: '100%' }"
         />
-      </template>
-      <template v-else>
-        Player Stream Unavailable
-      </template>
+      </div>
     </div>
-    <div class="StreamEmbed">
+    <div :style="{ width: '340px' }">
       <iframe
-        src="https://player.twitch.tv/?channel=esamarathon&autoplay=true&muted=true"
+        src="https://www.twitch.tv/embed/esamarathon/chat?darkpopout"
         frameborder="0"
         scrolling="no"
         allowfullscreen="true"
@@ -58,7 +69,6 @@ export default class extends Vue {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
     height: 50vh;
   }
 </style>

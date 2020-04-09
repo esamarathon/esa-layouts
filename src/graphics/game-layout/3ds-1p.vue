@@ -67,44 +67,44 @@ export default {
 
 <style scoped>
   #GameCapture1 {
-    left: 695px;
+    left: 774px;
     top: 0px;
-    width: 1225px;
+    width: 1146px;
     height: 689px;
   }
   #GameCapture2 {
-    left: 1525px;
+    left: 1506px;
     top: 689px;
-    width: 395px;
+    width: 414px;
     height: 311px;
   }
 
   #CameraCapture1 {
     left: 0px;
     top: 0px;
-    width: 695px;
-    height: 400px;
+    width: 774px;
+    height: 437px;
   }
 
   #DonationsBar {
     left: 0px;
     top: 940px;
-    width: 1525px;
+    width: 1506px;
     height: 60px;
   }
 
   #InfoStorageBox1 {
     left: 0px;
-    top: 400px;
-    width: 695px;
-    height: 540px;
+    top: 437px;
+    width: 774px;
+    height: 503px;
   }
 
   #InfoStorageBox2 {
     justify-content: center;
-    left: 695px;
+    left: 774px;
     top: 689px;
-    width: 830px;
+    width: 732px;
     height: 251px;
   }
 </style>

@@ -1,5 +1,4 @@
 import { Configschema } from 'configschema';
-import moment from 'moment';
 import needle from 'needle';
 import { FormattedPrize, Prize } from 'types';
 import { eventInfo, getCookies } from './tracker';
@@ -22,9 +21,9 @@ function processRawPrizes(rawPrizes: Prize[]): FormattedPrize[] {
       endTimestamp: prize.fields.endrun__endtime || prize.fields.endtime,
     };
     // Only add prize if applicable right now.
-    const currentTimestamp = moment().unix();
-    const startTimestamp = moment(formattedPrize.startTimestamp).unix();
-    const endTimestamp = moment(formattedPrize.endTimestamp).unix();
+    const currentTimestamp = Date.now();
+    const startTimestamp = Date.parse(formattedPrize.startTimestamp);
+    const endTimestamp = Date.parse(formattedPrize.endTimestamp);
     if (currentTimestamp > startTimestamp && currentTimestamp < endTimestamp) {
       prev.push(formattedPrize);
     }

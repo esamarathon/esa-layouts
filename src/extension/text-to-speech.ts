@@ -1,5 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-
 import { Configschema } from 'configschema';
 import needle from 'needle';
 import { TtsVoices } from 'schemas';
@@ -11,7 +9,7 @@ const config = (nodecg().bundleConfig as Configschema).tts;
 
 /**
  * Will attempt to trigger speech for the supplied donation.
- * @param donation Donation object.
+ * @param donation Donation object
  */
 export async function speak(donation: FormattedDonation): Promise<void> {
   const text = `${donation.name} donated $${donation.amount.toFixed(2)}`
@@ -45,15 +43,15 @@ async function init(): Promise<void> {
     nodecg().log.info('[TTS] Setting up');
     const resp = await needle('get', `${config.voiceAPI}/voices`);
     const list = resp.body.voices as Voices;
-    ttsVoices.value.available = Object.keys(list).reduce((accumulator, code) => {
+    ttsVoices.value.available = Object.keys(list).reduce((prev, code) => {
       // Only use voices using the Wavenet tech and that are English based.
       if (list[code].languageCode.includes('en-') && code.includes('Wavenet')) {
-        accumulator.push({
+        prev.push({
           code,
           name: `${list[code].name} (${list[code].languageName}, ${list[code].gender})`,
         });
       }
-      return accumulator;
+      return prev;
     }, [] as TtsVoices['available']);
 
     // Set the voice to a default if needed.

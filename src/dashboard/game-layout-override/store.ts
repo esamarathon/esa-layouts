@@ -27,7 +27,6 @@ const store = new Vuex.Store({
     updateSelected(state, code): void {
       if (typeof reps.gameLayouts.value !== 'undefined') {
         reps.gameLayouts.value.selected = code;
-        reps.gameLayouts.value.overridden = true;
       }
     },
     /* Mutations to replicants end */

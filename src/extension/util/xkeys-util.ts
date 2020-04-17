@@ -13,7 +13,7 @@ interface XKeysClass {
 }
 
 class XKeysClass extends EventEmitter {
-  panel!: XKeysLib;
+  panel: XKeysLib | undefined;
 
   constructor() {
     super();

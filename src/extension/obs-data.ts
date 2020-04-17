@@ -4,13 +4,14 @@ import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { obsData } from './util/replicants';
 
-const obsConfig = (nodecg().bundleConfig as Configschema).obs;
+const evtConfig = (nodecg().bundleConfig as Configschema).event;
+const config = (nodecg().bundleConfig as Configschema).obs;
 
 let gameLayoutScreenshotInterval: NodeJS.Timeout;
 async function takeGameLayoutScreenshot(): Promise<void> {
   try {
     const gameLayoutScreenshot = await obs.conn.send('TakeSourceScreenshot', {
-      sourceName: obsConfig.names.scenes.gameLayout,
+      sourceName: config.names.scenes.gameLayout,
       embedPictureFormat: 'png',
       height: 360,
     });
@@ -25,8 +26,10 @@ obs.conn.on('ConnectionOpened', async () => {
   try {
     const streamingStatus = await obs.conn.send('GetStreamingStatus');
     obsData.value.streaming = streamingStatus.streaming;
-    takeGameLayoutScreenshot();
-    gameLayoutScreenshotInterval = setInterval(takeGameLayoutScreenshot, 1 * 1000);
+    if (evtConfig.online) {
+      takeGameLayoutScreenshot();
+      gameLayoutScreenshotInterval = setInterval(takeGameLayoutScreenshot, 1 * 1000);
+    }
   } catch (err) {
     nodecg().log.warn('[OBS Data] Cannot get current scene on connection');
   }
@@ -49,7 +52,7 @@ obs.on('sceneListChanged', (sceneList) => {
 });
 
 // This logic assumes the duration supplied is correct, which isn't always the case.
-// Not too important for now, a "TransitionEnd" event will be added in a later version.
+// Not too important for now; a "TransitionEnd" event will be added in a later version.
 let transitioningTimeout: NodeJS.Timeout;
 obs.conn.on('TransitionBegin', (data) => {
   obsData.value.transitioning = true;

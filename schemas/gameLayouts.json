@@ -25,14 +25,9 @@
     },
     "selected": {
       "type": "string"
-    },
-    "overridden": {
-      "type": "boolean",
-      "default": false
     }
   },
   "required": [
-    "available",
-    "overridden"
+    "available"
   ]
 }

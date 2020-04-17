@@ -5,7 +5,7 @@ import { getCurrentEventShort, getOtherStreamEventShort } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { evt } from './util/rabbitmq';
-import { commentators, otherStreamData } from './util/replicants';
+import { assetsVideos, commentators, otherStreamData, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
 
 const config = (nodecg().bundleConfig as Configschema);
 const sc = new SpeedcontrolUtil(nodecg());
@@ -67,6 +67,21 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
   && !obs.isCurrentScene(config.obs.names.scenes.gameLayout)) {
     commentators.value.length = 0;
     nodecg().log.debug('[Misc] Cleared commentators');
+  }
+});
+
+// Set the upcoming intermission video.
+sc.on('timerStopped', () => {
+  const run = sc.getCurrentRun();
+  if (run?.customData.intermission) {
+    const videoName = run.customData.intermission;
+    const asset = assetsVideos.value.find((v) => v.name === videoName);
+    if (asset) {
+      videoPlayer.value.selected = asset.sum;
+      nodecg().log.info(`[Misc] Automatically set video player to ${videoName}`);
+    } else {
+      nodecg().log.warn(`[Misc] Cannot automatically set video player to ${videoName}`);
+    }
   }
 });
 

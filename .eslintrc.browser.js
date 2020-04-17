@@ -56,5 +56,6 @@ module.exports = {
     'lines-between-class-members': 'off',
     '@typescript-eslint/ban-ts-ignore': 'off',
     'no-restricted-syntax': 'off',
+    'import/prefer-default-export': 'off',
   }
 };

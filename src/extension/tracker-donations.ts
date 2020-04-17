@@ -1,5 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-
 import { Configschema } from 'configschema';
 import needle from 'needle';
 import { Donation, FormattedDonation } from 'types';

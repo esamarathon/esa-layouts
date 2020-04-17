@@ -1,5 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-
 import { Configschema } from 'configschema';
 import needle from 'needle';
 import { Bid, FormattedBid } from 'types';
@@ -99,13 +97,12 @@ async function updateBids(): Promise<void> {
     );
     const currentBids = processRawBids(resp.body);
     bids.value = currentBids;
-    setTimeout(updateBids, refreshTime);
   } catch (err) {
     nodecg().log.warn('[Tracker] Error updating bids');
     nodecg().log.debug('[Tracker] Error updating bids:', err);
     bids.value.length = 0; // Clear the array so we do not display incorrect information.
-    setTimeout(updateBids, refreshTime);
   }
+  setTimeout(updateBids, refreshTime);
 }
 
 export function setup(): void {

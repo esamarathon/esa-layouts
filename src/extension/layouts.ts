@@ -1,9 +1,8 @@
-/* eslint-disable no-await-in-loop */
 import { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { assetsVideos, capturePositions, gameLayouts, obsData, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
+import { capturePositions, gameLayouts, obsData, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
 
 const evtConfig = (nodecg().bundleConfig as Configschema).event;
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
@@ -19,28 +18,16 @@ const obsSourceKeys: { [key: string]: string } = {
   CameraCapture2: obsConfig.names.sources.cameraCapture2,
 };
 
+// nodecg-speedcontrol no longer sends forceRefreshIntermission so doing it here instead.
 sc.on('timerStopped', () => {
-  // nodecg-speedcontrol no longer sends forceRefreshIntermission so doing it here instead.
   nodecg().sendMessage('forceRefreshIntermission');
-
-  // Set the upcoming intermission video.
-  const run = sc.getCurrentRun();
-  if (run?.customData.intermission) {
-    const videoName = run.customData.intermission;
-    const asset = assetsVideos.value.find((v) => v.name === videoName);
-    if (asset) {
-      videoPlayer.value.selected = asset.sum;
-      nodecg().log.info(`[Layouts] Automatically set video player to ${videoName}`);
-    } else {
-      nodecg().log.warn(`[Layouts] Cannot automatically set video player to ${videoName}`);
-    }
-  }
 });
 
+// TODO: Should this function be in ./util/obs, or routed via it at least?
 /**
  * Helper function used by modifyCaptures.
  * Resets the scene item, then sets some properties if possible.
- * @param scene Name of scene item is in
+ * @param scene Name of scene that item is in
  * @param item Name of item
  * @param area Area object (as used in capturePositions): x, y, width, height
  * @param crop Crop object: top, bottom, left, right
@@ -64,6 +51,10 @@ async function configureSceneItem(
   visible?: boolean,
 ): Promise<void> {
   try {
+    if (!obsConfig.enable || !obs.connected) {
+      // OBS not enabled, don't even try to set.
+      throw new Error('No OBS connection available');
+    }
     if (area) {
       await obs.conn.send('ResetSceneItem', {
         'scene-name': scene,
@@ -92,14 +83,10 @@ async function configureSceneItem(
 }
 
 // Change the game layout based on information supplied via the run data.
-// TO SEE: Do we need "overridden" anymore, besides for informational purposes?
 let init = false;
 sc.runDataActiveRun.on('change', (newVal, oldVal) => {
   // This shouldn't trigger on initial start up, so should only happen on an *actual* run change.
   if (newVal && init) {
-    // If we've changed to a new run, override the overridden value (heh).
-    gameLayouts.value.overridden = false;
-
     // If there's no old run or we changed to a different run, try to automatically set the layout.
     if (!oldVal || newVal.id !== oldVal.id) {
       const layout = gameLayouts.value.available.find((l) => l.code === newVal.customData.layout);
@@ -161,6 +148,7 @@ capturePositions.on('change', async (val) => {
 });
 
 sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
+  // Disable transitioning if on commercials scene and seconds are on the commercial timer.
   if (obs.isCurrentScene(obsConfig.names.scenes.commercials)) {
     obsData.value.disableTransitioning = newVal.secondsRemaining > 0;
   }
@@ -170,8 +158,8 @@ sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
   if (oldVal && oldVal.secondsRemaining > 0 && newVal.secondsRemaining <= 0
     && videoPlayer.value.selected && obs.isCurrentScene(obsConfig.names.scenes.commercials)) {
     try {
-      obsData.value.disableTransitioning = true;
       await obs.changeScene(obsConfig.names.scenes.videoPlayer);
+      obsData.value.disableTransitioning = true;
     } catch (err) {
       nodecg().log.warn('[Layouts] Could not switch to video player scene'
         + ' after intermission commercials');

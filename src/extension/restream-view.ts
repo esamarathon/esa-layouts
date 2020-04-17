@@ -3,7 +3,7 @@ import needle, { BodyData, NeedleHttpVerbs, NeedleResponse } from 'needle';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import * as mq from './util/rabbitmq';
+import { evt } from './util/rabbitmq';
 import { restreamViewerTool } from './util/replicants';
 
 const sc = new SpeedcontrolUtil(nodecg());
@@ -165,7 +165,7 @@ if (config.enable) {
   setInterval(updateStatus, 10 * 1000);
 
   // Received when we need to tweak the OBS source for the stream.
-  mq.evt.on('rvtServerStarted', (data) => {
+  evt.on('rvtServerStarted', (data) => {
     configureMediaSource(`http://localhost:${data.port}`);
   });
 

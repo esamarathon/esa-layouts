@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 /* eslint no-new: off, @typescript-eslint/explicit-function-return-type: off */
 
 import { GameLayouts } from 'schemas';
@@ -131,14 +130,14 @@ const router = new VueRouter({
 
 // Collect list of available game layouts to add to replicant.
 function getAvailable(): GameLayouts['available'] {
-  return routes.reduce((accumulator, route) => {
+  return routes.reduce((prev, route) => {
     if (route.name) {
-      accumulator.push({
+      prev.push({
         name: route.name,
         code: route.path.replace('/', ''),
       });
     }
-    return accumulator;
+    return prev;
   }, [] as GameLayouts['available']);
 }
 

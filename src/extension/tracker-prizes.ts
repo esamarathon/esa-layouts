@@ -1,5 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-
 import { Configschema } from 'configschema';
 import moment from 'moment';
 import needle from 'needle';
@@ -13,7 +11,7 @@ const refreshTime = 60 * 1000; // Get prizes every 60s.
 
 // Processes the response from the API above.
 function processRawPrizes(rawPrizes: Prize[]): FormattedPrize[] {
-  return rawPrizes.reduce((accumulator, prize) => {
+  return rawPrizes.reduce((prev, prize) => {
     const formattedPrize = {
       id: prize.pk,
       name: prize.fields.name,
@@ -28,13 +26,14 @@ function processRawPrizes(rawPrizes: Prize[]): FormattedPrize[] {
     const startTimestamp = moment(formattedPrize.startTimestamp).unix();
     const endTimestamp = moment(formattedPrize.endTimestamp).unix();
     if (currentTimestamp > startTimestamp && currentTimestamp < endTimestamp) {
-      accumulator.push(formattedPrize);
+      prev.push(formattedPrize);
     }
-    return accumulator;
+    return prev;
   }, [] as FormattedPrize[]);
 }
 
 // Get the prizes from the API.
+// We always get these from the first listed event, in the case of multiple tracker events.
 async function updatePrizes(): Promise<void> {
   try {
     const resp = await needle(
@@ -46,13 +45,12 @@ async function updatePrizes(): Promise<void> {
     );
     const currentPrizes = processRawPrizes(resp.body);
     prizes.value = currentPrizes;
-    setTimeout(updatePrizes, refreshTime);
   } catch (err) {
     nodecg().log.warn('[Tracker] Error updating prizes');
     nodecg().log.debug('[Tracker] Error updating prizes:', err);
     prizes.value.length = 0; // Clear the array so we do not display incorrect information.
-    setTimeout(updatePrizes, refreshTime);
   }
+  setTimeout(updatePrizes, refreshTime);
 }
 
 export function setup(): void {

@@ -8,7 +8,7 @@ import obs from './util/obs';
 import { donationsToRead, streamDeckData } from './util/replicants';
 import sd from './util/streamdeck';
 
-const config = (nodecg().bundleConfig as Configschema);
+const config = nodecg().bundleConfig as Configschema;
 const sc = new SpeedcontrolUtil(nodecg());
 const defaultCommercialText = 'STEP 1\nTWITCH AD';
 const defaultTimerText = 'Start\nTimer';
@@ -58,7 +58,7 @@ function init(): void {
   sd.on('keyUp', async (data) => {
     // com.esamarathon.streamdeck.timer
     // Controls the nodecg-speedcontrol timer when the button is pressed.
-    // Currently the "Stop Timer" state only works if there's only 1 team.
+    // Currently the "Stop Timer" state works if there's only 1 team.
     if (data.action === 'com.esamarathon.streamdeck.timer') {
       try {
         // Note: the nodecg-speedcontrol bundle will check if it *can* do these actions,

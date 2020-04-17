@@ -1,5 +1,3 @@
-/* eslint-disable no-await-in-loop */
-
 import { Configschema } from 'configschema';
 import needle, { NeedleResponse } from 'needle';
 import { EventInfo } from 'types';
@@ -69,7 +67,7 @@ evt.on('donationTotalUpdated', (data) => {
     total += event.total;
   }
   if (donationTotal.value !== total) {
-    nodecg().log.info('[Tracker] Updated donation total received: $%s', total.toFixed(2));
+    nodecg().log.debug('[Tracker] Updated donation total received: $%s', total.toFixed(2));
     donationTotal.value = total;
   }
 });
@@ -78,7 +76,7 @@ evt.on('donationTotalUpdated', (data) => {
 evt.on('donationFullyProcessed', (data) => {
   if (data.comment_state === 'APPROVED') {
     // eslint-disable-next-line no-underscore-dangle
-    nodecg().log.info('[Tracker] Received new donation with ID %s', data._id);
+    nodecg().log.debug('[Tracker] Received new donation with ID %s', data._id);
     nodecg().sendMessage('newDonation', data);
     if (data.amount >= 20) { // Notable donations are over $20
       notableDonations.value.unshift(data);

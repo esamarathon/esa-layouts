@@ -1,4 +1,4 @@
-/* eslint-disable import/prefer-default-export */
+// TODO: Rewrite this whole file I think!
 
 import { Configschema } from 'configschema';
 import { SponsorLogos } from 'schemas';

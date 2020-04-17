@@ -76,7 +76,6 @@ class OBS extends EventEmitter {
    * Find scene based on string; at least the start of the name should be supplied.
    * @param name Name of scene, at least starting of name.
    */
-  // eslint-disable-next-line class-methods-use-this
   findScene(name: string): string | undefined {
     let match: string | undefined;
     const matches = this.sceneList.filter((s) => s.startsWith(name));
@@ -129,7 +128,7 @@ class OBS extends EventEmitter {
   async setSourceSettings(sourceName: string, sourceType: string, sourceSettings: {}): Promise<void> {
     if (!config.enable || !this.connected) {
       // OBS not enabled, don't even try to set.
-      throw new Error('No OBS connection available');
+      throw new Error('No connection available');
     }
     try {
       await this.conn.send('SetSourceSettings', {

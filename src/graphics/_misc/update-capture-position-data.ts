@@ -1,5 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-
 import { CapturePositions } from 'schemas';
 
 export function updateCapturePositionData(layout: string): void {

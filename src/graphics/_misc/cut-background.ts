@@ -1,7 +1,4 @@
-/* eslint-disable object-curly-newline */
-/* eslint-disable import/prefer-default-export */
-
-import { BoxCoor, Coor, makeCoors, outputCss, sortBoxCoor } from './clip';
+import { BoxCoor, Coor, makeCoors, outputCss, sortBoxCoor } from './clip'; // eslint-disable-line object-curly-newline, max-len
 
 export function generateClipPath(): string {
   const captureElems = document.getElementsByClassName('Capture');

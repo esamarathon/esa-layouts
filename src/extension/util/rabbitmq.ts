@@ -116,8 +116,7 @@ let conn: AmqpConnectionManager | undefined;
 let chan: ChannelWrapper | undefined;
 if (config.enable) {
   nodecg().log.info('[RabbitMQ] Setting up connection');
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  conn = amqpConnectionManager.connect([url()], opts() as any)
+  conn = amqpConnectionManager.connect([url()], opts())
     .on('connect', () => {
       nodecg().log.info('[RabbitMQ] Server connection successful');
     })
@@ -143,8 +142,7 @@ if (config.enable) {
  * @param key The routing key this message will be published with.
  * @param data The data that should be sent in this message.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function send(key: string, data: any): void {
+export function send(key: string, data: unknown): void {
   if (!config.enable) {
     // RabbitMQ not enabled, don't even try to send.
     return;

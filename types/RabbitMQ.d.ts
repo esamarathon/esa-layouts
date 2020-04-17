@@ -1,3 +1,5 @@
+// TODO: Check the message typings are up to date.
+
 import { EventEmitter } from 'events';
 
 export interface MQOpts {

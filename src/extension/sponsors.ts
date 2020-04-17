@@ -3,11 +3,12 @@ import { sponsorLogos } from './util/replicants';
 
 /**
  * Get the length in milliseconds a sponsor logo should remain,
- * -1000 if we cannot find it in the rotation.
+ * -1 if we cannot find it in the rotation.
  * @param id ID of sponsor logo in rotation.
  */
 function getLength(id: string): number {
-  return (sponsorLogos.value.rotation.find((i) => i.id === id)?.seconds || -1) * 1000;
+  const logo = sponsorLogos.value.rotation.find((i) => i.id === id);
+  return logo ? logo.seconds * 1000 : -1;
 }
 
 /**

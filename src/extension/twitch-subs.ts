@@ -2,7 +2,7 @@ import { ExtensionReturn } from '../../../nodecg-speedcontrol/types';
 import { get as nodecg } from './util/nodecg';
 import { twitchAPIData, twitchSubscribers } from './util/replicants';
 
-const { sendMessage } = (nodecg().extensions['nodecg-speedcontrol'] as unknown as ExtensionReturn);
+const { sendMessage } = nodecg().extensions['nodecg-speedcontrol'] as unknown as ExtensionReturn;
 const refreshTime = 60 * 1000; // Update every 60s.
 
 async function updateSubscriptionStats(): Promise<void> {
@@ -13,7 +13,6 @@ async function updateSubscriptionStats(): Promise<void> {
     let nextPage = true;
     while (nextPage) {
       const endpoint = `/subscriptions?broadcaster_id=${twitchAPIData.value.channelID}&first=100`;
-      // eslint-disable-next-line no-await-in-loop
       const resp = await sendMessage('twitchAPIRequest', {
         method: 'get',
         endpoint: `${endpoint}${cursor ? `&after=${cursor}` : ''}`,
@@ -27,24 +26,24 @@ async function updateSubscriptionStats(): Promise<void> {
         nextPage = false;
       }
     }
-    const filteredSubs = subs.reduce((prev, curr) => {
+    const filteredSubs = subs.reduce((prev, sub) => {
       // Either broadcaster or moobot should be filtered out.
-      if (curr.user_id === curr.broadcaster_id || curr.user_id === '1564983') {
+      if (sub.user_id === sub.broadcaster_id || sub.user_id === '1564983') {
         return prev;
       }
       let points;
-      if (curr.tier === '3000') {
+      if (sub.tier === '3000') {
         points = 6;
-      } else if (curr.tier === '2000') {
+      } else if (sub.tier === '2000') {
         points = 2;
       } else {
         points = 1;
       }
-      const match = prev.findIndex((s) => s.id === curr.user_id);
+      const match = prev.findIndex((s) => s.id === sub.user_id);
       if (match >= 0 && prev[match].points < points) {
-        prev.splice(match, 1, { id: curr.user_id, points });
+        prev.splice(match, 1, { id: sub.user_id, points });
       } else {
-        prev.push({ id: curr.user_id, points });
+        prev.push({ id: sub.user_id, points });
       }
       return prev;
     }, [] as { id: string; points: number }[]);

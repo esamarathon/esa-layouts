@@ -21,12 +21,12 @@ export const notableDonations = nodecg().Replicant<NotableDonations>('notableDon
 export const obsData = nodecg().Replicant<ObsData>('obsData', { persistent: false });
 export const otherStreamData = nodecg().Replicant<OtherStreamData>('otherStreamData');
 export const prizes = nodecg().Replicant<Prizes>('prizes', { persistent: false });
+export const restreamViewerTool = nodecg().Replicant<RestreamViewerTool>('restreamViewerTool');
 export const sponsorLogos = nodecg().Replicant<SponsorLogos>('sponsorLogos');
 export const streamDeckData = nodecg().Replicant<StreamDeckData>('streamDeckData');
 export const ttsVoices = nodecg().Replicant<TtsVoices>('ttsVoices');
 export const twitchSubscribers = nodecg().Replicant<TwitchSubscribers>('twitchSubscribers');
 export const videoPlayer = nodecg().Replicant<VideoPlayer>('videoPlayer');
-export const restreamViewerTool = nodecg().Replicant<RestreamViewerTool>('restreamViewerTool');
 
 // nodecg-speedcontrol
 export const twitchAPIData = nodecg().Replicant<TwitchAPIData>('twitchAPIData', 'nodecg-speedcontrol');

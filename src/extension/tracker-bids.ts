@@ -1,6 +1,6 @@
 import { Configschema } from 'configschema';
 import needle from 'needle';
-import { Bid, FormattedBid } from 'types';
+import type { Tracker } from 'types';
 import { eventInfo, getCookies } from './tracker';
 import { get as nodecg } from './util/nodecg';
 import { bids } from './util/replicants';
@@ -10,9 +10,9 @@ const config = (nodecg().bundleConfig as Configschema).tracker;
 const refreshTime = 60 * 1000; // Get bids every 60s.
 
 // Processes the response from the API.
-function processRawBids(rawBids: Bid[]): FormattedBid[] {
-  const parentBids: { [k: string]: FormattedBid } = {};
-  const childBids: Bid[] = [];
+function processRawBids(rawBids: Tracker.Bid[]): Tracker.FormattedBid[] {
+  const parentBids: { [k: string]: Tracker.FormattedBid } = {};
+  const childBids: Tracker.Bid[] = [];
 
   rawBids.forEach((bid) => {
     // Ignore denied/pending entries.

@@ -1,6 +1,6 @@
 import { Configschema } from 'configschema';
 import needle from 'needle';
-import { FormattedPrize, Prize } from 'types';
+import type { Tracker } from 'types';
 import { eventInfo, getCookies } from './tracker';
 import { get as nodecg } from './util/nodecg';
 import { prizes } from './util/replicants';
@@ -9,7 +9,7 @@ const config = (nodecg().bundleConfig as Configschema).tracker;
 const refreshTime = 60 * 1000; // Get prizes every 60s.
 
 // Processes the response from the API above.
-function processRawPrizes(rawPrizes: Prize[]): FormattedPrize[] {
+function processRawPrizes(rawPrizes: Tracker.Prize[]): Tracker.FormattedPrize[] {
   return rawPrizes.reduce((prev, prize) => {
     const formattedPrize = {
       id: prize.pk,
@@ -28,7 +28,7 @@ function processRawPrizes(rawPrizes: Prize[]): FormattedPrize[] {
       prev.push(formattedPrize);
     }
     return prev;
-  }, [] as FormattedPrize[]);
+  }, [] as Tracker.FormattedPrize[]);
 }
 
 // Get the prizes from the API.

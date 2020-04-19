@@ -1,7 +1,7 @@
 // TODO: Rewrite this whole file I think!
 
 import { Configschema } from 'configschema';
-import { SponsorLogos } from 'schemas';
+import type { SponsorLogos } from 'schemas';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { getCurrentEventShort } from './util/helpers';
 import { get as nodecg } from './util/nodecg';

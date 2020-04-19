@@ -1,11 +1,11 @@
 import { Configschema } from 'configschema';
 import needle, { NeedleResponse } from 'needle';
-import { EventInfo } from 'types';
+import type { Tracker } from 'types';
 import { get as nodecg } from './util/nodecg';
 import { evt } from './util/rabbitmq';
 import { donationTotal, notableDonations } from './util/replicants';
 
-export const eventInfo: EventInfo[] = [];
+export const eventInfo: Tracker.EventInfo[] = [];
 const eventConfig = (nodecg().bundleConfig as Configschema).event;
 const config = (nodecg().bundleConfig as Configschema).tracker;
 let cookies: NeedleResponse['cookies'];

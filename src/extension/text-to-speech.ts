@@ -1,7 +1,7 @@
 import { Configschema } from 'configschema';
 import needle from 'needle';
-import { TtsVoices } from 'schemas';
-import { FormattedDonation, Voices } from 'types';
+import type { TtsVoices } from 'schemas';
+import type { TextToSpeech, Tracker } from 'types';
 import { get as nodecg } from './util/nodecg';
 import { ttsVoices } from './util/replicants';
 
@@ -11,7 +11,7 @@ const config = (nodecg().bundleConfig as Configschema).tts;
  * Will attempt to trigger speech for the supplied donation.
  * @param donation Donation object
  */
-export async function speak(donation: FormattedDonation): Promise<void> {
+export async function speak(donation: Tracker.FormattedDonation): Promise<void> {
   const text = `${donation.name} donated $${donation.amount.toFixed(2)}`
     + `${donation.comment ? `: ${donation.comment}` : ''}`;
   const url = `${config.voiceAPI}?voice=${ttsVoices.value.selected}`
@@ -42,7 +42,7 @@ async function init(): Promise<void> {
   try {
     nodecg().log.info('[TTS] Setting up');
     const resp = await needle('get', `${config.voiceAPI}/voices`);
-    const list = resp.body.voices as Voices;
+    const list = resp.body.voices as TextToSpeech.Voices;
     ttsVoices.value.available = Object.keys(list).reduce((prev, code) => {
       // Only use voices using the Wavenet tech and that are English based.
       if (list[code].languageCode.includes('en-') && code.includes('Wavenet')) {

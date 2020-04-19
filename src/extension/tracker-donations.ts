@@ -1,6 +1,6 @@
 import { Configschema } from 'configschema';
 import needle from 'needle';
-import { Donation, FormattedDonation } from 'types';
+import type { Tracker } from 'types';
 import { eventInfo, getCookies } from './tracker';
 import { get as nodecg } from './util/nodecg';
 import { donationsToRead } from './util/replicants';
@@ -10,7 +10,7 @@ const config = (nodecg().bundleConfig as Configschema).tracker;
 const refreshTime = 10 * 1000; // Get donations every 10s.
 let updateTimeout: NodeJS.Timeout;
 
-function processToReadDonations(donations: Donation[]): FormattedDonation[] {
+function processToReadDonations(donations: Tracker.Donation[]): Tracker.FormattedDonation[] {
   return donations.map((donation) => ({
     id: donation.pk,
     name: donation.fields.donor__public,

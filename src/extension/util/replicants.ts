@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 
-import { Bids, CapturePositions, Commentators, DonationsToRead, DonationTotal, GameLayouts, MusicPlayer, NotableDonations, ObsData, OtherStreamData, Prizes, RestreamViewerTool, SponsorLogos, StreamDeckData, TtsVoices, TwitchSubscribers, VideoPlayer } from 'schemas'; // eslint-disable-line object-curly-newline
-import { Asset } from 'types';
-import { TwitchAPIData } from '../../../../nodecg-speedcontrol/schemas';
+import type { Bids, CapturePositions, Commentators, DonationsToRead, DonationTotal, GameLayouts, MusicPlayer, NotableDonations, ObsData, OtherStreamData, Prizes, RestreamViewerTool, SponsorLogos, StreamDeckData, TtsVoices, TwitchSubscribers, VideoPlayer } from 'schemas'; // eslint-disable-line object-curly-newline
+import type { Asset } from 'types';
+import type { TwitchAPIData } from '../../../../nodecg-speedcontrol/schemas';
 import { get as nodecg } from './nodecg';
 
 export const assetsIntermissionSlides = nodecg().Replicant<Asset[]>('assets:intermission-slides');

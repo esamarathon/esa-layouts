@@ -2,14 +2,14 @@ import amqpConnectionManager, { AmqpConnectionManager, ChannelWrapper } from 'am
 import amqplib, { ConfirmChannel, Message } from 'amqplib';
 import { Configschema } from 'configschema';
 import { EventEmitter } from 'events';
-import { MQEvents, MQOpts } from 'types';
+import type { RabbitMQ } from 'types';
 import { getCurrentEventShort } from './helpers';
 import { get as nodecg } from './nodecg';
 
 const config = (nodecg().bundleConfig as Configschema).rabbitmq;
 const exchange = 'cg';
 const event = getCurrentEventShort();
-export const evt = new EventEmitter() as MQEvents;
+export const evt = new EventEmitter() as RabbitMQ.Events;
 
 // List of topics we are going to listen to.
 const listenTopics = [
@@ -74,7 +74,7 @@ function url(): string {
   return `${config.protocol}://${config.hostname}${config.vhost ? `/${config.vhost}` : ''}`;
 }
 
-function opts(): MQOpts | undefined {
+function opts(): RabbitMQ.Options | undefined {
   if (config.username || !config.password) {
     return {
       connectionOptions: {

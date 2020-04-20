@@ -1,5 +1,3 @@
-// TODO: Rewrite this whole file I think!
-
 import { Configschema } from 'configschema';
 import type { SponsorLogos } from 'schemas';
 import SpeedcontrolUtil from 'speedcontrol-util';

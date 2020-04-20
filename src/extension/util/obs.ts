@@ -120,6 +120,30 @@ class OBS extends EventEmitter {
   }
 
   /**
+   * Get named source's current settings.
+   * @param sourceName Name of the source.
+   */
+  async getSourceSettings(sourceName: string): Promise<{
+    messageId: string;
+    status: 'ok';
+    sourceName: string;
+    sourceType: string;
+    sourceSettings: {};
+  }> {
+    if (!config.enable || !this.connected) {
+      // OBS not enabled, don't even try to set.
+      throw new Error('No connection available');
+    }
+    try {
+      return await this.conn.send('GetSourceSettings', { sourceName });
+    } catch (err) {
+      nodecg().log.warn(`[OBS] Cannot get source settings [${sourceName}]`);
+      nodecg().log.debug(`[OBS] Cannot get source settings [${sourceName}]: ${err.error || err}`);
+      throw err;
+    }
+  }
+
+  /**
    * Modify a sources settings.
    * @param sourceName Name of the source.
    * @param sourceType Source type (has the be the internal name, not the display name).

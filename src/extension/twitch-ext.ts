@@ -1,5 +1,3 @@
-// TODO: Improve method of seeing channels, or move logic fully to nodecg-speedcontrol
-
 import { Configschema } from 'configschema';
 import _ from 'lodash';
 import needle from 'needle';

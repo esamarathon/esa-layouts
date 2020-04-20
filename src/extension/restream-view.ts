@@ -104,9 +104,7 @@ async function restartStream(): Promise<void> {
 
 async function configureMediaSource(url: string): Promise<void> {
   try {
-    const sourceSettings = await obs.conn.send('GetSourceSettings', {
-      sourceName: obsConfig.names.sources.restreamSource,
-    });
+    const sourceSettings = await obs.getSourceSettings(obsConfig.names.sources.restreamSource);
     if (!['vlc_source', 'ffmpeg_source'].includes(sourceSettings.sourceType)) {
       throw new Error('Source is neither vlc_source/ffmpeg_source');
     }

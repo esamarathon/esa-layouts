@@ -44,7 +44,6 @@
     "paths": {
       "*": [
         "node_modules/*",
-        "schemas/*",
         "types/*",
         "*"
       ],

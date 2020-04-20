@@ -1,7 +1,7 @@
 import clone from 'clone';
-import { ReplicantBrowser } from 'nodecg/types/browser';
-import { SponsorLogos } from 'schemas';
-import { Asset } from 'types';
+import type { ReplicantBrowser } from 'nodecg/types/browser';
+import type { SponsorLogos } from 'schemas';
+import type { Asset } from 'types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 

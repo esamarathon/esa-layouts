@@ -1,6 +1,6 @@
 /* eslint no-new: off, @typescript-eslint/explicit-function-return-type: off */
 
-import { GameLayouts } from 'schemas';
+import type { GameLayouts } from 'schemas';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import '../_misc/common.css';

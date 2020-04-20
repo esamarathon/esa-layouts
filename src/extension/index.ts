@@ -1,7 +1,7 @@
 /* eslint-disable global-require */
 
 import { Configschema } from 'configschema';
-import { NodeCG } from 'nodecg/types/server';
+import type { NodeCG } from 'nodecg/types/server';
 import { set } from './util/nodecg';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

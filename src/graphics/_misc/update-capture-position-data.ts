@@ -1,4 +1,4 @@
-import { CapturePositions } from 'schemas';
+import type { CapturePositions } from 'schemas';
 
 export function updateCapturePositionData(layout: string): void {
   const capturePositions = nodecg.Replicant<CapturePositions>('capturePositions');

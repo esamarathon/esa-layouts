@@ -1,6 +1,6 @@
 import clone from 'clone';
-import { ReplicantBrowser } from 'nodecg/types/browser';
-import { DonationsToRead } from 'schemas';
+import type { ReplicantBrowser } from 'nodecg/types/browser';
+import type { DonationsToRead } from 'schemas';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 

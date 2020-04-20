@@ -113,7 +113,8 @@ class OBS extends EventEmitter {
         throw new Error('Scene could not be found');
       }
     } catch (err) {
-      nodecg().log.warn(`[OBS] Cannot change scene [${name}]: ${err.error || err}`);
+      nodecg().log.warn(`[OBS] Cannot change scene [${name}]`);
+      nodecg().log.debug(`[OBS] Cannot change scene [${name}]: ${err.error || err}`);
       throw err;
     }
   }
@@ -137,7 +138,69 @@ class OBS extends EventEmitter {
         sourceSettings,
       });
     } catch (err) {
-      nodecg().log.warn(`[OBS] Cannot set source settings [${sourceName}]: ${err.error || err}`);
+      nodecg().log.warn(`[OBS] Cannot set source settings [${sourceName}]`);
+      nodecg().log.debug(`[OBS] Cannot set source settings [${sourceName}]: ${err.error || err}`);
+      throw err;
+    }
+  }
+
+  /**
+   * Helper function used by layouts.ts.
+   * Resets the scene item, then sets some properties if possible.
+   * @param scene Name of scene that item is in
+   * @param item Name of item
+   * @param area Area object (as used in capturePositions): x, y, width, height
+   * @param crop Crop object: top, bottom, left, right
+   * @param visible If the source should be visible or not
+   */
+  async configureSceneItem(
+    scene: string,
+    item: string,
+    area?: {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    },
+    crop?: {
+      top: number;
+      bottom: number;
+      left: number;
+      right: number;
+    },
+    visible?: boolean,
+  ): Promise<void> {
+    try {
+      if (!config.enable || !this.connected) {
+        // OBS not enabled, don't even try to set.
+        throw new Error('No connection available');
+      }
+      if (area) {
+        await this.conn.send('ResetSceneItem', {
+          'scene-name': scene,
+          item,
+        });
+      }
+      // @ts-ignore: Typings say we need to specify more than we actually do.
+      await this.conn.send('SetSceneItemProperties', {
+        'scene-name': scene,
+        item,
+        visible: typeof visible !== 'undefined' ? visible : true,
+        position: (area) ? {
+          x: area.x,
+          y: area.y,
+        } : {},
+        bounds: (area) ? {
+          type: 'OBS_BOUNDS_STRETCH',
+          x: area.width,
+          y: area.height,
+        } : {},
+        crop: crop || {},
+      });
+    } catch (err) {
+      nodecg().log.warn(`[OBS] Cannot configure scene item [${scene}: ${item}]`);
+      nodecg().log.debug(`[OBS] Cannot configure scene item [${scene}: ${item}]: `
+        + `${err.error || err}`);
       throw err;
     }
   }

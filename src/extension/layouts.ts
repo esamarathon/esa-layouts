@@ -23,65 +23,6 @@ sc.on('timerStopped', () => {
   nodecg().sendMessage('forceRefreshIntermission');
 });
 
-// TODO: Should this function be in ./util/obs, or routed via it at least?
-/**
- * Helper function used by modifyCaptures.
- * Resets the scene item, then sets some properties if possible.
- * @param scene Name of scene that item is in
- * @param item Name of item
- * @param area Area object (as used in capturePositions): x, y, width, height
- * @param crop Crop object: top, bottom, left, right
- * @param visible If the source should be visible or not
- */
-async function configureSceneItem(
-  scene: string,
-  item: string,
-  area?: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  },
-  crop?: {
-    top: number;
-    bottom: number;
-    left: number;
-    right: number;
-  },
-  visible?: boolean,
-): Promise<void> {
-  try {
-    if (!obsConfig.enable || !obs.connected) {
-      // OBS not enabled, don't even try to set.
-      throw new Error('No OBS connection available');
-    }
-    if (area) {
-      await obs.conn.send('ResetSceneItem', {
-        'scene-name': scene,
-        item,
-      });
-    }
-    // @ts-ignore: Typings say we need to specify more than we actually do.
-    await obs.conn.send('SetSceneItemProperties', {
-      'scene-name': scene,
-      item,
-      visible: typeof visible !== 'undefined' ? visible : true,
-      position: (area) ? {
-        x: area.x,
-        y: area.y,
-      } : {},
-      bounds: (area) ? {
-        type: 'OBS_BOUNDS_STRETCH',
-        x: area.width,
-        y: area.height,
-      } : {},
-      crop: crop || {},
-    });
-  } catch (err) {
-    nodecg().log.warn('[Layouts] Cannot successfully configure scene item:', err);
-  }
-}
-
 // Change the game layout based on information supplied via the run data.
 let init = false;
 sc.runDataActiveRun.on('change', (newVal, oldVal) => {
@@ -137,13 +78,18 @@ capturePositions.on('change', async (val) => {
       }
     }
 
-    await configureSceneItem(
-      obsConfig.names.scenes.gameLayout,
-      obsSourceKeys[key],
-      val['Game Layout'][key],
-      crop,
-      !!val['Game Layout'][key],
-    );
+    try {
+      await obs.configureSceneItem(
+        obsConfig.names.scenes.gameLayout,
+        obsSourceKeys[key],
+        val['Game Layout'][key],
+        crop,
+        !!val['Game Layout'][key],
+      );
+    } catch (err) {
+      nodecg().log.warn(`[Layouts] Cannot successfully configure capture position [${key}]`);
+      nodecg().log.debug(`[Layouts] Cannot successfully configure capture position [${key}]:`, err);
+    }
   }
 });
 

@@ -60,6 +60,7 @@ export function logRunChange(run?: RunData): void {
 }
 
 // TODO: stuff that is logged needs changing to be more accurate
+//       We should add sum in case the name cannot be found, just as a backup
 /**
  * Logos the current sponsor logo when triggered.
  * @param logo Sponsor logo object.

@@ -1,5 +1,6 @@
-import { Configschema } from 'configschema';
-import needle, { NeedleResponse } from 'needle';
+import type { Configschema } from 'configschema';
+import needle from 'needle';
+import type { NeedleResponse } from 'needle';
 import type { Tracker } from 'types';
 import { get as nodecg } from './util/nodecg';
 import { evt } from './util/rabbitmq';

@@ -1,4 +1,4 @@
-import { Configschema } from 'configschema';
+import type { Configschema } from 'configschema';
 import needle from 'needle';
 import type { TtsVoices } from 'schemas';
 import type { TextToSpeech, Tracker } from 'types';

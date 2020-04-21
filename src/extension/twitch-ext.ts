@@ -1,4 +1,4 @@
-import { Configschema } from 'configschema';
+import type { Configschema } from 'configschema';
 import _ from 'lodash';
 import needle from 'needle';
 import { get as nodecg } from './util/nodecg';

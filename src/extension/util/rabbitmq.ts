@@ -1,6 +1,8 @@
-import amqpConnectionManager, { AmqpConnectionManager, ChannelWrapper } from 'amqp-connection-manager'; // eslint-disable-line max-len
-import amqplib, { ConfirmChannel, Message } from 'amqplib';
-import { Configschema } from 'configschema';
+import amqpConnectionManager from 'amqp-connection-manager';
+import type { AmqpConnectionManager, ChannelWrapper } from 'amqp-connection-manager';
+import amqplib from 'amqplib';
+import type { ConfirmChannel, Message } from 'amqplib';
+import type { Configschema } from 'configschema';
 import { EventEmitter } from 'events';
 import type { RabbitMQ } from 'types';
 import { getCurrentEventShort } from './helpers';
@@ -69,6 +71,14 @@ const listenTopics = [
     key: `${event}.*.server.started`,
   },
 ];
+
+function getTimeInfo(): { unix: number; iso: string } {
+  const nowDate: Date = new Date();
+  return {
+    unix: nowDate.getTime() / 1000,
+    iso: nowDate.toISOString(),
+  };
+}
 
 function url(): string {
   return `${config.protocol}://${config.hostname}${config.vhost ? `/${config.vhost}` : ''}`;
@@ -142,7 +152,7 @@ if (config.enable) {
  * @param key The routing key this message will be published with.
  * @param data The data that should be sent in this message.
  */
-export function send(key: string, data: unknown): void {
+export function send(key: string, data: {}): void {
   if (!config.enable) {
     // RabbitMQ not enabled, don't even try to send.
     return;
@@ -151,12 +161,20 @@ export function send(key: string, data: unknown): void {
     nodecg().log.debug('[RabbitMQ] Could not send message as channel is not defined');
     return;
   }
-  const dataStr = JSON.stringify(data);
+  const newData = {
+    ...data,
+    ...{
+      event,
+      time: getTimeInfo(),
+    },
+  };
+  const fullKey = `${event}.${key}`;
   chan.publish(
     exchange,
-    `${event}.${key}`,
-    Buffer.from(dataStr),
+    fullKey,
+    Buffer.from(JSON.stringify(newData)),
     { persistent: true },
   );
-  nodecg().log.debug('[RabbitMQ] Sending message with routing key: %s: %s', key, dataStr);
+  nodecg().log.debug('[RabbitMQ] Sending message with routing key: %s: %s',
+    fullKey, JSON.stringify(newData));
 }

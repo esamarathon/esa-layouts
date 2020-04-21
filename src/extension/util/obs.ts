@@ -1,4 +1,4 @@
-import { Configschema } from 'configschema';
+import type { Configschema } from 'configschema';
 import { EventEmitter } from 'events';
 import ObsWebsocketJs from 'obs-websocket-js';
 import { findBestMatch } from 'string-similarity';
@@ -7,8 +7,15 @@ import { get as nodecg } from './nodecg';
 const config = (nodecg().bundleConfig as Configschema).obs;
 
 interface OBS {
-  on(event: 'currentSceneChanged', listener: (currentScene?: string) => void): this;
-  on(event: 'sceneListChanged', listener: (sceneList: string[]) => void): this;
+  once(event: 'streamingStateChanged', listener: (streaming: boolean) => void): this;
+  once(event: 'connectionStateChanged', listener: (connected: boolean) => void): this;
+  once(event: 'currentSceneChanged', listener: (current?: string, last?: string) => void): this;
+  once(event: 'sceneListChanged', listener: (list: string[]) => void): this;
+
+  on(event: 'streamingStateChanged', listener: (streaming: boolean) => void): this;
+  on(event: 'connectionStateChanged', listener: (connected: boolean) => void): this;
+  on(event: 'currentSceneChanged', listener: (current?: string, last?: string) => void): this;
+  on(event: 'sceneListChanged', listener: (list: string[]) => void): this;
 }
 
 class OBS extends EventEmitter {
@@ -16,6 +23,7 @@ class OBS extends EventEmitter {
   currentScene: string | undefined;
   sceneList: string [] = [];
   connected = false;
+  streaming = false;
   settings = {
     address: config.address,
     password: config.password,
@@ -29,22 +37,31 @@ class OBS extends EventEmitter {
 
       this.conn.on('ConnectionClosed', () => {
         this.connected = false;
-        this.currentScene = undefined;
-        this.sceneList.length = 0;
-        this.emit('currentSceneChanged', this.currentScene);
-        this.emit('sceneListChanged', this.sceneList);
+        this.emit('connectionStateChanged', this.connected);
         nodecg().log.warn('[OBS] Connection lost, retrying in 5 seconds');
         setTimeout(() => this.connect(), 5000);
       });
 
       this.conn.on('SwitchScenes', (data) => {
+        const lastScene = this.currentScene;
         this.currentScene = data['scene-name'];
-        this.emit('currentSceneChanged', this.currentScene);
+        this.emit('currentSceneChanged', this.currentScene, lastScene);
       });
 
       this.conn.on('ScenesChanged', async () => {
         const scenes = await this.conn.send('GetSceneList');
         this.sceneList = scenes.scenes.map((s) => s.name);
+        this.emit('sceneListChanged', this.sceneList);
+      });
+
+      this.conn.on('StreamStarted', () => {
+        this.streaming = true;
+        this.emit('streamingStateChanged', this.streaming);
+      });
+
+      this.conn.on('StreamStopped', () => {
+        this.streaming = false;
+        this.emit('streamingStateChanged', this.streaming);
       });
 
       // @ts-ignore: Pretty sure this emits an error.
@@ -59,14 +76,34 @@ class OBS extends EventEmitter {
     try {
       await this.conn.connect(this.settings);
       this.connected = true;
+      this.emit('connectionStateChanged', this.connected);
       await this.conn.send('SetHeartbeat', { enable: true });
       const scenes = await this.conn.send('GetSceneList');
-      this.currentScene = scenes['current-scene'];
-      this.sceneList = scenes.scenes.map((s) => s.name);
-      this.emit('currentSceneChanged', this.currentScene);
-      this.emit('sceneListChanged', this.sceneList);
+
+      // Get current scene on connection.
+      const lastScene = this.currentScene;
+      if (this.currentScene !== scenes['current-scene']) {
+        this.currentScene = scenes['current-scene'];
+        this.emit('currentSceneChanged', this.currentScene, lastScene);
+      }
+
+      // Get scene list on connection.
+      const list = scenes.scenes.map((s) => s.name);
+      if (JSON.stringify(list) !== JSON.stringify(this.sceneList)) {
+        this.sceneList = list;
+        this.emit('sceneListChanged', this.sceneList);
+      }
+
+      // Get streaming status on connection.
+      const streamingStatus = await this.conn.send('GetStreamingStatus');
+      if (streamingStatus.streaming !== this.streaming) {
+        this.streaming = streamingStatus.streaming;
+        this.emit('streamingStateChanged', this.streaming);
+      }
+
       nodecg().log.info('[OBS] Connection successful');
     } catch (err) {
+      this.conn.disconnect();
       nodecg().log.warn('[OBS] Connection error');
       nodecg().log.debug('[OBS] Connection error:', err);
     }

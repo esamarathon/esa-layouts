@@ -1,5 +1,6 @@
 import clone from 'clone';
-import { Configschema } from 'configschema';
+import type { Configschema } from 'configschema';
+import { logSceneSwitch } from './logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { obsData } from './util/replicants';
@@ -21,34 +22,30 @@ async function takeGameLayoutScreenshot(): Promise<void> {
   }
 }
 
-obs.conn.on('ConnectionOpened', async () => {
-  obsData.value.connected = true;
-  try {
-    const streamingStatus = await obs.conn.send('GetStreamingStatus');
-    obsData.value.streaming = streamingStatus.streaming;
+obs.on('connectionStateChanged', (connected) => {
+  obsData.value.connected = connected;
+
+  if (connected) {
     if (evtConfig.online) {
       takeGameLayoutScreenshot();
       gameLayoutScreenshotInterval = setInterval(takeGameLayoutScreenshot, 1 * 1000);
     }
-  } catch (err) {
-    nodecg().log.warn('[OBS Data] Cannot get current scene on connection');
+  } else {
+    clearInterval(gameLayoutScreenshotInterval);
   }
 });
 
-obs.conn.on('ConnectionClosed', () => {
-  obsData.value = {
-    connected: false,
-    sceneList: [],
-    disableTransitioning: obsData.value.disableTransitioning,
-  };
-  clearInterval(gameLayoutScreenshotInterval);
+obs.on('currentSceneChanged', (current, last) => {
+  obsData.value.scene = current;
+  if (last) {
+    logSceneSwitch(last, 'end');
+  }
+  if (current) {
+    logSceneSwitch(current, 'start');
+  }
 });
-
-obs.on('currentSceneChanged', (currentScene) => {
-  obsData.value.scene = currentScene;
-});
-obs.on('sceneListChanged', (sceneList) => {
-  obsData.value.sceneList = clone(sceneList);
+obs.on('sceneListChanged', (list) => {
+  obsData.value.sceneList = clone(list);
 });
 
 // This logic assumes the duration supplied is correct, which isn't always the case.
@@ -60,8 +57,6 @@ obs.conn.on('TransitionBegin', (data) => {
   transitioningTimeout = setTimeout(() => { obsData.value.transitioning = false; }, data.duration);
 });
 
-obs.conn.on('Heartbeat', (data) => {
-  if (typeof data.streaming === 'boolean') {
-    obsData.value.streaming = data.streaming;
-  }
+obs.on('streamingStateChanged', (streaming) => {
+  obsData.value.streaming = streaming;
 });

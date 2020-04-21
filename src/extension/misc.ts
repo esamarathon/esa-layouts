@@ -1,6 +1,7 @@
-import { Configschema } from 'configschema';
+import type { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
-import { RunData } from '../../../nodecg-speedcontrol/types';
+import type { RunData } from '../../../nodecg-speedcontrol/types';
+import { logRunChange } from './logging';
 import { getCurrentEventShort, getOtherStreamEventShort } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
@@ -61,13 +62,16 @@ evt.on('bigbuttonTagScanned', (data) => {
   }
 });
 
-// Reset the commentators when the run changes and not on the game layout scene.
 sc.runDataActiveRun.on('change', (newVal, oldVal) => {
+  // Reset the commentators when the run changes and not on the game layout scene.
   if ((!newVal || (newVal && oldVal && oldVal.id !== newVal.id))
   && !obs.isCurrentScene(config.obs.names.scenes.gameLayout)) {
     commentators.value.length = 0;
     nodecg().log.debug('[Misc] Cleared commentators');
   }
+
+  // This will also be triggered on server start up.
+  logRunChange(newVal);
 });
 
 // Set the upcoming intermission video.

@@ -1,6 +1,6 @@
 /* eslint-disable global-require */
 
-import { Configschema } from 'configschema';
+import type { Configschema } from 'configschema';
 import type { NodeCG } from 'nodecg/types/server';
 import { set } from './util/nodecg';
 

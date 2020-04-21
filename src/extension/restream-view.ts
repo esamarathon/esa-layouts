@@ -1,5 +1,6 @@
-import { Configschema } from 'configschema';
-import needle, { BodyData, NeedleHttpVerbs, NeedleResponse } from 'needle';
+import type { Configschema } from 'configschema';
+import needle from 'needle';
+import type { BodyData, NeedleHttpVerbs, NeedleResponse } from 'needle';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';

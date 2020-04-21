@@ -1,5 +1,6 @@
-import { Configschema } from 'configschema';
+import type { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
+import { logTimerChange } from './logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { evt } from './util/rabbitmq';
@@ -58,3 +59,13 @@ obs.on('currentSceneChanged', () => {
     sc.disableTimerChanges();
   }
 });
+
+// Logs changes to the timer using helper function in logging.ts
+sc.on('timerStarted', () => logTimerChange('started'));
+sc.on('timerPaused', () => logTimerChange('paused'));
+sc.on('timerResumed', () => logTimerChange('resumed'));
+sc.on('timerStopped', () => logTimerChange('finished'));
+sc.on('timerReset', () => logTimerChange('reset'));
+sc.on('timerEdited', () => logTimerChange('edited'));
+sc.on('timerTeamStopped', (id) => logTimerChange('team_finished', id));
+sc.on('timerTeamUndone', (id) => logTimerChange('team_undid_finish', id));

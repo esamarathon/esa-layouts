@@ -1,4 +1,4 @@
-import { Configschema } from 'configschema';
+import type { Configschema } from 'configschema';
 import { EventEmitter } from 'events';
 import XKeysLib from 'xkeys';
 import { get as nodecg } from './nodecg';

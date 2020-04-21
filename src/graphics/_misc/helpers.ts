@@ -1,4 +1,4 @@
-import { Configschema } from 'configschema';
+import type { Configschema } from 'configschema';
 
 const config = nodecg.bundleConfig as Configschema;
 

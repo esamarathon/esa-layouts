@@ -7,12 +7,7 @@ import { get as nodecg } from './nodecg';
 const config = (nodecg().bundleConfig as Configschema).obs;
 
 interface OBS {
-  once(event: 'streamingStateChanged', listener: (streaming: boolean) => void): this;
-  once(event: 'connectionStateChanged', listener: (connected: boolean) => void): this;
-  once(event: 'currentSceneChanged', listener: (current?: string, last?: string) => void): this;
-  once(event: 'sceneListChanged', listener: (list: string[]) => void): this;
-
-  on(event: 'streamingStateChanged', listener: (streaming: boolean) => void): this;
+  on(event: 'streamingStateChanged', listener: (streaming: boolean, old?: boolean) => void): this;
   on(event: 'connectionStateChanged', listener: (connected: boolean) => void): this;
   on(event: 'currentSceneChanged', listener: (current?: string, last?: string) => void): this;
   on(event: 'sceneListChanged', listener: (list: string[]) => void): this;
@@ -23,7 +18,7 @@ class OBS extends EventEmitter {
   currentScene: string | undefined;
   sceneList: string [] = [];
   connected = false;
-  streaming = false;
+  streaming: boolean | undefined;
   settings = {
     address: config.address,
     password: config.password,
@@ -56,12 +51,12 @@ class OBS extends EventEmitter {
 
       this.conn.on('StreamStarted', () => {
         this.streaming = true;
-        this.emit('streamingStateChanged', this.streaming);
+        this.emit('streamingStateChanged', this.streaming, !this.streaming);
       });
 
       this.conn.on('StreamStopped', () => {
         this.streaming = false;
-        this.emit('streamingStateChanged', this.streaming);
+        this.emit('streamingStateChanged', this.streaming, !this.streaming);
       });
 
       // @ts-ignore: Pretty sure this emits an error.
@@ -96,9 +91,10 @@ class OBS extends EventEmitter {
 
       // Get streaming status on connection.
       const streamingStatus = await this.conn.send('GetStreamingStatus');
+      const lastStatus = this.streaming;
       if (streamingStatus.streaming !== this.streaming) {
         this.streaming = streamingStatus.streaming;
-        this.emit('streamingStateChanged', this.streaming);
+        this.emit('streamingStateChanged', this.streaming, lastStatus);
       }
 
       nodecg().log.info('[OBS] Connection successful');

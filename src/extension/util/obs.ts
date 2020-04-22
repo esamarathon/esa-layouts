@@ -39,8 +39,10 @@ class OBS extends EventEmitter {
 
       this.conn.on('SwitchScenes', (data) => {
         const lastScene = this.currentScene;
-        this.currentScene = data['scene-name'];
-        this.emit('currentSceneChanged', this.currentScene, lastScene);
+        if (lastScene !== data['scene-name']) {
+          this.currentScene = data['scene-name'];
+          this.emit('currentSceneChanged', this.currentScene, lastScene);
+        }
       });
 
       this.conn.on('ScenesChanged', async () => {

@@ -24,7 +24,6 @@ async function takeGameLayoutScreenshot(): Promise<void> {
 
 obs.on('connectionStateChanged', (connected) => {
   obsData.value.connected = connected;
-
   if (connected) {
     if (evtConfig.online) {
       takeGameLayoutScreenshot();
@@ -35,15 +34,29 @@ obs.on('connectionStateChanged', (connected) => {
   }
 });
 
-obs.on('currentSceneChanged', (current, last) => {
-  obsData.value.scene = current;
-  if (last) {
-    logSceneSwitch(last, 'end');
-  }
-  if (current) {
-    logSceneSwitch(current, 'start');
+obs.on('streamingStateChanged', (streaming, old) => {
+  obsData.value.streaming = streaming;
+  if (obs.currentScene) {
+    if (streaming) {
+      logSceneSwitch(obs.currentScene, 'start');
+    } else if (old && !streaming) {
+      logSceneSwitch(obs.currentScene, 'end');
+    }
   }
 });
+
+obs.on('currentSceneChanged', (current, last) => {
+  obsData.value.scene = current;
+  if (obs.streaming) {
+    if (last) {
+      logSceneSwitch(last, 'end');
+    }
+    if (current) {
+      logSceneSwitch(current, 'start');
+    }
+  }
+});
+
 obs.on('sceneListChanged', (list) => {
   obsData.value.sceneList = clone(list);
 });
@@ -55,8 +68,4 @@ obs.conn.on('TransitionBegin', (data) => {
   obsData.value.transitioning = true;
   clearTimeout(transitioningTimeout);
   transitioningTimeout = setTimeout(() => { obsData.value.transitioning = false; }, data.duration);
-});
-
-obs.on('streamingStateChanged', (streaming) => {
-  obsData.value.streaming = streaming;
 });

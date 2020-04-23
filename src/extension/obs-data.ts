@@ -36,24 +36,15 @@ obs.on('connectionStateChanged', (connected) => {
 
 obs.on('streamingStateChanged', (streaming, old) => {
   obsData.value.streaming = streaming;
-  if (obs.currentScene) {
-    if (streaming) {
-      logSceneSwitch(obs.currentScene, 'start');
-    } else if (old && !streaming) {
-      logSceneSwitch(obs.currentScene, 'end');
-    }
-  }
 });
 
 obs.on('currentSceneChanged', (current, last) => {
   obsData.value.scene = current;
-  if (obs.streaming) {
-    if (last) {
-      logSceneSwitch(last, 'end');
-    }
-    if (current) {
-      logSceneSwitch(current, 'start');
-    }
+  if (last) {
+    logSceneSwitch(last, 'end');
+  }
+  if (current) {
+    logSceneSwitch(current, 'start');
   }
 });
 

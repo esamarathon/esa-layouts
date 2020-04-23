@@ -1,6 +1,6 @@
 import type { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
-import { logTimerChange } from './logging';
+import { logTimerChange } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { evt } from './util/rabbitmq';

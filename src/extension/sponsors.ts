@@ -1,5 +1,5 @@
 import type { Configschema } from 'configschema';
-import { logSponsorLogoChange } from './logging';
+import { logSponsorLogoChange } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { sponsorLogos } from './util/replicants';

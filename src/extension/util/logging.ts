@@ -2,10 +2,10 @@ import type { NodeCG as mqTypes } from '@esamarathon/mq-events/types';
 import type { Configschema } from 'configschema';
 import type { SponsorLogos } from 'schemas';
 import SpeedcontrolUtil from 'speedcontrol-util';
-import type { RunData } from '../../../nodecg-speedcontrol/types';
-import { get as nodecg } from './util/nodecg';
-import { send as mqSend } from './util/rabbitmq';
-import { assetsSponsorLogos, sponsorLogos } from './util/replicants';
+import type { RunData } from '../../../../nodecg-speedcontrol/types';
+import { get as nodecg } from './nodecg';
+import { send as mqSend } from './rabbitmq';
+import { assetsSponsorLogos, sponsorLogos } from './replicants';
 
 const config = nodecg().bundleConfig as Configschema;
 const sc = new SpeedcontrolUtil(nodecg());

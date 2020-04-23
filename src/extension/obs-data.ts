@@ -1,6 +1,6 @@
 import clone from 'clone';
 import type { Configschema } from 'configschema';
-import { logSceneSwitch, logStreamingStatusChange } from './logging';
+import { logSceneSwitch, logStreamingStatusChange } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { obsData } from './util/replicants';

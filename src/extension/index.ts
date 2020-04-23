@@ -27,7 +27,6 @@ export = (nodecg: NodeCG): { obs: any } => {
   require('./sponsors');
   require('./text-to-speech');
   require('./twitch-ext');
-  require('./logging');
   // require('./twitch-subs');
 
   return {

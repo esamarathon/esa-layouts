@@ -1,8 +1,8 @@
 import type { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import type { RunData } from '../../../nodecg-speedcontrol/types';
-import { logRunChange } from './logging';
 import { getCurrentEventShort, getOtherStreamEventShort } from './util/helpers';
+import { logRunChange } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { evt } from './util/rabbitmq';

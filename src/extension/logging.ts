@@ -1,5 +1,5 @@
+import type { NodeCG as mqTypes } from '@esamarathon/mq-events/types';
 import type { Configschema } from 'configschema';
-import type { NodeCG as mqTypes } from 'mq-events/types';
 import type { SponsorLogos } from 'schemas';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import type { RunData } from '../../../nodecg-speedcontrol/types';
@@ -9,6 +9,19 @@ import { assetsSponsorLogos, sponsorLogos } from './util/replicants';
 
 const config = nodecg().bundleConfig as Configschema;
 const sc = new SpeedcontrolUtil(nodecg());
+
+/**
+ * Logs OBS streaming status changes.
+ * @param streaming If the streaming was started or stopped.
+ */
+export function logStreamingStatusChange(streaming: boolean): void {
+  mqSend(
+    `obs.stream.${streaming ? 'start' : 'stop'}`,
+    {
+      streaming,
+    } as mqTypes.OBSStreamingStatusChanged,
+  );
+}
 
 /**
  * Logs OBS scene changes.

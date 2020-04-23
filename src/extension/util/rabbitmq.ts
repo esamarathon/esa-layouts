@@ -61,6 +61,11 @@ const listenTopics = [
     key: '*.run.changed',
   },
   {
+    name: 'streamingStatusChanged',
+    exchange,
+    key: '*.obs.stream.*',
+  },
+  {
     name: 'gameSceneChanged',
     exchange,
     key: '*.obs.scene.*.*.gamescene',

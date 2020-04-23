@@ -1,6 +1,6 @@
 import clone from 'clone';
 import type { Configschema } from 'configschema';
-import { logSceneSwitch } from './logging';
+import { logSceneSwitch, logStreamingStatusChange } from './logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { obsData } from './util/replicants';
@@ -34,8 +34,9 @@ obs.on('connectionStateChanged', (connected) => {
   }
 });
 
-obs.on('streamingStateChanged', (streaming, old) => {
+obs.on('streamingStateChanged', (streaming) => {
   obsData.value.streaming = streaming;
+  logStreamingStatusChange(streaming);
 });
 
 obs.on('currentSceneChanged', (current, last) => {

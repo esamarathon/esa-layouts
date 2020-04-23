@@ -34,9 +34,11 @@ obs.on('connectionStateChanged', (connected) => {
   }
 });
 
-obs.on('streamingStateChanged', (streaming) => {
+obs.on('streamingStateChanged', (streaming, old) => {
   obsData.value.streaming = streaming;
-  logStreamingStatusChange(streaming);
+  if (typeof old === 'boolean') {
+    logStreamingStatusChange(streaming);
+  }
 });
 
 obs.on('currentSceneChanged', (current, last) => {

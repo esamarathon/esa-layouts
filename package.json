@@ -144,6 +144,14 @@
         "headerColor": "#c49215"
       },
       {
+        "name": "upcoming-run-control",
+        "title": "Upcoming Run Control",
+        "width": 3,
+        "file": "upcoming-run-control.html",
+        "workspace": "ESA",
+        "headerColor": "#c49215"
+      },
+      {
         "name": "restream-viewer-tool",
         "title": "Restream Viewer Tool",
         "width": 2,

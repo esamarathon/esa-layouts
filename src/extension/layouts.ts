@@ -18,9 +18,22 @@ const obsSourceKeys: { [key: string]: string } = {
   CameraCapture2: obsConfig.names.sources.cameraCapture2,
 };
 
-// Update replicant that stores the ID of the upcoming run.
+// Update replicant that stores the ID of the upcoming run,
+// both on timer stopping, if you somehow have no current run
+// (usually if you're at the start of the run list),
+// and also via a "force" button on the dashboard.
 sc.on('timerStopped', () => {
   upcomingRunID.value = sc.runDataActiveRunSurrounding.value.next || null;
+});
+sc.runDataActiveRunSurrounding.on('change', (newVal) => {
+  if (!newVal.current) {
+    upcomingRunID.value = newVal.next || null;
+  }
+});
+nodecg().listenFor('forceUpcomingRun', (id?: string) => {
+  // Check supplied run ID exists in our array.
+  const run = sc.runDataArray.value.find((r) => r.id === id);
+  upcomingRunID.value = run?.id || null;
 });
 
 // Change the game layout based on information supplied via the run data.

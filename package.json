@@ -42,7 +42,7 @@
     "xkeys": "^0.1.2"
   },
   "devDependencies": {
-    "@esamarathon/mq-events": "github:esamarathon/mq-events#types",
+    "@esamarathon/mq-events": "github:esamarathon/mq-events",
     "@mdi/font": "^5.1.45",
     "@types/amqp-connection-manager": "^2.0.9",
     "@types/amqplib": "^0.5.13",

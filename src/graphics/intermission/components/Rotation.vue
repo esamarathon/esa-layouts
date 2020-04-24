@@ -63,7 +63,7 @@ export default {
       this.updateNextRuns();
       this.showNextMsg();
     });
-    nodecg.listenFor('forceRefreshIntermission', () => this.updateNextRuns());
+    // nodecg.listenFor('forceRefreshIntermission', () => this.updateNextRuns());
   },
   methods: {
     showNextMsg() {

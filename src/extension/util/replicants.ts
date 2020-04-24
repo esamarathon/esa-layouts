@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import type { Bids, CapturePositions, Commentators, DonationsToRead, DonationTotal, GameLayouts, MusicPlayer, NotableDonations, ObsData, OtherStreamData, Prizes, RestreamViewerTool, SponsorLogos, StreamDeckData, TtsVoices, TwitchSubscribers, VideoPlayer } from 'schemas'; // eslint-disable-line object-curly-newline
+import type { Bids, CapturePositions, Commentators, DonationsToRead, DonationTotal, GameLayouts, MusicPlayer, NotableDonations, ObsData, OtherStreamData, Prizes, RestreamViewerTool, SponsorLogos, StreamDeckData, TtsVoices, TwitchSubscribers, UpcomingRunID, VideoPlayer } from 'schemas'; // eslint-disable-line object-curly-newline
 import type { Asset } from 'types';
 import type { TwitchAPIData } from '../../../../nodecg-speedcontrol/schemas';
 import { get as nodecg } from './nodecg';
@@ -26,6 +26,7 @@ export const sponsorLogos = nodecg().Replicant<SponsorLogos>('sponsorLogos');
 export const streamDeckData = nodecg().Replicant<StreamDeckData>('streamDeckData');
 export const ttsVoices = nodecg().Replicant<TtsVoices>('ttsVoices');
 export const twitchSubscribers = nodecg().Replicant<TwitchSubscribers>('twitchSubscribers');
+export const upcomingRunID = nodecg().Replicant<UpcomingRunID>('upcomingRunID');
 export const videoPlayer = nodecg().Replicant<VideoPlayer>('videoPlayer');
 
 // nodecg-speedcontrol

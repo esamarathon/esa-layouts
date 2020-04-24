@@ -61,7 +61,7 @@ export default {
   },
   created() {
     NodeCG.waitForReplicants(runDataActiveRun, runDataArray).then(() => this.refreshUpcomingRun());
-    nodecg.listenFor('forceRefreshIntermission', this.refreshUpcomingRun);
+    // nodecg.listenFor('forceRefreshIntermission', this.refreshUpcomingRun);
   },
   mounted() {
     this.clipPath = generateClipPath();

@@ -2,7 +2,7 @@ import type { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { capturePositions, gameLayouts, obsData, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
+import { capturePositions, gameLayouts, obsData, upcomingRunID, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
 
 const evtConfig = (nodecg().bundleConfig as Configschema).event;
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
@@ -18,9 +18,9 @@ const obsSourceKeys: { [key: string]: string } = {
   CameraCapture2: obsConfig.names.sources.cameraCapture2,
 };
 
-// nodecg-speedcontrol no longer sends forceRefreshIntermission so doing it here instead.
+// Update replicant that stores the ID of the upcoming run.
 sc.on('timerStopped', () => {
-  nodecg().sendMessage('forceRefreshIntermission');
+  upcomingRunID.value = sc.runDataActiveRunSurrounding.value.next || null;
 });
 
 // Change the game layout based on information supplied via the run data.

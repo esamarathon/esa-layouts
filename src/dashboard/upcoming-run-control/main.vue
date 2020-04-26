@@ -39,6 +39,14 @@
           </div>
         </div>
       </v-btn>
+      <v-btn
+        v-else
+        width="100%"
+        block
+        disabled
+      >
+        {{ type }} not available
+      </v-btn>
     </div>
     <v-btn
       :style="{ 'margin-top': '5px' }"
@@ -70,12 +78,12 @@ export default class IntermissionControl extends Vue {
     const run = this.runDataArray.find((r) => r.id === id);
     if (run) {
       const arr = [
-        run.game,
+        run.game || '?',
         run.category,
       ].filter(Boolean);
       return arr.join(' - ');
     }
-    return 'Run Not Found';
+    return '?';
   }
 }
 </script>

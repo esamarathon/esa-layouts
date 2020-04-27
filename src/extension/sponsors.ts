@@ -83,7 +83,7 @@ function update(): void {
 }
 
 // Will log sponsors changing when going live/going offline if needed.
-obs.on('streamingStateChanged', (streaming, old) => {
+obs.on('streamingStatusChanged', (streaming, old) => {
   if (doesSceneHaveSponsorLogos(obs.currentScene)
     && sponsorLogos.value.current && typeof old === 'boolean') {
     if (streaming) {

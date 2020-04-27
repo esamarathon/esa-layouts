@@ -22,7 +22,7 @@ async function takeGameLayoutScreenshot(): Promise<void> {
   }
 }
 
-obs.on('connectionStateChanged', (connected) => {
+obs.on('connectionStatusChanged', (connected) => {
   obsData.value.connected = connected;
   if (connected) {
     if (evtConfig.online) {
@@ -34,7 +34,7 @@ obs.on('connectionStateChanged', (connected) => {
   }
 });
 
-obs.on('streamingStateChanged', (streaming) => {
+obs.on('streamingStatusChanged', (streaming) => {
   obsData.value.streaming = streaming;
   logStreamingStatusChange(streaming);
 });

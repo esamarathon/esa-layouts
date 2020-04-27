@@ -1,6 +1,6 @@
 import type { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
-import type { RunData } from '../../../nodecg-speedcontrol/types';
+import type { RunData } from 'speedcontrol-util/types';
 import { getCurrentEventShort, getOtherStreamEventShort } from './util/helpers';
 import { logRunChange } from './util/logging';
 import { get as nodecg } from './util/nodecg';

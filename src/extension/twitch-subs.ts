@@ -1,4 +1,4 @@
-import type { ExtensionReturn } from '../../../nodecg-speedcontrol/types';
+import type { ExtensionReturn } from 'speedcontrol-util/types';
 import { get as nodecg } from './util/nodecg';
 import { twitchAPIData, twitchSubscribers } from './util/replicants';
 

@@ -56,7 +56,6 @@ export default class extends Vue {
     this.player.load();
   }
 
-  // eslint-disable-next-line class-methods-use-this
   videoEnded(): void {
     this.updatePlayCount();
     this.unselectVideo();

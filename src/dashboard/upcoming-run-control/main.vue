@@ -69,7 +69,6 @@ export default class IntermissionControl extends Vue {
   @State runDataActiveRunSurrounding!: RunDataActiveRunSurrounding;
   @State upcomingRunID!: UpcomingRunID;
 
-  // eslint-disable-next-line class-methods-use-this
   forceUpcomingRun(id?: string): void {
     nodecg.sendMessage('forceUpcomingRun', id);
   }

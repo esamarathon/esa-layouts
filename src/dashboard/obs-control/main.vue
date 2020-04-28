@@ -87,7 +87,6 @@ export default class extends Vue {
     || this.obsData.disableTransitioning;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   changeScene(scene: string): void {
     nodecg.sendMessage('obsChangeScene', scene);
   }

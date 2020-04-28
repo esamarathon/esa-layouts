@@ -41,7 +41,6 @@
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
-// @ts-ignore: goTo isn't typed
 import goTo from 'vuetify/es5/services/goto';
 import { TtsVoices } from 'schemas';
 import { Configschema } from 'configschema';
@@ -60,7 +59,6 @@ export default class extends Vue {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
   playExample(): void {
     nodecg.sendMessage('ttsExample');
   }

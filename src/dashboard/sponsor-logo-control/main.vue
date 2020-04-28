@@ -160,7 +160,6 @@ export default class extends Vue {
     setInterval(this.updateTimeLeft, 1000);
   }
 
-  // eslint-disable-next-line class-methods-use-this
   cloneLogo(original: Asset): SponsorLogos['rotation'][0] {
     return {
       id: uuid(),

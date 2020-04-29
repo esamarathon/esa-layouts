@@ -1,10 +1,10 @@
-import { BoxCoor, Coor, makeCoors, outputCss, sortBoxCoor } from './clip'; // eslint-disable-line object-curly-newline, max-len
+import { makeCoors, outputCss, sortBoxCoor } from './clip';
+import type { BoxCoor } from './clip';
 
 export function generateClipPath(): string {
   const captureElems = document.getElementsByClassName('Capture');
-  const coordsArr: Coor[][] = [];
 
-  Array.from(captureElems).forEach((el) => {
+  const coordsArr = Array.from(captureElems).map((el) => {
     const sizes = el.getBoundingClientRect();
     const coords: BoxCoor = [
       [sizes.x, sizes.y],
@@ -12,11 +12,8 @@ export function generateClipPath(): string {
       [sizes.x, sizes.bottom],
       [sizes.right, sizes.bottom],
     ];
-    coordsArr.push(sortBoxCoor(coords));
+    return sortBoxCoor(coords);
   });
 
-  const css = outputCss(
-    makeCoors(1920, 1080, coordsArr),
-  );
-  return css;
+  return outputCss(makeCoors(1920, 1080, coordsArr));
 }

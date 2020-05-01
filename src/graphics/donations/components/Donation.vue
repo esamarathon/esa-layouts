@@ -1,11 +1,11 @@
 <template>
-  <div class="Donation">
-    <div class="NameTotal">
+  <div :style="{ padding: '20px 0', 'border-top': '3px solid white' }">
+    <div :style="{ 'font-size': '35px' }">
       #{{ index + 1 }}: {{ data.name }} donated ${{ data.amount.toFixed(2) }}
     </div>
     <div
       v-if="data.comment"
-      class="Comment"
+      :style="{ 'font-size': '25px' }"
     >
       {{ data.comment }}
     </div>
@@ -22,18 +22,3 @@ export default class extends Vue {
   @Prop({ default: 0 }) readonly index!: number;
 }
 </script>
-
-<style scoped>
-  .Donation {
-    padding: 20px 0;
-    border-top: 3px solid white;
-  }
-
-  .NameTotal {
-    font-size: 35px;
-  }
-
-  .Comment {
-    font-size: 25px;
-  }
-</style>

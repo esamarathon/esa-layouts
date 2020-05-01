@@ -3,7 +3,7 @@
     <h1>Unread Donations</h1>
     <div
       v-if="!toRead.length"
-      id="None"
+      :style="{ 'font-size': '30px', 'font-style': 'italic' }"
     >
       None right now!
     </div>
@@ -41,10 +41,5 @@ export default class extends Vue {
     color: white;
     overflow: hidden;
     text-align: center;
-  }
-
-  #None {
-    font-size: 30px;
-    font-style: italic;
   }
 </style>

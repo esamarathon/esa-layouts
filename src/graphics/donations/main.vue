@@ -33,8 +33,6 @@ export default class extends Vue {
 </script>
 
 <style>
-  @import url('https://fonts.googleapis.com/css?family=Montserrat:600&subset=cyrillic,cyrillic-ext,latin-ext,vietnamese');
-
   body {
     font-family: 'Montserrat', sans-serif;
     background-color: #212121;

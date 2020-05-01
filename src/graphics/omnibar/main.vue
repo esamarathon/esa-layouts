@@ -3,7 +3,6 @@
     id="Omnibar"
     class="Flex"
   >
-    <t-t-s></t-t-s>
     <img
       src="./logo.png"
       :style="{ padding: '0 10px' }"
@@ -20,7 +19,6 @@
 </template>
 
 <script>
-import TTS from '../_misc/components/TextToSpeech.vue';
 import Total from './components/Total.vue';
 import SubGoalMet from './components/SubGoalMet.vue';
 import Ticker from './components/Ticker.vue';
@@ -30,7 +28,6 @@ import Divider from './components/Divider.vue';
 export default {
   name: 'Omnibar',
   components: {
-    TTS,
     Total,
     SubGoalMet,
     Ticker,

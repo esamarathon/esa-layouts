@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import TextToSpeech from '../_misc/components/TextToSpeech.vue';
+import TextToSpeech from './components/TextToSpeech.vue';
 
 @Component({
   components: {

@@ -16,12 +16,10 @@ Stuff not in this file (yet):
 }
 
 #Background {
-  /*content: url('./background-blue.png');*/
   background-color: #19171c;
 }
 
 #Omnibar {
-  /*background-image: url('../omnibar/background-gradient.png');*/
   background-color: #41245b;
   color: white;
 }

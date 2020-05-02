@@ -103,27 +103,6 @@ const routes = [
   },
 ];
 
-// This controls the player name -> Twitch username animation timings.
-export const serverBus = new Vue();
-let playerShowTwitchTO: number;
-let playerShowTwitch = false;
-function rotatePlayerInfo(init: boolean) {
-  if (!init) {
-    playerShowTwitch = !playerShowTwitch;
-    serverBus.$emit('playerShowTwitch', playerShowTwitch);
-  }
-  if (playerShowTwitch) {
-    playerShowTwitchTO = window.setTimeout(rotatePlayerInfo, 15000);
-  } else {
-    playerShowTwitchTO = window.setTimeout(rotatePlayerInfo, 45000);
-  }
-}
-nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol').on('change', () => {
-  clearTimeout(playerShowTwitchTO);
-  playerShowTwitch = false;
-  rotatePlayerInfo(true);
-});
-
 const router = new VueRouter({
   routes,
 });

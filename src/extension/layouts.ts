@@ -2,7 +2,7 @@ import type { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { capturePositions, gameLayouts, obsData, upcomingRunID, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
+import { capturePositions, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
 
 const evtConfig = (nodecg().bundleConfig as Configschema).event;
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
@@ -17,6 +17,22 @@ const obsSourceKeys: { [key: string]: string } = {
   CameraCapture1: obsConfig.names.sources.cameraCapture1,
   CameraCapture2: obsConfig.names.sources.cameraCapture2,
 };
+
+// Controls the name cycling ticks for players/hosts
+function cycleNames(): void {
+  nameCycle.value += 1;
+  console.log(nameCycle.value);
+  const cycle = nameCycle.value;
+  if (cycle === 0) { // Name
+    setTimeout(cycleNames, 45 * 1000);
+  } else if (cycle === 1) { // Twitch
+    setTimeout(cycleNames, 15 * 1000);
+  } else {
+    nameCycle.value = -1;
+    cycleNames();
+  }
+}
+cycleNames();
 
 // Update replicant that stores the ID of the upcoming run,
 // both on timer stopping, if you somehow have no current run

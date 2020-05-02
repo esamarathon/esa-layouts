@@ -43,8 +43,6 @@
 </template>
 
 <script>
-import { serverBus } from '../main';
-
 const playerSoloImg = require('../../_misc/PlayerIconSolo.png');
 const twitchIconImg = require('../../_misc/TwitchIcon.png');
 const playerImg1 = require('../../_misc/PlayerIcon1.png');
@@ -59,6 +57,7 @@ const playerImgNumbered = [
   playerImg4,
 ];
 
+const nameCycle = nodecg.Replicant('nameCycle');
 const runData = nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol');
 const timerRep = nodecg.Replicant('timer', 'nodecg-speedcontrol');
 
@@ -92,14 +91,15 @@ export default {
     };
   },
   created() {
-    // Listen to the main.js file for animation timing.
-    serverBus.$on('playerShowTwitch', (show) => {
-      if (!show) {
+    let init = false;
+    nameCycle.on('change', (val) => {
+      if (val === 0 || !init) {
         this.changePlayer();
       } else if (this.players[this.index].social.twitch) {
         this.currentIcon = twitchIconImg;
         this.text = `/${this.players[this.index].social.twitch}`;
       }
+      init = true;
     });
     if (this.playerSlot >= 0) {
       this.playerIcon = playerImgNumbered[this.playerSlot];

@@ -38,7 +38,7 @@ export default class extends Vue {
     }
   }
 
-  layoutChange(route: Route): void {
+  layoutChanged(route: Route): void {
     // Is the last replace needed?
     const code = route.path.replace('/', '').replace('*', '');
     this.updateSelected(code || defaultCode);
@@ -47,13 +47,13 @@ export default class extends Vue {
   }
 
   mounted(): void {
-    this.layoutChange(this.$route);
+    this.layoutChanged(this.$route);
     this.$router.afterEach(async (to) => {
       try {
         await Vue.nextTick();
-        this.layoutChange(to);
+        this.layoutChanged(to);
       } catch (err) {
-        // Not sure if this would error but better be safe
+        // Not sure if this will error but better be safe
       }
     });
   }

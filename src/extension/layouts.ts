@@ -19,20 +19,22 @@ const obsSourceKeys: { [key: string]: string } = {
 };
 
 // Controls the name cycling ticks for players/hosts
-function cycleNames(): void {
-  nameCycle.value += 1;
-  console.log(nameCycle.value);
-  const cycle = nameCycle.value;
+function cycleNames(reset = false): void {
+  let cycle = 0;
+  if (!reset) {
+    cycle = nameCycle.value + 1;
+  }
   if (cycle === 0) { // Name
     setTimeout(cycleNames, 45 * 1000);
   } else if (cycle === 1) { // Twitch
     setTimeout(cycleNames, 15 * 1000);
   } else {
-    nameCycle.value = -1;
-    cycleNames();
+    cycleNames(true);
+    return;
   }
+  nameCycle.value = cycle;
 }
-cycleNames();
+cycleNames(true);
 
 // Update replicant that stores the ID of the upcoming run,
 // both on timer stopping, if you somehow have no current run

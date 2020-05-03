@@ -2,7 +2,7 @@ import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import type { GameLayouts, SponsorLogos } from 'schemas';
 import SpeedcontrolUtil from 'speedcontrol-util/browser';
-import type { Timer } from 'speedcontrol-util/types';
+import type { RunDataActiveRun, Timer } from 'speedcontrol-util/types';
 import type { Asset } from 'types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
@@ -16,12 +16,14 @@ const reps: {
   sponsorLogoAssets: ReplicantBrowser<Asset[]>;
   sponsorLogos: ReplicantBrowser<SponsorLogos>;
   timer: ReplicantBrowser<Timer>;
+  runDataActiveRun: ReplicantBrowser<RunDataActiveRun>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
   gameLayouts: nodecg.Replicant('gameLayouts'),
   sponsorLogoAssets: nodecg.Replicant('assets:sponsor-logos'),
   sponsorLogos: nodecg.Replicant('sponsorLogos'),
   timer: sc.timer,
+  runDataActiveRun: sc.runDataActiveRun,
 };
 
 // Types for mutations below

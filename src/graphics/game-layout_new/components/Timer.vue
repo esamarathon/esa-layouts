@@ -4,6 +4,7 @@
     :style="{
       'font-weight': '500',
       'font-size': '100px',
+      'margin-top': '-0.07em',
       transition: '1s',
       color: textColour(),
     }"

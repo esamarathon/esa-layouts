@@ -41,3 +41,15 @@ body {
 .Capture {
   box-sizing: border-box;
 }
+
+.NoWrap {
+  white-space: nowrap;
+}
+
+.HideOverflow {
+  overflow: hidden;
+}
+
+.BorderBox {
+  box-sizing: border-box;
+}

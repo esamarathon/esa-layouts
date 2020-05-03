@@ -80,7 +80,7 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
 
 capturePositions.on('change', async (val) => {
   // Online marathons are not currently using the same OBS logic.
-  if (evtConfig.online || !val || !val['Game Layout']) {
+  if (evtConfig.online || !val || !val['game-layout']) {
     return;
   }
   for (const key of Object.keys(obsSourceKeys)) {
@@ -91,11 +91,11 @@ capturePositions.on('change', async (val) => {
       left: 0,
     };
     // If this is a camera, it may need cropping.
-    if (key.includes('Camera') && val['Game Layout'][key]) {
+    if (key.includes('Camera') && val['game-layout'][key]) {
       // Cameras need cropping if not exactly 16:9.
       // Bigger than 16:9 need top/bottom cropping.
       // Smaller than 16:9 need left/right cropping.
-      const webcamAR = val['Game Layout'][key].width / val['Game Layout'][key].height;
+      const webcamAR = val['game-layout'][key].width / val['game-layout'][key].height;
       if (webcamAR > (16 / 9)) {
         const newHeight = 1920 / webcamAR;
         const cropAmount = Math.floor((1080 - newHeight) / 2);
@@ -113,9 +113,9 @@ capturePositions.on('change', async (val) => {
       await obs.configureSceneItem(
         obsConfig.names.scenes.gameLayout,
         obsSourceKeys[key],
-        val['Game Layout'][key],
+        val['game-layout'][key],
         crop,
-        !!val['Game Layout'][key],
+        !!val['game-layout'][key],
       );
     } catch (err) {
       nodecg().log.warn(`[Layouts] Cannot successfully configure capture position [${key}]`);

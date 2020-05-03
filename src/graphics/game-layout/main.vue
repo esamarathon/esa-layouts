@@ -43,7 +43,7 @@ export default class extends Vue {
     const code = route.path.replace('/', '').replace('*', '');
     this.updateSelected(code || defaultCode);
     this.clipPath = generateClipPath();
-    updateCapturePositionData('Game Layout');
+    updateCapturePositionData(document.title);
   }
 
   mounted(): void {

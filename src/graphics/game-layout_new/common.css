@@ -1,0 +1,43 @@
+/* Integrate this into the main "common.css" when rewrite done. */
+
+@import url('../_misc/fonts/barlow-condensed.css');
+
+body {
+  font-family: 'Barlow Condensed', sans-serif;
+  color: var(--font-colour);
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+#Background, #Layout {
+  width: 1920px;
+  height: 1080px;
+  position: fixed;
+}
+
+.BorderTop {
+  border-top: 3px solid var(--border-colour);
+}
+.BorderRight {
+  border-right: 3px solid var(--border-colour);
+}
+.BorderBottom {
+  border-bottom: 3px solid var(--border-colour);
+}
+.BorderLeft {
+  border-left: 3px solid var(--border-colour);
+}
+
+.Flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Fixed, .Capture {
+  position: fixed;
+}
+.Capture {
+  box-sizing: border-box;
+}

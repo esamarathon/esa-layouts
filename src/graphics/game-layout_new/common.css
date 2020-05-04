@@ -41,6 +41,7 @@ body {
 .Fixed, .Capture {
   position: fixed;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .NoWrap {

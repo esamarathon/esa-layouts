@@ -26,7 +26,7 @@
 
     <!-- General Run Info -->
     <div
-      class="Fixed FlexColumn BorderBottom NoWrap HideOverflow BorderBox"
+      class="Fixed FlexColumn BorderBottom NoWrap BorderBox"
       :style="{
         left: '0px',
         top: '380px',
@@ -60,9 +60,9 @@
       }"
     />
 
-    <!-- Donations Bar -->
-    <div
-      class="Fixed BorderLeft"
+    <!-- Donation Bar -->
+    <donation-bar
+      class="BorderLeft"
       :style="{
         left: '668px',
         top: '940px',
@@ -80,6 +80,7 @@ import Commentator from './components/Commentator.vue';
 import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
 import MediaBox from '../_misc/components/MediaBox.vue';
+import DonationBar from './components/DonationBar.vue';
 
 @Component({
   components: {
@@ -88,6 +89,7 @@ import MediaBox from '../_misc/components/MediaBox.vue';
     RunInfo,
     Timer,
     MediaBox,
+    DonationBar,
   },
 })
 export default class extends Vue {}

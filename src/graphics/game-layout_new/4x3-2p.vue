@@ -3,57 +3,73 @@
     <!-- Game Captures -->
     <div
       id="GameCapture1"
-      class="Capture BorderLeft"
+      class="Capture BorderRight"
       :style="{
-        left: '875px',
+        left: '0px',
         top: '0px',
-        width: '1045px',
-        height: '940px',
+        width: '960px',
+        height: '720px',
+      }"
+    />
+    <div
+      id="GameCapture2"
+      class="Capture"
+      :style="{
+        left: '960px',
+        top: '0px',
+        width: '960px',
+        height: '720px',
       }"
     />
 
     <!-- Camera Captures -->
     <div
       id="CameraCapture1"
-      class="Capture"
+      class="Capture BorderTop BorderRight BorderLeft"
       :style="{
-        left: '0px',
-        top: '0px',
-        width: '875px',
-        height: '492px',
+        left: '711px',
+        top: '720px',
+        width: '498px',
+        height: '280px',
       }"
     />
 
-    <!-- General Run Info -->
+    <!-- Player 1/Commentator -->
     <div
-      class="Fixed FlexColumn BorderBottom NoWrap"
+      class="Fixed"
       :style="{
         left: '0px',
-        top: '492px',
-        width: '875px',
-        height: '210px',
+        top: '720px',
+        width: '711px',
+        height: '90px',
       }"
     >
       <player />
       <commentator />
+    </div>
+
+    <!-- Player 2/General Run Info -->
+    <div
+      class="Fixed FlexColumn NoWrap"
+      :style="{
+        left: '1209px',
+        top: '720px',
+        width: '711px',
+        height: '235px',
+      }"
+    >
+      <player />
 
       <!-- Run Game Info/Timer -->
       <div
-        class="Flex NoWrap"
+        class="FlexColumn"
         :style="{ flex: '1' }"
       >
-        <run-info
-          class="BorderLeft"
-          :style="{
-            'width': '525px',
-            height: '100%',
-          }"
-        />
+        <run-info :style="{ 'font-size': '35px' }" />
         <timer
-          class="BorderLeft"
           :style="{
-            'width': '350px',
-            height: '100%',
+            'font-size': '80px',
+            'margin-top': '-0.09em',
           }"
         />
       </div>
@@ -63,9 +79,9 @@
     <media-box
       :style="{
         left: '0px',
-        top: '702px',
-        width: '875px',
-        height: '298px',
+        top: '810px',
+        width: '711px',
+        height: '190px',
       }"
     />
 
@@ -73,10 +89,10 @@
     <donation-bar
       class="BorderLeft"
       :style="{
-        left: '875px',
-        top: '940px',
-        width: '1045px',
-        height: '60px',
+        left: '1209px',
+        top: '955px',
+        width: '711px',
+        height: '45px',
       }"
     />
   </div>

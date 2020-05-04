@@ -1,16 +1,15 @@
 <template>
   <div
     v-if="runData"
-    class="Flex"
+    class="FlexColumn"
     :style="{
-      'flex-direction': 'column',
+      'font-size': '40px',
     }"
   >
     <div
       v-if="runData.game"
       :style="{
         'font-weight': '500',
-        'font-size': '40px',
       }"
     >
       {{ runData.game }}
@@ -18,7 +17,7 @@
     <div
       class="RunInfoExtra"
       :style="{
-        'font-size': '35px',
+        'font-size': '0.75em',
         color: 'var(--font-colour-secondary)', // should be changed
       }"
     >

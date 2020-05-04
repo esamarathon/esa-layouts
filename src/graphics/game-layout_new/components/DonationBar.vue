@@ -1,5 +1,8 @@
 <template>
-  <div class="Fixed Flex">
+  <div
+    class="Fixed Flex"
+    :style="{ 'background-color': 'rgba(0, 0, 0, 0.15)' }"
+  >
     Donations
   </div>
 </template>

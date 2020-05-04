@@ -37,15 +37,15 @@
       <run-info
         class="BorderLeft"
         :style="{
-          flex: '3',
+          'font-size': '45px',
+          'width': '1000px',
           height: '100%',
         }"
       />
       <timer
         class="BorderLeft"
         :style="{
-          'min-width': '387px',
-          flex: '1',
+          'width': '387px',
           height: '100%',
         }"
       />

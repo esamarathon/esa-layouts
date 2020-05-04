@@ -24,8 +24,17 @@ const routes = [
   },
   {
     name: '3DS 1 Player',
-    path: '/3ds-1p',
+    path: '/3DS-1p',
     component: List.L_3DS_1p,
+  },
+  {
+    name: 'DS 1 Player',
+    path: '/DS-1p',
+    component: List.L_DS_1p,
+  },
+  {
+    path: '*',
+    redirect: '/4x3-1p',
   },
 ];
 

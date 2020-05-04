@@ -17,6 +17,11 @@ const routes = [
     path: '/4x3-1p',
     component: List.L_4x3_1p,
   },
+  {
+    name: '16:9 1 Player',
+    path: '/16x9-1p',
+    component: List.L_16x9_1p,
+  },
 ];
 
 const router = new VueRouter({

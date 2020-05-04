@@ -23,6 +23,11 @@ const routes = [
     component: List.L_16x9_1p,
   },
   {
+    name: 'GameBoy 1 Player',
+    path: '/GB-1p',
+    component: List.L_GB_1p,
+  },
+  {
     name: '3DS 1 Player',
     path: '/3DS-1p',
     component: List.L_3DS_1p,

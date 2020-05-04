@@ -1,0 +1,93 @@
+<template>
+  <div>
+    <!-- Game Captures -->
+    <div
+      id="GameCapture1"
+      class="Capture BorderLeft"
+      :style="{
+        left: '512px',
+        top: '0px',
+        width: '1408px',
+        height: '940px',
+      }"
+    />
+
+    <!-- Camera Captures -->
+    <div
+      id="CameraCapture1"
+      class="Capture"
+      :style="{
+        left: '0px',
+        top: '0px',
+        width: '513px',
+        height: '333px',
+      }"
+    />
+
+    <!-- General Run Info -->
+    <div
+      class="Fixed FlexColumn BorderBottom NoWrap"
+      :style="{
+        left: '0px',
+        top: '333px',
+        width: '512px',
+        height: '321px',
+      }"
+    >
+      <player />
+      <commentator />
+
+      <!-- Run Game Info/Timer -->
+      <div
+        class="FlexColumn"
+        :style="{ flex: '1' }"
+      >
+        <run-info />
+        <timer />
+      </div>
+    </div>
+
+    <!-- Media Box -->
+    <media-box
+      :style="{
+        left: '0px',
+        top: '654px',
+        width: '512px',
+        height: '346px',
+      }"
+    />
+
+    <!-- Donation Bar -->
+    <donation-bar
+      class="BorderLeft"
+      :style="{
+        left: '512px',
+        top: '940px',
+        width: '1408px',
+        height: '60px',
+      }"
+    />
+  </div>
+</template>
+
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import Player from './components/Player.vue';
+import Commentator from './components/Commentator.vue';
+import RunInfo from './components/RunInfo.vue';
+import Timer from './components/Timer.vue';
+import MediaBox from '../_misc/components/MediaBox.vue';
+import DonationBar from './components/DonationBar.vue';
+
+@Component({
+  components: {
+    Player,
+    Commentator,
+    RunInfo,
+    Timer,
+    MediaBox,
+    DonationBar,
+  },
+})
+export default class extends Vue {}
+</script>

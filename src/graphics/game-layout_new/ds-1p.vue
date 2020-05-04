@@ -67,7 +67,6 @@
         left: '0px',
         top: '483px',
         width: '858px',
-        height: '90px',
       }"
     >
       <player />

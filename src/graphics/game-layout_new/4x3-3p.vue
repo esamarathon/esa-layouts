@@ -7,70 +7,90 @@
       :style="{
         left: '0px',
         top: '0px',
-        width: '960px',
-        height: '720px',
+        width: '640px',
+        height: '480px',
       }"
     />
     <div
       id="GameCapture2"
+      class="Capture BorderRight"
+      :style="{
+        left: '640px',
+        top: '0px',
+        width: '640px',
+        height: '480px',
+      }"
+    />
+    <div
+      id="GameCapture3"
       class="Capture"
       :style="{
-        left: '960px',
+        left: '1280px',
         top: '0px',
-        width: '960px',
-        height: '720px',
+        width: '640px',
+        height: '480px',
       }"
     />
 
     <!-- Camera Captures -->
     <div
       id="CameraCapture1"
-      class="Capture BorderTop BorderRight BorderLeft"
+      class="Capture BorderRight BorderLeft"
       :style="{
-        left: '711px',
-        top: '720px',
-        width: '498px',
-        height: '280px',
+        left: '600px',
+        top: '530px',
+        width: '721px',
+        height: '410px',
       }"
     />
 
-    <!-- Player 1/Commentator -->
-    <div
+    <player
       class="Fixed"
       :style="{
         left: '0px',
-        top: '720px',
-        width: '711px',
+        top: '480px',
+        width: '640px',
+        height: '50px',
       }"
-    >
-      <player />
-      <commentator />
-    </div>
+    />
+    <player
+      class="Fixed"
+      :style="{
+        left: '640px',
+        top: '480px',
+        width: '640px',
+        height: '50px',
+      }"
+    />
+    <player
+      class="Fixed"
+      :style="{
+        left: '1280px',
+        top: '480px',
+        width: '640px',
+        height: '50px',
+      }"
+    />
 
-    <!-- Player 2/General Run Info -->
+    <!-- General Run Info -->
     <div
       class="Fixed FlexColumn NoWrap"
       :style="{
-        left: '1209px',
-        top: '720px',
-        width: '711px',
-        height: '235px',
+        left: '1321px',
+        top: '530px',
+        width: '600px',
+        height: '410px',
       }"
     >
-      <player />
+      <commentator />
 
       <!-- Run Game Info/Timer -->
       <div
         class="FlexColumn"
         :style="{ flex: '1' }"
       >
-        <run-info :style="{ 'font-size': '35px' }" />
-        <timer
-          :style="{
-            'font-size': '80px',
-            'margin-top': '-0.09em',
-          }"
-        />
+        <run-info :style="{ 'font-size': '45px' }" />
+        <timer />
       </div>
     </div>
 
@@ -78,20 +98,19 @@
     <media-box
       :style="{
         left: '0px',
-        top: '810px',
-        width: '711px',
-        height: '190px',
+        top: '535px',
+        width: '600px',
+        height: '405px',
       }"
     />
 
     <!-- Donation Bar -->
     <donation-bar
-      class="BorderLeft"
       :style="{
-        left: '1209px',
-        top: '955px',
-        width: '711px',
-        height: '45px',
+        left: '0px',
+        top: '940px',
+        width: '1920px',
+        height: '60px',
       }"
     />
   </div>

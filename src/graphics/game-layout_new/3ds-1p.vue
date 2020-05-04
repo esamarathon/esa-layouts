@@ -55,7 +55,6 @@
         left: '0px',
         top: '437px',
         width: '774px',
-        height: '90px',
       }"
     >
       <player />

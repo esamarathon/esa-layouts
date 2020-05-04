@@ -16,7 +16,7 @@ body {
   position: fixed;
 }
 
-*[class^="Border"] {
+*[class*="Border"] {
   box-sizing: border-box;
 }
 .BorderTop {
@@ -32,7 +32,7 @@ body {
   border-left: 3px solid var(--border-colour);
 }
 
-.Flex, *[class^="Flex"] {
+*[class*="Flex"] {
   display: flex;
   align-items: center;
   justify-content: center;

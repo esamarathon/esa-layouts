@@ -26,37 +26,22 @@
 
     <!-- General Run Info -->
     <div
-      class="Fixed Flex BorderBottom NoWrap HideOverflow BorderBox"
+      class="Fixed FlexColumn BorderBottom NoWrap HideOverflow BorderBox"
       :style="{
         left: '0px',
         top: '380px',
         width: '668px',
         height: '310px',
-        'flex-direction': 'column'
       }"
     >
-      <!-- player, to be done -->
-      <div
-        class="TestArea Flex"
-        :style="{ height: '50px', width: '100%' }"
-      >
-        PLAYER TO GO HERE
-      </div>
-
-      <!-- commentators, to be done -->
-      <div
-        class="TestArea Flex"
-        :style="{ height: '40px', width: '100%' }"
-      >
-        COMMENTATOR TO GO HERE
-      </div>
+      <player />
+      <commentator />
 
       <!-- Run Game Info/Timer -->
       <div
-        class="Flex"
+        class="Flex FlexColumn"
         :style="{
           flex: '1',
-          'flex-direction': 'column',
           'padding-top': '10px',
         }"
       >
@@ -90,12 +75,16 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
+import Player from './components/Player.vue';
+import Commentator from './components/Commentator.vue';
 import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
 import MediaBox from '../_misc/components/MediaBox.vue';
 
 @Component({
   components: {
+    Player,
+    Commentator,
     RunInfo,
     Timer,
     MediaBox,
@@ -103,9 +92,3 @@ import MediaBox from '../_misc/components/MediaBox.vue';
 })
 export default class extends Vue {}
 </script>
-
-<style scoped>
-  .TestArea {
-    background-color: rgba(255, 192, 203, 0.5);
-  }
-</style>

@@ -29,16 +29,17 @@ body {
   border-left: 3px solid var(--border-colour);
 }
 
-.Flex {
+.Flex, .FlexColumn {
   display: flex;
   align-items: center;
   justify-content: center;
 }
+.FlexColumn {
+  flex-direction: column;
+}
 
 .Fixed, .Capture {
   position: fixed;
-}
-.Capture {
   box-sizing: border-box;
 }
 

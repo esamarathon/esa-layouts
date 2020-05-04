@@ -22,6 +22,11 @@ const routes = [
     path: '/16x9-1p',
     component: List.L_16x9_1p,
   },
+  {
+    name: '3DS 1 Player',
+    path: '/3ds-1p',
+    component: List.L_3DS_1p,
+  },
 ];
 
 const router = new VueRouter({

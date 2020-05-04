@@ -33,6 +33,11 @@ const routes = [
     component: List.L_16x9_1p_LargeCam,
   },
   {
+    name: '16:9 2 Player',
+    path: '/16x9-2p',
+    component: List.L_16x9_2p,
+  },
+  {
     name: 'GameBoy 1 Player',
     path: '/GB-1p',
     component: List.L_GB_1p,

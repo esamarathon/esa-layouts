@@ -16,6 +16,9 @@ body {
   position: fixed;
 }
 
+*[class^="Border"] {
+  box-sizing: border-box;
+}
 .BorderTop {
   border-top: 3px solid var(--border-colour);
 }
@@ -29,7 +32,7 @@ body {
   border-left: 3px solid var(--border-colour);
 }
 
-.Flex, .FlexColumn {
+.Flex, *[class^="Flex"] {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -40,18 +43,9 @@ body {
 
 .Fixed, .Capture {
   position: fixed;
-  box-sizing: border-box;
   overflow: hidden;
 }
 
 .NoWrap {
   white-space: nowrap;
-}
-
-.HideOverflow {
-  overflow: hidden;
-}
-
-.BorderBox {
-  box-sizing: border-box;
 }

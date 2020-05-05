@@ -33,7 +33,7 @@
       <div
         class="RunInfoExtra"
         :style="{
-          'font-size': '0.75em', // Also gets set in the script, here as backup.
+          'font-size': '0.8em', // Also gets set in the script, here as backup.
           color: 'var(--font-colour-secondary)', // should be changed
         }"
       >
@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'; // eslint-disable-line object-curly-newline, max-len
 import { State } from 'vuex-class';
 import { RunDataActiveRun } from 'speedcontrol-util/types';
 import fitty from 'fitty';
@@ -55,22 +55,35 @@ import fitty from 'fitty';
 export default class extends Vue {
   @State('runDataActiveRun') runData!: RunDataActiveRun;
   @Prop(Boolean) readonly noWrap!: boolean;
-  elem!: HTMLElement;
+  elem: HTMLElement | undefined;
 
   fit(): void {
-    fitty('.RunGame', {
-      minSize: 1,
-      maxSize: parseInt(this.elem.style.fontSize, 0),
-    });
-    fitty('.RunInfoExtra', {
-      minSize: 1,
-      maxSize: parseInt(this.elem.style.fontSize, 0) * 0.75,
-    });
+    this.elem = this.$refs.RunInfo as HTMLElement;
+    if (this.elem) {
+      if (!this.noWrap) {
+        fitty('.RunGame', {
+          minSize: 1,
+          maxSize: parseInt(this.elem.style.fontSize, 0),
+        });
+        fitty('.RunInfoExtra', {
+          minSize: 1,
+          maxSize: parseInt(this.elem.style.fontSize, 0) * 0.8,
+        });
+      }
+    }
   }
 
-  mounted(): void {
-    this.elem = this.$refs.RunInfo as HTMLElement;
-    if (!this.noWrap) {
+  async mounted(): Promise<void> {
+    if (this.runData) {
+      this.fit();
+    }
+  }
+
+  @Watch('runData')
+  async onRunDataChange(newVal: RunDataActiveRun, oldVal?: RunDataActiveRun): Promise<void> {
+    // Re-fit the elements if run data becomes definded (as elements do no exist before this).
+    if (newVal && !oldVal) {
+      await Vue.nextTick();
       this.fit();
     }
   }

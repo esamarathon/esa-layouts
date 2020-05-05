@@ -9,6 +9,8 @@
       'text-align': 'center',
       padding: '0 20px',
       'box-sizing': 'border-box',
+      'min-height': '0',
+      transform: scale || 'unset',
     }"
   >
     <div
@@ -56,6 +58,7 @@ export default class extends Vue {
   @State('runDataActiveRun') runData!: RunDataActiveRun;
   @Prop(Boolean) readonly noWrap!: boolean;
   elem: HTMLElement | undefined;
+  scale: string | null = null;
 
   fit(): void {
     this.elem = this.$refs.RunInfo as HTMLElement;
@@ -69,6 +72,15 @@ export default class extends Vue {
           minSize: 1,
           maxSize: parseInt(this.elem.style.fontSize, 0) * 0.8,
         });
+      } else {
+        // If there is no horizontal fitting, will crudely attempt to
+        // squash vertically if needed, just in case.
+        const scale = this.elem.clientHeight / this.elem.scrollHeight;
+        if (scale < 1) {
+          this.scale = `scale(1, ${scale - 0.15})`;
+        } else {
+          this.scale = null;
+        }
       }
     }
   }
@@ -82,7 +94,7 @@ export default class extends Vue {
   @Watch('runData')
   async onRunDataChange(newVal: RunDataActiveRun, oldVal?: RunDataActiveRun): Promise<void> {
     // Re-fit the elements if run data becomes definded (as elements do no exist before this).
-    if (newVal && !oldVal) {
+    if ((newVal && !oldVal) || this.noWrap) {
       await Vue.nextTick();
       this.fit();
     }

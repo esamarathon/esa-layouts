@@ -49,7 +49,7 @@
 
     <!-- Player 2/General Run Info -->
     <div
-      class="Fixed FlexColumn NoWrap"
+      class="Fixed FlexColumn"
       :style="{
         left: '1209px',
         top: '720px',
@@ -62,7 +62,10 @@
       <!-- Run Game Info/Timer -->
       <div
         class="FlexColumn"
-        :style="{ flex: '1' }"
+        :style="{
+          flex: '1',
+          width: '100%',
+        }"
       >
         <run-info :style="{ 'font-size': '35px' }" />
         <timer

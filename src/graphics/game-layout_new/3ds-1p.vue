@@ -36,7 +36,7 @@
 
     <!-- Run Game Info/Timer -->
     <div
-      class="Fixed FlexColumn BorderLeft NoWrap"
+      class="Fixed FlexColumn BorderLeft"
       :style="{
         left: '774px',
         top: '689px',

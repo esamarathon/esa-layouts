@@ -45,7 +45,3 @@ body {
   position: fixed;
   overflow: hidden;
 }
-
-.NoWrap {
-  white-space: nowrap;
-}

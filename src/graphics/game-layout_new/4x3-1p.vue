@@ -26,7 +26,7 @@
 
     <!-- General Run Info -->
     <div
-      class="Fixed FlexColumn BorderBottom NoWrap"
+      class="Fixed FlexColumn BorderBottom"
       :style="{
         left: '0px',
         top: '380px',
@@ -40,7 +40,10 @@
       <!-- Run Game Info/Timer -->
       <div
         class="FlexColumn"
-        :style="{ flex: '1' }"
+        :style="{
+          flex: '1',
+          width: '100%',
+        }"
       >
         <run-info />
         <timer />

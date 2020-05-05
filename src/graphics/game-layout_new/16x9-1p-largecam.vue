@@ -26,7 +26,7 @@
 
     <!-- Run Game Info/Timer -->
     <div
-      class="Fixed Flex NoWrap"
+      class="Fixed Flex"
       :style="{
         left: '533px',
         top: '780px',

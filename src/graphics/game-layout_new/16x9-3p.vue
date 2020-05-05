@@ -86,10 +86,9 @@
         top: '0px',
         width: '390px',
         height: '390px',
-        padding: '0 10px',
       }"
     >
-      <run-info />
+      <run-info no-wrap />
       <timer />
     </div>
 

@@ -74,7 +74,7 @@
 
     <!-- General Run Info -->
     <div
-      class="Fixed FlexColumn NoWrap"
+      class="Fixed FlexColumn"
       :style="{
         left: '1321px',
         top: '530px',
@@ -87,9 +87,15 @@
       <!-- Run Game Info/Timer -->
       <div
         class="FlexColumn"
-        :style="{ flex: '1' }"
+        :style="{
+          flex: '1',
+          width: '100%',
+        }"
       >
-        <run-info :style="{ 'font-size': '45px' }" />
+        <run-info
+          :style="{ 'font-size': '45px' }"
+          no-wrap
+        />
         <timer />
       </div>
     </div>

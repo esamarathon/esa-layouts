@@ -4,6 +4,8 @@
     class="FlexColumn"
     :style="{
       'font-size': '40px',
+      width: '100%',
+      'text-align': 'center',
     }"
   >
     <div

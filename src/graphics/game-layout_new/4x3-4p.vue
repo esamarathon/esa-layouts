@@ -74,10 +74,10 @@
           width: '100%',
         }"
       >
-        <run-info :style="{ 'font-size': '35px' }" />
+        <run-info :style="{ 'font-size': '40px' }" />
         <timer
           :style="{
-            'font-size': '75px',
+            'font-size': '90px',
           }"
         />
       </div>

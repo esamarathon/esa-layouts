@@ -57,25 +57,24 @@ import fitty from 'fitty';
 export default class extends Vue {
   @State('runDataActiveRun') runData!: RunDataActiveRun;
   @Prop(Boolean) readonly noWrap!: boolean;
-  elem: HTMLElement | undefined;
   scale: string | null = null;
 
   fit(): void {
-    this.elem = this.$refs.RunInfo as HTMLElement;
-    if (this.elem) {
+    const elem = this.$refs.RunInfo as HTMLElement;
+    if (elem) {
       if (!this.noWrap) {
         fitty('.RunGame', {
           minSize: 1,
-          maxSize: parseInt(this.elem.style.fontSize, 0),
+          maxSize: parseInt(elem.style.fontSize, 0),
         });
         fitty('.RunInfoExtra', {
           minSize: 1,
-          maxSize: parseInt(this.elem.style.fontSize, 0) * 0.8,
+          maxSize: parseInt(elem.style.fontSize, 0) * 0.8,
         });
       } else {
         // If there is no horizontal fitting, will crudely attempt to
         // squash vertically if needed, just in case.
-        const scale = this.elem.clientHeight / this.elem.scrollHeight;
+        const scale = elem.clientHeight / elem.scrollHeight;
         if (scale < 1) {
           this.scale = `scale(1, ${scale - 0.15})`;
         } else {

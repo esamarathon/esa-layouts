@@ -10,7 +10,7 @@
       padding: '0 20px',
       'box-sizing': 'border-box',
       'min-height': '0',
-      transform: scale || 'unset',
+      'line-height': lineHeight || 'unset',
     }"
   >
     <div
@@ -57,7 +57,7 @@ import fitty from 'fitty';
 export default class extends Vue {
   @State('runDataActiveRun') runData!: RunDataActiveRun;
   @Prop(Boolean) readonly noWrap!: boolean;
-  scale: string | null = null;
+  lineHeight: string | null = null;
 
   fit(): void {
     const elem = this.$refs.RunInfo as HTMLElement;
@@ -73,12 +73,12 @@ export default class extends Vue {
         });
       } else {
         // If there is no horizontal fitting, will crudely attempt to
-        // squash vertically if needed, just in case.
+        // reduce line height if needed, just in case.
         const scale = elem.clientHeight / elem.scrollHeight;
         if (scale < 1) {
-          this.scale = `scale(1, ${scale - 0.15})`;
+          this.lineHeight = `${(scale - 0.1) * 100}%`;
         } else {
-          this.scale = null;
+          this.lineHeight = null;
         }
       }
     }
@@ -94,6 +94,7 @@ export default class extends Vue {
   async onRunDataChange(newVal: RunDataActiveRun, oldVal?: RunDataActiveRun): Promise<void> {
     // Re-fit the elements if run data becomes definded (as elements do no exist before this).
     if ((newVal && !oldVal) || this.noWrap) {
+      this.lineHeight = null;
       await Vue.nextTick();
       this.fit();
     }

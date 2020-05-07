@@ -90,13 +90,13 @@
         <player
           :style="{
             'margin-right': '3px',
-            flex: '1',
+            width: 'calc(50%)',
           }"
         />
         <player
           :style="{
             'margin-left': '3px',
-            flex: '1',
+            width: 'calc(50%)',
           }"
         />
       </div>
@@ -114,13 +114,13 @@
       <player
         :style="{
           'margin-right': '3px',
-          flex: '1',
+          width: 'calc(50%)',
         }"
       />
       <player
         :style="{
           'margin-left': '3px',
-          flex: '1',
+          width: 'calc(50%)',
         }"
       />
     </div>

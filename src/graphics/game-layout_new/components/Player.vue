@@ -42,6 +42,24 @@
         </div>
       </div>
     </div>
+    <div
+      class="Flex"
+      :style="{
+        'font-size': '0.72em',
+        'line-height': '75%',
+        'text-align': 'center',
+        'margin-right': '7px',
+        padding: '0 5px',
+        'background-color': 'white',
+        color: 'black',
+        height: '100%',
+      }"
+    >
+      <!-- Examples for testing -->
+      He/Him
+      <!--She/Her-->
+      <!--They/Them-->
+    </div>
     <img
       ref="Flag"
       :src="`/bundles/esa-layouts/static/flags/gb/eng.png`"

@@ -72,18 +72,67 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'; // eslint-disable-line object-curly-newline, max-len
+import { State } from 'vuex-class';
+import { NameCycle } from 'schemas';
+import { RunDataActiveRun } from 'speedcontrol-util/types';
+import { RunDataTeam, RunDataPlayer } from 'nodecg-speedcontrol/types'; // should expose in sc-util
 import fitty from 'fitty';
 import { waitForImages } from '../../_misc/helpers';
 
 @Component
 export default class extends Vue {
+  @State('runDataActiveRun') runData!: RunDataActiveRun;
+  @State nameCycle!: NameCycle;
+  @Prop(Number) slotNo!: number;
+  team: RunDataTeam | null = null;
+  player: RunDataPlayer | null = null;
+  playerIndex = 0;
+
+  updateTeam(): void {
+    this.team = this.runData?.teams[this.slotNo || 0] || null;
+  }
+
+  updatePlayer(): void {
+    this.player = (this.team ? this.team.players[this.playerIndex] : null) || null;
+  }
+
+  created(): void {
+    this.updateTeam();
+    this.updatePlayer();
+  }
+
   async mounted(): Promise<void> {
     const elem = this.$refs.Player as HTMLElement;
     const nameElem = this.$refs.PlayerName as HTMLElement;
     await waitForImages(this.$refs.PlayerIcon, this.$refs.Flag);
     nameElem.style.width = `${nameElem.clientWidth}px`;
     fitty('.PlayerName', { minSize: 1, maxSize: parseInt(elem.style.fontSize, 0) });
+  }
+
+  @Watch('runData')
+  onRunDataChange(newVal: RunDataActiveRun, oldVal?: RunDataActiveRun): void {
+    // Only reset the player if run is changed or player length is different.
+    const newPlayers = newVal?.teams[this.slotNo || 0]?.players;
+    const oldPlayers = oldVal?.teams[this.slotNo || 0]?.players;
+    if (newVal?.id !== oldVal?.id && newPlayers?.length !== oldPlayers?.length) {
+      this.playerIndex = 0;
+    }
+    this.updateTeam();
+    this.updatePlayer();
+  }
+
+  @Watch('nameCycle')
+  onNameCycleChange(newVal: NameCycle, oldVal: NameCycle): void {
+    // If the name cycle resets, we need to move to the next player if applicable.
+    if (newVal < oldVal) {
+      if (this.team && this.team.players.length - 1 > this.playerIndex) {
+        this.playerIndex += 1;
+      } else {
+        this.playerIndex = 0;
+      }
+      this.updatePlayer();
+    }
   }
 }
 </script>

@@ -88,12 +88,14 @@
         :style="{ width: '100%' }"
       >
         <player
+          :slot-no="0"
           :style="{
             'margin-right': '3px',
             width: 'calc(50%)',
           }"
         />
         <player
+          :slot-no="1"
           :style="{
             'margin-left': '3px',
             width: 'calc(50%)',
@@ -112,12 +114,14 @@
       }"
     >
       <player
+        :slot-no="2"
         :style="{
           'margin-right': '3px',
           width: 'calc(50%)',
         }"
       />
       <player
+        :slot-no="3"
         :style="{
           'margin-left': '3px',
           width: 'calc(50%)',

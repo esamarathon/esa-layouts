@@ -43,7 +43,7 @@
         width: '660px',
       }"
     >
-      <player />
+      <player :slot-no="0" />
       <commentator />
     </div>
 
@@ -57,7 +57,7 @@
         height: '400px',
       }"
     >
-      <player />
+      <player :slot-no="1" />
 
       <!-- Run Game Info/Timer -->
       <div

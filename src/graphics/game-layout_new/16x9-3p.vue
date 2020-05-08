@@ -52,6 +52,7 @@
     <!-- Players -->
     <player
       class="Fixed"
+      :slot-no="0"
       :style="{
         left: '0px',
         top: '0px',
@@ -61,6 +62,7 @@
     />
     <player
       class="Fixed"
+      :slot-no="1"
       :style="{
         left: '1155px',
         top: '0px',
@@ -70,6 +72,7 @@
     />
     <player
       class="Fixed"
+      :slot-no="2"
       :style="{
         left: '1155px',
         top: '900px',

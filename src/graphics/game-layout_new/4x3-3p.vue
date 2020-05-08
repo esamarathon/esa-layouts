@@ -44,8 +44,10 @@
       }"
     />
 
+    <!-- Players -->
     <player
       class="Fixed"
+      :slot-no="0"
       :style="{
         left: '0px',
         top: '480px',
@@ -55,6 +57,7 @@
     />
     <player
       class="Fixed"
+      :slot-no="1"
       :style="{
         left: '640px',
         top: '480px',
@@ -64,6 +67,7 @@
     />
     <player
       class="Fixed"
+      :slot-no="2"
       :style="{
         left: '1280px',
         top: '480px',

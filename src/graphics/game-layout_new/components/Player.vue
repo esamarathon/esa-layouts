@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="player"
     ref="Player"
     class="Flex"
     :style="{
@@ -13,56 +14,53 @@
       'box-sizing': 'border-box',
     }"
   >
-    <img
-      ref="PlayerIcon"
-      src="../../_misc/PlayerIconSolo.png"
+    <!-- Player Icon/Name -->
+    <div
       :style="{
-        filter: 'var(--icon-colour-inversion)',
+        position: 'relative',
         height: '100%',
-      }"
-    >
-    <div
-      ref="PlayerName"
-      :style="{
+        'min-width': '0px',
         flex: '1',
-        overflow: 'hidden',
-        padding: '0 10px',
-        'box-sizing': 'border-box',
       }"
     >
-      <div
-        class="Flex"
-        :style="{
-          width: '100%',
-          'justify-content': 'flex-start',
-        }"
-      >
-        <div class="PlayerName">
-          zoton2
-        </div>
-      </div>
+      <transition name="fade">
+        <player-name
+          v-if="nameCycle === 1 && player.social.twitch"
+          :key="`twitch${playerIndex}`"
+          type="twitch"
+          :text="player.social.twitch"
+        />
+        <player-name
+          v-else
+          :key="`name${playerIndex}`"
+          :text="player.name"
+        />
+      </transition>
     </div>
+
+    <!-- Pronouns -->
+    <!-- Placeholder code, needs changing when properly implemented! -->
     <div
+      v-if="false"
       class="Flex"
       :style="{
         'font-size': '0.72em',
         'line-height': '75%',
         'text-align': 'center',
-        'margin-right': '7px',
+        'margin-right': player.country ? '7px' : 'unset',
         padding: '0 5px',
         'background-color': 'white',
         color: 'black',
         height: '100%',
       }"
     >
-      <!-- Examples for testing -->
       He/Him
-      <!--She/Her-->
-      <!--They/Them-->
     </div>
+
+    <!-- Country Flag -->
     <img
-      ref="Flag"
-      :src="`/bundles/esa-layouts/static/flags/gb/eng.png`"
+      v-if="player.country"
+      :src="`/bundles/esa-layouts/static/flags/${player.country}.png`"
       :style="{
         height: 'calc(100% - 4px)',
         border: '2px solid var(--font-colour-inverted)',
@@ -77,10 +75,13 @@ import { State } from 'vuex-class';
 import { NameCycle } from 'schemas';
 import { RunDataActiveRun } from 'speedcontrol-util/types';
 import { RunDataTeam, RunDataPlayer } from 'nodecg-speedcontrol/types'; // should expose in sc-util
-import fitty from 'fitty';
-import { waitForImages } from '../../_misc/helpers';
+import PlayerName from './PlayerName.vue';
 
-@Component
+@Component({
+  components: {
+    PlayerName,
+  },
+})
 export default class extends Vue {
   @State('runDataActiveRun') runData!: RunDataActiveRun;
   @State nameCycle!: NameCycle;
@@ -102,20 +103,12 @@ export default class extends Vue {
     this.updatePlayer();
   }
 
-  async mounted(): Promise<void> {
-    const elem = this.$refs.Player as HTMLElement;
-    const nameElem = this.$refs.PlayerName as HTMLElement;
-    await waitForImages(this.$refs.PlayerIcon, this.$refs.Flag);
-    nameElem.style.width = `${nameElem.clientWidth}px`;
-    fitty('.PlayerName', { minSize: 1, maxSize: parseInt(elem.style.fontSize, 0) });
-  }
-
   @Watch('runData')
   onRunDataChange(newVal: RunDataActiveRun, oldVal?: RunDataActiveRun): void {
     // Only reset the player if run is changed or player length is different.
     const newPlayers = newVal?.teams[this.slotNo || 0]?.players;
     const oldPlayers = oldVal?.teams[this.slotNo || 0]?.players;
-    if (newVal?.id !== oldVal?.id && newPlayers?.length !== oldPlayers?.length) {
+    if (newVal?.id !== oldVal?.id || newPlayers?.length !== oldPlayers?.length) {
       this.playerIndex = 0;
     }
     this.updateTeam();
@@ -136,3 +129,13 @@ export default class extends Vue {
   }
 }
 </script>
+
+<style scoped>
+  /* Copied from old code, needs checking! */
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 1s;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
+</style>

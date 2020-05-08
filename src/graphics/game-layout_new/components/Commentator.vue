@@ -23,7 +23,7 @@
           <template v-if="commentators.length === 1">Commentator:</template>
           <template v-else>Commentators:</template>
         </span>
-        &nbsp;{{ commentators.join(', ') }}
+        {{ commentators.join(', ') }}
       </div>
     </div>
   </div>

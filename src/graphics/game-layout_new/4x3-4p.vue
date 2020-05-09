@@ -45,7 +45,7 @@
     <!-- Camera Captures -->
     <div
       id="CameraCapture1"
-      class="Capture BorderTop BorderBottom"
+      class="Capture"
       :style="{
         left: '626px',
         top: '308px',
@@ -89,17 +89,13 @@
       >
         <player
           :slot-no="0"
-          :style="{
-            'margin-right': '3px',
-            width: 'calc(50%)',
-          }"
+          class="Player"
+          :style="{ 'margin-right': '3px' }"
         />
         <player
           :slot-no="1"
-          :style="{
-            'margin-left': '3px',
-            width: 'calc(50%)',
-          }"
+          class="Player"
+          :style="{ 'margin-left': '3px' }"
         />
       </div>
     </div>
@@ -115,17 +111,13 @@
     >
       <player
         :slot-no="2"
-        :style="{
-          'margin-right': '3px',
-          width: 'calc(50%)',
-        }"
+        class="Player"
+        :style="{ 'margin-right': '3px' }"
       />
       <player
         :slot-no="3"
-        :style="{
-          'margin-left': '3px',
-          width: 'calc(50%)',
-        }"
+        class="Player"
+        :style="{ 'margin-left': '3px' }"
       />
     </div>
 
@@ -172,3 +164,9 @@ import DonationBar from './components/DonationBar.vue';
 })
 export default class extends Vue {}
 </script>
+
+<style scoped>
+  .Player {
+    width: calc(50%);
+  }
+</style>

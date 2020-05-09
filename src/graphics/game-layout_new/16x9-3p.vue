@@ -54,6 +54,7 @@
       class="Fixed"
       :slot-no="0"
       :style="{
+        'font-size': '22px',
         left: '0px',
         top: '0px',
         width: '765px',
@@ -64,6 +65,7 @@
       class="Fixed"
       :slot-no="1"
       :style="{
+        'font-size': '22px',
         left: '1155px',
         top: '0px',
         width: '765px',
@@ -74,6 +76,7 @@
       class="Fixed"
       :slot-no="2"
       :style="{
+        'font-size': '22px',
         left: '1155px',
         top: '900px',
         width: '765px',

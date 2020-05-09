@@ -1,6 +1,7 @@
 /* eslint no-new: off, @typescript-eslint/explicit-function-return-type: off */
 
 import type { GameLayouts } from 'schemas';
+import { RunDataActiveRun } from 'speedcontrol-util/types';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import '../_misc/defaults.css';
@@ -95,11 +96,21 @@ function getAvailable(): GameLayouts['available'] {
   }, [] as GameLayouts['available']);
 }
 
+// Logic for if we should be using mutiplayer layouts as "co-op" variants.
+function checkCoop(runData: RunDataActiveRun): boolean {
+  return (runData
+    && runData.teams.length === 1
+    && runData.teams[0].players.length > 1) || false;
+}
+
 waitForReplicants().then((store) => {
   store.commit('updateList', getAvailable());
   window.addEventListener('beforeunload', () => {
     store.commit('clearList');
   });
+  store.watch(() => store.state.runDataActiveRun, () => {
+    store.commit('updateCoop', checkCoop(store.state.runDataActiveRun));
+  }, { immediate: true });
 
   new Vue({
     store,

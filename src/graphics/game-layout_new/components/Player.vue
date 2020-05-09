@@ -29,7 +29,7 @@
           class="Icon"
           src="../../_misc/TwitchIcon.png"
         >
-        <template v-else-if="typeof slotNo === 'number'">
+        <template v-else-if="!coop && typeof slotNo === 'number'">
           <img
             v-if="slotNo === 0"
             key="`name"
@@ -132,13 +132,20 @@ import { RunDataTeam, RunDataPlayer } from 'nodecg-speedcontrol/types'; // shoul
 export default class extends Vue {
   @State('runDataActiveRun') runData!: RunDataActiveRun;
   @State nameCycle!: NameCycle;
+  @State coop!: boolean;
   @Prop(Number) slotNo!: number;
   team: RunDataTeam | null = null;
   player: RunDataPlayer | null = null;
   playerIndex = 0;
 
   updateTeam(): void {
-    this.team = this.runData?.teams[this.slotNo || 0] || null;
+    if (this.coop && typeof this.slotNo === 'number') {
+      // Makes a fake team with just 1 player in it.
+      const player = this.runData?.teams[0]?.players[this.slotNo];
+      this.team = player ? { id: player.id, players: [player] } : null;
+    } else {
+      this.team = this.runData?.teams[this.slotNo || 0] || null;
+    }
   }
 
   updatePlayer(): void {

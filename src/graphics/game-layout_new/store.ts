@@ -30,13 +30,20 @@ const reps: {
   runDataActiveRun: sc.runDataActiveRun,
 };
 
+interface StateTypes {
+  coop: boolean;
+  runDataActiveRun: RunDataActiveRun;
+}
+
 // Types for mutations below
 export type UpdateSelected = (code?: string) => void;
 export type UpdateList = (list: GameLayouts['available']) => void;
 export type ClearList = () => void;
 
 const store = new Vuex.Store({
-  state: {},
+  state: {
+    coop: false,
+  } as StateTypes,
   mutations: {
     setState(state, { name, val }): void {
       Vue.set(state, name, val);
@@ -58,6 +65,9 @@ const store = new Vuex.Store({
       }
     },
     /* Mutations to replicants end */
+    updateCoop(state, coop): void {
+      Vue.set(state, 'coop', coop);
+    },
   },
 });
 
@@ -67,7 +77,7 @@ Object.keys(reps).forEach((key) => {
   });
 });
 
-export default async function (): Promise<Store<{}>> {
+export default async function (): Promise<Store<StateTypes>> {
   return NodeCG.waitForReplicants(
     ...Object.keys(reps).map((key) => reps[key]),
   ).then(() => store);

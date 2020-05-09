@@ -1,9 +1,9 @@
 <template>
   <div>
     <!-- Game Captures -->
-    <div
+    <game-capture
       id="GameCapture1"
-      class="Capture BorderLeft BorderBottom"
+      class="BorderLeft BorderBottom"
       :style="{
         left: '774px',
         top: '0px',
@@ -11,9 +11,9 @@
         height: '689px',
       }"
     />
-    <div
+    <game-capture
       id="GameCapture2"
-      class="Capture BorderLeft"
+      class="BorderLeft"
       :style="{
         left: '1506px',
         top: '689px',
@@ -85,6 +85,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
+import GameCapture from './components/GameCapture.vue';
 import Player from './components/Player.vue';
 import Commentator from './components/Commentator.vue';
 import RunInfo from './components/RunInfo.vue';
@@ -94,6 +95,7 @@ import DonationBar from './components/DonationBar.vue';
 
 @Component({
   components: {
+    GameCapture,
     Player,
     Commentator,
     RunInfo,

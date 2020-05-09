@@ -1,9 +1,10 @@
 <template>
   <div>
     <!-- Game Captures -->
-    <div
+    <game-capture
       id="GameCapture1"
-      class="Capture BorderRight"
+      class="BorderRight"
+      :slot-no="0"
       :style="{
         left: '0px',
         top: '0px',
@@ -11,9 +12,9 @@
         height: '720px',
       }"
     />
-    <div
+    <game-capture
       id="GameCapture2"
-      class="Capture"
+      :slot-no="1"
       :style="{
         left: '960px',
         top: '0px',
@@ -102,6 +103,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
+import GameCapture from './components/GameCapture.vue';
 import Player from './components/Player.vue';
 import Commentator from './components/Commentator.vue';
 import RunInfo from './components/RunInfo.vue';
@@ -111,6 +113,7 @@ import DonationBar from './components/DonationBar.vue';
 
 @Component({
   components: {
+    GameCapture,
     Player,
     Commentator,
     RunInfo,

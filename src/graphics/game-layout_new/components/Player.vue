@@ -4,6 +4,7 @@
     ref="Player"
     class="Flex"
     :style="{
+      'justify-content': 'space-between',
       'background-color': 'var(--border-colour)',
       color: 'var(--font-colour-inverted)',
       'font-weight': '500',
@@ -14,74 +15,94 @@
       'box-sizing': 'border-box',
     }"
   >
-    <!-- Player Icon/Name -->
+    <!-- Player/Twitch Icon -->
     <div
       :style="{
         position: 'relative',
         height: '100%',
-        'min-width': '0px',
-        flex: '1',
       }"
     >
       <transition name="fade">
-        <player-name
+        <img
           v-if="nameCycle === 1 && player.social.twitch"
-          :key="`twitch${playerIndex}`"
-          type="twitch"
-          :text="player.social.twitch"
-        />
-        <player-name
+          key="twitch"
+          class="Icon"
+          src="../../_misc/TwitchIcon.png"
+        >
+        <img
           v-else
-          :key="`name${playerIndex}`"
-          :text="player.name"
-        />
+          key="name"
+          class="Icon"
+          src="../../_misc/PlayerIconSolo.png"
+        >
       </transition>
     </div>
 
-    <!-- Pronouns -->
-    <!-- Placeholder code, needs changing when properly implemented! -->
+    <!-- Player Name/Twitch -->
     <div
-      v-if="false"
       class="Flex"
       :style="{
-        'font-size': '0.72em',
-        'line-height': '75%',
-        'text-align': 'center',
-        'margin-right': player.country ? '7px' : 'unset',
-        padding: '0 5px',
-        'background-color': 'white',
-        color: 'black',
+        position: 'relative',
+        width: 'calc(100% - 130px)',
         height: '100%',
+        overflow: 'hidden',
       }"
     >
-      He/Him
+      <transition name="fade">
+        <div
+          v-if="nameCycle === 1 && player.social.twitch"
+          key="twitch"
+          class="Flex TextWrapper"
+        >
+          <div class="PlayerText">
+            /{{ player.social.twitch }}
+          </div>
+        </div>
+        <div
+          v-else
+          key="name"
+          class="Flex TextWrapper"
+        >
+          <div class="PlayerText">
+            {{ player.name }}
+          </div>
+        </div>
+      </transition>
     </div>
 
     <!-- Country Flag -->
-    <img
-      v-if="player.country"
-      :src="`/bundles/esa-layouts/static/flags/${player.country}.png`"
+    <div
       :style="{
-        height: 'calc(100% - 4px)',
-        border: '2px solid var(--font-colour-inverted)',
+        position: 'relative',
+        height: '100%',
       }"
     >
+      <transition name="fade">
+        <img
+          v-if="player.country"
+          :key="player.country"
+          :src="`/bundles/esa-layouts/static/flags/${player.country}.png`"
+          :style="{
+            position: 'absolute',
+            right: '0',
+            height: 'calc(100% - 4px)',
+            border: '2px solid var(--font-colour-inverted)',
+          }"
+        >
+      </transition>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'; // eslint-disable-line object-curly-newline, max-len
 import { State } from 'vuex-class';
+import fitty from 'fitty';
 import { NameCycle } from 'schemas';
 import { RunDataActiveRun } from 'speedcontrol-util/types';
 import { RunDataTeam, RunDataPlayer } from 'nodecg-speedcontrol/types'; // should expose in sc-util
-import PlayerName from './PlayerName.vue';
 
-@Component({
-  components: {
-    PlayerName,
-  },
-})
+@Component
 export default class extends Vue {
   @State('runDataActiveRun') runData!: RunDataActiveRun;
   @State nameCycle!: NameCycle;
@@ -98,13 +119,27 @@ export default class extends Vue {
     this.player = (this.team ? this.team.players[this.playerIndex] : null) || null;
   }
 
+  fit(): void {
+    const elem = this.$refs.Player as HTMLElement;
+    if (elem) {
+      fitty('.PlayerText', {
+        minSize: 1,
+        maxSize: parseInt(elem.style.fontSize, 0),
+      });
+    }
+  }
+
   created(): void {
     this.updateTeam();
     this.updatePlayer();
   }
 
+  mounted(): void {
+    this.fit();
+  }
+
   @Watch('runData')
-  onRunDataChange(newVal: RunDataActiveRun, oldVal?: RunDataActiveRun): void {
+  async onRunDataChange(newVal: RunDataActiveRun, oldVal?: RunDataActiveRun): Promise<void> {
     // Only reset the player if run is changed or player length is different.
     const newPlayers = newVal?.teams[this.slotNo || 0]?.players;
     const oldPlayers = oldVal?.teams[this.slotNo || 0]?.players;
@@ -113,10 +148,12 @@ export default class extends Vue {
     }
     this.updateTeam();
     this.updatePlayer();
+    await Vue.nextTick();
+    this.fit();
   }
 
   @Watch('nameCycle')
-  onNameCycleChange(newVal: NameCycle, oldVal: NameCycle): void {
+  async onNameCycleChange(newVal: NameCycle, oldVal: NameCycle): Promise<void> {
     // If the name cycle resets, we need to move to the next player if applicable.
     if (newVal < oldVal) {
       if (this.team && this.team.players.length - 1 > this.playerIndex) {
@@ -126,11 +163,25 @@ export default class extends Vue {
       }
       this.updatePlayer();
     }
+    await Vue.nextTick();
+    this.fit();
   }
 }
 </script>
 
 <style scoped>
+  .Icon {
+    filter: var(--icon-colour-inversion);
+    height: 100%;
+    position: absolute;
+  }
+
+  .TextWrapper {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+  }
+
   /* Copied from old code, needs checking! */
   .fade-enter-active, .fade-leave-active {
     transition: opacity 1s;

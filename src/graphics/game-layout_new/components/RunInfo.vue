@@ -84,10 +84,8 @@ export default class extends Vue {
     }
   }
 
-  async mounted(): Promise<void> {
-    if (this.runData) {
-      this.fit();
-    }
+  mounted(): void {
+    this.fit();
   }
 
   @Watch('runData')

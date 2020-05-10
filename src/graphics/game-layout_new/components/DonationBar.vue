@@ -9,21 +9,11 @@
       'font-size': '30px',
     }"
   >
-    <div
+    <donation-box
       v-for="donation in donations"
       :key="donation._id"
-      class="Flex"
-      :style="{
-        height: '100%',
-        padding: '0 15px',
-        'margin-right': '3px',
-        'background-color': 'var(--border-colour)',
-      }"
-    >
-      ${{ Number.isInteger(donation.amount)
-        ? donation.amount : donation.amount.toFixed(2)
-      }} [{{ donation.donor_visiblename }}]
-    </div>
+      :donation="donation"
+    />
   </transition-group>
 </template>
 
@@ -31,8 +21,13 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { NotableDonations } from 'schemas';
+import DonationBox from './DonationBar/DonationBox.vue';
 
-@Component
+@Component({
+  components: {
+    DonationBox,
+  },
+})
 export default class extends Vue {
   @State('notableDonations') donations!: NotableDonations;
 </script>

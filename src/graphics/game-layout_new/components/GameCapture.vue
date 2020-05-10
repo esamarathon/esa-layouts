@@ -13,7 +13,7 @@
       <div
         v-if="typeof slotNo === 'number' && teamFinishTime"
         :style="{
-          'background-color': 'rgba(var(--border-colour-raw), 0.75)',
+          'background-color': 'rgba(var(--border-colour-raw), 0.5)',
           padding: '5px 10px',
         }"
       >

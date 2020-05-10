@@ -33,6 +33,7 @@ export function msToTimeStr(ms: number): string {
   }:${padTimeNumber(seconds)}`;
 }
 
+// TODO: remove if not needed anymore?
 /**
  * Wait for all images supplied to load.
  * @param elems HTML Element or Vue reference.

@@ -10,7 +10,7 @@ Stuff not in this file (yet):
   --font-colour-secondary: #b7b7b7;
   --font-colour-inverted: white; /* Inverted is a bad name. */
   --icon-colour-inversion: invert(1); /* Default is black, invert for white. */
-  --commentators-bg-colour: #41245b75;
+  --commentators-bg-colour: rgba(65, 36, 91, 0.5);
   --timer-colour: var(--font-colour);
   --timer-paused-colour: var(--font-colour-secondary);
   --timer-finish-colour: var(--font-colour-inverted);

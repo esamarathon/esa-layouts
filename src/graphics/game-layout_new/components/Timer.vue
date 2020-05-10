@@ -2,11 +2,11 @@
   <div
     class="Flex"
     :style="{
-      'font-weight': '500',
+      'font-weight': 500,
       'font-size': '100px',
       'margin-top': '-0.07em',
       transition: '1s',
-      color: textColour(),
+      color: textColour,
     }"
   >
     <span
@@ -37,31 +37,6 @@ export default class extends Vue {
   timeStr = '00:00:00';
   backupTimerTO: number | undefined;
 
-  @Watch('timer', { immediate: true })
-  onTimerChange(val: Timer): void {
-    this.timeStr = val.time;
-
-    // Backup timer (see below).
-    clearTimeout(this.backupTimerTO);
-    this.backupTimerTO = window.setTimeout(() => this.backupTimer(), 1000);
-  }
-
-  /**
-   * Currently these colours are being pulled from defaults.css, which should be changed.
-   */
-  textColour(): string {
-    switch (this.timer.state) {
-      default:
-      case 'running':
-        return getComputedStyle(document.documentElement).getPropertyValue('--timer-colour');
-      case 'paused':
-      case 'stopped':
-        return getComputedStyle(document.documentElement).getPropertyValue('--timer-paused-colour');
-      case 'finished':
-        return getComputedStyle(document.documentElement).getPropertyValue('--timer-finish-colour');
-    }
-  }
-
   /**
    * Backup timer that takes over if the connection to the server is lost.
    * Based on the last timestamp that was received.
@@ -73,6 +48,31 @@ export default class extends Vue {
       const missedTime = Date.now() - this.timer.timestamp;
       const timeOffset = this.timer.milliseconds + missedTime;
       this.timeStr = msToTimeStr(timeOffset);
+    }
+  }
+
+  @Watch('timer', { immediate: true })
+  onTimerChange(val: Timer): void {
+    this.timeStr = val.time;
+
+    // Backup timer (see above).
+    clearTimeout(this.backupTimerTO);
+    this.backupTimerTO = window.setTimeout(() => this.backupTimer(), 1000);
+  }
+
+  /**
+   * Currently these colours are being pulled from defaults.css, which should be changed.
+   */
+  get textColour(): string {
+    switch (this.timer.state) {
+      default:
+      case 'running':
+        return getComputedStyle(document.documentElement).getPropertyValue('--timer-colour');
+      case 'paused':
+      case 'stopped':
+        return getComputedStyle(document.documentElement).getPropertyValue('--timer-paused-colour');
+      case 'finished':
+        return getComputedStyle(document.documentElement).getPropertyValue('--timer-finish-colour');
     }
   }
 }

@@ -8,7 +8,7 @@
       width: '100%',
       height: '40px', // May need moving out/be a prop
       'font-size': '25px',
-      'font-weight': '400',
+      'font-weight': 400,
       color: 'var(--font-colour-inverted)',
       'box-sizing': 'border-box',
       padding: '0 20px',
@@ -19,7 +19,7 @@
       :style="{ width: '100%' }"
     >
       <div class="Commentator">
-        <span :style="{ 'font-weight': '500' }">
+        <span :style="{ 'font-weight': 500 }">
           <template v-if="commentators.length === 1">Commentator:</template>
           <template v-else>Commentators:</template>
         </span>

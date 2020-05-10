@@ -5,7 +5,7 @@
       'justify-content': finishTimePos.includes('left') ? 'flex-start' : 'flex-end',
       'align-items': finishTimePos.includes('top') ? 'flex-start' : 'flex-end',
       'font-size': '30px',
-      'font-weight': '500',
+      'font-weight': 500,
       color: 'white',
     }"
   >
@@ -52,7 +52,6 @@ export default class extends Vue {
 </script>
 
 <style scoped>
-  /* Copied from old code, needs checking! */
   .fade-enter-active, .fade-leave-active {
     transition: opacity 0.5s;
   }

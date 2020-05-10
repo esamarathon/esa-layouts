@@ -9,7 +9,7 @@
       'text-align': 'center',
       padding: '0 20px',
       'box-sizing': 'border-box',
-      'min-height': '0',
+      'min-height': 0,
       'line-height': lineHeight || 'unset',
     }"
   >
@@ -22,7 +22,7 @@
         class="RunGame"
         :style="{
           'font-size': '1em',
-          'font-weight': '500',
+          'font-weight': 500,
         }"
       >
         {{ runData.game }}

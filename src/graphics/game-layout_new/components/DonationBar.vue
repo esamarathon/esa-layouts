@@ -33,13 +33,12 @@ export default class extends Vue {
 </script>
 
 <style scoped>
-  /* Copied from old code, needs checking! */
   .donations-enter-active {
     transition: all 1s;
   }
   .donations-enter, .donations-leave-to {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(100%);
   }
   .donations-move {
     transition: transform 1s;

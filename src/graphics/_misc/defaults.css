@@ -5,6 +5,7 @@ Stuff not in this file (yet):
 
 :root {
   --border-colour: #41245b;
+  --border-colour-raw: 65, 36, 91;
   --font-colour: #fff073;
   --font-colour-secondary: #b7b7b7;
   --font-colour-inverted: white; /* Inverted is a bad name. */

@@ -15,6 +15,7 @@
     <game-capture
       id="GameCapture2"
       :slot-no="1"
+      finish-time-pos="bottomright"
       :style="{
         left: '960px',
         top: '0px',

@@ -3,12 +3,13 @@
     class="Flex"
     :style="{
       height: '100%',
-      padding: '0 15px',
+      padding: `0 ${padding}px`,
       'margin-right': '3px',
       'background-color': backgroundColor,
       color: fontColor,
       'font-weight': fontWeight,
       'font-size': `${fontSizeEm}em`,
+      'white-space': 'nowrap',
     }"
   >
     ${{ Number.isInteger(donation.amount)
@@ -24,6 +25,7 @@ import { NotableDonations } from 'schemas';
 @Component
 export default class extends Vue {
   @Prop(Object) donation!: NotableDonations[0];
+  @Prop({ default: 15 }) padding!: number;
   backgroundColor = '#301b4c';
   fontColor = '#f1d13f';
   fontWeight = 500;

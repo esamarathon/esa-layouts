@@ -13,12 +13,13 @@
       v-for="donation in donations"
       :key="donation._id"
       :donation="donation"
+      :padding="padding"
     />
   </transition-group>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { NotableDonations } from 'schemas';
 import DonationBox from './DonationBar/DonationBox.vue';
@@ -30,6 +31,8 @@ import DonationBox from './DonationBar/DonationBox.vue';
 })
 export default class extends Vue {
   @State('notableDonations') donations!: NotableDonations;
+  @Prop(Number) padding!: number;
+}
 </script>
 
 <style scoped>

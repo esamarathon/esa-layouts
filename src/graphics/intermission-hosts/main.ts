@@ -1,10 +1,15 @@
-import Vue from 'vue';
-import '../_misc/common.css';
-import '../_misc/defaults.css';
-import App from './main.vue';
+/* eslint no-new: off, @typescript-eslint/explicit-function-return-type: off */
 
-// eslint-disable-next-line no-new
-new Vue({
-  el: '#App',
-  render: h => h(App),
+import Vue from 'vue';
+import '../_misc/fonts/barlow-condensed.css';
+import './common.css';
+import App from './main.vue';
+import waitForReplicants from './store';
+
+waitForReplicants().then((store) => {
+  new Vue({
+    store,
+    el: '#App',
+    render: (h) => h(App),
+  });
 });

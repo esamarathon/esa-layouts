@@ -1,36 +1,31 @@
 <template>
   <div
-    id="IntermissionHosts"
-    class="Flex"
+    class="Layout Flex"
+    :style="{
+      'box-sizing': 'border-box',
+      color: 'white',
+      height: '1000px',
+      'justify-content': 'space-evenly',
+      'align-items': 'flex-end',
+      padding: '50px',
+    }"
   >
-    <host-info pos="left"></host-info>
-    <host-info pos="midleft"></host-info>
-    <host-info pos="middle"></host-info>
-    <host-info pos="midright"></host-info>
-    <host-info pos="right"></host-info>
+    <host
+      v-for="pos in ['left', 'midleft', 'middle', 'midright', 'right']"
+      :key="pos"
+      :pos="pos"
+    />
   </div>
 </template>
 
-<script>
-import HostInfo from './components/HostInfo.vue';
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import Host from './components/Host.vue';
 
-export default {
-  name: 'IntermissionHosts',
+@Component({
   components: {
-    HostInfo,
+    Host,
   },
-};
+})
+export default class extends Vue {}
 </script>
-
-<style>
-  #IntermissionHosts {
-    box-sizing: border-box;
-    color: white;
-    position: fixed;
-    width: 1920px;
-    height: 1000px;
-    justify-content: space-evenly;
-    align-items: flex-end;
-    padding: 50px;
-  }
-</style>

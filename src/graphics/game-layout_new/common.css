@@ -1,7 +1,5 @@
 /* Integrate this into the main "common.css" when rewrite done. */
 
-@import url('../_misc/fonts/barlow-condensed.css');
-
 body {
   font-family: 'Barlow Condensed', sans-serif;
   overflow: hidden;

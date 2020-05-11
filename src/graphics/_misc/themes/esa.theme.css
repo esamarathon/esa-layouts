@@ -1,0 +1,93 @@
+body {
+  color: #fff073;
+}
+
+#Background {
+  background-color: #19171c;
+}
+
+*[class*='Border'] {
+  border-color: #41245b;
+}
+
+.TimerStopped, .TimerPaused {
+  color: #b7b7b7;
+}
+.TimerRunning {
+  color: #fff073;
+}
+.TimerFinished {
+  color: white;
+}
+
+.RunInfoExtra {
+  color: #b7b7b7;
+}
+
+.Player {
+  color: white;
+  background-color: #41245b;
+}
+
+.Player .Icon {
+  filter: invert(1);
+}
+
+.Player .Flag {
+ border-color: white;
+}
+
+.GameCapture {
+  color: white;
+}
+
+.GameCapture .TeamFinishTime {
+  background-color: rgba(65, 36, 91, 0.5);
+}
+
+.Commentator {
+  background-color: rgba(65, 36, 91, 0.5);
+  color: white;
+}
+
+.DonationBar {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+*[class*='DonationBox'] {
+  background-color: #301b4c;
+  color: #f1d13f;
+  font-weight: 500;
+  font-size: 1em;
+}
+
+.DonationBoxTier1-1 {
+  background-color: #301b4c;
+}
+.DonationBoxTier1-2 {
+  background-color: #281643;
+}
+.DonationBoxTier1-3 {
+  background-color: #502f59;
+}
+
+*[class*='DonationBoxTier2'] {
+  color: #604054;
+  font-weight: 600;
+}
+.DonationBoxTier2-1 {
+  background-color: #f1d13f;
+}
+.DonationBoxTier2-2 {
+  background-color: #fbd93f;
+}
+.DonationBoxTier2-3 {
+  background-color: #e1c43c;
+}
+
+.DonationBoxTier3 {
+  background-color: #efbe00;
+  color: #604054;
+  font-weight: 700;
+  font-size: 1.1em;
+}

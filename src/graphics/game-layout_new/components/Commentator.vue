@@ -2,14 +2,12 @@
   <div
     v-if="commentators.length"
     ref="Commentator"
-    class="Flex"
+    class="Flex Commentator"
     :style="{
-      'background-color': 'var(--commentators-bg-colour)',
       width: '100%',
-      height: '40px', // May need moving out/be a prop
+      height: '40px',
       'font-size': '25px',
       'font-weight': 400,
-      color: 'var(--font-colour-inverted)',
       'box-sizing': 'border-box',
       padding: '0 20px',
     }"

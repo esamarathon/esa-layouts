@@ -1,19 +1,18 @@
 <template>
   <div
-    class="Capture Flex"
+    class="Capture GameCapture Flex"
     :style="{
       'justify-content': finishTimePos.includes('left') ? 'flex-start' : 'flex-end',
       'align-items': finishTimePos.includes('top') ? 'flex-start' : 'flex-end',
       'font-size': '30px',
       'font-weight': 500,
-      color: 'white',
     }"
   >
     <transition name="fade">
       <div
         v-if="typeof slotNo === 'number' && teamFinishTime"
+        class="TeamFinishTime"
         :style="{
-          'background-color': 'rgba(var(--border-colour-raw), 0.5)',
           padding: '5px 10px',
         }"
       >

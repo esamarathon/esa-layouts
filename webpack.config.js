@@ -99,10 +99,23 @@ const config = (name) => {
         },
         {
           test: /\.css$/,
+          exclude: /\.theme.css$/,
           use: [
             (isProd) ? miniCSSOpts : 'vue-style-loader',
             'css-loader',
           ],
+        },
+        {
+          test: /\.theme\.css$/,
+          use: [
+            {
+              loader: 'style-loader',
+              options: {
+                injectType: 'lazyStyleTag',
+              },
+            },
+            'css-loader',
+          ]
         },
         {
           test: /\.s(c|a)ss$/,

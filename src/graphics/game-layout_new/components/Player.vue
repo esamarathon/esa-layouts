@@ -2,11 +2,9 @@
   <div
     v-if="player"
     ref="Player"
-    class="Flex"
+    class="Flex Player"
     :style="{
       'justify-content': 'space-between',
-      'background-color': 'var(--border-colour)',
-      color: 'var(--font-colour-inverted)',
       'font-weight': 500,
       'font-size': '25px',
       width: '100%',
@@ -107,12 +105,14 @@
         <img
           v-if="player.country"
           :key="player.country"
+          class="Flag"
           :src="`/bundles/esa-layouts/static/flags/${player.country}.png`"
           :style="{
             position: 'absolute',
             right: '0',
             height: 'calc(100% - 4px)',
-            border: '2px solid var(--font-colour-inverted)',
+            'border-size': '2px',
+            'border-style': 'solid',
           }"
         >
       </transition>
@@ -204,7 +204,6 @@ export default class extends Vue {
 
 <style scoped>
   .Icon {
-    filter: var(--icon-colour-inversion);
     height: 100%;
     position: absolute;
   }

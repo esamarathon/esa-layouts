@@ -7,6 +7,7 @@
 
 export interface Configschema {
   event: {
+    theme: string;
     shorts: string | [string] | [string, string];
     thisEvent: number;
     online: boolean;

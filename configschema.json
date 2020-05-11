@@ -7,6 +7,11 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "theme": {
+          "type": "string",
+          "$comment": "Theme to be used in the graphical overlays.",
+          "default": "esa"
+        },
         "shorts": {
           "$comment": "This/these must match the tracker, if that feature is enabled.",
           "oneOf": [
@@ -39,6 +44,7 @@
         }
       },
       "required": [
+        "theme",
         "shorts",
         "thisEvent",
         "online"

@@ -1,12 +1,11 @@
 <template>
   <div
-    class="Flex"
+    :class="`Flex Timer${timerState}`"
     :style="{
       'font-weight': 500,
       'font-size': '100px',
       'margin-top': '-0.07em',
       transition: '1s',
-      color: textColour,
     }"
   >
     <span
@@ -60,20 +59,8 @@ export default class extends Vue {
     this.backupTimerTO = window.setTimeout(() => this.backupTimer(), 1000);
   }
 
-  /**
-   * Currently these colours are being pulled from defaults.css, which should be changed.
-   */
-  get textColour(): string {
-    switch (this.timer.state) {
-      default:
-      case 'running':
-        return getComputedStyle(document.documentElement).getPropertyValue('--timer-colour');
-      case 'paused':
-      case 'stopped':
-        return getComputedStyle(document.documentElement).getPropertyValue('--timer-paused-colour');
-      case 'finished':
-        return getComputedStyle(document.documentElement).getPropertyValue('--timer-finish-colour');
-    }
+  get timerState(): string {
+    return this.timer.state.charAt(0).toUpperCase() + this.timer.state.slice(1);
   }
 }
 </script>

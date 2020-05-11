@@ -36,7 +36,6 @@
         class="RunInfoExtra"
         :style="{
           'font-size': '0.8em', // Also gets set in the script, here as backup.
-          color: 'var(--font-colour-secondary)', // should be changed
         }"
       >
         <span v-if="runData.category">{{ runData.category }}</span>

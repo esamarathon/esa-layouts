@@ -1,14 +1,10 @@
 <template>
   <div
-    class="Flex"
+    :class="`Flex ${tierClass}`"
     :style="{
       height: '100%',
       padding: `0 ${padding}px`,
       'margin-right': '3px',
-      'background-color': backgroundColor,
-      color: fontColor,
-      'font-weight': fontWeight,
-      'font-size': `${fontSizeEm}em`,
       'white-space': 'nowrap',
     }"
   >
@@ -26,30 +22,19 @@ import { NotableDonations } from 'schemas';
 export default class extends Vue {
   @Prop(Object) donation!: NotableDonations[0];
   @Prop({ default: 15 }) padding!: number;
-  backgroundColor = '#301b4c';
-  fontColor = '#f1d13f';
-  fontWeight = 500;
-  fontSizeEm = 1;
 
-  chooseRandShade(shades: string[]): string {
-    const rand = Math.floor(Math.random() * shades.length);
-    return shades[rand];
-  }
-
-  // TODO: move the font colours to external styling file!
-  created(): void {
+  get tierClass(): string {
+    const rand = Math.floor(Math.random() * 3);
     if (this.donation.amount < 50) { // Under $50
-      this.backgroundColor = this.chooseRandShade(['#301b4c', '#281643', '#502f59']);
-    } else if (this.donation.amount >= 50 && this.donation.amount < 100) { // $50 - $100
-      this.backgroundColor = this.chooseRandShade(['#f1d13f', '#fbd93f', '#e1c43c']);
-      this.fontColor = '#604054';
-      this.fontWeight = 600;
-    } else if (this.donation.amount >= 100) { // $100+
-      this.backgroundColor = '#efbe00';
-      this.fontColor = '#604054';
-      this.fontWeight = 700;
-      this.fontSizeEm = 1.1;
+      return `DonationBoxTier1-${rand}`;
     }
+    if (this.donation.amount >= 50 && this.donation.amount < 100) { // $50 - $100
+      return `DonationBoxTier2-${rand}`;
+    }
+    if (this.donation.amount >= 100) { // $100+
+      return 'DonationBoxTier3';
+    }
+    return 'DonationBox';
   }
 }
 </script>

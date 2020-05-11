@@ -4,7 +4,7 @@ import type { GameLayouts } from 'schemas';
 import { RunDataActiveRun } from 'speedcontrol-util/types';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import '../_misc/defaults.css';
+import '../_misc/theme';
 import './common.css';
 import * as List from './list';
 import App from './main.vue';

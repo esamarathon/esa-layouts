@@ -2,9 +2,8 @@
   <transition-group
     tag="div"
     name="donations"
-    class="Fixed Flex"
+    class="Fixed Flex DonationBar"
     :style="{
-      'background-color': 'rgba(0, 0, 0, 0.15)',
       'justify-content': 'flex-start',
       'font-size': '30px',
     }"

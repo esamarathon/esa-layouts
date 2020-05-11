@@ -1,0 +1,14 @@
+/* Integrate this into the main "common.css" when rewrite done. */
+
+body {
+  font-family: 'Barlow Condensed', sans-serif;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+*[class*="Flex"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

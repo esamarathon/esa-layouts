@@ -1,7 +1,7 @@
 <template>
   <div :style="{ display: 'flex', width: '100%', height: '100vh' }">
     <div :style="{ flex: '1' }">
-      <div class="StreamEmbed">
+      <div class="Flex StreamEmbed">
         <template v-if="config.enable && playerStream">
           <iframe
             :src="`https://player.twitch.tv/?channel=${playerStream}&autoplay=true&muted=true`"
@@ -15,7 +15,7 @@
           Player Stream Unavailable
         </template>
       </div>
-      <div class="StreamEmbed">
+      <div class="Flex StreamEmbed">
         <iframe
           src="https://player.twitch.tv/?channel=esamarathon&autoplay=true&muted=true"
           frameborder="0"
@@ -56,8 +56,8 @@ export default class extends Vue {
 
 <style>
   body {
-    color: var(--font-colour-inverted);
     background-color: #19171c;
+    color: white;
     font-size: 5vw;
   }
 
@@ -66,9 +66,6 @@ export default class extends Vue {
   }
 
   .StreamEmbed {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 50vh;
   }
 </style>

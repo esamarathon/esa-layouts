@@ -1,118 +1,110 @@
 <template>
-  <div id="Layout">
+  <div>
     <!-- Game Captures -->
-    <capture
+    <game-capture
       id="GameCapture1"
-      class="GameCapture BorderLeft BorderBottom"
-    ></capture>
+      class="BorderLeft BorderBottom"
+      :style="{
+        left: '533px',
+        top: '0px',
+        width: '1387px',
+        height: '780px',
+      }"
+    />
 
     <!-- Camera Captures -->
-    <capture
+    <game-capture
       id="CameraCapture1"
-      class="CameraCapture"
-    ></capture>
+      :style="{
+        left: '0px',
+        top: '0px',
+        width: '533px',
+        height: '650px',
+      }"
+    />
 
-    <!-- Information Storage (below camera) -->
-    <info-storage-box id="InfoStorageBox1">
-      <player-container></player-container>
-      <commentators></commentators>
-      <sponsor-logos></sponsor-logos>
-    </info-storage-box>
-
-    <!-- Information Storage (below game, left) -->
-    <info-storage-box
-      id="InfoStorageBox2"
-      class="BorderLeft"
+    <!-- Run Game Info/Timer -->
+    <div
+      class="Fixed Flex"
+      :style="{
+        left: '533px',
+        top: '780px',
+        width: '1387px',
+        height: '160px',
+      }"
     >
-      <game-name></game-name>
-      <game-extra-info></game-extra-info>
-    </info-storage-box>
+      <run-info
+        class="BorderLeft"
+        :style="{
+          'font-size': '45px',
+          'width': '1000px',
+          height: '100%',
+        }"
+      />
+      <timer
+        class="BorderLeft"
+        :style="{
+          'width': '387px',
+          height: '100%',
+        }"
+      />
+    </div>
 
-    <!-- Information Storage (below game, right) -->
-    <info-storage-box
-      id="InfoStorageBox3"
-      class="BorderLeft"
+    <!-- Player/Commetator -->
+    <div
+      class="Fixed"
+      :style="{
+        left: '0px',
+        top: '650px',
+        width: '533px',
+      }"
     >
-      <timer></timer>
-    </info-storage-box>
+      <player />
+      <commentator />
+    </div>
 
-    <!-- Donations Bar -->
-    <donations-bar></donations-bar>
+    <!-- Media Box -->
+    <media-box
+      :style="{
+        left: '0px',
+        top: '740px',
+        width: '533px',
+        height: '200px',
+      }"
+    />
+
+    <!-- Donation Bar -->
+    <donation-bar
+      :style="{
+        left: '0px',
+        top: '940px',
+        width: '1920px',
+        height: '60px',
+      }"
+    />
   </div>
 </template>
 
-<script>
-import Capture from '../_misc/components/Capture.vue';
-import Commentators from './components/Commentators.vue';
-import DonationsBar from './components/DonationsBar.vue';
-import GameExtraInfo from './components/GameExtraInfo.vue';
-import GameName from './components/GameName.vue';
-import InfoStorageBox from '../_misc/components/InfoStorageBox.vue';
-import PlayerContainer from './components/PlayerContainer.vue';
-import SponsorLogos from '../_misc/components/SponsorLogos.vue';
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import GameCapture from './components/GameCapture.vue';
+import Player from './components/Player.vue';
+import Commentator from './components/Commentator.vue';
+import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
+import MediaBox from '../_misc/components/MediaBox.vue';
+import DonationBar from './components/DonationBar.vue';
 
-export default {
-  name: 'Layout',
+@Component({
   components: {
-    Capture,
-    DonationsBar,
-    PlayerContainer,
-    Commentators,
-    InfoStorageBox,
-    GameName,
-    GameExtraInfo,
+    GameCapture,
+    Player,
+    Commentator,
+    RunInfo,
     Timer,
-    SponsorLogos,
+    MediaBox,
+    DonationBar,
   },
-};
+})
+export default class extends Vue {}
 </script>
-
-<style scoped>
-  #GameCapture1 {
-    left: 533px;
-    top: 0px;
-    width: 1387px;
-    height: 780px;
-  }
-
-  #CameraCapture1 {
-    left: 0px;
-    top: 0px;
-    width: 533px;
-    height: 650px;
-  }
-
-  #DonationsBar {
-    left: 0px;
-    top: 940px;
-    width: 1920px;
-    height: 60px;
-  }
-
-  #InfoStorageBox1 {
-    left: 0px;
-    top: 650px;
-    width: 533px;
-    height: 290px;
-  }
-
-  #InfoStorageBox2 {
-    justify-content: center;
-    left: 533px;
-    top: 780px;
-    width: 1000px;
-    height: 160px;
-  }
-
-  #InfoStorageBox3 {
-    left: 1533px;
-    top: 780px;
-    width: 387px;
-    height: 160px;
-  }
-
-  #TimerBox {
-    height: 100%;
-  }
-</style>

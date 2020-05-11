@@ -1,132 +1,125 @@
 <template>
-  <div id="Layout">
+  <div>
     <!-- Game Captures -->
-    <capture
+    <game-capture
       id="GameCapture1"
-      class="GameCapture BorderRight"
-    ></capture>
-    <capture
+      class="BorderRight"
+      :slot-no="0"
+      :style="{
+        left: '0px',
+        top: '0px',
+        width: '960px',
+        height: '540px',
+      }"
+    />
+    <game-capture
       id="GameCapture2"
-      class="GameCapture"
-    ></capture>
+      :slot-no="1"
+      finish-time-pos="bottomright"
+      :style="{
+        left: '960px',
+        top: '0px',
+        width: '960px',
+        height: '540px',
+      }"
+    />
 
     <!-- Camera Captures -->
-    <capture
+    <div
       id="CameraCapture1"
-      class="CameraCapture BorderTop BorderRight BorderLeft"
-    ></capture>
+      class="Capture BorderTop BorderRight BorderLeft"
+      :style="{
+        left: '660px',
+        top: '540px',
+        width: '600px',
+        height: '400px',
+      }"
+    />
 
-    <!-- Information Storage (left) -->
-    <info-storage-box id="InfoStorageBox1">
-      <player-container
-        :team-index="0"
-        single
-      ></player-container>
-      <sponsor-logos></sponsor-logos>
-    </info-storage-box>
-
-    <!-- Information Storage (right) -->
-    <info-storage-box
-      id="InfoStorageBox2"
-      class=""
+    <!-- Player 1/Commentator -->
+    <div
+      class="Fixed"
+      :style="{
+        left: '0px',
+        top: '540px',
+        width: '660px',
+      }"
     >
-      <player-container
-        :team-index="1"
-        single
-      ></player-container>
-      <commentators></commentators>
-      <div
-        id="GameInfo"
-        class="Flex"
-      >
-        <game-name></game-name>
-        <game-extra-info></game-extra-info>
-        <timer></timer>
-      </div>
-    </info-storage-box>
+      <player :slot-no="0" />
+      <commentator />
+    </div>
 
-    <!-- Donations Bar -->
-    <donations-bar></donations-bar>
+    <!-- Player 2/General Run Info -->
+    <div
+      class="Fixed FlexColumn"
+      :style="{
+        left: '1260px',
+        top: '540px',
+        width: '660px',
+        height: '400px',
+      }"
+    >
+      <player :slot-no="1" />
+
+      <!-- Run Game Info/Timer -->
+      <div
+        class="FlexColumn"
+        :style="{
+          flex: '1',
+          width: '100%',
+          overflow: 'hidden',
+        }"
+      >
+        <run-info
+          :style="{ 'font-size': '45px' }"
+          no-wrap
+        />
+        <timer :style="{ 'font-size': '120px' }" />
+      </div>
+    </div>
+
+    <!-- Media Box -->
+    <media-box
+      :style="{
+        left: '0px',
+        top: '630px',
+        width: '660px',
+        height: '310px',
+      }"
+    />
+
+    <!-- Donation Bar -->
+    <donation-bar
+      :style="{
+        left: '0px',
+        top: '940px',
+        width: '1920px',
+        height: '60px',
+      }"
+    />
   </div>
 </template>
 
-<script>
-import Capture from '../_misc/components/Capture.vue';
-import Commentators from './components/Commentators.vue';
-import DonationsBar from './components/DonationsBar.vue';
-import GameExtraInfo from './components/GameExtraInfo.vue';
-import GameName from './components/GameName.vue';
-import InfoStorageBox from '../_misc/components/InfoStorageBox.vue';
-import PlayerContainer from './components/PlayerContainer.vue';
-import SponsorLogos from '../_misc/components/SponsorLogos.vue';
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import GameCapture from './components/GameCapture.vue';
+import Player from './components/Player.vue';
+import Commentator from './components/Commentator.vue';
+import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
+import MediaBox from '../_misc/components/MediaBox.vue';
+import DonationBar from './components/DonationBar.vue';
 
-export default {
-  name: 'Layout',
+@Component({
   components: {
-    Capture,
-    DonationsBar,
-    PlayerContainer,
-    Commentators,
-    InfoStorageBox,
-    GameName,
-    GameExtraInfo,
+    GameCapture,
+    Player,
+    Commentator,
+    RunInfo,
     Timer,
-    SponsorLogos,
+    MediaBox,
+    DonationBar,
   },
-};
+})
+export default class extends Vue {}
 </script>
-
-<style scoped>
-  .GameCapture {
-    width: 960px;
-    height: 540px;
-  }
-
-  #GameCapture1 {
-    left: 0px;
-    top: 0px;
-  }
-  #GameCapture2 {
-    left: 960px;
-    top: 0px;
-  }
-
-  #CameraCapture1 {
-    left: 660px;
-    top: 540px;
-    width: 600px;
-    height: 400px;
-  }
-
-  #InfoStorageBox1 {
-    left: 0px;
-    top: 540px;
-    width: 660px;
-    height: 400px;
-  }
-
-  #InfoStorageBox2 {
-    left: 1260px;
-    top: 540px;
-    width: 660px;
-    height: 400px;
-  }
-
-  #GameInfo {
-    width: 100%;
-    flex-direction: column;
-    flex: 1;
-  }
-
-  #DonationsBar {
-    left: 0px;
-    top: 940px;
-    width: 1920px;
-    height: 60px;
-  }
-
-  #TimerBox {
-    margin-top: -0.09em;
-  }
-</style>

@@ -1,100 +1,98 @@
 <template>
-  <div id="Layout">
+  <div>
     <!-- Game Captures -->
-    <capture
+    <game-capture
       id="GameCapture1"
-      class="GameCapture BorderLeft"
-    ></capture>
+      class="BorderLeft"
+      :style="{
+        left: '512px',
+        top: '0px',
+        width: '1408px',
+        height: '940px',
+      }"
+    />
 
     <!-- Camera Captures -->
-    <capture
+    <div
       id="CameraCapture1"
-      class="CameraCapture"
-    ></capture>
+      class="Capture"
+      :style="{
+        left: '0px',
+        top: '0px',
+        width: '513px',
+        height: '333px',
+      }"
+    />
 
-    <!-- Information Storage -->
-    <info-storage-box>
-      <player-container></player-container>
-      <commentators></commentators>
+    <!-- General Run Info -->
+    <div
+      class="Fixed FlexColumn BorderBottom"
+      :style="{
+        left: '0px',
+        top: '333px',
+        width: '512px',
+        height: '321px',
+      }"
+    >
+      <player />
+      <commentator />
+
+      <!-- Run Game Info/Timer -->
       <div
-        id="GameInfo"
-        class="BorderBottom"
+        class="FlexColumn"
+        :style="{
+          flex: '1',
+          width: '100%',
+        }"
       >
-        <game-name></game-name>
-        <game-extra-info></game-extra-info>
-        <timer></timer>
+        <run-info />
+        <timer />
       </div>
-      <sponsor-logos></sponsor-logos>
-    </info-storage-box>
+    </div>
 
-    <!-- Donations Bar -->
-    <donations-bar class="BorderLeft"></donations-bar>
+    <!-- Media Box -->
+    <media-box
+      :style="{
+        left: '0px',
+        top: '654px',
+        width: '512px',
+        height: '346px',
+      }"
+    />
+
+    <!-- Donation Bar -->
+    <donation-bar
+      class="BorderLeft"
+      :style="{
+        left: '512px',
+        top: '940px',
+        width: '1408px',
+        height: '60px',
+      }"
+    />
   </div>
 </template>
 
-<script>
-import Capture from '../_misc/components/Capture.vue';
-import Commentators from './components/Commentators.vue';
-import DonationsBar from './components/DonationsBar.vue';
-import GameExtraInfo from './components/GameExtraInfo.vue';
-import GameName from './components/GameName.vue';
-import InfoStorageBox from '../_misc/components/InfoStorageBox.vue';
-import PlayerContainer from './components/PlayerContainer.vue';
-import SponsorLogos from '../_misc/components/SponsorLogos.vue';
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import GameCapture from './components/GameCapture.vue';
+import Player from './components/Player.vue';
+import Commentator from './components/Commentator.vue';
+import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
+import MediaBox from '../_misc/components/MediaBox.vue';
+import DonationBar from './components/DonationBar.vue';
 
-export default {
-  name: 'Layout',
+@Component({
   components: {
-    Capture,
-    DonationsBar,
-    PlayerContainer,
-    Commentators,
-    InfoStorageBox,
-    GameName,
-    GameExtraInfo,
+    GameCapture,
+    Player,
+    Commentator,
+    RunInfo,
     Timer,
-    SponsorLogos,
+    MediaBox,
+    DonationBar,
   },
-};
+})
+export default class extends Vue {}
 </script>
-
-<style scoped>
-  #GameCapture1 {
-    left: 512px;
-    top: 0px;
-    width: 1408px;
-    height: 940px;
-  }
-
-  #CameraCapture1 {
-    left: 0px;
-    top: 0px;
-    width: 513px;
-    height: 333px;
-  }
-
-  #DonationsBar {
-    left: 512px;
-    top: 940px;
-    width: 1408px;
-    height: 60px;
-  }
-
-  .InfoStorageBox {
-    left: 0px;
-    top: 333px;
-    width: 512px;
-    height: 667px;
-  }
-
-  #GameInfo {
-    width: 100%;
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
-
-  #TimerBox {
-    margin-top: -0.07em;
-  }
-</style>

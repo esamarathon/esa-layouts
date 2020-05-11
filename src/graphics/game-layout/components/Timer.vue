@@ -1,102 +1,66 @@
 <template>
-  <!-- eslint-disable vue/no-v-html -->
   <div
-    v-if="show"
-    id="TimerBox"
-    class="RunInfoBox Flex"
-    :style="textColor"
-    v-html="time"
-  />
-  <!-- eslint-enable -->
+    :class="`Flex Timer${timerState}`"
+    :style="{
+      'font-weight': 500,
+      'font-size': '100px',
+      'margin-top': '-0.07em',
+      transition: '1s',
+    }"
+  >
+    <span
+      v-for="(char, i) in timeStr"
+      :key="i"
+      :style="{
+        display: 'inline-block',
+        width: ([2, 5].includes(i)) ? '0.22em' : '0.45em',
+        'text-align': 'center',
+        // Make the colon appear more towards the centre.
+        'margin-top': ([2, 5].includes(i)) ? '-0.1em' : 'unset',
+      }"
+    >
+      {{ char }}
+    </span>
+  </div>
 </template>
 
-<script>
-export default {
-  name: 'Timer',
-  data() {
-    return {
-      show: false,
-      time: '',
-      timer: nodecg.Replicant('timer', 'nodecg-speedcontrol'),
-      backupTimerTO: setTimeout(0),
-      textColor: {
-        color: 'white',
-      },
-    };
-  },
-  mounted() {
-    this.timer.on('change', this.updateData);
-  },
-  destroyed() {
-    this.timer.removeListener('change', this.updateData);
-  },
-  methods: {
-    updateData(timer) {
-      this.show = true;
-      this.time = this.splitStringToSpans(timer.time);
+<script lang="ts">
+import { Vue, Component, Watch } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import { Timer } from 'speedcontrol-util/types';
+import { msToTimeStr } from '../../_misc/helpers';
 
-      switch (timer.state) {
-      default:
-      case 'running':
-        this.textColor.color = getComputedStyle(document.documentElement).getPropertyValue('--timer-colour');
-        break;
-      case 'paused':
-      case 'stopped':
-        this.textColor.color = getComputedStyle(document.documentElement).getPropertyValue('--timer-paused-colour');
-        break;
-      case 'finished':
-        this.textColor.color = getComputedStyle(document.documentElement).getPropertyValue('--timer-finish-colour');
-      }
+@Component
+export default class extends Vue {
+  @State timer!: Timer;
+  timeStr = '00:00:00';
+  backupTimerTO: number | undefined;
 
-      // Backup timer (see below).
-      clearTimeout(this.backupTimerTO);
-      this.backupTimerTO = setTimeout(this.backupTimer, 1000);
-    },
-    splitStringToSpans(string) {
-      return string.replace(/\S/g, '<span>$&</span>');
-    },
-    // Backup timer that takes over if the connection to the server is lost.
-    // Based on the last timestamp that was received.
-    // When the connection is restored, the server timer will recover and take over again.
-    backupTimer() {
-      this.backupTimerTO = setTimeout(this.backupTimer, 200);
-      if (this.timer.value.state === 'running') {
-        const missedTime = Date.now() - this.timer.value.timestamp;
-        const timeOffset = this.timer.value.milliseconds + missedTime;
-        this.time = this.splitStringToSpans(this.msToDuration(timeOffset));
-      }
-    },
-    msToDuration(ms) {
-      const seconds = Math.floor((ms / 1000) % 60);
-      const minutes = Math.floor((ms / (1000 * 60)) % 60);
-      const hours = Math.floor(ms / (1000 * 60 * 60));
+  /**
+   * Backup timer that takes over if the connection to the server is lost.
+   * Based on the last timestamp that was received.
+   * When the connection is restored, the server timer will recover and take over again.
+   */
+  backupTimer(): void {
+    this.backupTimerTO = window.setTimeout(() => this.backupTimer(), 200);
+    if (this.timer.state === 'running') {
+      const missedTime = Date.now() - this.timer.timestamp;
+      const timeOffset = this.timer.milliseconds + missedTime;
+      this.timeStr = msToTimeStr(timeOffset);
+    }
+  }
 
-      const hoursStr = (hours < 10) ? `0${hours}` : `${hours}`;
-      const minutesStr = (minutes < 10) ? `0${minutes}` : `${minutes}`;
-      const secondsStr = (seconds < 10) ? `0${seconds}` : `${seconds}`;
+  @Watch('timer', { immediate: true })
+  onTimerChange(val: Timer): void {
+    this.timeStr = val.time;
 
-      return `${hoursStr}:${minutesStr}:${secondsStr}`;
-    },
-  },
-};
+    // Backup timer (see above).
+    clearTimeout(this.backupTimerTO);
+    this.backupTimerTO = window.setTimeout(() => this.backupTimer(), 1000);
+  }
+
+  get timerState(): string {
+    return this.timer.state.charAt(0).toUpperCase() + this.timer.state.slice(1);
+  }
+}
 </script>
-
-<style scoped>
-  @import url('./RunInfoBox.css');
-  #TimerBox {
-    font-weight: 500;
-    font-size: 100px;
-    transition: 1s;
-  }
-
-  /* Each character in the timer is in a span; setting width so the numbers appear monospaced. */
-  #TimerBox >>> span {
-    display: inline-block;
-    width: 0.45em;
-    text-align: center;
-  }
-  #TimerBox >>> span:nth-of-type(3), #TimerBox >>> span:nth-of-type(6) {
-    width: 0.22em;
-    margin-top: -0.15em; /* Make the colon appear more towards the centre. */
-  }
-</style>

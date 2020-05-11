@@ -1,168 +1,154 @@
 <template>
-  <div id="Layout">
+  <div>
     <!-- Game Captures -->
-    <capture
+    <game-capture
       id="GameCapture1"
-      class="GameCapture BorderRight"
-    ></capture>
-    <capture
+      class="BorderRight"
+      :slot-no="0"
+      :style="{
+        left: '0px',
+        top: '0px',
+        width: '640px',
+        height: '480px',
+      }"
+    />
+    <game-capture
       id="GameCapture2"
-      class="GameCapture BorderRight"
-    ></capture>
-    <capture
+      class="BorderRight"
+      :slot-no="1"
+      :style="{
+        left: '640px',
+        top: '0px',
+        width: '640px',
+        height: '480px',
+      }"
+    />
+    <game-capture
       id="GameCapture3"
-      class="GameCapture"
-    ></capture>
+      :slot-no="2"
+      :style="{
+        left: '1280px',
+        top: '0px',
+        width: '640px',
+        height: '480px',
+      }"
+    />
 
     <!-- Camera Captures -->
-    <capture
+    <div
       id="CameraCapture1"
-      class="CameraCapture BorderRight BorderLeft"
-    ></capture>
+      class="Capture BorderRight BorderLeft"
+      :style="{
+        left: '600px',
+        top: '530px',
+        width: '721px',
+        height: '410px',
+      }"
+    />
 
     <!-- Players -->
-    <info-storage-box
-      id="InfoStorageBox1"
-      class="PlayerStorageBox"
-    >
-      <player-container
-        :team-index="0"
-        single
-      ></player-container>
-    </info-storage-box>
-    <info-storage-box
-      id="InfoStorageBox2"
-      class="PlayerStorageBox"
-    >
-      <player-container
-        :team-index="1"
-        single
-      ></player-container>
-    </info-storage-box>
-    <info-storage-box
-      id="InfoStorageBox3"
-      class="PlayerStorageBox"
-    >
-      <player-container
-        :team-index="2"
-        single
-      ></player-container>
-    </info-storage-box>
+    <player
+      class="Fixed"
+      :slot-no="0"
+      :style="{
+        left: '0px',
+        top: '480px',
+        width: '640px',
+        height: '50px',
+      }"
+    />
+    <player
+      class="Fixed"
+      :slot-no="1"
+      :style="{
+        left: '640px',
+        top: '480px',
+        width: '640px',
+        height: '50px',
+      }"
+    />
+    <player
+      class="Fixed"
+      :slot-no="2"
+      :style="{
+        left: '1280px',
+        top: '480px',
+        width: '640px',
+        height: '50px',
+      }"
+    />
 
-    <info-storage-box id="InfoStorageBox4">
-      <sponsor-logos></sponsor-logos>
-    </info-storage-box>
+    <!-- General Run Info -->
+    <div
+      class="Fixed FlexColumn"
+      :style="{
+        left: '1321px',
+        top: '530px',
+        width: '600px',
+        height: '410px',
+      }"
+    >
+      <commentator />
 
-    <info-storage-box id="InfoStorageBox5">
-      <commentators></commentators>
+      <!-- Run Game Info/Timer -->
       <div
-        id="GameInfo"
-        class="Flex"
+        class="FlexColumn"
+        :style="{
+          flex: '1',
+          width: '100%',
+          overflow: 'hidden',
+        }"
       >
-        <game-name></game-name>
-        <game-extra-info></game-extra-info>
-        <timer></timer>
+        <run-info
+          :style="{ 'font-size': '45px' }"
+          no-wrap
+        />
+        <timer />
       </div>
-    </info-storage-box>
+    </div>
 
-    <!-- Donations Bar -->
-    <donations-bar></donations-bar>
+    <!-- Media Box -->
+    <media-box
+      :style="{
+        left: '0px',
+        top: '535px',
+        width: '600px',
+        height: '405px',
+      }"
+    />
+
+    <!-- Donation Bar -->
+    <donation-bar
+      :style="{
+        left: '0px',
+        top: '940px',
+        width: '1920px',
+        height: '60px',
+      }"
+    />
   </div>
 </template>
 
-<script>
-import Capture from '../_misc/components/Capture.vue';
-import Commentators from './components/Commentators.vue';
-import DonationsBar from './components/DonationsBar.vue';
-import GameExtraInfo from './components/GameExtraInfo.vue';
-import GameName from './components/GameName.vue';
-import InfoStorageBox from '../_misc/components/InfoStorageBox.vue';
-import PlayerContainer from './components/PlayerContainer.vue';
-import SponsorLogos from '../_misc/components/SponsorLogos.vue';
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import GameCapture from './components/GameCapture.vue';
+import Player from './components/Player.vue';
+import Commentator from './components/Commentator.vue';
+import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
+import MediaBox from '../_misc/components/MediaBox.vue';
+import DonationBar from './components/DonationBar.vue';
 
-export default {
-  name: 'Layout',
+@Component({
   components: {
-    Capture,
-    DonationsBar,
-    PlayerContainer,
-    Commentators,
-    InfoStorageBox,
-    GameName,
-    GameExtraInfo,
+    GameCapture,
+    Player,
+    Commentator,
+    RunInfo,
     Timer,
-    SponsorLogos,
+    MediaBox,
+    DonationBar,
   },
-};
+})
+export default class extends Vue {}
 </script>
-
-<style scoped>
-  .GameCapture {
-    width: 640px;
-    height: 480px;
-  }
-
-  #GameCapture1 {
-    left: 0px;
-    top: 0px;
-  }
-  #GameCapture2 {
-    left: 640px;
-    top: 0px;
-  }
-  #GameCapture3 {
-    left: 1280px;
-    top: 0px;
-  }
-
-  #CameraCapture1 {
-    left: 600px;
-    top: 535px;
-    width: 721px;
-    height: 405px;
-  }
-
-  /* Players */
-  .PlayerStorageBox {
-    width: 640px;
-    height: 55px;
-    top: 480px;
-  }
-  #InfoStorageBox1 {
-    left: 0px;
-  }
-  #InfoStorageBox2 {
-    left: 640px;
-  }
-  #InfoStorageBox3 {
-    left: 1280px;
-  }
-
-  #InfoStorageBox4 {
-    left: 0px;
-    top: 535px;
-    width: 600px;
-    height: 405px;
-  }
-
-  #InfoStorageBox5 {
-    left: 1321px;
-    top: 535px;
-    width: 600px;
-    height: 405px;
-  }
-
-  #GameInfo {
-    width: 100%;
-    flex-direction: column;
-    flex: 1;
-  }
-
-  #DonationsBar {
-    left: 0px;
-    top: 940px;
-    width: 1920px;
-    height: 60px;
-  }
-</style>

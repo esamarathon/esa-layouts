@@ -1,10 +1,11 @@
 /* eslint no-new: off, @typescript-eslint/explicit-function-return-type: off */
 
 import type { GameLayouts } from 'schemas';
+import { RunDataActiveRun } from 'speedcontrol-util/types';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import '../_misc/common.css';
-import '../_misc/defaults.css';
+import '../_misc/theme';
+import './common.css';
 import * as List from './list';
 import App from './main.vue';
 import waitForReplicants from './store';
@@ -23,11 +24,6 @@ const routes = [
     component: List.L_4x3_2p,
   },
   {
-    name: '4:3 2 Player (co-op)',
-    path: '/4x3-2p-coop',
-    component: List.L_4x3_2p_CoOp,
-  },
-  {
     name: '4:3 3 Player',
     path: '/4x3-3p',
     component: List.L_4x3_3p,
@@ -36,11 +32,6 @@ const routes = [
     name: '4:3 4 Player',
     path: '/4x3-4p',
     component: List.L_4x3_4p,
-  },
-  {
-    name: '4:3 4 Player (co-op)',
-    path: '/4x3-4p-coop',
-    component: List.L_4x3_4p_CoOp,
   },
   {
     name: '16:9 1 Player',
@@ -58,24 +49,9 @@ const routes = [
     component: List.L_16x9_2p,
   },
   {
-    name: '16:9 2 Player (co-op)',
-    path: '/16x9-2p-coop',
-    component: List.L_16x9_2p_CoOp,
-  },
-  {
-    name: '16:9 2 Player (bingo)',
-    path: '/16x9-2p-bingo',
-    component: List.L_16x9_2p_Bingo,
-  },
-  {
     name: '16:9 3 Player',
     path: '/16x9-3p',
     component: List.L_16x9_3p,
-  },
-  {
-    name: '16:9 4 Player (MonHun)',
-    path: '/16x9-4p-monhun',
-    component: List.L_16x9_4p_MonHun,
   },
   {
     name: 'GameBoy 1 Player',
@@ -120,11 +96,21 @@ function getAvailable(): GameLayouts['available'] {
   }, [] as GameLayouts['available']);
 }
 
+// Logic for if we should be using mutiplayer layouts as "co-op" variants.
+function checkCoop(runData: RunDataActiveRun): boolean {
+  return (runData
+    && runData.teams.length === 1
+    && runData.teams[0].players.length > 1) || false;
+}
+
 waitForReplicants().then((store) => {
   store.commit('updateList', getAvailable());
   window.addEventListener('beforeunload', () => {
     store.commit('clearList');
   });
+  store.watch(() => store.state.runDataActiveRun, () => {
+    store.commit('updateCoop', checkCoop(store.state.runDataActiveRun));
+  }, { immediate: true });
 
   new Vue({
     store,

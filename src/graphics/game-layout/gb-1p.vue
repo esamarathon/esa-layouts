@@ -1,111 +1,107 @@
 <template>
-  <div id="Layout">
+  <div>
     <!-- Game Captures -->
-    <capture
+    <game-capture
       id="GameCapture1"
-      class="GameCapture BorderLeft"
-    ></capture>
+      class="BorderLeft"
+      :style="{
+        left: '875px',
+        top: '0px',
+        width: '1045px',
+        height: '940px',
+      }"
+    />
 
     <!-- Camera Captures -->
-    <capture
+    <div
       id="CameraCapture1"
-      class="CameraCapture"
-    ></capture>
+      class="Capture"
+      :style="{
+        left: '0px',
+        top: '0px',
+        width: '875px',
+        height: '492px',
+      }"
+    />
 
-    <!-- Information Storage -->
-    <info-storage-box>
-      <player-container></player-container>
-      <commentators></commentators>
+    <!-- General Run Info -->
+    <div
+      class="Fixed FlexColumn BorderBottom"
+      :style="{
+        left: '0px',
+        top: '492px',
+        width: '875px',
+        height: '210px',
+      }"
+    >
+      <player />
+      <commentator />
+
+      <!-- Run Game Info/Timer -->
       <div
-        id="InfoBox"
         class="Flex"
+        :style="{ flex: '1' }"
       >
-        <div
-          id="GameInfo"
-          class="BorderRight"
-        >
-          <game-name></game-name>
-          <game-extra-info></game-extra-info>
-        </div>
-        <timer></timer>
+        <run-info
+          class="BorderLeft"
+          :style="{
+            'width': '525px',
+            height: '100%',
+          }"
+        />
+        <timer
+          class="BorderLeft"
+          :style="{
+            'width': '350px',
+            height: '100%',
+          }"
+        />
       </div>
-      <sponsor-logos class="BorderTop"></sponsor-logos>
-    </info-storage-box>
+    </div>
 
-    <!-- Donations Bar -->
-    <donations-bar class="BorderLeft"></donations-bar>
+    <!-- Media Box -->
+    <media-box
+      :style="{
+        left: '0px',
+        top: '702px',
+        width: '875px',
+        height: '298px',
+      }"
+    />
+
+    <!-- Donation Bar -->
+    <donation-bar
+      class="BorderLeft"
+      :style="{
+        left: '875px',
+        top: '940px',
+        width: '1045px',
+        height: '60px',
+      }"
+    />
   </div>
 </template>
 
-<script>
-import Capture from '../_misc/components/Capture.vue';
-import Commentators from './components/Commentators.vue';
-import DonationsBar from './components/DonationsBar.vue';
-import GameExtraInfo from './components/GameExtraInfo.vue';
-import GameName from './components/GameName.vue';
-import InfoStorageBox from '../_misc/components/InfoStorageBox.vue';
-import PlayerContainer from './components/PlayerContainer.vue';
-import SponsorLogos from '../_misc/components/SponsorLogos.vue';
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import GameCapture from './components/GameCapture.vue';
+import Player from './components/Player.vue';
+import Commentator from './components/Commentator.vue';
+import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
+import MediaBox from '../_misc/components/MediaBox.vue';
+import DonationBar from './components/DonationBar.vue';
 
-export default {
-  name: 'Layout',
+@Component({
   components: {
-    Capture,
-    DonationsBar,
-    PlayerContainer,
-    Commentators,
-    InfoStorageBox,
-    GameName,
-    GameExtraInfo,
+    GameCapture,
+    Player,
+    Commentator,
+    RunInfo,
     Timer,
-    SponsorLogos,
+    MediaBox,
+    DonationBar,
   },
-};
+})
+export default class extends Vue {}
 </script>
-
-<style scoped>
-  #GameCapture1 {
-    left: 875px;
-    top: 0px;
-    width: 1045px;
-    height: 940px;
-  }
-
-  #CameraCapture1 {
-    left: 0px;
-    top: 0px;
-    width: 875px;
-    height: 492px;
-  }
-
-  #DonationsBar {
-    left: 875px;
-    top: 940px;
-    width: 1045px;
-    height: 60px;
-  }
-
-  .InfoStorageBox {
-    left: 0px;
-    top: 492px;
-    width: 875px;
-    height: 508px;
-  }
-
-  #InfoBox {
-    width: 100%;
-  }
-
-  #GameInfo {
-    width: 100%;
-    flex: 1;
-    padding-top: 10px;
-    padding-bottom: 15px;
-  }
-
-  #TimerBox {
-    width: 350px;
-    margin-top: -0.07em;
-  }
-</style>

@@ -3,10 +3,10 @@
 import { Configschema } from 'configschema';
 
 const { theme } = (nodecg.bundleConfig as Configschema).event;
-const esa = require('./themes/esa.theme.css');
+const defaultTheme = require('./themes/default.theme.css');
 
-if (theme === 'esa') {
-  esa.use();
+if (!theme) {
+  defaultTheme.use();
 } else {
-  esa.use();
+  defaultTheme.use();
 }

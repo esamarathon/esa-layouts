@@ -9,8 +9,7 @@
       "properties": {
         "theme": {
           "type": "string",
-          "$comment": "Theme to be used in the graphical overlays.",
-          "default": "esa"
+          "$comment": "Theme to be used in the graphical overlays; will use default if none supplied."
         },
         "shorts": {
           "$comment": "This/these must match the tracker, if that feature is enabled.",
@@ -44,7 +43,6 @@
         }
       },
       "required": [
-        "theme",
         "shorts",
         "thisEvent",
         "online"

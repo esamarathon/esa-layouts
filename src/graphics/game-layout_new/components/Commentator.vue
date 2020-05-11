@@ -16,7 +16,7 @@
       class="Flex"
       :style="{ width: '100%' }"
     >
-      <div class="Commentator">
+      <div class="CommentatorText">
         <span :style="{ 'font-weight': 500 }">
           <template v-if="commentators.length === 1">Commentator:</template>
           <template v-else>Commentators:</template>
@@ -39,7 +39,7 @@ export default class extends Vue {
 
   fit(): void {
     const elem = this.$refs.Commentator as HTMLElement;
-    fitty('.Commentator', {
+    fitty('.CommentatorText', {
       minSize: 1,
       maxSize: parseInt(elem.style.fontSize, 0),
     });

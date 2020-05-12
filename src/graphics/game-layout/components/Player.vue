@@ -114,6 +114,7 @@
             'border-size': '2px',
             'border-style': 'solid',
           }"
+          @error="$event.target.style.opacity = 0"
         >
       </transition>
     </div>
@@ -131,12 +132,13 @@ import { RunDataTeam, RunDataPlayer } from 'nodecg-speedcontrol/types'; // shoul
 @Component
 export default class extends Vue {
   @State('runDataActiveRun') runData!: RunDataActiveRun;
-  @State nameCycle!: NameCycle;
+  @State('nameCycle') nameCycleServer!: NameCycle;
   @State coop!: boolean;
   @Prop(Number) slotNo!: number;
   team: RunDataTeam | null = null;
   player: RunDataPlayer | null = null;
   playerIndex = 0;
+  nameCycle = 0; // "Local" name cycle used so we can let flags load.
 
   updateTeam(): void {
     if (this.coop && typeof this.slotNo === 'number') {
@@ -148,8 +150,28 @@ export default class extends Vue {
     }
   }
 
-  updatePlayer(): void {
-    this.player = (this.team ? this.team.players[this.playerIndex] : null) || null;
+  async preloadFlag(player: RunDataPlayer | null): Promise<void> {
+    if (!player) {
+      return;
+    }
+    await new Promise((res) => {
+      const img = new Image();
+      const setAsLoaded = (): void => {
+        img.removeEventListener('load', setAsLoaded);
+        img.removeEventListener('error', setAsLoaded);
+        res();
+      };
+      img.addEventListener('load', setAsLoaded);
+      img.addEventListener('error', setAsLoaded);
+      img.src = `/bundles/esa-layouts/static/flags/${player.country}.png`;
+    });
+  }
+
+  async updatePlayer(): Promise<void> {
+    const player = (this.team ? this.team.players[this.playerIndex] : null) || null;
+    await this.preloadFlag(player);
+    this.nameCycle = this.nameCycleServer;
+    this.player = player;
   }
 
   fit(): void {
@@ -185,7 +207,7 @@ export default class extends Vue {
     this.fit();
   }
 
-  @Watch('nameCycle')
+  @Watch('nameCycleServer')
   async onNameCycleChange(newVal: NameCycle, oldVal: NameCycle): Promise<void> {
     // If the name cycle resets, we need to move to the next player if applicable.
     if (newVal < oldVal) {
@@ -195,6 +217,8 @@ export default class extends Vue {
         this.playerIndex = 0;
       }
       this.updatePlayer();
+    } else if (oldVal < newVal) {
+      this.nameCycle = newVal; // Set "local" name cycle if cycle has only progressed.
     }
     await Vue.nextTick();
     this.fit();

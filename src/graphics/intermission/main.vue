@@ -1,11 +1,9 @@
 <template>
-  <div>
-    <!-- Background -->
+  <div id="Intermission">
     <div
       id="Background"
       :style="{ 'clip-path': clipPath }"
     />
-
     <div id="Layout">
       <!-- Logo -->
       <div
@@ -86,7 +84,8 @@
           'font-size': '30px',
         }"
       >
-        Donation Reader and Music Track
+        <donation-reader />
+        <music-track />
       </div>
     </div>
   </div>
@@ -99,11 +98,15 @@ import { TwitchCommercialTimer } from 'speedcontrol-util/types';
 import { generateClipPath } from '../_misc/cut-background';
 import MediaBox from '../_misc/components/MediaBox.vue';
 import CommercialTimer from './components/CommercialTimer.vue';
+import DonationReader from './components/DonationReader.vue';
+import MusicTrack from './components/MusicTrack.vue';
 
 @Component({
   components: {
     MediaBox,
     CommercialTimer,
+    DonationReader,
+    MusicTrack,
   },
 })
 export default class extends Vue {

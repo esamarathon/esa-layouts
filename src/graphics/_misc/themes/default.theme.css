@@ -91,3 +91,7 @@ body {
   font-weight: 700;
   font-size: 1.1em;
 }
+
+#Intermission .DonationReader .Mic, #Intermission .MusicTrack .MCat {
+  background-color: #41245b;
+}

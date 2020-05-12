@@ -7,9 +7,9 @@
   >
     <transition name="fade">
       <img
-        v-if="current"
-        :key="current.id"
-        :src="current.url"
+        v-if="currentLoaded"
+        :key="currentLoaded.id"
+        :src="currentLoaded.url"
         :style="{
           position: 'absolute',
           'object-fit': 'contain',
@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { SponsorLogos } from 'schemas';
 import { Asset } from 'types';
@@ -33,8 +33,9 @@ import { Asset } from 'types';
 export default class extends Vue {
   @State sponsorLogoAssets!: Asset[];
   @State sponsorLogos!: SponsorLogos;
+  currentLoaded: { id: string; url: string } | null = null;
 
-  get current(): { id: string; url: string} | undefined {
+  get current(): { id: string; url: string } | undefined {
     if (!this.sponsorLogoAssets) {
       return undefined;
     }
@@ -43,6 +44,22 @@ export default class extends Vue {
       id: this.sponsorLogos.current.id,
       url: asset.url,
     } : undefined;
+  }
+
+  // Preloads the image and will only show once loaded.
+  @Watch('current', { immediate: true })
+  onCurrentChange(val?: { id: string; url: string }): void {
+    if (!val) {
+      this.currentLoaded = null;
+      return;
+    }
+    const img = new Image();
+    const setAsLoaded = (): void => {
+      this.currentLoaded = val;
+      img.removeEventListener('load', setAsLoaded);
+    };
+    img.addEventListener('load', setAsLoaded);
+    img.src = val.url;
   }
 }
 </script>

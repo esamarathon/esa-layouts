@@ -1,22 +1,41 @@
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import type { MusicPlayer, SponsorLogos } from 'schemas';
+import type { Bids, DonationReader, MusicPlayer, Prizes, SponsorLogos, UpcomingRunID } from 'schemas'; // eslint-disable-line object-curly-newline, max-len
+import SpeedcontrolUtil from 'speedcontrol-util/browser';
+import { RunDataActiveRun, RunDataArray, TwitchCommercialTimer } from 'speedcontrol-util/types';
 import type { Asset } from 'types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
+const sc = new SpeedcontrolUtil(nodecg);
 Vue.use(Vuex);
 
 // Replicants and their types
 const reps: {
+  upcomingRunID: ReplicantBrowser<UpcomingRunID>;
   musicPlayer: ReplicantBrowser<MusicPlayer>;
+  donationReader: ReplicantBrowser<DonationReader>;
   sponsorLogoAssets: ReplicantBrowser<Asset[]>;
   sponsorLogos: ReplicantBrowser<SponsorLogos>;
+  bids: ReplicantBrowser<Bids>;
+  prizes: ReplicantBrowser<Prizes>;
+  intermissionSlides: ReplicantBrowser<Asset[]>;
+  runDataArray: ReplicantBrowser<RunDataArray>;
+  runDataActiveRun: ReplicantBrowser<RunDataActiveRun>;
+  twitchCommercialTimer: ReplicantBrowser<TwitchCommercialTimer>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
+  upcomingRunID: nodecg.Replicant('upcomingRunID'),
   musicPlayer: nodecg.Replicant('musicPlayer'),
+  donationReader: nodecg.Replicant('donationReader'),
   sponsorLogoAssets: nodecg.Replicant('assets:sponsor-logos'),
   sponsorLogos: nodecg.Replicant('sponsorLogos'),
+  bids: nodecg.Replicant('bids'),
+  prizes: nodecg.Replicant('prizes'),
+  intermissionSlides: nodecg.Replicant('assets:intermission-slides'),
+  runDataArray: sc.runDataArray,
+  runDataActiveRun: sc.runDataActiveRun,
+  twitchCommercialTimer: sc.twitchCommercialTimer,
 };
 
 const store = new Vuex.Store({

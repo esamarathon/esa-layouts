@@ -1,8 +1,8 @@
 /* eslint no-new: off, @typescript-eslint/explicit-function-return-type: off */
 
 import Vue from 'vue';
-import '../_misc/common.css';
-import '../_misc/defaults.css';
+import '../_misc/theme';
+import './common.css';
 import App from './main.vue';
 import waitForReplicants from './store';
 

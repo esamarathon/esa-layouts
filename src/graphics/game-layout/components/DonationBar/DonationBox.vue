@@ -24,7 +24,7 @@ export default class extends Vue {
   @Prop({ default: 15 }) padding!: number;
 
   get tierClass(): string {
-    const rand = Math.floor(Math.random() * 3);
+    const rand = 1 + Math.floor(Math.random() * 3);
     if (this.donation.amount < 50) { // Under $50
       return `DonationBoxTier1-${rand}`;
     }

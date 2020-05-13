@@ -1,65 +1,34 @@
 <template>
-  <div id="UpcomingRuns">
-    <run-upcoming
-      v-for="run in runs"
-      :key="`${Date.now()}${run.id}`"
-      :data="run"
-    ></run-upcoming>
+  <div
+    class="Flex"
+    :style="{
+      position: 'absolute',
+      height: '100%',
+      width: '100%',
+      'flex-direction': 'column',
+      'justify-content': 'space-around',
+    }"
+  >
+    <upcoming-run
+      v-for="i in [1, 2, 3]"
+      :key="i"
+      :slot-no="i"
+    />
   </div>
 </template>
 
-<script>
-import clone from 'clone';
-import RunUpcoming from '../RunUpcoming.vue';
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import UpcomingRun from '../UpcomingRun.vue';
 
-export default {
-  name: 'UpcomingRuns',
+@Component({
   components: {
-    RunUpcoming,
+    UpcomingRun,
   },
-  props: {
-    nextRuns: {
-      type: Array,
-      default() {
-        return [];
-      },
-    },
-  },
-  data() {
-    return {
-      runs: [],
-      whenTotal: 0,
-    };
-  },
-  mounted() {
-    if (!this.nextRuns.length) {
-      this.$emit('end');
-      return;
-    }
-
-    for (let i = 0; i < this.nextRuns.length; i += 1) {
-      const cloned = clone(this.nextRuns[i]);
-      cloned.when = this.whenTotal;
-      this.whenTotal += this.nextRuns[i].estimateS;
-      this.whenTotal += this.nextRuns[i].setupTimeS;
-
-      if (i !== 0) {
-        this.runs.push(cloned);
-      }
-    }
-
-    setTimeout(() => this.$emit('end'), 20 * 1000);
-  },
-};
-</script>
-
-<style>
-  #UpcomingRuns {
-    position: absolute;
-    display: flex;
-    height: 100%;
-    width: 100%;
-    flex-direction: column;
-    justify-content: space-around;
+})
+export default class extends Vue {
+  mounted(): void {
+    window.setTimeout(() => this.$emit('end'), 20 * 1000);
   }
-</style>
+}
+</script>

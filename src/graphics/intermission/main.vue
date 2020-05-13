@@ -56,15 +56,14 @@
         }"
       />
 
-      <!-- Rotation (todo) -->
-      <div
-        class="Fixed FlexColumn"
+      <!-- Rotation -->
+      <rotation
+        class="Fixed"
         :style="{
           left: '718px',
           top: '240px',
           width: '1172px',
           height: '660px',
-          'justify-content': 'space-around',
         }"
       />
 
@@ -93,6 +92,7 @@ import { Vue, Component } from 'vue-property-decorator';
 import MediaBox from '../_misc/components/MediaBox.vue';
 import CommercialTimer from './components/CommercialTimer.vue';
 import UpcomingRun from './components/UpcomingRun.vue';
+import Rotation from './components/Rotation.vue';
 import DonationReader from './components/DonationReader.vue';
 import MusicTrack from './components/MusicTrack.vue';
 
@@ -101,6 +101,7 @@ import MusicTrack from './components/MusicTrack.vue';
     MediaBox,
     CommercialTimer,
     UpcomingRun,
+    Rotation,
     DonationReader,
     MusicTrack,
   },

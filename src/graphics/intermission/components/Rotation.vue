@@ -1,101 +1,42 @@
 <template>
-  <div id="Rotation">
+  <div class="Fixed">
     <transition name="fade">
       <component
         :is="currentComponent"
-        :next-runs="nextRuns"
-        @end="showNextMsg"
-      >
-      </component>
+        @end="showNextSlide"
+      />
     </transition>
   </div>
 </template>
 
-<script>
-import clone from 'clone';
-import UpcomingRuns from './Rotation/UpcomingRuns.vue';
-import Bid from './Rotation/Bid.vue';
-import Prize from './Rotation/Prize.vue';
-import ImageSlide from './Rotation/ImageSlide.vue';
-import VideoSlide from './Rotation/VideoSlide.vue';
-// import Twitch from './Rotation/Twitch.vue';
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import UpcomingRuns from './rotation/UpcomingRuns.vue';
 
-const runDataActiveRun = nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol');
-const runDataArray = nodecg.Replicant('runDataArray', 'nodecg-speedcontrol');
+@Component
+export default class extends Vue {
+  currentComponent: any | null = null;
+  componentArray = [
+    UpcomingRuns,
+  ]
+  index = 0;
 
-export default {
-  name: 'Rotation',
-  data() {
-    return {
-      currentComponent: undefined,
-      componentArray: [
-        UpcomingRuns,
-        Bid,
-        Prize,
-        Bid,
-        Prize,
-        ImageSlide,
-        Bid,
-        Prize,
-        UpcomingRuns,
-        Bid,
-        Prize,
-        Bid,
-        Prize,
-        ImageSlide,
-        Bid,
-        Prize,
-        UpcomingRuns,
-        Bid,
-        Prize,
-        Bid,
-        Prize,
-        VideoSlide,
-        Bid,
-        Prize,
-      ],
-      index: 0,
-      nextRuns: [],
-    };
-  },
-  mounted() {
-    NodeCG.waitForReplicants(runDataActiveRun, runDataArray).then(() => {
-      this.updateNextRuns();
-      this.showNextMsg();
-    });
-    // nodecg.listenFor('forceRefreshIntermission', () => this.updateNextRuns());
-  },
-  methods: {
-    showNextMsg() {
-      if (this.index >= this.componentArray.length) {
-        this.index = 0;
-      }
-
-      this.currentComponent = this.componentArray[this.index];
+  showNextSlide(): void {
+    if (this.index >= this.componentArray.length - 1) {
+      this.index = 0;
+    } else {
       this.index += 1;
-    },
-    updateNextRuns() {
-      this.nextRuns = this.getNextRuns();
-    },
-    getNextRuns() {
-      const runIndex = this.findRunIndex();
-      return clone(runDataArray.value).slice(runIndex + 1).slice(0, 4);
-    },
-    findRunIndex() {
-      if (!runDataActiveRun.value) {
-        return -1;
-      }
-      return clone(runDataArray.value).findIndex(run => run.id === runDataActiveRun.value.id);
-    },
-  },
-};
-</script>
-
-<style>
-  #Rotation {
-    position: fixed;
+    }
+    this.currentComponent = this.componentArray[this.index];
   }
 
+  mounted(): void {
+    this.showNextSlide();
+  }
+}
+</script>
+
+<style scoped>
   .fade-enter-active, .fade-leave-active {
     transition: opacity 1s;
   }

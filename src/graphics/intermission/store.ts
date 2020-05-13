@@ -2,7 +2,7 @@ import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import type { Bids, DonationReader, MusicPlayer, Prizes, SponsorLogos, UpcomingRunID } from 'schemas'; // eslint-disable-line object-curly-newline, max-len
 import SpeedcontrolUtil from 'speedcontrol-util/browser';
-import { RunDataActiveRun, RunDataArray, TwitchCommercialTimer } from 'speedcontrol-util/types';
+import { RunDataArray, TwitchCommercialTimer } from 'speedcontrol-util/types';
 import type { Asset } from 'types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
@@ -21,7 +21,6 @@ const reps: {
   prizes: ReplicantBrowser<Prizes>;
   intermissionSlides: ReplicantBrowser<Asset[]>;
   runDataArray: ReplicantBrowser<RunDataArray>;
-  runDataActiveRun: ReplicantBrowser<RunDataActiveRun>;
   twitchCommercialTimer: ReplicantBrowser<TwitchCommercialTimer>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
@@ -34,7 +33,6 @@ const reps: {
   prizes: nodecg.Replicant('prizes'),
   intermissionSlides: nodecg.Replicant('assets:intermission-slides'),
   runDataArray: sc.runDataArray,
-  runDataActiveRun: sc.runDataActiveRun,
   twitchCommercialTimer: sc.twitchCommercialTimer,
 };
 

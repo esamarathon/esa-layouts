@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="GameLayout">
     <div
       id="Background"
       :style="{ 'clip-path': clipPath }"

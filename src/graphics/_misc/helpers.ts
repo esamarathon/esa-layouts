@@ -32,21 +32,3 @@ export function msToTimeStr(ms: number): string {
   }:${padTimeNumber(minutes)
   }:${padTimeNumber(seconds)}`;
 }
-
-// TODO: remove if not needed anymore?
-/**
- * Wait for all images supplied to load.
- * @param elems HTML Element or Vue reference.
- */
-// eslint-disable-next-line max-len
-export async function waitForImages(...elems: (Vue | Element | Vue[] | Element[] | HTMLElement | undefined)[]): Promise<void> {
-  for (const elem of elems) {
-    await new Promise((res) => {
-      if (!elem) {
-        res();
-      }
-      (elem as HTMLElement).addEventListener('load', () => res());
-      (elem as HTMLElement).addEventListener('error', () => res());
-    });
-  }
-}

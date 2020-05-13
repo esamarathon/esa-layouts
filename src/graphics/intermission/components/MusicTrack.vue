@@ -13,7 +13,7 @@
       }"
     >
       <img
-        src="./MCat_Logo.png"
+        src="./MCat.png"
         :style="{ height: '100%' }"
       >
     </div>

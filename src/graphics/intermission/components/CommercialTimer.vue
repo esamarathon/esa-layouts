@@ -1,9 +1,8 @@
 <template>
   <div
     v-if="twitchCommercialTimer.secondsRemaining > 0"
-    class="Fixed Flex"
+    class="CommercialTimer Fixed Flex"
     :style="{
-      'background-color': 'rgba(0,0,0,0.3)',
       'font-size': '20px',
     }"
   >

@@ -45,8 +45,8 @@
         }"
       />
 
-      <!-- Upcoming Run (todo) -->
-      <div
+      <!-- Upcoming Run -->
+      <upcoming-run
         class="Fixed"
         :style="{
           left: '718px',
@@ -54,33 +54,29 @@
           width: '1172px',
           height: '199px',
         }"
-      >
-        Upcoming Run
-      </div>
+      />
 
       <!-- Rotation (todo) -->
       <div
-        class="Fixed"
+        class="Fixed FlexColumn"
         :style="{
           left: '718px',
           top: '240px',
           width: '1172px',
           height: '660px',
+          'justify-content': 'space-around',
         }"
-      >
-        Rotation
-      </div>
+      />
 
-      <!-- Donation Reader and Music Track (todo) -->
+      <!-- Donation Reader and Music Track -->
       <div
-        class="Fixed Flex"
+        class="BottomBox Fixed Flex"
         :style="{
           left: '718px',
           top: '910px',
           width: '1172px',
           height: '60px',
           'justify-content': 'flex-start',
-          'background-color': 'rgba(0,0,0,0.3)',
           'font-size': '30px',
         }"
       >
@@ -93,11 +89,10 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { TwitchCommercialTimer } from 'speedcontrol-util/types';
-import { generateClipPath } from '../_misc/cut-background';
+// import { generateClipPath } from '../_misc/cut-background';
 import MediaBox from '../_misc/components/MediaBox.vue';
 import CommercialTimer from './components/CommercialTimer.vue';
+import UpcomingRun from './components/UpcomingRun.vue';
 import DonationReader from './components/DonationReader.vue';
 import MusicTrack from './components/MusicTrack.vue';
 
@@ -105,16 +100,17 @@ import MusicTrack from './components/MusicTrack.vue';
   components: {
     MediaBox,
     CommercialTimer,
+    UpcomingRun,
     DonationReader,
     MusicTrack,
   },
 })
 export default class extends Vue {
-  @State twitchCommercialTimer!: TwitchCommercialTimer;
   clipPath = 'unset';
 
   mounted(): void {
-    this.clipPath = generateClipPath();
+    // Bring this back if we actually gain some cameras on this layout.
+    // this.clipPath = generateClipPath();
   }
 }
 </script>

@@ -20,7 +20,7 @@ body {
   color: white;
 }
 
-.RunInfoExtra {
+#GameLayout .RunInfoExtra {
   color: #b7b7b7;
 }
 
@@ -92,6 +92,18 @@ body {
   font-size: 1.1em;
 }
 
-#Intermission .DonationReader .Mic, #Intermission .MusicTrack .MCat {
+#Intermission .DonationReader .Mic,
+#Intermission .MusicTrack .MCat {
   background-color: #41245b;
+}
+
+#Intermission .UpcomingRun .Header {
+  background-color: #41245b;
+  color: white;
+}
+
+#Intermission .BottomBox,
+#Intermission .UpcomingRun .Content,
+#Intermission .CommercialTimer {
+  background-color: rgba(0, 0, 0, 0.3);
 }

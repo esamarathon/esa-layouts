@@ -58,7 +58,6 @@
 
       <!-- Rotation -->
       <rotation
-        class="Fixed"
         :style="{
           left: '718px',
           top: '240px',

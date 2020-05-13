@@ -1,25 +1,28 @@
 <template>
-  <div
-    class="Fixed Flex"
-    :style="{
-      position: 'relative',
-    }"
-  >
-    <transition name="fade">
-      <img
-        v-if="currentLoaded"
-        :key="currentLoaded.id"
-        :src="currentLoaded.url"
-        :style="{
-          position: 'absolute',
-          'object-fit': 'contain',
-          width: '100%',
-          height: '100%',
-          padding: '30px',
-          'box-sizing': 'border-box',
-        }"
-      >
-    </transition>
+  <div class="Fixed">
+    <div
+      :style="{
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+      }"
+    >
+      <transition name="fade">
+        <img
+          v-if="currentLoaded"
+          :key="currentLoaded.id"
+          :src="currentLoaded.url"
+          :style="{
+            position: 'absolute',
+            'object-fit': 'contain',
+            width: '100%',
+            height: '100%',
+            padding: '30px',
+            'box-sizing': 'border-box',
+          }"
+        >
+      </transition>
+    </div>
   </div>
 </template>
 

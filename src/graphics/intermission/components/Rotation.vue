@@ -1,11 +1,19 @@
 <template>
   <div class="Fixed">
-    <transition name="fade">
-      <component
-        :is="currentComponent"
-        @end="showNextSlide"
-      />
-    </transition>
+    <div
+      :style="{
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+      }"
+    >
+      <transition name="fade">
+        <component
+          :is="currentComponent"
+          @end="showNextSlide"
+        />
+      </transition>
+    </div>
   </div>
 </template>
 

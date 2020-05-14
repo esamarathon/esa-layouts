@@ -8,9 +8,11 @@
       }"
     >
       <transition name="fade">
-        <component
-          :is="currentComponent"
-          @end="showNextSlide"
+        <upcoming-runs
+          v-if="currentSlide === 0"
+          :key="0"
+          class="Slide"
+          @end="showNextSlide()"
         />
       </transition>
     </div>
@@ -21,30 +23,40 @@
 import { Vue, Component } from 'vue-property-decorator';
 import UpcomingRuns from './rotation/UpcomingRuns.vue';
 
-@Component
-export default class extends Vue {
-  currentComponent: any | null = null;
-  componentArray = [
+const componentKey = {
+  UpcomingRuns: 0,
+};
+
+@Component({
+  components: {
     UpcomingRuns,
-  ]
-  index = 0;
+  },
+})
+export default class extends Vue {
+  currentSlide = 0;
+  slideCount = Object.keys(componentKey).length;
 
   showNextSlide(): void {
-    if (this.index >= this.componentArray.length - 1) {
-      this.index = 0;
-    } else {
-      this.index += 1;
+    // If we have only 1 component for some reason, no need to do anything.
+    if (this.slideCount === 1) {
+      return;
     }
-    this.currentComponent = this.componentArray[this.index];
-  }
-
-  mounted(): void {
-    this.showNextSlide();
+    if (this.currentSlide >= this.slideCount - 1) {
+      this.currentSlide = 0;
+    } else {
+      this.currentSlide += 1;
+    }
   }
 }
 </script>
 
 <style scoped>
+  .Slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+
   .fade-enter-active, .fade-leave-active {
     transition: opacity 1s;
   }

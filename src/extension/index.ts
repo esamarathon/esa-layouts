@@ -17,6 +17,11 @@ export = (nodecg: NodeCG): { obs: any } => {
       + 'have 1 event short at event.shorts');
   }
 
+  const { useTestData } = nodecg.bundleConfig as Configschema;
+  if (useTestData) {
+    nodecg.log.warn('USING TEST DATA, MAKE SURE TO DISABLE THIS IN PRODUCTION!');
+  }
+
   require('./obs-data');
   require('./layouts');
   require('./tracker');

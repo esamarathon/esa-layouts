@@ -9,6 +9,7 @@ import { donationTotal, notableDonations } from './util/replicants';
 export const eventInfo: Tracker.EventInfo[] = [];
 const eventConfig = (nodecg().bundleConfig as Configschema).event;
 const config = (nodecg().bundleConfig as Configschema).tracker;
+const { useTestData } = nodecg().bundleConfig as Configschema;
 let cookies: NeedleResponse['cookies'];
 
 /**
@@ -156,20 +157,24 @@ async function init(): Promise<void> {
 
     // Go through all events and compile the important info for them.
     const events = (Array.isArray(eventConfig.shorts)) ? eventConfig.shorts : [eventConfig.shorts];
-    for (const short of events) {
-      const id = await getEventIDFromShort(short);
+    for (const [index, short] of events.entries()) {
+      const id = !useTestData ? await getEventIDFromShort(short) : index + 1;
       eventInfo.push({
         id,
         short,
-        total: 0,
+        total: !useTestData ? 0 : Math.random() * 1000,
       });
     }
 
-    await loginToTracker();
+    if (!useTestData) {
+      await loginToTracker();
 
-    // Get initial total from API and set an interval as a fallback.
-    updateDonationTotalFromAPI();
-    setInterval(updateDonationTotalFromAPI, 60 * 1000);
+      // Get initial total from API and set an interval as a fallback.
+      updateDonationTotalFromAPI();
+      setInterval(updateDonationTotalFromAPI, 60 * 1000);
+    } else {
+      donationTotal.value = eventInfo.reduce((p, e) => p + e.total, 0);
+    }
 
     /* eslint-disable global-require */
     require('./tracker-bids').setup();

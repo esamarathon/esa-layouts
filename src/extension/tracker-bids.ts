@@ -7,6 +7,7 @@ import { bids } from './util/replicants';
 
 const eventConfig = (nodecg().bundleConfig as Configschema).event;
 const config = (nodecg().bundleConfig as Configschema).tracker;
+const { useTestData } = nodecg().bundleConfig as Configschema;
 const refreshTime = 60 * 1000; // Get bids every 60s.
 
 // Processes the response from the API.
@@ -106,5 +107,46 @@ async function updateBids(): Promise<void> {
 }
 
 export function setup(): void {
-  updateBids();
+  if (!useTestData) {
+    updateBids();
+  } else {
+    // Test Data
+    const randID = Math.floor(Math.random() * 1000);
+    const randGoal = Math.floor(Math.random() * 1000);
+    const randBidWarAmount = Math.random() * 1000;
+    bids.value = [
+      {
+        id: randID,
+        name: 'Test Goal',
+        // description: 'This is a test description.',
+        total: randGoal / 2,
+        goal: randGoal,
+        // game: 'Test Game 1',
+        // category: 'Test Category 1',
+        endTime: Date.now() + 21600000, // Now + 6 hours
+        war: false,
+        allowUserOptions: false,
+        options: [],
+      },
+      {
+        id: randID + 1,
+        name: 'Test Bid War',
+        // description: 'This is a test description.',
+        total: randBidWarAmount,
+        // game: 'Test Game 2',
+        // category: 'Test Category 2',
+        endTime: Date.now() + 21600000, // Now + 6 hours
+        war: true,
+        allowUserOptions: false,
+        options: [
+          {
+            id: randID + 2,
+            parent: randID + 1,
+            name: 'Test Option',
+            total: randBidWarAmount,
+          },
+        ],
+      },
+    ];
+  }
 }

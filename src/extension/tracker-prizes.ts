@@ -6,6 +6,7 @@ import { get as nodecg } from './util/nodecg';
 import { prizes } from './util/replicants';
 
 const config = (nodecg().bundleConfig as Configschema).tracker;
+const { useTestData } = nodecg().bundleConfig as Configschema;
 const refreshTime = 60 * 1000; // Get prizes every 60s.
 
 // Processes the response from the API above.
@@ -53,5 +54,20 @@ async function updatePrizes(): Promise<void> {
 }
 
 export function setup(): void {
-  updatePrizes();
+  if (!useTestData) {
+    updatePrizes();
+  } else {
+    // Test Data
+    prizes.value = [
+      {
+        id: Math.floor(Math.random() * 1000),
+        name: 'Test Prize Name',
+        // provided: 'Anonymous',
+        minimumBid: Math.floor(Math.random() * 50),
+        image: 'https://homepages.cae.wisc.edu/~ece533/images/cat.png',
+        // startTimestamp: new Date().toISOString(),
+        // endTimestamp: new Date(Date.now() + 21600000).toISOString(), // Now + 6 hours
+      },
+    ];
+  }
 }

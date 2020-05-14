@@ -7,6 +7,7 @@ import { donationsToRead } from './util/replicants';
 
 const eventConfig = (nodecg().bundleConfig as Configschema).event;
 const config = (nodecg().bundleConfig as Configschema).tracker;
+const { useTestData } = nodecg().bundleConfig as Configschema;
 const refreshTime = 10 * 1000; // Get donations every 10s.
 let updateTimeout: NodeJS.Timeout;
 
@@ -77,5 +78,18 @@ export async function markDonationAsRead(donationID: number): Promise<void> {
 }
 
 export function setup(): void {
-  updateToReadDonations();
+  if (!useTestData) {
+    updateToReadDonations();
+  } else {
+    // Test Data
+    donationsToRead.value = [
+      {
+        id: Math.floor(Math.random() * 1000),
+        name: 'Anonymous',
+        amount: Math.random() * 1000,
+        // comment: 'This is a test comment.',
+        timestamp: new Date().toISOString(),
+      },
+    ];
+  }
 }

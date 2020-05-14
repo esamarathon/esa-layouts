@@ -6,6 +6,7 @@
  */
 
 export interface Configschema {
+  useTestData: boolean;
   event: {
     theme?: string;
     shorts: string | [string] | [string, string];

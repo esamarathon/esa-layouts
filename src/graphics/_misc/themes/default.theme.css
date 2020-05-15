@@ -97,13 +97,13 @@ body {
   background-color: #41245b;
 }
 
-#Intermission .UpcomingRun .Header {
+#Intermission .Header {
   background-color: #41245b;
   color: white;
 }
 
 #Intermission .BottomBox,
-#Intermission .UpcomingRun .Content,
+#Intermission .Content,
 #Intermission .CommercialTimer {
   background-color: rgba(0, 0, 0, 0.3);
 }

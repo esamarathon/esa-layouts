@@ -14,6 +14,12 @@
           class="Slide"
           @end="showNextSlide()"
         />
+        <bid
+          v-else-if="currentSlide === 1"
+          :key="1"
+          class="Slide"
+          @end="showNextSlide()"
+        />
       </transition>
     </div>
   </div>
@@ -22,29 +28,31 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import UpcomingRuns from './rotation/UpcomingRuns.vue';
+import Bid from './rotation/Bid.vue';
+import { setCurrentBid } from './rotation/Bid';
 
 const componentKey = {
   UpcomingRuns: 0,
+  Bid: 1,
+  // Prize: 2,
+  // MediaSlide: 3,
 };
 
 @Component({
   components: {
     UpcomingRuns,
+    Bid,
   },
 })
 export default class extends Vue {
   currentSlide = 0;
-  slideCount = Object.keys(componentKey).length;
 
   showNextSlide(): void {
-    // If we have only 1 component for some reason, no need to do anything.
-    if (this.slideCount === 1) {
-      return;
-    }
-    if (this.currentSlide >= this.slideCount - 1) {
-      this.currentSlide = 0;
+    const next = this.currentSlide + 1;
+    if (next === 1 && setCurrentBid()) {
+      this.currentSlide = next;
     } else {
-      this.currentSlide += 1;
+      this.currentSlide = 0;
     }
   }
 }

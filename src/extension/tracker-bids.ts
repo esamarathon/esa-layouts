@@ -129,7 +129,7 @@ export function setup(): void {
         goal: randGoal,
         // game: 'Test Game',
         // category: 'Test Category',
-        // endTime: Date.now() + 21600000, // Now + 6 hours
+        endTime: Date.now() + 21600000, // Now + 6 hours
         war: false,
         allowUserOptions: false,
         options: [],
@@ -141,7 +141,7 @@ export function setup(): void {
         total: randBidWarAmount,
         // game: 'Test Game',
         // category: 'Test Category',
-        // endTime: Date.now() + 21600000, // Now + 6 hours
+        endTime: Date.now() + 21600000, // Now + 6 hours
         war: true,
         allowUserOptions: false,
         options: [
@@ -166,7 +166,7 @@ export function setup(): void {
         total: randBidWarAmount,
         // game: 'Test Game',
         // category: 'Test Category',
-        // endTime: Date.now() + 21600000, // Now + 6 hours
+        endTime: Date.now() + 21600000, // Now + 6 hours
         war: true,
         allowUserOptions: true,
         options: [

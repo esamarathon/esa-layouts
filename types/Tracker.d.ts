@@ -13,7 +13,6 @@ interface BidFields {
   allowuseroptions: boolean;
   goal: string | null;
 }
-
 interface BidChildFields extends BidFields {
   parent: number;
 }

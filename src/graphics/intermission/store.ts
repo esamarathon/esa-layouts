@@ -3,7 +3,7 @@ import type { ReplicantBrowser } from 'nodecg/types/browser';
 import type { Bids, DonationReader, MusicPlayer, Prizes, SponsorLogos, UpcomingRunID } from 'schemas'; // eslint-disable-line object-curly-newline, max-len
 import SpeedcontrolUtil from 'speedcontrol-util/browser';
 import { RunDataArray, TwitchCommercialTimer } from 'speedcontrol-util/types';
-import type { Asset } from 'types';
+import type { Asset, Tracker } from 'types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
@@ -36,11 +36,21 @@ const reps: {
   twitchCommercialTimer: sc.twitchCommercialTimer,
 };
 
-const store = new Vuex.Store({
-  state: {},
+interface StateTypes {
+  currentBid?: Tracker.FormattedBid;
+  bids: Bids;
+}
+
+export const store = new Vuex.Store({
+  state: {
+    bids: [],
+  } as StateTypes,
   mutations: {
     setState(state, { name, val }): void {
       Vue.set(state, name, val);
+    },
+    setCurrentBid(state, bid?: Tracker.FormattedBid): void {
+      Vue.set(state, 'currentBid', bid);
     },
   },
 });
@@ -51,7 +61,7 @@ Object.keys(reps).forEach((key) => {
   });
 });
 
-export default async function (): Promise<Store<{}>> {
+export default async function (): Promise<Store<StateTypes>> {
   return NodeCG.waitForReplicants(
     ...Object.keys(reps).map((key) => reps[key]),
   ).then(() => store);

@@ -11,25 +11,21 @@ const refreshTime = 60 * 1000; // Get prizes every 60s.
 
 // Processes the response from the API above.
 function processRawPrizes(rawPrizes: Tracker.Prize[]): Tracker.FormattedPrize[] {
-  return rawPrizes.reduce((prev, prize) => {
-    const formattedPrize = {
+  return rawPrizes.map((prize) => {
+    const startTime = prize.fields.startrun__starttime || prize.fields.starttime;
+    const endTime = prize.fields.endrun__endtime || prize.fields.endtime;
+    return {
       id: prize.pk,
       name: prize.fields.name,
-      provided: prize.fields.provider || 'Anonymous',
+      provided: prize.fields.provider || undefined,
       minimumBid: parseFloat(prize.fields.minimumbid),
-      image: prize.fields.image,
-      startTimestamp: prize.fields.startrun__starttime || prize.fields.starttime,
-      endTimestamp: prize.fields.endrun__endtime || prize.fields.endtime,
+      image: prize.fields.image || undefined,
+      startTime: startTime ? Date.parse(startTime) : undefined,
+      endTime: endTime ? Date.parse(endTime) : undefined,
     };
     // Only add prize if applicable right now.
-    const currentTimestamp = Date.now();
-    const startTimestamp = Date.parse(formattedPrize.startTimestamp);
-    const endTimestamp = Date.parse(formattedPrize.endTimestamp);
-    if (currentTimestamp > startTimestamp && currentTimestamp < endTimestamp) {
-      prev.push(formattedPrize);
-    }
-    return prev;
-  }, [] as Tracker.FormattedPrize[]);
+  }).filter((prize) => !!prize.startTime && !!prize.endTime
+    && Date.now() > prize.startTime && Date.now() < prize.endTime);
 }
 
 // Get the prizes from the API.
@@ -64,9 +60,9 @@ export function setup(): void {
         name: 'Test Prize Name',
         // provided: 'Anonymous',
         minimumBid: Math.floor(Math.random() * 50),
-        image: 'https://homepages.cae.wisc.edu/~ece533/images/cat.png',
-        // startTimestamp: new Date().toISOString(),
-        // endTimestamp: new Date(Date.now() + 21600000).toISOString(), // Now + 6 hours
+        // image: 'https://homepages.cae.wisc.edu/~ece533/images/cat.png',
+        // startTime: Date.now(),
+        // endTime: Date.now() + 21600000, // Now + 6 hours
       },
     ];
   }

@@ -17,7 +17,7 @@ function processToReadDonations(donations: Tracker.Donation[]): Tracker.Formatte
     name: donation.fields.donor__public,
     amount: parseFloat(donation.fields.amount),
     comment: (donation.fields.commentstate === 'APPROVED') ? donation.fields.comment : undefined,
-    timestamp: donation.fields.timereceived,
+    timestamp: Date.parse(donation.fields.timereceived),
   })).sort((a, b) => {
     if (a.timestamp < b.timestamp) {
       return -1;
@@ -88,7 +88,7 @@ export function setup(): void {
         name: 'Anonymous',
         amount: Math.random() * 1000,
         // comment: 'This is a test comment.',
-        timestamp: new Date().toISOString(),
+        timestamp: Date.now(),
       },
     ];
   }

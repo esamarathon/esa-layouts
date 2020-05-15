@@ -67,7 +67,6 @@
       "id",
       "name",
       "total",
-      "endTime",
       "war",
       "allowUserOptions",
       "options"

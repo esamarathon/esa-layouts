@@ -31,7 +31,7 @@ async function ttsExample(): Promise<void> {
       name: 'Anonymous',
       comment: resp.body,
       id: 0, // Fake ID
-      timestamp: '', // Fake timestamp
+      timestamp: 0, // Fake timestamp
     });
   } catch (err) {
     // Silently drop for this example

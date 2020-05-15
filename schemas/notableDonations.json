@@ -9,7 +9,7 @@
         "type": "string"
       },
       "_id": {
-        "type": "integer"
+        "type": "number"
       },
       "donor_visiblename": {
         "type": "string"

@@ -10,5 +10,5 @@ export type DonationsToRead = {
   name: string;
   amount: number;
   comment?: string;
-  timestamp: string;
+  timestamp: number;
 }[];

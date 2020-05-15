@@ -20,11 +20,11 @@
       "image": {
         "type": "string"
       },
-      "startTimestamp": {
-        "type": "string"
+      "startTime": {
+        "type": "number"
       },
-      "endTimestamp": {
-        "type": "string"
+      "endTime": {
+        "type": "number"
       }
     },
     "required": [

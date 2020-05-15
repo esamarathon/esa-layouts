@@ -11,6 +11,6 @@ export type Prizes = {
   provided?: string;
   minimumBid: number;
   image?: string;
-  startTimestamp?: string;
-  endTimestamp?: string;
+  startTime?: number;
+  endTime?: number;
 }[];

@@ -1,35 +1,14 @@
 <template>
-  <div
-    v-if="bid"
-    class="FlexColumn"
-    :style="{
-      'font-size': '41px',
-      'text-align': 'center',
-    }"
-  >
-    <div
-      class="Header Flex"
-      :style="{
-        width: '100%',
-        height: '60px',
-        'font-weight': 500,
-        'text-transform': 'uppercase',
-      }"
-    >
+  <container v-if="bid">
+    <template v-slot:header>
       <template v-if="!bid.war">
         Upcoming Goal
       </template>
       <template v-else>
         Upcoming Bid War
       </template>
-    </div>
-    <div
-      class="Content FlexColumn"
-      :style="{
-        width: '100%',
-        flex: 1,
-      }"
-    >
+    </template>
+    <template v-slot:content>
       <div
         v-if="runTitle"
         :style="{ 'font-size': '45px' }"
@@ -60,8 +39,8 @@
           </div>
         </template>
       </div>
-    </div>
-  </div>
+    </template>
+  </container>
 </template>
 
 <script lang="ts">
@@ -69,8 +48,13 @@ import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Tracker } from 'types';
 import { formatUSD } from '../../../_misc/helpers';
+import Container from '../Container.vue';
 
-@Component
+@Component({
+  components: {
+    Container,
+  },
+})
 export default class extends Vue {
   @State('currentBid') bid!: Tracker.FormattedBid | undefined;
   formatUSD = formatUSD;
@@ -96,9 +80,3 @@ export default class extends Vue {
   }
 }
 </script>
-
-<style scoped>
-  .Content > div {
-    padding: 10px;
-  }
-</style>

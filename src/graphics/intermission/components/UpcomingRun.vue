@@ -1,31 +1,12 @@
 <template>
-  <div
+  <container
     v-if="runData"
-    class="UpcomingRun FlexColumn"
-    :style="{
-      width: '100%',
-      height: '199px',
-      'font-size': '41px',
-    }"
+    :style="{ width: '100%', height: '199px' }"
   >
-    <div
-      class="Header Flex"
-      :style="{
-        width: '100%',
-        height: '60px',
-        'font-weight': 500,
-        'text-transform': 'uppercase',
-      }"
-    >
+    <template v-slot:header>
       {{ etaUntil }}
-    </div>
-    <div
-      class="Content FlexColumn"
-      :style="{
-        width: '100%',
-        flex: 1,
-      }"
-    >
+    </template>
+    <template v-slot:content>
       <div>
         {{ runData.game }}
       </div>
@@ -46,8 +27,8 @@
           {{ runData.estimate }}
         </span>
       </div>
-    </div>
-  </div>
+    </template>
+  </container>
 </template>
 
 <script lang="ts">
@@ -58,11 +39,16 @@ import { RunData, RunDataArray } from 'speedcontrol-util/types';
 import SpeedcontrolUtil from 'speedcontrol-util/browser';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import Container from './Container.vue';
 
 dayjs.extend(relativeTime);
 const sc = new SpeedcontrolUtil(nodecg);
 
-@Component
+@Component({
+  components: {
+    Container,
+  },
+})
 export default class extends Vue {
   @State runDataArray!: RunDataArray;
   @State upcomingRunID!: UpcomingRunID;

@@ -28,6 +28,8 @@ import { getCurrentEventShort } from '../../_misc/helpers';
 const otherStreamData = nodecg.Replicant('otherStreamData');
 const runDataActiveRun = nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol');
 const runDataArray = nodecg.Replicant('runDataArray', 'nodecg-speedcontrol');
+const bids = nodecg.Replicant('bids');
+const prizes = nodecg.Replicant('prizes');
 
 const newDonations = [];
 const newSubs = [];
@@ -53,6 +55,8 @@ export default {
       otherStreamData,
       runDataActiveRun,
       runDataArray,
+      bids,
+      prizes,
     ).then(() => {
       nodecg.listenFor('newSub', data => newSubs.push(data));
       nodecg.listenFor('newTweet', data => newTweets.push(data));

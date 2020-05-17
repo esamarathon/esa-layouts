@@ -37,7 +37,7 @@ $(() => {
       $('.prizeName', prizeElement).html(prize.name);
       $('.prizeProvider', prizeElement).html(prize.provided);
       $('.prizeMinDonation', prizeElement).html(formatDollarAmount(prize.minimumBid));
-      $('.prizeEnd', prizeElement).html(moment(prize.endTimestamp).format('Do HH:mm'));
+      $('.prizeEnd', prizeElement).html(moment.unix(prize.endTime / 1000).format('Do HH:mm'));
       prizesContainer.append(prizeElement);
     });
   });
@@ -234,7 +234,7 @@ $(() => {
 
   // calculate the time until the prize period ends and render it as a human readable string ("an hour", "20 minutes")
   function getPrizeTimeUntilString(prize) {
-    var timeUntil = moment(prize.endTimestamp).fromNow(true);
+    var timeUntil = moment.unix(prize.endTime / 1000).fromNow(true);
     timeUntil = timeUntil.replace('an ', ''); // Dirty fix for "Donate in the next an hour".
     timeUntil = timeUntil.replace('a ', ''); // Dirty fix for "Donate in the next a day".
     return timeUntil;

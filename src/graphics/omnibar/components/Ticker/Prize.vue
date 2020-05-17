@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     getPrizeTimeUntilString(prize) {
-      let timeUntil = moment(prize.endTimestamp).fromNow(true);
+      let timeUntil = moment.unix(prize.endTime / 1000).fromNow(true);
       timeUntil = timeUntil.replace('an ', ''); // Dirty fix for "Donate in the next an hour".
       timeUntil = timeUntil.replace('a ', ''); // Dirty fix for "Donate in the next a day".
       return timeUntil;

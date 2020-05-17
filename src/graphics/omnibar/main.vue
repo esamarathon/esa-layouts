@@ -10,8 +10,8 @@
     <divider></divider>
     <total></total>
     <divider></divider>
-    <sub-goal-met></sub-goal-met>
-    <divider></divider>
+    <!--<sub-goal-met></sub-goal-met>
+    <divider></divider>-->
     <ticker></ticker>
     <divider></divider>
     <clock></clock>

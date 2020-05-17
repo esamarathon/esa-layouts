@@ -20,7 +20,9 @@
         width: (width > 0) ? `${width}px` : 'inherit'
       }"
     >
-      {{ bid.name }} ({{ bid.description }}):
+      {{ bid.name }}<template v-if="bid.description">
+        &nbsp;({{ bid.description }})
+      </template>:
       <span v-if="!bid.war">
         {{ formatUSD(bid.total) }}/{{ formatUSD(bid.goal) }}
       </span>

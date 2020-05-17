@@ -35,9 +35,3 @@ import { Vue, Component } from 'vue-property-decorator';
 @Component
 export default class extends Vue {}
 </script>
-
-<style scoped>
-  .Content > div {
-    padding: 10px 0;
-  }
-</style>

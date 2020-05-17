@@ -38,12 +38,15 @@ const reps: {
 
 interface StateTypes {
   currentBid?: Tracker.FormattedBid;
+  currentPrize?: Tracker.FormattedPrize;
   bids: Bids;
+  prizes: Prizes;
 }
 
 export const store = new Vuex.Store({
   state: {
     bids: [],
+    prizes: [],
   } as StateTypes,
   mutations: {
     setState(state, { name, val }): void {
@@ -51,6 +54,9 @@ export const store = new Vuex.Store({
     },
     setCurrentBid(state, bid?: Tracker.FormattedBid): void {
       Vue.set(state, 'currentBid', bid);
+    },
+    setCurrentPrize(state, prize?: Tracker.FormattedPrize): void {
+      Vue.set(state, 'currentPrize', prize);
     },
   },
 });

@@ -58,11 +58,11 @@ export function setup(): void {
       {
         id: Math.floor(Math.random() * 1000),
         name: 'Test Prize Name',
-        // provided: 'Anonymous',
+        provided: 'Anonymous',
         minimumBid: Math.floor(Math.random() * 50),
-        // image: 'https://homepages.cae.wisc.edu/~ece533/images/cat.png',
+        image: 'https://homepages.cae.wisc.edu/~ece533/images/cat.png',
         // startTime: Date.now(),
-        // endTime: Date.now() + 21600000, // Now + 6 hours
+        endTime: Date.now() + 21600000, // Now + 6 hours
       },
     ];
   }

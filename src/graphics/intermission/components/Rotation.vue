@@ -20,6 +20,12 @@
           class="Slide"
           @end="showNextSlide()"
         />
+        <prize
+          v-else-if="currentSlide === 2"
+          :key="2"
+          class="Slide"
+          @end="showNextSlide()"
+        />
       </transition>
     </div>
   </div>
@@ -29,12 +35,14 @@
 import { Vue, Component } from 'vue-property-decorator';
 import UpcomingRuns from './rotation/UpcomingRuns.vue';
 import Bid from './rotation/Bid.vue';
+import Prize from './rotation/Prize.vue';
 import { setCurrentBid } from './rotation/Bid';
+import { setCurrentPrize } from './rotation/Prize';
 
 const componentKey = {
   UpcomingRuns: 0,
   Bid: 1,
-  // Prize: 2,
+  Prize: 2,
   // MediaSlide: 3,
 };
 
@@ -42,6 +50,7 @@ const componentKey = {
   components: {
     UpcomingRuns,
     Bid,
+    Prize,
   },
 })
 export default class extends Vue {
@@ -50,6 +59,8 @@ export default class extends Vue {
   showNextSlide(): void {
     const next = this.currentSlide + 1;
     if (next === 1 && setCurrentBid()) {
+      this.currentSlide = next;
+    } else if (next === 2 && setCurrentPrize()) {
       this.currentSlide = next;
     } else {
       this.currentSlide = 0;

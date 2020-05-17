@@ -10,7 +10,7 @@ import { store } from '../../store';
  * @param bid Formatted bid from the tracker.
  */
 function getBidWeight(bid: Tracker.FormattedBid): number {
-  return !!store.state.currentBid && store.state.currentBid.id === bid.id
+  return store.state.currentBid?.id === bid.id
     ? 0 : Math.max(
       Math.min(
         (10 * 60 * 1000) / ((bid.endTime || 0) - Date.now()),

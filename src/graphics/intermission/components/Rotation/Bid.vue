@@ -80,3 +80,9 @@ export default class extends Vue {
   }
 }
 </script>
+
+<style scoped>
+  .Content > * {
+    padding: 10px 0;
+  }
+</style>

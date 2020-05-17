@@ -39,9 +39,11 @@ import { RunData, RunDataArray } from 'speedcontrol-util/types';
 import SpeedcontrolUtil from 'speedcontrol-util/browser';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import utc from 'dayjs/plugin/utc';
 import Container from './Container.vue';
 
 dayjs.extend(relativeTime);
+dayjs.extend(utc);
 const sc = new SpeedcontrolUtil(nodecg);
 
 @Component({
@@ -75,7 +77,7 @@ export default class extends Vue {
     const prevTime = this.nextRuns
       .slice(0, -1)
       .reduce((prev, run) => prev + (run.estimateS || 0) + (run.setupTimeS || 0), 0);
-    return `Coming Up In About ${dayjs().second(0).to(dayjs().second(prevTime), true)}`;
+    return `Coming Up In About ${dayjs().to(dayjs.unix((Date.now() / 1000) + prevTime), true)}`;
   }
 }
 </script>

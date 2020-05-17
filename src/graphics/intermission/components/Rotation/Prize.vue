@@ -1,113 +1,89 @@
 <template>
-  <div
-    v-if="prize"
-    id="Prize"
-  >
-    <div class="Header">
+  <container v-if="prize">
+    <template v-slot:header>
       Prize Available
-    </div>
-    <div class="Body">
+    </template>
+    <template v-slot:content>
       <img
         v-if="prize.image"
-        class="Image"
         :src="prize.image"
+        :style="{
+          height: '400px',
+          'object-fit': 'contain',
+        }"
       >
-      <div class="Title">
-        {{ prize.name }} provided by {{ prize.provided }}
+      <div :style="{ 'font-size': '40px' }">
+        {{ prize.name }}
+        <template v-if="prize.provided">
+          provided by {{ prize.provided }}
+        </template>
       </div>
-      <div class="MinAmount">
+      <div :style="{ 'font-size': '30px' }">
         Minimum donation amount: {{ formatUSD(prize.minimumBid) }}
       </div>
-      <div class="Deadline">
-        Donate in the next {{ getPrizeTimeUntilString(prize) }}
+      <div
+        v-if="etaUntil"
+        :style="{ 'font-size': '30px' }"
+      >
+        Donate in the next {{ etaUntil }}
       </div>
-    </div>
-  </div>
+    </template>
+  </container>
 </template>
 
-<script>
-import moment from 'moment';
-import clone from 'clone';
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import { Tracker } from 'types';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import utc from 'dayjs/plugin/utc';
+import updateLocale from 'dayjs/plugin/updateLocale';
+import Container from '../Container.vue';
+import { formatUSD } from '../../../_misc/helpers';
 
-const prizes = nodecg.Replicant('prizes');
-
-export default {
-  name: 'Prize',
-  data() {
-    return {
-      prize: undefined,
-    };
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(updateLocale);
+// These locales may be updated for the whole page and that annoys me.
+dayjs.updateLocale('en', {
+  relativeTime: {
+    future: 'in %s',
+    past: '%s ago',
+    s: 'few seconds',
+    m: 'minute',
+    mm: '%d minutes',
+    h: 'hour',
+    hh: '%d hours',
+    d: 'day',
+    dd: '%d days',
+    M: 'month',
+    MM: '%d months',
+    y: 'year',
+    yy: '%d years',
   },
-  mounted() {
-    if (!prizes.value.length) {
+});
+
+@Component({
+  components: {
+    Container,
+  },
+})
+export default class extends Vue {
+  @State('currentPrize') prize!: Tracker.FormattedPrize | undefined;
+  formatUSD = formatUSD;
+
+  get etaUntil(): string | undefined {
+    return this.prize?.endTime ? dayjs.unix(this.prize.endTime / 1000).fromNow(true) : undefined;
+  }
+
+  mounted(): void {
+    // We should always have a prize, this is just a backup in case.
+    if (!this.prize) {
       this.$emit('end');
-      return;
+    } else {
+      window.setTimeout(() => this.$emit('end'), 20 * 1000);
     }
-    const randNum = Math.floor(Math.random() * prizes.value.length);
-    this.prize = clone(prizes.value[randNum]);
-    setTimeout(() => this.$emit('end'), 20 * 1000);
-  },
-  methods: {
-    formatUSD(amount) {
-      return `$${amount.toFixed(2)}`;
-    },
-    getPrizeTimeUntilString(prize) {
-      let timeUntil = moment(prize.endTimestamp).fromNow(true);
-      timeUntil = timeUntil.replace('an ', ''); // Dirty fix for "Donate in the next an hour".
-      timeUntil = timeUntil.replace('a ', ''); // Dirty fix for "Donate in the next a day".
-      return timeUntil;
-    },
-  },
-};
+  }
+}
 </script>
-
-<style>
-  #Prize {
-    position: absolute;
-    display: flex;
-    height: 100%;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
-  }
-
-  #Prize > .Header {
-    width: 100%;
-    font-weight: 500;
-    height: 60px;
-    line-height: 60px;
-    background-color: var(--border-colour);
-    color: white;
-    font-size: 41px;
-    text-transform: uppercase;
-  }
-
-  #Prize > .Body {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    flex: 1;
-    font-size: 41px;
-    background-color: rgba(0,0,0,0.3);
-  }
-
-  #Prize > .Body > .Image {
-    height: 400px;
-    object-fit: contain;
-  }
-
-  #Prize > .Body > .Title {
-    font-size: 40px;
-  }
-
-  #Prize > .Body > .MinAmount {
-    font-size: 30px;
-  }
-
-  #Prize > .Body > .Deadline {
-    font-size: 30px;
-  }
-</style>

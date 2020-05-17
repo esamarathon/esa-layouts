@@ -26,6 +26,12 @@
           class="Slide"
           @end="showNextSlide()"
         />
+        <media
+          v-else-if="currentSlide === 3"
+          :key="3"
+          class="Slide"
+          @end="showNextSlide()"
+        />
       </transition>
     </div>
   </div>
@@ -36,14 +42,16 @@ import { Vue, Component } from 'vue-property-decorator';
 import UpcomingRuns from './rotation/UpcomingRuns.vue';
 import Bid from './rotation/Bid.vue';
 import Prize from './rotation/Prize.vue';
+import Media from './rotation/Media.vue';
 import { setCurrentBid } from './rotation/Bid';
 import { setCurrentPrize } from './rotation/Prize';
+import { setCurrentMedia } from './Rotation/Media';
 
 const componentKey = {
   UpcomingRuns: 0,
   Bid: 1,
   Prize: 2,
-  // MediaSlide: 3,
+  MediaSlide: 3,
 };
 
 @Component({
@@ -51,6 +59,7 @@ const componentKey = {
     UpcomingRuns,
     Bid,
     Prize,
+    Media,
   },
 })
 export default class extends Vue {
@@ -61,6 +70,8 @@ export default class extends Vue {
     if (next === 1 && setCurrentBid()) {
       this.currentSlide = next;
     } else if (next === 2 && setCurrentPrize()) {
+      this.currentSlide = next;
+    } else if (next === 3 && setCurrentMedia()) {
       this.currentSlide = next;
     } else {
       this.currentSlide = 0;

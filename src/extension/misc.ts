@@ -62,16 +62,20 @@ evt.on('bigbuttonTagScanned', (data) => {
   }
 });
 
+let init = false;
 sc.runDataActiveRun.on('change', (newVal, oldVal) => {
-  // Reset the commentators when the run changes and not on the game layout scene.
-  if (oldVal?.id !== newVal?.id && obs.connected
-    && !obs.isCurrentScene(config.obs.names.scenes.gameLayout)) {
+  // Reset the commentators when the run changes and
+  // not on the game layout scene (if OBS is connected).
+  if (oldVal?.id !== newVal?.id && ((!obs.connected && init) || (obs.connected
+    && !obs.isCurrentScene(config.obs.names.scenes.gameLayout)))) {
     commentators.value.length = 0;
     nodecg().log.debug('[Misc] Cleared commentators');
   }
 
   // This will also be triggered on server start up.
   logRunChange(newVal);
+
+  init = true;
 });
 
 // Set the upcoming intermission video.

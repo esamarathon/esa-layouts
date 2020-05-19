@@ -44,6 +44,11 @@ const routes = [
     component: List.L_16x9_1p_LargeCam,
   },
   {
+    name: '16:9 1 Player (2 Cameras)',
+    path: '/16x9-1p-2cams',
+    component: List.L_16x9_1p_2Cams,
+  },
+  {
     name: '16:9 2 Player',
     path: '/16x9-2p',
     component: List.L_16x9_2p,

@@ -20,7 +20,17 @@
         left: '0px',
         top: '0px',
         width: '533px',
-        height: '650px',
+        height: '325px',
+      }"
+    />
+    <div
+      id="CameraCapture2"
+      class="Capture BorderTop"
+      :style="{
+        left: '0px',
+        top: '325px',
+        width: '533px',
+        height: '325px',
       }"
     />
 

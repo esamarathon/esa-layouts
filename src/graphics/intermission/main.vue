@@ -7,7 +7,7 @@
     <div id="Layout">
       <!-- Logo -->
       <div
-        class="Fixed"
+        class="Logo Fixed"
         :style="{
           left: '53px',
           top: '43px',
@@ -16,7 +16,6 @@
         }"
       >
         <img
-          src="./Logo.png"
           :style="{
             width: '100%',
             height: '100%',

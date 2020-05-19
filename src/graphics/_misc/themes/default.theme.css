@@ -92,6 +92,10 @@ body {
   font-size: 1.1em;
 }
 
+#Intermission .Logo > img {
+  content: url('./default/IntermissionLogo.png');
+}
+
 #Intermission .DonationReader .Mic,
 #Intermission .MusicTrack .MCat {
   background-color: #41245b;

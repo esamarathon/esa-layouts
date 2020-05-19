@@ -34,8 +34,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { UpcomingRunID } from 'schemas';
-import { RunData, RunDataArray } from 'speedcontrol-util/types';
+import { RunData } from 'speedcontrol-util/types';
 import SpeedcontrolUtil from 'speedcontrol-util/browser';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -44,7 +43,6 @@ import Container from './Container.vue';
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
-const sc = new SpeedcontrolUtil(nodecg);
 
 @Component({
   components: {
@@ -52,30 +50,18 @@ const sc = new SpeedcontrolUtil(nodecg);
   },
 })
 export default class extends Vue {
-  @State runDataArray!: RunDataArray;
-  @State upcomingRunID!: UpcomingRunID;
+  @State nextRuns!: RunData[];
+  @Prop({ default: undefined }) runData!: RunData | undefined;
   @Prop({ default: 0 }) slotNo!: number;
   getRunTotalPlayers = SpeedcontrolUtil.getRunTotalPlayers;
   formPlayerNamesStr = SpeedcontrolUtil.formPlayerNamesStr;
-
-  get nextRuns(): RunData[] {
-    const runIndex = sc.findRunIndex(this.upcomingRunID);
-    if (runIndex >= 0) {
-      return this.runDataArray.slice(runIndex, runIndex + this.slotNo + 1);
-    }
-    return [];
-  }
-
-  get runData(): RunData | undefined {
-    return this.nextRuns[this.slotNo];
-  }
 
   get etaUntil(): string {
     if (this.slotNo === 0) {
       return 'Coming Up Next';
     }
     const prevTime = this.nextRuns
-      .slice(0, -1)
+      .slice(0, this.slotNo)
       .reduce((prev, run) => prev + (run.estimateS || 0) + (run.setupTimeS || 0), 0);
     return `Coming Up In About ${dayjs().to(dayjs.unix((Date.now() / 1000) + prevTime), true)}`;
   }

@@ -2,7 +2,7 @@ import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import type { Bids, DonationReader, MusicPlayer, Prizes, SponsorLogos, UpcomingRunID } from 'schemas'; // eslint-disable-line object-curly-newline, max-len
 import SpeedcontrolUtil from 'speedcontrol-util/browser';
-import { RunDataArray, TwitchCommercialTimer } from 'speedcontrol-util/types';
+import { RunData, RunDataArray, TwitchCommercialTimer } from 'speedcontrol-util/types';
 import type { Asset, Tracker } from 'types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
@@ -37,9 +37,11 @@ const reps: {
 };
 
 interface StateTypes {
+  nextRuns: RunData[];
   currentBid?: Tracker.FormattedBid;
   currentPrize?: Tracker.FormattedPrize;
   currentMedia?: Asset;
+  upcomingRunID: UpcomingRunID;
   bids: Bids;
   prizes: Prizes;
   intermissionSlides: Asset[];
@@ -47,6 +49,8 @@ interface StateTypes {
 
 export const store = new Vuex.Store({
   state: {
+    nextRuns: [],
+    upcomingRunID: null,
     bids: [],
     prizes: [],
     intermissionSlides: [],
@@ -63,6 +67,9 @@ export const store = new Vuex.Store({
     },
     setCurrentMedia(state, media?: Asset): void {
       Vue.set(state, 'currentMedia', media);
+    },
+    setNextRuns(state, runs: RunData[]): void {
+      Vue.set(state, 'nextRuns', runs);
     },
   },
 });

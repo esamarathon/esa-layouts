@@ -47,6 +47,7 @@
       <!-- Upcoming Run -->
       <upcoming-run
         class="Fixed"
+        :run-data="nextRuns[0]"
         :style="{
           left: '718px',
           top: '31px',
@@ -86,6 +87,8 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import { RunData } from 'speedcontrol-util/types';
 // import { generateClipPath } from '../_misc/cut-background';
 import MediaBox from '../_misc/components/MediaBox.vue';
 import CommercialTimer from './components/CommercialTimer.vue';
@@ -105,6 +108,7 @@ import MusicTrack from './components/MusicTrack.vue';
   },
 })
 export default class extends Vue {
+  @State nextRuns!: RunData[];
   clipPath = 'unset';
 
   mounted(): void {

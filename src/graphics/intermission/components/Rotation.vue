@@ -47,13 +47,6 @@ import { setCurrentBid } from './rotation/Bid';
 import { setCurrentPrize } from './rotation/Prize';
 import { setCurrentMedia } from './Rotation/Media';
 
-const componentKey = {
-  UpcomingRuns: 0,
-  Bid: 1,
-  Prize: 2,
-  MediaSlide: 3,
-};
-
 @Component({
   components: {
     UpcomingRuns,
@@ -64,18 +57,33 @@ const componentKey = {
 })
 export default class extends Vue {
   currentSlide = 0;
+  next = 0;
 
   showNextSlide(): void {
-    const next = this.currentSlide + 1;
-    if (next === 1 && setCurrentBid()) {
-      this.currentSlide = next;
-    } else if (next === 2 && setCurrentPrize()) {
-      this.currentSlide = next;
-    } else if (next === 3 && setCurrentMedia()) {
-      this.currentSlide = next;
-    } else {
+    this.next = this.next < 3 ? this.next + 1 : 0;
+
+    // Upcoming Runs (always has something to display)
+    if (this.next === 0) {
       this.currentSlide = 0;
+      return;
     }
+    // Bid
+    if (this.next === 1 && setCurrentBid()) {
+      this.currentSlide = 1;
+      return;
+    }
+    // Prize
+    if (this.next === 2 && setCurrentPrize()) {
+      this.currentSlide = 2;
+      return;
+    }
+    // Media
+    if (this.next === 3 && setCurrentMedia()) {
+      this.currentSlide = 3;
+      return;
+    }
+
+    this.showNextSlide();
   }
 }
 </script>

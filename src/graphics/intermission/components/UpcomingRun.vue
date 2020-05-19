@@ -61,7 +61,7 @@ export default class extends Vue {
       return 'Coming Up Next';
     }
     const prevTime = this.nextRuns
-      .slice(0, this.slotNo)
+      .slice(0, this.slotNo) // This gets all runs before this one.
       .reduce((prev, run) => prev + (run.estimateS || 0) + (run.setupTimeS || 0), 0);
     return `Coming Up In About ${dayjs().to(dayjs.unix((Date.now() / 1000) + prevTime), true)}`;
   }

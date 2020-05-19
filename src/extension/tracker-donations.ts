@@ -87,7 +87,7 @@ export function setup(): void {
         id: Math.floor(Math.random() * 1000),
         name: 'Anonymous',
         amount: Math.random() * 1000,
-        // comment: 'This is a test comment.',
+        comment: 'This is a test comment.',
         timestamp: Date.now(),
       },
     ];

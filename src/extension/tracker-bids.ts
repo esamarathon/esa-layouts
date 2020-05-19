@@ -124,11 +124,11 @@ export function setup(): void {
       {
         id: Math.floor(Math.random() * 1000),
         name: 'Test Goal',
-        // description: 'This is a test description.',
+        description: 'This is a test description.',
         total: randGoal / 2,
         goal: randGoal,
-        // game: 'Test Game',
-        // category: 'Test Category',
+        game: 'Test Game',
+        category: 'Test Category',
         endTime: Date.now() + 21600000, // Now + 6 hours
         war: false,
         allowUserOptions: false,
@@ -137,10 +137,10 @@ export function setup(): void {
       {
         id: randBidWarID,
         name: 'Test Bid War',
-        // description: 'This is a test description.',
+        description: 'This is a test description.',
         total: randBidWarAmount,
-        // game: 'Test Game',
-        // category: 'Test Category',
+        game: 'Test Game',
+        category: 'Test Category',
         endTime: Date.now() + 21600000, // Now + 6 hours
         war: true,
         allowUserOptions: false,
@@ -162,10 +162,10 @@ export function setup(): void {
       {
         id: randBidWarID + 1,
         name: 'Test Bid War',
-        // description: 'This is a test description.',
+        description: 'This is a test description.',
         total: randBidWarAmount,
-        // game: 'Test Game',
-        // category: 'Test Category',
+        game: 'Test Game',
+        category: 'Test Category',
         endTime: Date.now() + 21600000, // Now + 6 hours
         war: true,
         allowUserOptions: true,

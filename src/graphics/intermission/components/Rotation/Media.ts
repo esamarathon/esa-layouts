@@ -4,6 +4,7 @@ let index = 0;
 
 /**
  * Sets the current image/video to be shown.
+ * Currently just cycles through all available assets in "order".
  */
 export function setCurrentMedia(): boolean {
   if (!store.state.intermissionSlides.length) {

@@ -23,9 +23,7 @@ function processRawPrizes(rawPrizes: Tracker.Prize[]): Tracker.FormattedPrize[] 
       startTime: startTime ? Date.parse(startTime) : undefined,
       endTime: endTime ? Date.parse(endTime) : undefined,
     };
-    // Only add prize if applicable right now.
-  }).filter((prize) => !!prize.startTime && !!prize.endTime
-    && Date.now() > prize.startTime && Date.now() < prize.endTime);
+  });
 }
 
 // Get the prizes from the API.
@@ -58,11 +56,29 @@ export function setup(): void {
       {
         id: Math.floor(Math.random() * 1000),
         name: 'Test Prize Name',
+        provided: 'Anonymous (Old)',
+        minimumBid: Math.floor(Math.random() * 50),
+        image: 'https://homepages.cae.wisc.edu/~ece533/images/airplane.png',
+        startTime: Date.now() - 43200000, // Now - 12 hours
+        endTime: Date.now() - 21600000, // Now + 6 hours
+      },
+      {
+        id: Math.floor(Math.random() * 1000),
+        name: 'Test Prize Name (Active)',
         provided: 'Anonymous',
         minimumBid: Math.floor(Math.random() * 50),
         image: 'https://homepages.cae.wisc.edu/~ece533/images/cat.png',
-        // startTime: Date.now(),
+        startTime: Date.now(),
         endTime: Date.now() + 21600000, // Now + 6 hours
+      },
+      {
+        id: Math.floor(Math.random() * 1000),
+        name: 'Test Prize Name (Future)',
+        provided: 'Anonymous',
+        minimumBid: Math.floor(Math.random() * 50),
+        image: 'https://homepages.cae.wisc.edu/~ece533/images/tulips.png',
+        startTime: Date.now() + 21600000, // Now + 6 hours
+        endTime: Date.now() + 43200000, // Now + 12 hours
       },
     ];
   }

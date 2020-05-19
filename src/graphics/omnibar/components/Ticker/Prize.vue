@@ -40,8 +40,13 @@ export default {
     if (!prizes.value.length) {
       this.$emit('end');
     } else {
-      const randNum = Math.floor(Math.random() * prizes.value.length);
-      this.prize = clone(prizes.value[randNum]);
+      // We only want to show prizes that are actually applicable right now!
+      const activePrizes = prizes.value.filter((prize) => (
+        !!prize.startTime && !!prize.endTime
+        && Date.now() > prize.startTime && Date.now() < prize.endTime
+      ));
+      const randNum = Math.floor(Math.random() * activePrizes.length);
+      this.prize = clone(activePrizes[randNum]);
       clearTimeout(fallback);
       setTimeout(() => this.$emit('end'), 25 * 1000);
     }

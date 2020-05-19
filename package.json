@@ -115,10 +115,10 @@
         "headerColor": "#c49215"
       },
       {
-        "name": "sponsor-logo-control",
-        "title": "Sponsor Logo Control",
+        "name": "media-box-control",
+        "title": "Media Box Control",
         "width": 3,
-        "file": "sponsor-logo-control.html",
+        "file": "media-box-control.html",
         "workspace": "ESA",
         "headerColor": "#c49215"
       },
@@ -245,8 +245,8 @@
     ],
     "assetCategories": [
       {
-        "name": "sponsor-logos",
-        "title": "Sponsor Logos",
+        "name": "media-box-images",
+        "title": "Media Box Images",
         "allowedTypes": [
           "jpg",
           "jpeg",

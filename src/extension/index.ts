@@ -29,7 +29,7 @@ export = (nodecg: NodeCG): { obs: any } => {
   require('./streamdeck-buttons');
   require('./timer');
   require('./restream-view');
-  require('./sponsors');
+  require('./media-box');
   require('./text-to-speech');
   require('./twitch-ext');
   // require('./twitch-subs');

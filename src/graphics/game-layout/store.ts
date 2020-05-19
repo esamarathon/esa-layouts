@@ -1,6 +1,6 @@
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import type { Commentators, DonationReader, GameLayouts, NameCycle, NotableDonations, SponsorLogos } from 'schemas'; // eslint-disable-line object-curly-newline, max-len
+import type { Commentators, DonationReader, GameLayouts, MediaBox, NameCycle, NotableDonations } from 'schemas'; // eslint-disable-line object-curly-newline, max-len
 import SpeedcontrolUtil from 'speedcontrol-util/browser';
 import type { RunDataActiveRun, Timer } from 'speedcontrol-util/types';
 import type { Asset } from 'types';
@@ -13,8 +13,8 @@ Vue.use(Vuex);
 // Replicants and their types
 const reps: {
   gameLayouts: ReplicantBrowser<GameLayouts>;
-  sponsorLogoAssets: ReplicantBrowser<Asset[]>;
-  sponsorLogos: ReplicantBrowser<SponsorLogos>;
+  mediaBoxImages: ReplicantBrowser<Asset[]>;
+  mediaBox: ReplicantBrowser<MediaBox>;
   commentators: ReplicantBrowser<Commentators>;
   donationReader: ReplicantBrowser<DonationReader>;
   nameCycle: ReplicantBrowser<NameCycle>;
@@ -24,8 +24,8 @@ const reps: {
   [k: string]: ReplicantBrowser<unknown>;
 } = {
   gameLayouts: nodecg.Replicant('gameLayouts'),
-  sponsorLogoAssets: nodecg.Replicant('assets:sponsor-logos'),
-  sponsorLogos: nodecg.Replicant('sponsorLogos'),
+  mediaBoxImages: nodecg.Replicant('assets:media-box-images'),
+  mediaBox: nodecg.Replicant('mediaBox'),
   commentators: nodecg.Replicant('commentators'),
   donationReader: nodecg.Replicant('donationReader'),
   nameCycle: nodecg.Replicant('nameCycle'),

@@ -29,22 +29,22 @@
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { SponsorLogos } from 'schemas';
+import { MediaBox } from 'schemas';
 import { Asset } from 'types';
 
 @Component
 export default class extends Vue {
-  @State sponsorLogoAssets!: Asset[];
-  @State sponsorLogos!: SponsorLogos;
+  @State mediaBoxImages!: Asset[];
+  @State mediaBox!: MediaBox;
   currentLoaded: { id: string; url: string } | null = null;
 
   get current(): { id: string; url: string } | undefined {
-    if (!this.sponsorLogoAssets) {
+    if (!this.mediaBoxImages) {
       return undefined;
     }
-    const asset = this.sponsorLogoAssets.find((s) => s.sum === this.sponsorLogos.current?.sum);
-    return asset && this.sponsorLogos.current ? {
-      id: this.sponsorLogos.current.id,
+    const asset = this.mediaBoxImages.find((s) => s.sum === this.mediaBox.current?.sum);
+    return asset && this.mediaBox.current ? {
+      id: this.mediaBox.current.id,
       url: asset.url,
     } : undefined;
   }

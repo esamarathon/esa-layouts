@@ -1,6 +1,6 @@
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import type { SponsorLogos } from 'schemas';
+import type { MediaBox } from 'schemas';
 import type { Asset } from 'types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
@@ -10,21 +10,21 @@ Vue.use(Vuex);
 // Replicants and their types
 const reps: {
   logos: ReplicantBrowser<Asset[]>;
-  settings: ReplicantBrowser<SponsorLogos>;
+  settings: ReplicantBrowser<MediaBox>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
-  logos: nodecg.Replicant('assets:sponsor-logos'),
-  settings: nodecg.Replicant('sponsorLogos'),
+  logos: nodecg.Replicant('assets:media-box-images'),
+  settings: nodecg.Replicant('mediaBox'),
 };
 
 // Types for mutations/actions below
-export type UpdateNewRotation = (arr: SponsorLogos['rotation']) => void;
+export type UpdateNewRotation = (arr: MediaBox['rotation']) => void;
 export type Save = () => void;
 
 const store = new Vuex.Store({
   state: {
     disableSave: false,
-    newRotation: [] as SponsorLogos['rotation'],
+    newRotation: [] as MediaBox['rotation'],
   },
   mutations: {
     setState(state, { name, val }): void {
@@ -54,7 +54,7 @@ Object.keys(reps).forEach((key) => {
 
 export default async function (): Promise<Store<{
   disableSave: boolean;
-  newRotation: SponsorLogos['rotation'];
+  newRotation: MediaBox['rotation'];
 }>> {
   return NodeCG.waitForReplicants(
     ...Object.keys(reps).map((key) => reps[key]),

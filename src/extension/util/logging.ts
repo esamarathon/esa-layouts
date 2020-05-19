@@ -1,11 +1,11 @@
 import type { NodeCG as mqTypes } from '@esamarathon/mq-events/types';
 import type { Configschema } from 'configschema';
-import type { SponsorLogos } from 'schemas';
+import type { MediaBox } from 'schemas';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';
 import { get as nodecg } from './nodecg';
 import { send as mqSend } from './rabbitmq';
-import { assetsSponsorLogos, sponsorLogos } from './replicants';
+import { assetsMediaBoxImages, mediaBox } from './replicants';
 
 const config = nodecg().bundleConfig as Configschema;
 const sc = new SpeedcontrolUtil(nodecg());
@@ -78,9 +78,9 @@ export function logRunChange(run?: RunData): void {
  * Logos the current sponsor logo when triggered.
  * @param logo Sponsor logo object.
  */
-export function logSponsorLogoChange(logo?: SponsorLogos['current'] | null): void {
-  const logoInfo = sponsorLogos.value.rotation.find((l) => l.id === logo?.id);
-  const asset = assetsSponsorLogos.value.find((a) => a.sum === logo?.sum);
+export function logSponsorLogoChange(logo?: MediaBox['current'] | null): void {
+  const logoInfo = mediaBox.value.rotation.find((l) => l.id === logo?.id);
+  const asset = assetsMediaBoxImages.value.find((a) => a.sum === logo?.sum);
   mqSend(
     'sponsor.logo.changed',
     {

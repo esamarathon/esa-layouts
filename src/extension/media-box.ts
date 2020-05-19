@@ -2,7 +2,7 @@ import type { Configschema } from 'configschema';
 import { logSponsorLogoChange } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { sponsorLogos } from './util/replicants';
+import { mediaBox } from './util/replicants';
 
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 
@@ -12,7 +12,7 @@ const obsConfig = (nodecg().bundleConfig as Configschema).obs;
  * @param id ID of sponsor logo in rotation.
  */
 function getLength(id: string): number {
-  const logo = sponsorLogos.value.rotation.find((i) => i.id === id);
+  const logo = mediaBox.value.rotation.find((i) => i.id === id);
   return logo ? logo.seconds * 1000 : -1;
 }
 
@@ -21,9 +21,9 @@ function getLength(id: string): number {
  * 0 if for some reason nothing can be located correctly.
  */
 function getNextIndex(): number {
-  const indexID = sponsorLogos.value.rotation
-    .findIndex((i) => i.id === sponsorLogos.value.current?.id);
-  return indexID >= 0 ? indexID + 1 : ((sponsorLogos.value.current?.index || -1) + 1);
+  const indexID = mediaBox.value.rotation
+    .findIndex((i) => i.id === mediaBox.value.current?.id);
+  return indexID >= 0 ? indexID + 1 : ((mediaBox.value.current?.index || -1) + 1);
 }
 
 /**
@@ -48,21 +48,21 @@ function doesSceneHaveSponsorLogos(name?: string): boolean {
  * Cycle to the next logo in the rotation, or set it to null if none available.
  */
 function cycle(): void {
-  if (!sponsorLogos.value.rotation.length) {
+  if (!mediaBox.value.rotation.length) {
     nodecg().log.debug('[Sponsors] No logos in rotation to cycle to, will wait');
-    sponsorLogos.value.current = null;
+    mediaBox.value.current = null;
   } else {
-    const index = getNextIndex() < sponsorLogos.value.rotation.length ? getNextIndex() : 0;
-    sponsorLogos.value.current = {
-      id: sponsorLogos.value.rotation[index].id,
-      sum: sponsorLogos.value.rotation[index].sum,
+    const index = getNextIndex() < mediaBox.value.rotation.length ? getNextIndex() : 0;
+    mediaBox.value.current = {
+      id: mediaBox.value.rotation[index].id,
+      sum: mediaBox.value.rotation[index].sum,
       index,
       timestamp: Date.now(),
     };
   }
   // Log the logo change if on a relevant scene.
   if (obs.streaming && doesSceneHaveSponsorLogos(obs.currentScene)) {
-    logSponsorLogoChange(sponsorLogos.value.current);
+    logSponsorLogoChange(mediaBox.value.current);
   }
 }
 
@@ -70,13 +70,13 @@ function cycle(): void {
  * This runs every second, all of the time.
  */
 function update(): void {
-  if (!sponsorLogos.value.current) {
-    if (sponsorLogos.value.rotation.length) {
+  if (!mediaBox.value.current) {
+    if (mediaBox.value.rotation.length) {
       nodecg().log.debug('[Sponsors] Logos added to rotation, will cycle');
       cycle();
     }
-  } else if (sponsorLogos.value.current.timestamp
-      + getLength(sponsorLogos.value.current.id) <= Date.now()) {
+  } else if (mediaBox.value.current.timestamp
+      + getLength(mediaBox.value.current.id) <= Date.now()) {
     nodecg().log.debug('[Sponsors] Current logo time finished, will cycle');
     cycle();
   }
@@ -85,9 +85,9 @@ function update(): void {
 // Will log sponsors changing when going live/going offline if needed.
 obs.on('streamingStatusChanged', (streaming, old) => {
   if (doesSceneHaveSponsorLogos(obs.currentScene)
-    && sponsorLogos.value.current && typeof old === 'boolean') {
+    && mediaBox.value.current && typeof old === 'boolean') {
     if (streaming) {
-      logSponsorLogoChange(sponsorLogos.value.current);
+      logSponsorLogoChange(mediaBox.value.current);
     } else {
       logSponsorLogoChange();
     }
@@ -96,11 +96,11 @@ obs.on('streamingStatusChanged', (streaming, old) => {
 
 // Will log sponsors changing when the scene changes if needed.
 obs.on('currentSceneChanged', (current, last) => {
-  if (obs.streaming && sponsorLogos.value.current && last) {
+  if (obs.streaming && mediaBox.value.current && last) {
     const currentHas = doesSceneHaveSponsorLogos(current);
     const lastHas = doesSceneHaveSponsorLogos(last);
     if (currentHas && !lastHas) {
-      logSponsorLogoChange(sponsorLogos.value.current);
+      logSponsorLogoChange(mediaBox.value.current);
     } else if (!currentHas && lastHas) {
       logSponsorLogoChange();
     }

@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-toolbar-title>
-      Available Logos
+      Available Images
     </v-toolbar-title>
     <v-card
       v-if="!logos.length"
@@ -30,7 +30,7 @@
       </v-card>
     </draggable>
     <v-toolbar-title :style="{ 'margin-top': '20px' }">
-      Logo Rotation
+      Rotation
     </v-toolbar-title>
     <v-card
       v-if="!newRotation.length"
@@ -117,7 +117,7 @@ import Draggable from 'vuedraggable';
 import { Asset } from 'types';
 import clone from 'clone';
 import { v4 as uuid } from 'uuid';
-import { SponsorLogos } from 'schemas';
+import { MediaBox } from 'schemas';
 import { Save, UpdateNewRotation } from './store';
 
 @Component({
@@ -127,14 +127,14 @@ import { Save, UpdateNewRotation } from './store';
 })
 export default class extends Vue {
   @State logos!: Asset[];
-  @State settings!: SponsorLogos;
+  @State settings!: MediaBox;
   @State disableSave!: boolean;
-  @State('newRotation') newRotationState!: SponsorLogos['rotation'];
+  @State('newRotation') newRotationState!: MediaBox['rotation'];
   @Mutation updateNewRotation!: UpdateNewRotation;
   @Action save!: Save;
   timeLeft = 0;
 
-  get newRotation(): SponsorLogos['rotation'] {
+  get newRotation(): MediaBox['rotation'] {
     return this.newRotationState;
   }
   set newRotation(val) {
@@ -160,7 +160,7 @@ export default class extends Vue {
     setInterval(this.updateTimeLeft, 1000);
   }
 
-  cloneLogo(original: Asset): SponsorLogos['rotation'][0] {
+  cloneLogo(original: Asset): MediaBox['rotation'][0] {
     return {
       id: uuid(),
       sum: original.sum,

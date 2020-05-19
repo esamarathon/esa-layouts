@@ -1,6 +1,6 @@
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import type { Bids, DonationReader, MusicPlayer, Prizes, SponsorLogos, UpcomingRunID } from 'schemas'; // eslint-disable-line object-curly-newline, max-len
+import type { Bids, DonationReader, MediaBox, MusicPlayer, Prizes, UpcomingRunID } from 'schemas'; // eslint-disable-line object-curly-newline, max-len
 import SpeedcontrolUtil from 'speedcontrol-util/browser';
 import { RunData, RunDataArray, TwitchCommercialTimer } from 'speedcontrol-util/types';
 import type { Asset, Tracker } from 'types';
@@ -15,8 +15,8 @@ const reps: {
   upcomingRunID: ReplicantBrowser<UpcomingRunID>;
   musicPlayer: ReplicantBrowser<MusicPlayer>;
   donationReader: ReplicantBrowser<DonationReader>;
-  sponsorLogoAssets: ReplicantBrowser<Asset[]>;
-  sponsorLogos: ReplicantBrowser<SponsorLogos>;
+  mediaBoxImages: ReplicantBrowser<Asset[]>;
+  mediaBox: ReplicantBrowser<MediaBox>;
   bids: ReplicantBrowser<Bids>;
   prizes: ReplicantBrowser<Prizes>;
   intermissionSlides: ReplicantBrowser<Asset[]>;
@@ -27,8 +27,8 @@ const reps: {
   upcomingRunID: nodecg.Replicant('upcomingRunID'),
   musicPlayer: nodecg.Replicant('musicPlayer'),
   donationReader: nodecg.Replicant('donationReader'),
-  sponsorLogoAssets: nodecg.Replicant('assets:sponsor-logos'),
-  sponsorLogos: nodecg.Replicant('sponsorLogos'),
+  mediaBoxImages: nodecg.Replicant('assets:media-box-images'),
+  mediaBox: nodecg.Replicant('mediaBox'),
   bids: nodecg.Replicant('bids'),
   prizes: nodecg.Replicant('prizes'),
   intermissionSlides: nodecg.Replicant('assets:intermission-slides'),

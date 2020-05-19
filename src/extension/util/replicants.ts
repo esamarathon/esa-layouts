@@ -1,13 +1,13 @@
 /* eslint-disable max-len */
 
-import type { Bids, CapturePositions, Commentators, DonationsToRead, DonationTotal, GameLayouts, MusicPlayer, NameCycle, NotableDonations, ObsData, OtherStreamData, Prizes, RestreamViewerTool, SponsorLogos, StreamDeckData, TtsVoices, TwitchSubscribers, UpcomingRunID, VideoPlayer } from 'schemas'; // eslint-disable-line object-curly-newline
+import type { Bids, CapturePositions, Commentators, DonationsToRead, DonationTotal, GameLayouts, MediaBox, MusicPlayer, NameCycle, NotableDonations, ObsData, OtherStreamData, Prizes, RestreamViewerTool, StreamDeckData, TtsVoices, TwitchSubscribers, UpcomingRunID, VideoPlayer } from 'schemas'; // eslint-disable-line object-curly-newline
 import type { Asset } from 'types';
 import type { TwitchAPIData } from '../../../../nodecg-speedcontrol/schemas';
 import { get as nodecg } from './nodecg';
 
 export const assetsIntermissionSlides = nodecg().Replicant<Asset[]>('assets:intermission-slides');
 export const assetsMusic = nodecg().Replicant<Asset[]>('assets:music');
-export const assetsSponsorLogos = nodecg().Replicant<Asset[]>('assets:sponsor-logos');
+export const assetsMediaBoxImages = nodecg().Replicant<Asset[]>('assets:media-box-images');
 export const assetsVideos = nodecg().Replicant<Asset[]>('assets:videos');
 export const bids = nodecg().Replicant<Bids>('bids', { persistent: false });
 export const capturePositions = nodecg().Replicant<CapturePositions>('capturePositions');
@@ -15,6 +15,7 @@ export const commentators = nodecg().Replicant<Commentators>('commentators');
 export const donationsToRead = nodecg().Replicant<DonationsToRead>('donationsToRead', { persistent: false });
 export const donationTotal = nodecg().Replicant<DonationTotal>('donationTotal');
 export const gameLayouts = nodecg().Replicant<GameLayouts>('gameLayouts');
+export const mediaBox = nodecg().Replicant<MediaBox>('mediaBox');
 // @ts-ignore: persistenceInterval not typed yet
 export const musicPlayer = nodecg().Replicant<MusicPlayer>('musicPlayer', { persistenceInterval: 1000 });
 export const nameCycle = nodecg().Replicant<NameCycle>('nameCycle', { persistent: false });
@@ -23,7 +24,6 @@ export const obsData = nodecg().Replicant<ObsData>('obsData', { persistent: fals
 export const otherStreamData = nodecg().Replicant<OtherStreamData>('otherStreamData');
 export const prizes = nodecg().Replicant<Prizes>('prizes', { persistent: false });
 export const restreamViewerTool = nodecg().Replicant<RestreamViewerTool>('restreamViewerTool');
-export const sponsorLogos = nodecg().Replicant<SponsorLogos>('sponsorLogos');
 export const streamDeckData = nodecg().Replicant<StreamDeckData>('streamDeckData');
 export const ttsVoices = nodecg().Replicant<TtsVoices>('ttsVoices');
 export const twitchSubscribers = nodecg().Replicant<TwitchSubscribers>('twitchSubscribers');

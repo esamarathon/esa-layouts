@@ -1,6 +1,6 @@
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import type { Commentators, GameLayouts, NameCycle, NotableDonations, SponsorLogos } from 'schemas'; // eslint-disable-line object-curly-newline, max-len
+import type { Commentators, DonationReader, GameLayouts, NameCycle, NotableDonations, SponsorLogos } from 'schemas'; // eslint-disable-line object-curly-newline, max-len
 import SpeedcontrolUtil from 'speedcontrol-util/browser';
 import type { RunDataActiveRun, Timer } from 'speedcontrol-util/types';
 import type { Asset } from 'types';
@@ -16,6 +16,7 @@ const reps: {
   sponsorLogoAssets: ReplicantBrowser<Asset[]>;
   sponsorLogos: ReplicantBrowser<SponsorLogos>;
   commentators: ReplicantBrowser<Commentators>;
+  donationReader: ReplicantBrowser<DonationReader>;
   nameCycle: ReplicantBrowser<NameCycle>;
   notableDonations: ReplicantBrowser<NotableDonations>;
   timer: ReplicantBrowser<Timer>;
@@ -26,6 +27,7 @@ const reps: {
   sponsorLogoAssets: nodecg.Replicant('assets:sponsor-logos'),
   sponsorLogos: nodecg.Replicant('sponsorLogos'),
   commentators: nodecg.Replicant('commentators'),
+  donationReader: nodecg.Replicant('donationReader'),
   nameCycle: nodecg.Replicant('nameCycle'),
   notableDonations: nodecg.Replicant('notableDonations'),
   timer: sc.timer,

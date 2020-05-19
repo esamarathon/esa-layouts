@@ -4,7 +4,10 @@ import { Configschema } from 'configschema';
 
 const { theme } = (nodecg.bundleConfig as Configschema).event;
 const defaultTheme = require('./themes/default.theme.css');
+const together = require('./themes/together.theme.css');
 
 defaultTheme.use();
 
-// More themes will be included here when added.
+if (theme === 'together') {
+  together.use();
+}

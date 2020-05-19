@@ -124,7 +124,7 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'; // eslint-disable-line object-curly-newline, max-len
 import { State } from 'vuex-class';
-import fitty from 'fitty';
+import fitty, { FittyInstance } from 'fitty';
 import { NameCycle } from 'schemas';
 import { RunDataActiveRun } from 'speedcontrol-util/types';
 import { RunDataTeam, RunDataPlayer } from 'nodecg-speedcontrol/types'; // should expose in sc-util
@@ -139,6 +139,7 @@ export default class extends Vue {
   player: RunDataPlayer | null = null;
   playerIndex = 0;
   nameCycle = 0; // "Local" name cycle used so we can let flags load.
+  fittyPlayer: FittyInstance | undefined;
 
   updateTeam(): void {
     if (this.coop && typeof this.slotNo === 'number') {
@@ -177,7 +178,7 @@ export default class extends Vue {
   fit(): void {
     const elem = this.$refs.Player as HTMLElement;
     if (elem) {
-      fitty('.PlayerText', {
+      [this.fittyPlayer] = fitty('.PlayerText', {
         minSize: 1,
         maxSize: parseInt(elem.style.fontSize, 0),
       });
@@ -191,6 +192,12 @@ export default class extends Vue {
 
   mounted(): void {
     this.fit();
+  }
+
+  destroyed(): void {
+    if (this.fittyPlayer) {
+      this.fittyPlayer.unsubscribe();
+    }
   }
 
   @Watch('runData')

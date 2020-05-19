@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="runData"
+    v-show="runData"
     ref="RunInfo"
     class="FlexColumn"
     :style="{
@@ -18,7 +18,7 @@
       :style="{ width: '100%' }"
     >
       <div
-        v-if="runData.game"
+        v-show="runData.game"
         class="RunGame"
         :style="{
           'font-size': '1em',
@@ -33,6 +33,7 @@
       :style="{ width: '100%' }"
     >
       <div
+        v-show="runData.category || runData.system || runData.estimate"
         class="RunInfoExtra"
         :style="{
           'font-size': '0.8em', // Also gets set in the script, here as backup.
@@ -50,23 +51,25 @@
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'; // eslint-disable-line object-curly-newline, max-len
 import { State } from 'vuex-class';
 import { RunDataActiveRun } from 'speedcontrol-util/types';
-import fitty from 'fitty';
+import fitty, { FittyInstance } from 'fitty';
 
 @Component
 export default class extends Vue {
   @State('runDataActiveRun') runData!: RunDataActiveRun;
   @Prop(Boolean) readonly noWrap!: boolean;
   lineHeight: string | null = null;
+  fittyGame: FittyInstance | undefined;
+  fittyInfoExtra: FittyInstance | undefined;
 
   fit(): void {
     const elem = this.$refs.RunInfo as HTMLElement;
     if (elem) {
       if (!this.noWrap) {
-        fitty('.RunGame', {
+        [this.fittyGame] = fitty('.RunGame', {
           minSize: 1,
           maxSize: parseInt(elem.style.fontSize, 0),
         });
-        fitty('.RunInfoExtra', {
+        [this.fittyInfoExtra] = fitty('.RunInfoExtra', {
           minSize: 1,
           maxSize: parseInt(elem.style.fontSize, 0) * 0.8,
         });
@@ -85,6 +88,15 @@ export default class extends Vue {
 
   mounted(): void {
     this.fit();
+  }
+
+  destroyed(): void {
+    if (this.fittyGame) {
+      this.fittyGame.unsubscribe();
+    }
+    if (this.fittyInfoExtra) {
+      this.fittyInfoExtra.unsubscribe();
+    }
   }
 
   @Watch('runData')

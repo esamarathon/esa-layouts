@@ -42,7 +42,7 @@ export default class extends Vue {
     if (!this.mediaBoxImages) {
       return undefined;
     }
-    const asset = this.mediaBoxImages.find((s) => s.sum === this.mediaBox.current?.sum);
+    const asset = this.mediaBoxImages.find((s) => s.sum === this.mediaBox.current?.mediaUUID);
     return asset && this.mediaBox.current ? {
       id: this.mediaBox.current.id,
       url: asset.url,

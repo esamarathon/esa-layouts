@@ -55,8 +55,8 @@ export function setup(): void {
     prizes.value = [
       {
         id: Math.floor(Math.random() * 1000),
-        name: 'Test Prize Name',
-        provided: 'Anonymous (Old)',
+        name: 'Test Prize Name (Old)',
+        provided: 'Anonymous',
         minimumBid: Math.floor(Math.random() * 50),
         image: 'https://homepages.cae.wisc.edu/~ece533/images/airplane.png',
         startTime: Date.now() - 43200000, // Now - 12 hours

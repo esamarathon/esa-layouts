@@ -1,6 +1,6 @@
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import type { MediaBox } from 'schemas';
+import type { MediaBox, Prizes } from 'schemas';
 import type { Asset } from 'types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
@@ -9,11 +9,13 @@ Vue.use(Vuex);
 
 // Replicants and their types
 const reps: {
-  logos: ReplicantBrowser<Asset[]>;
+  images: ReplicantBrowser<Asset[]>;
+  prizes: ReplicantBrowser<Prizes>;
   settings: ReplicantBrowser<MediaBox>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
-  logos: nodecg.Replicant('assets:media-box-images'),
+  images: nodecg.Replicant('assets:media-box-images'),
+  prizes: nodecg.Replicant('prizes'),
   settings: nodecg.Replicant('mediaBox'),
 };
 

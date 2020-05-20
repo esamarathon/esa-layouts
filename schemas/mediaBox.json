@@ -1,5 +1,57 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
+  "definitions": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "image",
+        "prize",
+        "prize_generic"
+      ]
+    },
+    "mediaActive": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "$ref": "#/definitions/type"
+            },
+            "id": {
+              "type": "string"
+            },
+            "mediaUUID": {
+              "type": "string"
+            },
+            "index": {
+              "type": "number"
+            },
+            "timestamp": {
+              "type": "number",
+              "default": 0
+            },
+            "timeElapsed": {
+              "type": "number",
+              "default": 0
+            }
+          },
+          "required": [
+            "type",
+            "id",
+            "mediaUUID",
+            "index",
+            "timestamp",
+            "timeElapsed"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -9,10 +61,13 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "sum": {
-            "type": "string"
+          "type": {
+            "$ref": "#/definitions/type"
           },
           "id": {
+            "type": "string"
+          },
+          "mediaUUID": {
             "type": "string"
           },
           "seconds": {
@@ -20,44 +75,16 @@
           }
         },
         "required": [
-          "sum",
+          "type",
           "id",
+          "mediaUUID",
           "seconds"
         ]
       },
       "default": []
     },
     "current": {
-      "oneOf": [
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "sum": {
-              "type": "string"
-            },
-            "index": {
-              "type": "number"
-            },
-            "timestamp": {
-              "type": "number"
-            }
-          },
-          "required": [
-            "id",
-            "sum",
-            "index",
-            "timestamp"
-          ]
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null
+      "$ref": "#/definitions/mediaActive"
     }
   },
   "required": [

@@ -7,17 +7,17 @@ import { mediaBox } from './util/replicants';
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 
 /**
- * Get the length in milliseconds a sponsor logo should remain,
+ * Get the length in milliseconds a piece of media should remain,
  * -1 if we cannot find it in the rotation.
- * @param id ID of sponsor logo in rotation.
+ * @param id ID of media in rotation.
  */
 function getLength(id: string): number {
-  const logo = mediaBox.value.rotation.find((i) => i.id === id);
-  return logo ? logo.seconds * 1000 : -1;
+  const media = mediaBox.value.rotation.find((i) => i.id === id);
+  return media ? media.seconds * 1000 : -1;
 }
 
 /**
- * Get the index of the next sponsor logo in the rotation,
+ * Get the index of the next piece of media in the rotation,
  * 0 if for some reason nothing can be located correctly.
  */
 function getNextIndex(): number {
@@ -45,19 +45,21 @@ function doesSceneHaveSponsorLogos(name?: string): boolean {
 }
 
 /**
- * Cycle to the next logo in the rotation, or set it to null if none available.
+ * Cycle to the next piece of media in the rotation, or delete if none is available.
  */
 function cycle(): void {
   if (!mediaBox.value.rotation.length) {
-    nodecg().log.debug('[Sponsors] No logos in rotation to cycle to, will wait');
+    nodecg().log.debug('[Media Box] No media in rotation to cycle to, will wait');
     mediaBox.value.current = null;
   } else {
     const index = getNextIndex() < mediaBox.value.rotation.length ? getNextIndex() : 0;
     mediaBox.value.current = {
+      type: mediaBox.value.rotation[index].type,
       id: mediaBox.value.rotation[index].id,
-      sum: mediaBox.value.rotation[index].sum,
+      mediaUUID: mediaBox.value.rotation[index].mediaUUID,
       index,
       timestamp: Date.now(),
+      timeElapsed: 0,
     };
   }
   // Log the logo change if on a relevant scene.
@@ -72,13 +74,19 @@ function cycle(): void {
 function update(): void {
   if (!mediaBox.value.current) {
     if (mediaBox.value.rotation.length) {
-      nodecg().log.debug('[Sponsors] Logos added to rotation, will cycle');
+      nodecg().log.debug('[Media Box] Media added to rotation, will cycle');
       cycle();
     }
-  } else if (mediaBox.value.current.timestamp
-      + getLength(mediaBox.value.current.id) <= Date.now()) {
-    nodecg().log.debug('[Sponsors] Current logo time finished, will cycle');
-    cycle();
+  } else {
+    const addedTime = Date.now() - mediaBox.value.current.timestamp;
+    const timeElapsed = mediaBox.value.current.timeElapsed + addedTime;
+    if (getLength(mediaBox.value.current.id) <= timeElapsed) {
+      nodecg().log.debug('[Media Box] Current media time finished, will cycle');
+      cycle();
+    } else {
+      mediaBox.value.current.timestamp = Date.now();
+      mediaBox.value.current.timeElapsed = timeElapsed;
+    }
   }
 }
 

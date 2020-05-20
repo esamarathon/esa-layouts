@@ -1,10 +1,11 @@
 <template>
   <v-app>
+    <!-- Available Images -->
     <v-toolbar-title>
       Available Images
     </v-toolbar-title>
     <v-card
-      v-if="!logos.length"
+      v-if="!images.length"
       :style="{
         'text-align': 'center',
         padding: '5px',
@@ -16,19 +17,53 @@
     </v-card>
     <draggable
       v-else
-      :list="logos"
-      :group="{ name: 'logos', pull: 'clone', put: false }"
+      :list="images"
+      :group="{ name: 'media', pull: 'clone', put: false }"
       :sort="false"
-      :clone="cloneLogo"
+      :clone="cloneImage"
     >
       <v-card
-        v-for="logo in logos"
-        :key="logo.sum"
+        v-for="image in images"
+        :key="image.sum"
         :style="{ 'text-align': 'center', padding: '5px', 'margin-top': '10px' }"
       >
-        {{ logo.name }}
+        {{ image.name }}
       </v-card>
     </draggable>
+
+    <!-- Available Prizes -->
+    <v-toolbar-title :style="{ 'margin-top': '20px' }">
+      Available Prizes
+    </v-toolbar-title>
+    <v-card
+      v-if="!prizes.length"
+      :style="{
+        'text-align': 'center',
+        padding: '5px',
+        'margin-top': '10px',
+        'font-style': 'italic',
+      }"
+    >
+      No prizes available from the tracker.
+    </v-card>
+    <template v-else>
+      <draggable
+        :list="prizes"
+        :group="{ name: 'media', pull: 'clone', put: false }"
+        :sort="false"
+        :clone="clonePrize"
+      >
+        <v-card
+          v-for="prize in prizes"
+          :key="prize.id"
+          :style="{ 'text-align': 'center', padding: '5px', 'margin-top': '10px' }"
+        >
+          {{ prize.name }}
+        </v-card>
+      </draggable>
+    </template>
+
+    <!-- Editable list of media in the rotation. -->
     <v-toolbar-title :style="{ 'margin-top': '20px' }">
       Rotation
     </v-toolbar-title>
@@ -41,15 +76,15 @@
         'font-style': 'italic',
       }"
     >
-      Drag logos from above to here to configure.
+      Drag elements from above to here to configure.
     </v-card>
     <draggable
       v-model="newRotation"
-      group="logos"
+      group="media"
     >
       <v-card
-        v-for="(logo, i) in newRotation"
-        :key="logo.id"
+        v-for="(media, i) in newRotation"
+        :key="media.id"
         :style="{ 'text-align': 'center', padding: '5px', 'margin-top': '10px' }"
         class="d-flex"
       >
@@ -57,10 +92,10 @@
           class="flex-grow-1 d-flex align-center justify-start"
           :style="{ 'padding-left': '5px' }"
         >
-          {{ getAssetDetails(logo.sum).name }}
+          {{ getMediaDetails(media).name }}
         </div>
         <v-text-field
-          v-model="logo.seconds"
+          v-model="media.seconds"
           class="pa-0 ma-0 flex-shrink-1"
           type="number"
           hide-details
@@ -75,6 +110,8 @@
         </v-icon>
       </v-card>
     </draggable>
+
+    <!-- Save Button -->
     <v-btn
       :loading="disableSave"
       :disabled="disableSave"
@@ -83,6 +120,8 @@
     >
       Save
     </v-btn>
+
+    <!-- Information on current media, displayed at the bottom. -->
     <div
       v-if="!settings.current"
       :style="{
@@ -92,7 +131,7 @@
         'font-style': 'italic',
       }"
     >
-      No sponsor logo currently in rotation.
+      No media currently in rotation.
     </div>
     <div
       v-else
@@ -103,9 +142,10 @@
       }"
     >
       <span class="font-weight-bold">Current:</span>
-      {{ getAssetDetails(settings.current.sum).name }}
+      {{ getMediaDetails(settings.current).name }}
       <br>(position {{ currentPosition }}/{{ settings.rotation.length }},
-      {{ timeLeft }}/{{ getLength(settings.current.id) }}s left)
+      {{ Math.round(getLength(settings.current.id)
+        - (settings.current.timeElapsed / 1000)) }}/{{ getLength(settings.current.id) }}s left)
     </div>
   </v-app>
 </template>
@@ -114,10 +154,10 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { State, Action, Mutation } from 'vuex-class';
 import Draggable from 'vuedraggable';
-import { Asset } from 'types';
+import { Asset, Tracker } from 'types';
 import clone from 'clone';
 import { v4 as uuid } from 'uuid';
-import { MediaBox } from 'schemas';
+import { MediaBox, Prizes } from 'schemas';
 import { Save, UpdateNewRotation } from './store';
 
 @Component({
@@ -126,13 +166,13 @@ import { Save, UpdateNewRotation } from './store';
   },
 })
 export default class extends Vue {
-  @State logos!: Asset[];
+  @State images!: Asset[];
+  @State prizes!: Prizes;
   @State settings!: MediaBox;
   @State disableSave!: boolean;
   @State('newRotation') newRotationState!: MediaBox['rotation'];
   @Mutation updateNewRotation!: UpdateNewRotation;
   @Action save!: Save;
-  timeLeft = 0;
 
   get newRotation(): MediaBox['rotation'] {
     return this.newRotationState;
@@ -145,25 +185,23 @@ export default class extends Vue {
     return this.settings.rotation.find((i) => i.id === id)?.seconds || 0;
   }
 
-  updateTimeLeft(): void {
-    if (this.settings.current) {
-      this.timeLeft = Math.floor((this.settings.current.timestamp / 1000)
-        + this.getLength(this.settings.current.id) - (Date.now() / 1000));
-    } else {
-      this.timeLeft = 0;
-    }
-  }
-
   created(): void {
     this.newRotation = clone(this.settings.rotation);
-    this.updateTimeLeft();
-    setInterval(this.updateTimeLeft, 1000);
   }
 
-  cloneLogo(original: Asset): MediaBox['rotation'][0] {
+  cloneImage(original: Asset): MediaBox['rotation'][0] {
+    return this.clone('image', original.sum);
+  }
+
+  clonePrize(original: Tracker.FormattedPrize): MediaBox['rotation'][0] {
+    return this.clone('prize', original.id.toString());
+  }
+
+  clone(type: 'image' | 'prize', mediaUUID: string): MediaBox['rotation'][0] {
     return {
+      type,
       id: uuid(),
-      sum: original.sum,
+      mediaUUID,
       seconds: 60,
     };
   }
@@ -174,8 +212,16 @@ export default class extends Vue {
     return indexID >= 0 ? indexID + 1 : ((this.settings.current?.index || -1) + 1);
   }
 
-  getAssetDetails(sum: string): Asset | {} {
-    return this.logos.find((l) => l.sum === sum) || {};
+  getMediaDetails(media: MediaBox['rotation'][0]): { name?: string } {
+    let details: Asset | Tracker.FormattedPrize | undefined;
+    if (media.type === 'image') {
+      details = this.images.find((l) => l.sum === media.mediaUUID);
+    } else if (media.type === 'prize') {
+      details = this.prizes.find((p) => p.id.toString() === media.mediaUUID);
+    }
+    return details ? {
+      name: details.name,
+    } : {};
   }
 
   parseSeconds(i: number): void {

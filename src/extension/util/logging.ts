@@ -78,14 +78,14 @@ export function logRunChange(run?: RunData): void {
  * Logos the current sponsor logo when triggered.
  * @param logo Sponsor logo object.
  */
-export function logSponsorLogoChange(logo?: MediaBox['current'] | null): void {
+export function logSponsorLogoChange(logo?: MediaBox['current']): void {
   const logoInfo = mediaBox.value.rotation.find((l) => l.id === logo?.id);
-  const asset = assetsMediaBoxImages.value.find((a) => a.sum === logo?.sum);
+  const asset = assetsMediaBoxImages.value.find((a) => a.sum === logo?.mediaUUID);
   mqSend(
     'sponsor.logo.changed',
     {
-      logo: asset?.name,
-      length: logoInfo?.seconds,
+      logo: logo?.type === 'image' ? asset?.name : undefined,
+      length: logo?.type === 'image' ? logoInfo?.seconds : undefined,
     } as mqTypes.SponsorLogoChanged,
   );
 }

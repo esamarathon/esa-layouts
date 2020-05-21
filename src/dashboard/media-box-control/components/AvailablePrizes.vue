@@ -9,47 +9,50 @@
     >
       No prizes available from the tracker.
     </media-card>
-    <template v-else>
-      <!-- All Prizes -->
-      <draggable
-        :list="prizes"
-        :group="{ name: 'media', pull: 'clone', put: false }"
-        :sort="false"
-        :clone="clone"
+    <!-- All Prizes -->
+    <draggable
+      v-else
+      :list="prizes"
+      :group="{ name: 'media', pull: 'clone', put: false }"
+      :sort="false"
+      :clone="clone"
+    >
+      <media-card
+        v-for="prize in prizes"
+        :key="prize.id"
+        class="d-flex"
       >
-        <media-card
-          v-for="prize in prizes"
-          :key="prize.id"
-          class="d-flex"
+        <applicable-icon :is-applicable="isPrizeApplicable(prize)" />
+        <div
+          class="flex-grow-1"
           :title="prize.name"
         >
-          <applicable-icon :is-applicable="isPrizeApplicable(prize)" />
-          <div class="flex-grow-1">
-            {{ prize.name }}
-          </div>
-        </media-card>
-      </draggable>
+          {{ prize.name }}
+        </div>
+      </media-card>
+    </draggable>
 
-      <!-- Generic Prize Slide -->
-      <draggable
-        :list="['generic_prize']"
-        :group="{ name: 'media', pull: 'clone', put: false }"
-        :sort="false"
-        :clone="cloneGeneric"
+    <!-- Generic Prize Slide -->
+    <draggable
+      :list="['generic_prize']"
+      :group="{ name: 'media', pull: 'clone', put: false }"
+      :sort="false"
+      :clone="cloneGeneric"
+    >
+      <media-card
+        key="generic_prize"
+        class="d-flex"
+        :style="{ 'font-weight': '500' }"
       >
-        <media-card
-          key="generic_prize"
-          class="d-flex"
+        <applicable-icon :is-applicable="!!prizes.length" />
+        <div
+          class="flex-grow-1"
           title="Generic Prize Slide"
-          :style="{ 'font-weight': '500' }"
         >
-          <applicable-icon :is-applicable="!!prizes.length" />
-          <div class="flex-grow-1">
-            Generic Prize Slide
-          </div>
-        </media-card>
-      </draggable>
-    </template>
+          Generic Prize Slide
+        </div>
+      </media-card>
+    </draggable>
   </div>
 </template>
 

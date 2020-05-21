@@ -25,9 +25,10 @@
           :style="{
             'overflow': 'hidden',
             'font-weight': media.type === 'prize_generic' ? '500' : undefined,
+            'font-style': !getMediaDetails(media).name ? 'italic' : undefined,
           }"
         >
-          {{ getMediaDetails(media).name }}
+          {{ getMediaDetails(media).name || 'Could not find media name.' }}
         </div>
         <div class="d-flex">
           <v-text-field

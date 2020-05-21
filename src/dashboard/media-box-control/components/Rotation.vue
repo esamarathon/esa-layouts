@@ -23,9 +23,8 @@
           class="d-flex align-center justify-center flex-grow-1"
           :title="getMediaDetails(media).name"
           :style="{
-            'padding-left': '5px',
-            'white-space': 'nowrap',
             'overflow': 'hidden',
+            'font-weight': media.type === 'prize_generic' ? '500' : undefined,
           }"
         >
           {{ getMediaDetails(media).name }}

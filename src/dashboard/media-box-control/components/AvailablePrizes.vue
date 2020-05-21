@@ -10,6 +10,7 @@
       No prizes available from the tracker.
     </media-card>
     <template v-else>
+      <!-- All Prizes -->
       <draggable
         :list="prizes"
         :group="{ name: 'media', pull: 'clone', put: false }"
@@ -25,6 +26,26 @@
           <applicable-icon :is-applicable="isPrizeApplicable(prize)" />
           <div class="flex-grow-1">
             {{ prize.name }}
+          </div>
+        </media-card>
+      </draggable>
+
+      <!-- Generic Prize Slide -->
+      <draggable
+        :list="['generic_prize']"
+        :group="{ name: 'media', pull: 'clone', put: false }"
+        :sort="false"
+        :clone="cloneGeneric"
+      >
+        <media-card
+          key="generic_prize"
+          class="d-flex"
+          title="Generic Prize Slide"
+          :style="{ 'font-weight': '500' }"
+        >
+          <applicable-icon :is-applicable="!!prizes.length" />
+          <div class="flex-grow-1">
+            Generic Prize Slide
           </div>
         </media-card>
       </draggable>
@@ -55,6 +76,10 @@ export default class extends Vue {
 
   clone(original: Tracker.FormattedPrize): MediaBox['rotation'][0] {
     return clone('prize', original.id.toString());
+  }
+
+  cloneGeneric(): MediaBox['rotation'][0] {
+    return clone('prize_generic');
   }
 }
 </script>

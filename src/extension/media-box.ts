@@ -93,10 +93,13 @@ function update(): void {
   } else {
     const addedTime = Date.now() - mediaBox.value.current.timestamp;
     const timeElapsed = mediaBox.value.current.timeElapsed + addedTime;
-    if (getLength(mediaBox.value.current.id) <= timeElapsed) {
+    const index = mediaBox.value.rotationApplicable
+      .findIndex((i) => i.id === mediaBox.value.current?.id);
+    if (index < 0 || getLength(mediaBox.value.current.id) <= timeElapsed) {
       nodecg().log.debug('[Media Box] Current media time finished, will cycle');
       cycle();
     } else {
+      mediaBox.value.current.index = index;
       mediaBox.value.current.timestamp = Date.now();
       mediaBox.value.current.timeElapsed = timeElapsed;
     }

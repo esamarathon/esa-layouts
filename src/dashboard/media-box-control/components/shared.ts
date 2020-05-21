@@ -5,6 +5,11 @@ import { store } from '../store';
 
 export function getMediaDetails(media: MediaBox['rotation'][0]): { name?: string } {
   let details: Asset | Tracker.FormattedPrize | undefined;
+  if (media.type === 'prize_generic') {
+    return {
+      name: 'Generic Prize Slide',
+    };
+  }
   if (media.type === 'image') {
     details = store.state.images.find((l) => l.sum === media.mediaUUID);
   } else if (media.type === 'prize') {
@@ -15,11 +20,14 @@ export function getMediaDetails(media: MediaBox['rotation'][0]): { name?: string
   } : {};
 }
 
-export function clone(type: 'image' | 'prize', mediaUUID: string): MediaBox['rotation'][0] {
+export function clone(
+  type: 'image' | 'prize' | 'prize_generic',
+  mediaUUID?: string,
+): MediaBox['rotation'][0] {
   return {
     type,
     id: uuid(),
-    mediaUUID,
+    mediaUUID: mediaUUID || '0',
     seconds: 60,
   };
 }

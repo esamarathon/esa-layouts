@@ -45,9 +45,8 @@ export default class extends Vue {
   }
 
   get position(): number {
-    const indexID = this.settings.rotationApplicable
-      .findIndex((i) => i.id === this.settings.current?.id);
-    return indexID >= 0 ? indexID + 1 : ((this.settings.current?.index || -1) + 1);
+    const index = this.settings.current?.index;
+    return typeof index === 'number' ? index + 1 : -1;
   }
 }
 </script>

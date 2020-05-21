@@ -19,15 +19,24 @@ const reps: {
   settings: nodecg.Replicant('mediaBox'),
 };
 
+interface StateTypes {
+  images: Asset[];
+  prizes: Prizes;
+  disableSave: boolean;
+  newRotation: MediaBox['rotation'];
+}
+
 // Types for mutations/actions below
 export type UpdateNewRotation = (arr: MediaBox['rotation']) => void;
 export type Save = () => void;
 
-const store = new Vuex.Store({
+export const store = new Vuex.Store({
   state: {
+    images: [],
+    prizes: [],
     disableSave: false,
-    newRotation: [] as MediaBox['rotation'],
-  },
+    newRotation: [],
+  } as StateTypes,
   mutations: {
     setState(state, { name, val }): void {
       Vue.set(state, name, val);
@@ -54,10 +63,7 @@ Object.keys(reps).forEach((key) => {
   });
 });
 
-export default async function (): Promise<Store<{
-  disableSave: boolean;
-  newRotation: MediaBox['rotation'];
-}>> {
+export default async function (): Promise<Store<StateTypes>> {
   return NodeCG.waitForReplicants(
     ...Object.keys(reps).map((key) => reps[key]),
   ).then(() => store);

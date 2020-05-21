@@ -54,7 +54,7 @@ export function setup(): void {
     // Test Data
     prizes.value = [
       {
-        id: Math.floor(Math.random() * 1000),
+        id: 624,
         name: 'Test Prize Name (Old)',
         provided: 'Anonymous',
         minimumBid: Math.floor(Math.random() * 50),
@@ -63,7 +63,7 @@ export function setup(): void {
         endTime: Date.now() - 21600000, // Now + 6 hours
       },
       {
-        id: Math.floor(Math.random() * 1000),
+        id: 32,
         name: 'Test Prize Name (Active)',
         provided: 'Anonymous',
         minimumBid: Math.floor(Math.random() * 50),
@@ -72,7 +72,7 @@ export function setup(): void {
         endTime: Date.now() + 21600000, // Now + 6 hours
       },
       {
-        id: Math.floor(Math.random() * 1000),
+        id: 878,
         name: 'Test Prize Name (Future)',
         provided: 'Anonymous',
         minimumBid: Math.floor(Math.random() * 50),

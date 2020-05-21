@@ -2,7 +2,7 @@ import type { Configschema } from 'configschema';
 import { logSponsorLogoChange } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { mediaBox } from './util/replicants';
+import { mediaBox, prizes } from './util/replicants';
 
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 
@@ -12,7 +12,7 @@ const obsConfig = (nodecg().bundleConfig as Configschema).obs;
  * @param id ID of media in rotation.
  */
 function getLength(id: string): number {
-  const media = mediaBox.value.rotation.find((i) => i.id === id);
+  const media = mediaBox.value.rotationApplicable.find((i) => i.id === id);
   return media ? media.seconds * 1000 : -1;
 }
 
@@ -21,7 +21,7 @@ function getLength(id: string): number {
  * 0 if for some reason nothing can be located correctly.
  */
 function getNextIndex(): number {
-  const indexID = mediaBox.value.rotation
+  const indexID = mediaBox.value.rotationApplicable
     .findIndex((i) => i.id === mediaBox.value.current?.id);
   return indexID >= 0 ? indexID + 1 : ((mediaBox.value.current?.index || -1) + 1);
 }
@@ -48,15 +48,15 @@ function doesSceneHaveSponsorLogos(name?: string): boolean {
  * Cycle to the next piece of media in the rotation, or delete if none is available.
  */
 function cycle(): void {
-  if (!mediaBox.value.rotation.length) {
+  if (!mediaBox.value.rotationApplicable.length) {
     nodecg().log.debug('[Media Box] No media in rotation to cycle to, will wait');
     mediaBox.value.current = null;
   } else {
-    const index = getNextIndex() < mediaBox.value.rotation.length ? getNextIndex() : 0;
+    const index = getNextIndex() < mediaBox.value.rotationApplicable.length ? getNextIndex() : 0;
     mediaBox.value.current = {
-      type: mediaBox.value.rotation[index].type,
-      id: mediaBox.value.rotation[index].id,
-      mediaUUID: mediaBox.value.rotation[index].mediaUUID,
+      type: mediaBox.value.rotationApplicable[index].type,
+      id: mediaBox.value.rotationApplicable[index].id,
+      mediaUUID: mediaBox.value.rotationApplicable[index].mediaUUID,
       index,
       timestamp: Date.now(),
       timeElapsed: 0,
@@ -72,8 +72,21 @@ function cycle(): void {
  * This runs every second, all of the time.
  */
 function update(): void {
+  const rotationApplicableLengthOld = mediaBox.value.rotationApplicable.length;
+  mediaBox.value.rotationApplicable = mediaBox.value.rotation.filter((m) => {
+    if (m.type !== 'prize') {
+      return true;
+    }
+    // We only want to show prizes that are actually applicable right now!
+    const prize = prizes.value.find((p) => p.id.toString() === m.mediaUUID);
+    return !!(prize && prize.startTime && prize.endTime
+    && Date.now() > prize.startTime && Date.now() < prize.endTime);
+  });
+  if (mediaBox.value.rotationApplicable.length !== rotationApplicableLengthOld) {
+    nodecg().log.debug('[Media Box] Applicable rotation length changed');
+  }
   if (!mediaBox.value.current) {
-    if (mediaBox.value.rotation.length) {
+    if (mediaBox.value.rotationApplicable.length) {
       nodecg().log.debug('[Media Box] Media added to rotation, will cycle');
       cycle();
     }

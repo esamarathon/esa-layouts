@@ -6,6 +6,12 @@
  */
 
 export type Type = "image" | "prize" | "prize_generic";
+export type Rotation = {
+  type: Type;
+  id: string;
+  mediaUUID: string;
+  seconds: number;
+}[];
 export type MediaActive = {
   type: Type;
   id: string;
@@ -16,11 +22,7 @@ export type MediaActive = {
 } | null;
 
 export interface MediaBox {
-  rotation: {
-    type: Type;
-    id: string;
-    mediaUUID: string;
-    seconds: number;
-  }[];
+  rotation: Rotation;
+  rotationApplicable: Rotation;
   current: MediaActive;
 }

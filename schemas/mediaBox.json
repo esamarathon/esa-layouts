@@ -9,6 +9,34 @@
         "prize_generic"
       ]
     },
+    "rotation": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "$ref": "#/definitions/type"
+          },
+          "id": {
+            "type": "string"
+          },
+          "mediaUUID": {
+            "type": "string"
+          },
+          "seconds": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "mediaUUID",
+          "seconds"
+        ]
+      },
+      "default": []
+    },
     "mediaActive": {
       "oneOf": [
         {
@@ -56,32 +84,10 @@
   "additionalProperties": false,
   "properties": {
     "rotation": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "type": {
-            "$ref": "#/definitions/type"
-          },
-          "id": {
-            "type": "string"
-          },
-          "mediaUUID": {
-            "type": "string"
-          },
-          "seconds": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "type",
-          "id",
-          "mediaUUID",
-          "seconds"
-        ]
-      },
-      "default": []
+      "$ref": "#/definitions/rotation"
+    },
+    "rotationApplicable": {
+      "$ref": "#/definitions/rotation"
     },
     "current": {
       "$ref": "#/definitions/mediaActive"
@@ -89,6 +95,7 @@
   },
   "required": [
     "rotation",
+    "rotationApplicable",
     "current"
   ]
 }

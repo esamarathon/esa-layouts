@@ -1,8 +1,9 @@
 import type { Configschema } from 'configschema';
+import { Tracker } from 'types';
 import { logSponsorLogoChange } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { mediaBox, prizes } from './util/replicants';
+import { assetsMediaBoxImages, mediaBox, prizes } from './util/replicants';
 
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 
@@ -24,6 +25,23 @@ function getNextIndex(): number {
   const indexID = mediaBox.value.rotationApplicable
     .findIndex((i) => i.id === mediaBox.value.current?.id);
   return indexID >= 0 ? indexID + 1 : ((mediaBox.value.current?.index || -1) + 1);
+}
+
+/**
+ * Returns if a prize should be shown or not.
+ * @param prize Formatted prize object from the tracker.
+ */
+function isPrizeApplicable(prize?: Tracker.FormattedPrize): boolean {
+  return !!(prize && prize.startTime && prize.endTime
+    && Date.now() > prize.startTime && Date.now() < prize.endTime);
+}
+
+/**
+ * Returns a random applicable prize if one is available.
+ */
+function getRandomPrize(): Tracker.FormattedPrize | undefined {
+  const applicablePrizes = prizes.value.filter((p) => isPrizeApplicable(p));
+  return applicablePrizes[Math.floor(Math.random() * applicablePrizes.length)];
 }
 
 /**
@@ -53,10 +71,13 @@ function cycle(): void {
     mediaBox.value.current = null;
   } else {
     const index = getNextIndex() < mediaBox.value.rotationApplicable.length ? getNextIndex() : 0;
+    const media = mediaBox.value.rotationApplicable[index];
+    const uuid = media.type === 'prize_generic'
+      ? (getRandomPrize()?.id.toString() || '-1') : media.mediaUUID;
     mediaBox.value.current = {
-      type: mediaBox.value.rotationApplicable[index].type,
-      id: mediaBox.value.rotationApplicable[index].id,
-      mediaUUID: mediaBox.value.rotationApplicable[index].mediaUUID,
+      type: media.type,
+      id: media.id,
+      mediaUUID: uuid,
       index,
       timestamp: Date.now(),
       timeElapsed: 0,
@@ -74,13 +95,19 @@ function cycle(): void {
 function update(): void {
   const rotationApplicableLengthOld = mediaBox.value.rotationApplicable.length;
   mediaBox.value.rotationApplicable = mediaBox.value.rotation.filter((m) => {
-    if (m.type !== 'prize') {
-      return true;
+    // Only rotate to image if the asset actually exists.
+    if (m.type === 'image') {
+      return !!assetsMediaBoxImages.value.find((i) => i.sum === m.mediaUUID);
     }
-    // We only want to show prizes that are actually applicable right now!
-    const prize = prizes.value.find((p) => p.id.toString() === m.mediaUUID);
-    return !!(prize && prize.startTime && prize.endTime
-    && Date.now() > prize.startTime && Date.now() < prize.endTime);
+    // Only show the generic prize element if there are applicable prizes to fill it with.
+    if (m.type === 'prize_generic') {
+      return !!prizes.value.filter((p) => isPrizeApplicable(p)).length;
+    }
+    // Only show prize if applicable right now.
+    if (m.type === 'prize') {
+      return isPrizeApplicable(prizes.value.find((p) => p.id.toString() === m.mediaUUID));
+    }
+    return false;
   });
   if (mediaBox.value.rotationApplicable.length !== rotationApplicableLengthOld) {
     nodecg().log.debug('[Media Box] Applicable rotation length changed');

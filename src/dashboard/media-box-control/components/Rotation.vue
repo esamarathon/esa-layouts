@@ -55,6 +55,7 @@ import { State, Mutation } from 'vuex-class';
 import Draggable from 'vuedraggable';
 import clone from 'clone';
 import { MediaBox, Prizes } from 'schemas';
+import { Asset } from 'types';
 import MediaCard from './MediaCard.vue';
 import ApplicableIcon from './ApplicableIcon.vue';
 import { UpdateNewRotation } from '../store';
@@ -68,6 +69,7 @@ import { getMediaDetails, isPrizeApplicable } from './shared';
   },
 })
 export default class extends Vue {
+  @State images!: Asset[];
   @State prizes!: Prizes;
   @State('newRotation') newRotationState!: MediaBox['rotation'];
   @Mutation updateNewRotation!: UpdateNewRotation;
@@ -87,11 +89,19 @@ export default class extends Vue {
   }
 
   isApplicable(media: MediaBox['rotation'][0]): boolean {
-    if (media.type !== 'prize') {
-      return true;
+    // Only applicable if the asset actually exists.
+    if (media.type === 'image') {
+      return !!this.images.find((i) => i.sum === media.mediaUUID);
     }
-    const prize = this.prizes.find((p) => p.id.toString() === media.mediaUUID);
-    return prize ? isPrizeApplicable(prize) : false;
+    // Generic prize element only applicable if there are applicable prizes to fill it with.
+    if (media.type === 'prize_generic') {
+      return !!this.prizes.filter((p) => isPrizeApplicable(p)).length;
+    }
+    // Check if prize is applicable using other function.
+    if (media.type === 'prize') {
+      return isPrizeApplicable(this.prizes.find((p) => p.id.toString() === media.mediaUUID));
+    }
+    return false;
   }
 
   parseSeconds(i: number): void {

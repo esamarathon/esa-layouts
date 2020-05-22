@@ -3,6 +3,10 @@ import { Asset, Tracker } from 'types';
 import { v4 as uuid } from 'uuid';
 import { store } from '../store';
 
+/**
+ * Returns details about a piece of media from rotation if found.
+ * @param media Media from rotation you wish to query information on.
+ */
 export function getMediaDetails(media: MediaBox['rotation'][0]): { name?: string } {
   let details: Asset | Tracker.FormattedPrize | undefined;
   if (media.type === 'prize_generic') {
@@ -20,6 +24,11 @@ export function getMediaDetails(media: MediaBox['rotation'][0]): { name?: string
   } : {};
 }
 
+/**
+ * Used by VueDraggble to properly clone items.
+ * @param type Type of item to be cloned.
+ * @param mediaUUID UUID of media, sum of image, ID of prize etc.
+ */
 export function clone(
   type: 'image' | 'prize' | 'prize_generic',
   mediaUUID?: string,
@@ -27,12 +36,16 @@ export function clone(
   return {
     type,
     id: uuid(),
-    mediaUUID: mediaUUID || '0',
+    mediaUUID: mediaUUID || '-1',
     seconds: 60,
   };
 }
 
-export function isPrizeApplicable(prize: Tracker.FormattedPrize): boolean {
+/**
+ * Returns if a prize should be shown or not.
+ * @param prize Formatted prize object from the tracker.
+ */
+export function isPrizeApplicable(prize?: Tracker.FormattedPrize): boolean {
   return !!(prize && prize.startTime && prize.endTime
   && Date.now() > prize.startTime && Date.now() < prize.endTime);
 }

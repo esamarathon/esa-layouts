@@ -44,7 +44,7 @@
         class="d-flex"
         :style="{ 'font-weight': '500' }"
       >
-        <applicable-icon :is-applicable="!!prizes.length" />
+        <applicable-icon :is-applicable="!!prizes.filter((p) => isPrizeApplicable(p)).length" />
         <div
           class="flex-grow-1"
           title="Generic Prize Slide"

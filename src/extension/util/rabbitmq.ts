@@ -1,4 +1,4 @@
-import { Tracker } from '@esamarathon/mq-events/types';
+import { OmnibarModeration, Tracker } from '@esamarathon/mq-events/types';
 import amqpConnectionManager from 'amqp-connection-manager';
 import type { AmqpConnectionManager, ChannelWrapper } from 'amqp-connection-manager';
 import amqplib from 'amqplib';
@@ -133,9 +133,11 @@ function initTest(): void {
   /* eslint-disable @typescript-eslint/camelcase */
   const testData: {
     donationFullyProcessed: Tracker.DonationFullyProcessed;
+    newScreenedSub: OmnibarModeration.NewScreenedSub;
+    newScreenedCheer: OmnibarModeration.NewScreenedCheer;
   } = {
     donationFullyProcessed: {
-      event: 'testevt',
+      event: 'testevt1',
       _id: Math.floor(Math.random() * 1000),
       donor_visiblename: 'Anonymous',
       amount: Math.floor(Math.random() * 100),
@@ -143,12 +145,30 @@ function initTest(): void {
       comment: 'This is a comment!',
       time_received: new Date(Date.now()).toISOString(),
     },
+    newScreenedSub: {
+      message: {
+        trailing: 'This is an extra message from the user!',
+        tags: {
+          'system-msg': 'ExampleUser subscribed at Tier 1. They\'ve subscribed for'
+            + '26 months, currently on a 26 month streak!',
+        },
+      },
+    },
+    newScreenedCheer: {
+      message: {
+        trailing: 'This is a message included with the cheer!',
+        tags: {
+          'display-name': 'ExampleUser',
+          bits: '500',
+        },
+      },
+    },
   };
   /* eslint-enable */
 
   nodecg().listenFor(
     'testRabbitMQ',
-    (msgType: 'donationFullyProcessed') => {
+    (msgType: 'donationFullyProcessed' | 'newScreenedSub' | 'newScreenedCheer') => {
       nodecg().log.debug('[RabbitMQ] Sending test message out for topic %s: %s',
         msgType, JSON.stringify(testData[msgType]));
       evt.emit(msgType, testData[msgType]);

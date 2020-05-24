@@ -15,6 +15,12 @@
     <v-btn @click="donation">
       Donation
     </v-btn>
+    <v-btn @click="subscription">
+      Subscription
+    </v-btn>
+    <v-btn @click="cheer">
+      Cheer
+    </v-btn>
   </v-app>
 </template>
 
@@ -28,6 +34,12 @@ export default class extends Vue {
 
   donation(): void {
     nodecg.sendMessage('testRabbitMQ', 'donationFullyProcessed');
+  }
+  subscription(): void {
+    nodecg.sendMessage('testRabbitMQ', 'newScreenedSub');
+  }
+  cheer(): void {
+    nodecg.sendMessage('testRabbitMQ', 'newScreenedCheer');
   }
 }
 </script>

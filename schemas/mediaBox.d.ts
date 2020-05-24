@@ -5,24 +5,44 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type Type = "image" | "prize" | "prize_generic";
 export type Rotation = {
-  type: Type;
+  type: "image" | "prize" | "prize_generic";
   id: string;
   mediaUUID: string;
   seconds: number;
 }[];
 export type MediaActive = {
-  type: Type;
+  type: TypesAll;
   id: string;
   mediaUUID: string;
   index: number;
   timestamp: number;
   timeElapsed: number;
 } | null;
+export type TypesAll = "image" | "prize" | "prize_generic" | "donation" | "subscription" | "cheer";
 
 export interface MediaBox {
   rotation: Rotation;
   rotationApplicable: Rotation;
+  alertQueue: {
+    type: "donation" | "subscription" | "cheer";
+    id: string;
+    data:
+      | {
+          name: string;
+          amount: number;
+          comment?: string;
+        }
+      | {
+          systemMsg: string;
+          message?: string;
+        }
+      | {
+          name: string;
+          amount: number;
+          message: string;
+        };
+  }[];
+  paused: MediaActive;
   current: MediaActive;
 }

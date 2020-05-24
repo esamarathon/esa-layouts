@@ -1,20 +1,35 @@
+import clone from 'clone';
 import type { Configschema } from 'configschema';
+import { MediaBox } from 'schemas';
 import { Tracker } from 'types';
+import { v4 as uuid } from 'uuid';
 import { logSponsorLogoChange } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
+import { evt } from './util/rabbitmq';
 import { assetsMediaBoxImages, mediaBox, prizes } from './util/replicants';
 
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 
 /**
- * Get the length in milliseconds a piece of media should remain,
- * -1 if we cannot find it in the rotation.
- * @param id ID of media in rotation.
+ * Checks if the supplied type is that of an alert.
+ * @param type Type of alert
  */
-function getLength(id: string): number {
-  const media = mediaBox.value.rotationApplicable.find((i) => i.id === id);
-  return media ? media.seconds * 1000 : -1;
+function isAlertType(type: string): boolean {
+  return ['donation', 'subscription', 'cheer'].includes(type);
+}
+
+/**
+ * Get the length in milliseconds a piece of media should remain,
+ * -1 if we cannot find any relevant length.
+ * @param media media box object, usually from "current" property.
+ */
+function getLength(media: MediaBox['current']): number {
+  if (media && isAlertType(media.type)) {
+    return 10 * 1000; // Alerts have a hardcoded 10 second length for now.
+  }
+  const length = mediaBox.value.rotationApplicable.find((i) => i.id === media?.id)?.seconds;
+  return length ? length * 1000 : -1;
 }
 
 /**
@@ -63,25 +78,48 @@ function doesSceneHaveSponsorLogos(name?: string): boolean {
 }
 
 /**
- * Cycle to the next piece of media in the rotation, or delete if none is available.
+ * Handles the cycling of of the current media.
+ * @param pause If we should be attempted to "pause" the current media for an alert.
  */
-function cycle(): void {
-  if (!mediaBox.value.rotationApplicable.length) {
-    nodecg().log.debug('[Media Box] No media in rotation to cycle to, will wait');
-    mediaBox.value.current = null;
-  } else {
-    const index = getNextIndex() < mediaBox.value.rotationApplicable.length ? getNextIndex() : 0;
-    const media = mediaBox.value.rotationApplicable[index];
-    const uuid = media.type === 'prize_generic'
-      ? (getRandomPrize()?.id.toString() || '-1') : media.mediaUUID;
+function cycle(pause = false): void {
+  // If the alert queue has anything in it, we need to handle those first.
+  if (mediaBox.value.alertQueue.length) {
+    if (pause) { // Pause current media element.
+      mediaBox.value.paused = clone(mediaBox.value.current);
+    }
     mediaBox.value.current = {
-      type: media.type,
-      id: media.id,
-      mediaUUID: uuid,
-      index,
+      type: mediaBox.value.alertQueue[0].type,
+      id: uuid(),
+      mediaUUID: mediaBox.value.alertQueue[0].id,
+      index: -1,
       timestamp: Date.now(),
       timeElapsed: 0,
     };
+  } else if (mediaBox.value.rotationApplicable.length) {
+    // Resume paused media element if applicable.
+    if (mediaBox.value.paused) {
+      const toResume = clone(mediaBox.value.paused);
+      toResume.timestamp = Date.now();
+      mediaBox.value.current = toResume;
+      mediaBox.value.paused = null;
+    } else { // Find next media element from rotation to use.
+      const index = getNextIndex() < mediaBox.value.rotationApplicable.length ? getNextIndex() : 0;
+      const media = mediaBox.value.rotationApplicable[index];
+      const mUUID = media.type === 'prize_generic'
+        ? (getRandomPrize()?.id.toString() || '-1') : media.mediaUUID;
+      mediaBox.value.current = {
+        type: media.type,
+        id: media.id,
+        mediaUUID: mUUID,
+        index,
+        timestamp: Date.now(),
+        timeElapsed: 0,
+      };
+    }
+  } else {
+    nodecg().log.debug('[Media Box] No media in rotation to cycle to, will wait');
+    mediaBox.value.current = null;
+    mediaBox.value.paused = null;
   }
   // Log the logo change if on a relevant scene.
   if (obs.streaming && doesSceneHaveSponsorLogos(obs.currentScene)) {
@@ -93,6 +131,7 @@ function cycle(): void {
  * This runs every second, all of the time.
  */
 function update(): void {
+  // Filters rotation for items only applicable/available at this moment.
   const rotationApplicableLengthOld = mediaBox.value.rotationApplicable.length;
   mediaBox.value.rotationApplicable = mediaBox.value.rotation.filter((m) => {
     // Only rotate to image if the asset actually exists.
@@ -112,26 +151,87 @@ function update(): void {
   if (mediaBox.value.rotationApplicable.length !== rotationApplicableLengthOld) {
     nodecg().log.debug('[Media Box] Applicable rotation length changed');
   }
+
+  // If we have no piece of media, check if there is anything to show.
   if (!mediaBox.value.current) {
-    if (mediaBox.value.rotationApplicable.length) {
-      nodecg().log.debug('[Media Box] Media added to rotation, will cycle');
+    if (mediaBox.value.rotationApplicable.length || mediaBox.value.alertQueue.length) {
+      nodecg().log.debug(`[Media Box] ${mediaBox.value.alertQueue.length ? 'Alert' : 'Media'}`
+        + ' available, will cycle');
       cycle();
     }
-  } else {
+  } else { // If we have a current piece of media, need to check if it still should be shown.
     const addedTime = Date.now() - mediaBox.value.current.timestamp;
     const timeElapsed = mediaBox.value.current.timeElapsed + addedTime;
     const index = mediaBox.value.rotationApplicable
       .findIndex((i) => i.id === mediaBox.value.current?.id);
-    if (index < 0 || getLength(mediaBox.value.current.id) <= timeElapsed) {
+
+    // Cycle if it is time to remove the current media.
+    if ((index < 0 && !isAlertType(mediaBox.value.current.type))
+      || getLength(mediaBox.value.current) <= timeElapsed) {
+      // If this is an alert, we also need to remove that one from the queue.
+      if (isAlertType(mediaBox.value.current.type)) {
+        const alertIndex = mediaBox.value.alertQueue
+          .findIndex((a) => a.id === mediaBox.value.current?.mediaUUID);
+        if (alertIndex >= 0) {
+          mediaBox.value.alertQueue.splice(alertIndex, 1);
+        }
+      }
       nodecg().log.debug('[Media Box] Current media time finished, will cycle');
       cycle();
     } else {
-      mediaBox.value.current.index = index;
+      if (!isAlertType(mediaBox.value.current.type)) {
+        mediaBox.value.current.index = index;
+      }
       mediaBox.value.current.timestamp = Date.now();
       mediaBox.value.current.timeElapsed = timeElapsed;
+
+      // If there are any alerts to show, we should do that now.
+      if (!isAlertType(mediaBox.value.current.type) && mediaBox.value.alertQueue.length) {
+        nodecg().log.debug('[Media Box] Alert available, will cycle');
+        cycle(true);
+      }
     }
   }
 }
+
+// Manages received donations/subscriptions/cheers.
+evt.on('donationFullyProcessed', (data) => {
+  if (data.comment_state === 'APPROVED') {
+    nodecg().log.debug('[Media Box] Received new donation');
+    mediaBox.value.alertQueue.push({
+      type: 'donation',
+      id: uuid(),
+      data: {
+        name: data.donor_visiblename.replace('(Anonymous)', 'Anonymous'),
+        amount: data.amount,
+        comment: data.comment || undefined,
+      },
+    });
+  }
+});
+evt.on('newScreenedSub', (data) => {
+  nodecg().log.debug('[Media Box] Received new subscription');
+  mediaBox.value.alertQueue.push({
+    type: 'subscription',
+    id: uuid(),
+    data: {
+      systemMsg: data.message.tags['system-msg'].replace(/\\s/g, ' '),
+      message: data.message.trailing,
+    },
+  });
+});
+evt.on('newScreenedCheer', (data) => {
+  nodecg().log.debug('[Media Box] Received new cheer');
+  mediaBox.value.alertQueue.push({
+    type: 'cheer',
+    id: uuid(),
+    data: {
+      name: data.message.tags['display-name'],
+      amount: Number(data.message.tags.bits),
+      message: data.message.trailing,
+    },
+  });
+});
 
 // Will log sponsors changing when going live/going offline if needed.
 obs.on('streamingStatusChanged', (streaming, old) => {

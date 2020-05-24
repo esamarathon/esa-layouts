@@ -177,6 +177,14 @@
         "file": "donation-reader-control.html",
         "workspace": "ESA",
         "headerColor": "#c49215"
+      },
+      {
+        "name": "rabbitmq-test",
+        "title": "RabbitMQ Test",
+        "width": 2,
+        "file": "rabbitmq-test.html",
+        "workspace": "ESA Debug",
+        "headerColor": "#c49215"
       }
     ],
     "graphics": [

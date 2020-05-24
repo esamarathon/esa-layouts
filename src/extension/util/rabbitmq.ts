@@ -1,3 +1,4 @@
+import { Tracker } from '@esamarathon/mq-events/types';
 import amqpConnectionManager from 'amqp-connection-manager';
 import type { AmqpConnectionManager, ChannelWrapper } from 'amqp-connection-manager';
 import amqplib from 'amqplib';
@@ -8,6 +9,7 @@ import type { RabbitMQ } from 'types';
 import { getCurrentEventShort } from './helpers';
 import { get as nodecg } from './nodecg';
 
+const { useTestData } = nodecg().bundleConfig as Configschema;
 const config = (nodecg().bundleConfig as Configschema).rabbitmq;
 const exchange = 'cg';
 const event = getCurrentEventShort();
@@ -127,28 +129,59 @@ async function setupChan(chan: ConfirmChannel): Promise<void> {
   nodecg().log.info('[RabbitMQ] Server connection listening for messages');
 }
 
+function initTest(): void {
+  /* eslint-disable @typescript-eslint/camelcase */
+  const testData: {
+    donationFullyProcessed: Tracker.DonationFullyProcessed;
+  } = {
+    donationFullyProcessed: {
+      event: 'testevt',
+      _id: Math.floor(Math.random() * 1000),
+      donor_visiblename: 'Anonymous',
+      amount: Math.floor(Math.random() * 100),
+      comment_state: 'APPROVED',
+      comment: 'This is a comment!',
+      time_received: new Date(Date.now()).toISOString(),
+    },
+  };
+  /* eslint-enable */
+
+  nodecg().listenFor(
+    'testRabbitMQ',
+    (msgType: 'donationFullyProcessed') => {
+      nodecg().log.debug('[RabbitMQ] Sending test message out for topic %s: %s',
+        msgType, JSON.stringify(testData[msgType]));
+      evt.emit(msgType, testData[msgType]);
+    },
+  );
+}
+
 let conn: AmqpConnectionManager | undefined;
 let chan: ChannelWrapper | undefined;
 if (config.enable) {
-  nodecg().log.info('[RabbitMQ] Setting up connection');
-  conn = amqpConnectionManager.connect([url()], opts())
-    .on('connect', () => {
-      nodecg().log.info('[RabbitMQ] Server connection successful');
-    })
-    .on('disconnect', (err) => {
-      nodecg().log.warn('[RabbitMQ] Server connection closed');
-      if (err) {
-        nodecg().log.warn('[RabbitMQ] Server connection error');
-        nodecg().log.debug('[RabbitMQ] Server connection error:', err);
-      }
+  if (!useTestData) {
+    nodecg().log.info('[RabbitMQ] Setting up connection');
+    conn = amqpConnectionManager.connect([url()], opts())
+      .on('connect', () => {
+        nodecg().log.info('[RabbitMQ] Server connection successful');
+      })
+      .on('disconnect', (err) => {
+        nodecg().log.warn('[RabbitMQ] Server connection closed');
+        if (err) {
+          nodecg().log.warn('[RabbitMQ] Server connection error');
+          nodecg().log.debug('[RabbitMQ] Server connection error:', err);
+        }
+      });
+    chan = conn.createChannel({
+      json: false,
+      setup: setupChan,
+    }).on('error', (err) => {
+      nodecg().log.warn('[RabbitMQ] Server channel error');
+      nodecg().log.debug('[RabbitMQ] Server channel error:', err);
     });
-  chan = conn.createChannel({
-    json: false,
-    setup: setupChan,
-  }).on('error', (err) => {
-    nodecg().log.warn('[RabbitMQ] Server channel error');
-    nodecg().log.debug('[RabbitMQ] Server channel error:', err);
-  });
+  } else {
+    initTest();
+  }
 }
 
 /**
@@ -162,7 +195,7 @@ export function send(key: string, data: {}): void {
     // RabbitMQ not enabled, don't even try to send.
     return;
   }
-  if (!chan) {
+  if (!chan && !useTestData) {
     nodecg().log.debug('[RabbitMQ] Could not send message as channel is not defined');
     return;
   }
@@ -174,12 +207,14 @@ export function send(key: string, data: {}): void {
     },
   };
   const fullKey = `${event}.${key}`;
-  chan.publish(
-    exchange,
-    fullKey,
-    Buffer.from(JSON.stringify(newData)),
-    { persistent: true },
-  );
+  if (chan && !useTestData) {
+    chan.publish(
+      exchange,
+      fullKey,
+      Buffer.from(JSON.stringify(newData)),
+      { persistent: true },
+    );
+  }
   nodecg().log.debug('[RabbitMQ] Sending message with routing key: %s: %s',
     fullKey, JSON.stringify(newData));
 }

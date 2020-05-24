@@ -13,7 +13,7 @@ const sc = new SpeedcontrolUtil(nodecg());
 
 // Screened data from our moderation tool.
 evt.on('newScreenedSub', (data) => {
-  nodecg().log.debug('[Misc] Received new subscriber');
+  nodecg().log.debug('[Misc] Received new subscription');
   nodecg().sendMessage('newSub', data);
 });
 evt.on('newScreenedTweet', (data) => {

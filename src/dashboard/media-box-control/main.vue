@@ -14,7 +14,7 @@
       Save
     </v-btn>
 
-    <current-media-info />
+    <current-media-info :style="{ 'margin-top': '10px' }" />
   </v-app>
 </template>
 

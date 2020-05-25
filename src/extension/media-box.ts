@@ -1,7 +1,6 @@
 import clone from 'clone';
 import type { Configschema } from 'configschema';
-import { MediaBox } from 'schemas';
-import { Tracker } from 'types';
+import { MediaBox, Tracker } from 'types';
 import { v4 as uuid } from 'uuid';
 import { logSponsorLogoChange } from './util/logging';
 import { get as nodecg } from './util/nodecg';
@@ -15,7 +14,7 @@ const obsConfig = (nodecg().bundleConfig as Configschema).obs;
  * Checks if the supplied type is that of an alert.
  * @param type Type of alert
  */
-function isAlertType(type: string): boolean {
+function isAlertType(type: MediaBox.Types): boolean {
   return ['donation', 'subscription', 'cheer'].includes(type);
 }
 
@@ -24,7 +23,7 @@ function isAlertType(type: string): boolean {
  * -1 if we cannot find any relevant length.
  * @param media media box object, usually from "current" property.
  */
-function getLength(media: MediaBox['current']): number {
+function getLength(media: MediaBox.ActiveElem): number {
   if (media && isAlertType(media.type)) {
     return 10 * 1000; // Alerts have a hardcoded 10 second length for now.
   }

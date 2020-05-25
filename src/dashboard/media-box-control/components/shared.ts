@@ -1,13 +1,20 @@
-import { MediaBox } from 'schemas';
-import { Asset, Tracker } from 'types';
+import { Asset, MediaBox, Tracker } from 'types';
 import { v4 as uuid } from 'uuid';
 import { store } from '../store';
+
+/**
+ * Checks if the supplied type is that of an alert.
+ * @param type Type of alert
+ */
+export function isAlertType(type: MediaBox.Types): boolean {
+  return ['donation', 'subscription', 'cheer'].includes(type);
+}
 
 /**
  * Returns details about a piece of media from rotation if found.
  * @param media Media from rotation you wish to query information on.
  */
-export function getMediaDetails(media: MediaBox['rotation'][0]): { name?: string } {
+export function getMediaDetails(media: MediaBox.RotationElem): { name?: string } {
   let details: Asset | Tracker.FormattedPrize | undefined;
   if (media.type === 'prize_generic') {
     return {
@@ -32,7 +39,7 @@ export function getMediaDetails(media: MediaBox['rotation'][0]): { name?: string
 export function clone(
   type: 'image' | 'prize' | 'prize_generic',
   mediaUUID?: string,
-): MediaBox['rotation'][0] {
+): MediaBox.RotationElem {
   return {
     type,
     id: uuid(),

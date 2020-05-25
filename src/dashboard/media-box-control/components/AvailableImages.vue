@@ -31,8 +31,7 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import Draggable from 'vuedraggable';
-import { Asset } from 'types';
-import { MediaBox } from 'schemas';
+import { Asset, MediaBox } from 'types';
 import { clone } from './shared';
 import MediaCard from './MediaCard.vue';
 
@@ -45,7 +44,7 @@ import MediaCard from './MediaCard.vue';
 export default class extends Vue {
   @State images!: Asset[];
 
-  clone(original: Asset): MediaBox['rotation'][0] {
+  clone(original: Asset): MediaBox.RotationElem {
     return clone('image', original.sum);
   }
 }

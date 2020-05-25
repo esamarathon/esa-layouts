@@ -60,8 +60,8 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import Draggable from 'vuedraggable';
-import { Tracker } from 'types';
-import { MediaBox, Prizes } from 'schemas';
+import { Tracker, MediaBox } from 'types';
+import { Prizes } from 'schemas';
 import { clone, isPrizeApplicable } from './shared';
 import MediaCard from './MediaCard.vue';
 import ApplicableIcon from './ApplicableIcon.vue';
@@ -77,11 +77,11 @@ export default class extends Vue {
   @State prizes!: Prizes;
   isPrizeApplicable = isPrizeApplicable;
 
-  clone(original: Tracker.FormattedPrize): MediaBox['rotation'][0] {
+  clone(original: Tracker.FormattedPrize): MediaBox.RotationElem {
     return clone('prize', original.id.toString());
   }
 
-  cloneGeneric(): MediaBox['rotation'][0] {
+  cloneGeneric(): MediaBox.RotationElem {
     return clone('prize_generic');
   }
 }

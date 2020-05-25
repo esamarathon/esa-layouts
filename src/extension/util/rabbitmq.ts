@@ -129,22 +129,29 @@ async function setupChan(chan: ConfirmChannel): Promise<void> {
   nodecg().log.info('[RabbitMQ] Server connection listening for messages');
 }
 
-function initTest(): void {
+let donationID = 0;
+function generateDonationMsg(): Tracker.DonationFullyProcessed {
+  donationID += 1;
   /* eslint-disable @typescript-eslint/camelcase */
+  return {
+    event: 'testevt1',
+    _id: donationID,
+    donor_visiblename: 'Anonymous',
+    amount: Math.floor(Math.random() * 100),
+    comment_state: 'APPROVED',
+    comment: 'This is a comment!',
+    time_received: new Date(Date.now()).toISOString(),
+  };
+  /* eslint-enable */
+}
+
+function initTest(): void {
   const testData: {
     donationFullyProcessed: Tracker.DonationFullyProcessed;
     newScreenedSub: OmnibarModeration.NewScreenedSub;
     newScreenedCheer: OmnibarModeration.NewScreenedCheer;
   } = {
-    donationFullyProcessed: {
-      event: 'testevt1',
-      _id: Math.floor(Math.random() * 1000),
-      donor_visiblename: 'Anonymous',
-      amount: Math.floor(Math.random() * 100),
-      comment_state: 'APPROVED',
-      comment: 'This is a comment!',
-      time_received: new Date(Date.now()).toISOString(),
-    },
+    donationFullyProcessed: generateDonationMsg(),
     newScreenedSub: {
       message: {
         trailing: 'This is an extra message from the user!',
@@ -169,6 +176,9 @@ function initTest(): void {
   nodecg().listenFor(
     'testRabbitMQ',
     (msgType: 'donationFullyProcessed' | 'newScreenedSub' | 'newScreenedCheer') => {
+      if (msgType === 'donationFullyProcessed') {
+        testData.donationFullyProcessed = generateDonationMsg();
+      }
       nodecg().log.debug('[RabbitMQ] Sending test message out for topic %s: %s',
         msgType, JSON.stringify(testData[msgType]));
       evt.emit(msgType, testData[msgType]);

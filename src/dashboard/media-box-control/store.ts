@@ -1,7 +1,7 @@
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import type { MediaBox, Prizes } from 'schemas';
-import type { Asset } from 'types';
+import type { MediaBox as MediaBoxRep, Prizes } from 'schemas';
+import type { Asset, MediaBox } from 'types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
@@ -11,7 +11,7 @@ Vue.use(Vuex);
 const reps: {
   images: ReplicantBrowser<Asset[]>;
   prizes: ReplicantBrowser<Prizes>;
-  settings: ReplicantBrowser<MediaBox>;
+  settings: ReplicantBrowser<MediaBoxRep>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
   images: nodecg.Replicant('assets:media-box-images'),
@@ -23,11 +23,11 @@ interface StateTypes {
   images: Asset[];
   prizes: Prizes;
   disableSave: boolean;
-  newRotation: MediaBox['rotation'];
+  newRotation: MediaBox.RotationElem[];
 }
 
 // Types for mutations/actions below
-export type UpdateNewRotation = (arr: MediaBox['rotation']) => void;
+export type UpdateNewRotation = (arr: MediaBox.RotationElem[]) => void;
 export type Save = () => void;
 
 export const store = new Vuex.Store({

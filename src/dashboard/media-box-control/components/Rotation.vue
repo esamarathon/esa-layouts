@@ -54,8 +54,8 @@ import { Vue, Component } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
 import Draggable from 'vuedraggable';
 import clone from 'clone';
-import { MediaBox, Prizes } from 'schemas';
-import { Asset } from 'types';
+import { Prizes, MediaBox as MediaBoxRep } from 'schemas';
+import { Asset, MediaBox } from 'types';
 import MediaCard from './MediaCard.vue';
 import ApplicableIcon from './ApplicableIcon.vue';
 import { UpdateNewRotation } from '../store';
@@ -71,9 +71,9 @@ import { getMediaDetails, isPrizeApplicable } from './shared';
 export default class extends Vue {
   @State images!: Asset[];
   @State prizes!: Prizes;
-  @State('newRotation') newRotationState!: MediaBox['rotation'];
+  @State('newRotation') newRotationState!: MediaBox.RotationElem[];
   @Mutation updateNewRotation!: UpdateNewRotation;
-  @State settings!: MediaBox;
+  @State settings!: MediaBoxRep;
   getMediaDetails = getMediaDetails;
   isPrizeApplicable = isPrizeApplicable;
 
@@ -81,14 +81,14 @@ export default class extends Vue {
     this.newRotation = clone(this.settings.rotation);
   }
 
-  get newRotation(): MediaBox['rotation'] {
+  get newRotation(): MediaBox.RotationElem[] {
     return this.newRotationState;
   }
   set newRotation(val) {
     this.updateNewRotation(val);
   }
 
-  isApplicable(media: MediaBox['rotation'][0]): boolean {
+  isApplicable(media: MediaBox.RotationElem): boolean {
     // Only applicable if the asset actually exists.
     if (media.type === 'image') {
       return !!this.images.find((i) => i.sum === media.mediaUUID);

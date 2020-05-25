@@ -189,6 +189,10 @@
     },
     "current": {
       "$ref": "#/definitions/mediaActive"
+    },
+    "lastIndex": {
+      "type": "number",
+      "default": 0
     }
   },
   "required": [
@@ -196,6 +200,7 @@
     "rotationApplicable",
     "alertQueue",
     "paused",
-    "current"
+    "current",
+    "lastIndex"
   ]
 }

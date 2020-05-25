@@ -45,4 +45,5 @@ export interface MediaBox {
   }[];
   paused: MediaActive;
   current: MediaActive;
+  lastIndex: number;
 }

@@ -38,7 +38,10 @@ function getLength(media: MediaBox.ActiveElem): number {
 function getNextIndex(): number {
   const indexID = mediaBox.value.rotationApplicable
     .findIndex((i) => i.id === mediaBox.value.current?.id);
-  return indexID >= 0 ? indexID + 1 : ((mediaBox.value.current?.index || -1) + 1);
+  if (indexID >= 0) {
+    return indexID + 1;
+  }
+  return typeof mediaBox.value.lastIndex === 'number' ? mediaBox.value.lastIndex + 1 : 0;
 }
 
 /**
@@ -174,6 +177,8 @@ function update(): void {
         if (alertIndex >= 0) {
           mediaBox.value.alertQueue.splice(alertIndex, 1);
         }
+      } else {
+        mediaBox.value.lastIndex = mediaBox.value.current.index;
       }
       nodecg().log.debug('[Media Box] Current media time finished, will cycle');
       cycle();

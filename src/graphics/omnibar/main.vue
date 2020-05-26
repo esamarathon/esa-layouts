@@ -4,10 +4,14 @@
     class="Flex"
   >
     <img
-      src="./logo.png"
+      src="./coronarelief_logo.png"
       :style="{ padding: '0 10px' }"
     >
     <divider></divider>
+    <img
+      src="./stc_logo.png"
+      :style="{ padding: '0 5px 0 5px' }"
+    >
     <total></total>
     <divider></divider>
     <!--<sub-goal-met></sub-goal-met>

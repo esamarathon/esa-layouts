@@ -52,7 +52,7 @@ export default {
 
 <style scoped>
   #Total {
-    padding: 0 10px;
+    padding: 0 13px 0 0;
     font-size: 40px;
     font-weight: 500;
     min-width: 50px;

@@ -76,7 +76,7 @@ export default {
         this.bid(),
         this.teamPromo(),
         this.donationURL(),
-        this.shirts(),
+        // this.shirts(),
         // this.twitchCharity(),
       ];
 

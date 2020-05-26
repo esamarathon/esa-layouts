@@ -18,14 +18,16 @@
       :style="{ width: '100%' }"
     >
       <div
-        v-show="runData.game"
+        v-show="runData && runData.game"
         class="RunGame"
         :style="{
           'font-size': '1em',
           'font-weight': 500,
         }"
       >
-        {{ runData.game }}
+        <template v-if="runData && runData.game">
+          {{ runData.game }}
+        </template>
       </div>
     </div>
     <div
@@ -33,15 +35,17 @@
       :style="{ width: '100%' }"
     >
       <div
-        v-show="runData.category || runData.system || runData.estimate"
+        v-show="runData && (runData.category || runData.system || runData.estimate)"
         class="RunInfoExtra"
         :style="{
           'font-size': '0.8em', // Also gets set in the script, here as backup.
         }"
       >
-        <span v-if="runData.category">{{ runData.category }}</span>
-        <span v-if="runData.system">{{ runData.system }}</span>
-        <span v-if="runData.estimate">{{ runData.estimate }}</span>
+        <template v-if="runData">
+          <span v-if="runData.category">{{ runData.category }}</span>
+          <span v-if="runData.system">{{ runData.system }}</span>
+          <span v-if="runData.estimate">{{ runData.estimate }}</span>
+        </template>
       </div>
     </div>
   </div>

@@ -119,7 +119,7 @@
         "title": "Media Box Control",
         "width": 3,
         "file": "media-box-control.html",
-        "workspace": "ESA",
+        "workspace": "ESA Advanced",
         "headerColor": "#c49215"
       },
       {
@@ -135,7 +135,7 @@
         "title": "Text-To-Speech Control",
         "width": 3,
         "file": "tts-control.html",
-        "workspace": "ESA",
+        "workspace": "ESA Advanced",
         "headerColor": "#c49215"
       },
       {
@@ -143,7 +143,7 @@
         "title": "Video Player Control",
         "width": 3,
         "file": "video-player-control.html",
-        "workspace": "ESA",
+        "workspace": "ESA Advanced",
         "headerColor": "#c49215"
       },
       {
@@ -151,7 +151,7 @@
         "title": "Upcoming Run Control",
         "width": 3,
         "file": "upcoming-run-control.html",
-        "workspace": "ESA",
+        "workspace": "ESA Advanced",
         "headerColor": "#c49215"
       },
       {

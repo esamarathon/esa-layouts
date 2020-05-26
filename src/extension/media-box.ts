@@ -201,7 +201,8 @@ function update(): void {
 // Manages received donations/subscriptions/cheers.
 evt.on('donationFullyProcessed', (data) => {
   if (data.comment_state === 'APPROVED') {
-    nodecg().log.debug('[Media Box] Received new donation');
+    // eslint-disable-next-line no-underscore-dangle
+    nodecg().log.debug('[Media Box] Received new donation with ID %s', data._id);
     mediaBox.value.alertQueue.push({
       type: 'donation',
       id: uuid(),

@@ -129,13 +129,11 @@ async function setupChan(chan: ConfirmChannel): Promise<void> {
   nodecg().log.info('[RabbitMQ] Server connection listening for messages');
 }
 
-let donationID = 0;
 function generateDonationMsg(): Tracker.DonationFullyProcessed {
-  donationID += 1;
   /* eslint-disable @typescript-eslint/camelcase */
   return {
     event: 'testevt1',
-    _id: donationID,
+    _id: Math.random() * 1000000000,
     donor_visiblename: 'Anonymous',
     amount: Math.floor(Math.random() * 100),
     comment_state: 'APPROVED',

@@ -1,19 +1,32 @@
 <template>
-  <div>
-    <video
-      ref="VideoPlayer"
-      :style="{
-        display: 'block',
-        width: '100%',
-        height: '100vh',
-      }"
+  <div
+    :style="{
+      position: 'relative',
+      width: '100%',
+      height: '100vh',
+    }"
+  >
+    <transition
+      name="fade"
+      mode="in-out"
     >
-      <source
+      <video
         v-if="video"
-        :src="video.url"
-        :type="`video/${video.ext.toLowerCase().replace('.', '')}`"
+        :key="video.sum"
+        :ref="`VideoPlayer_${video.sum}`"
+        :style="{
+          display: 'block',
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+        }"
       >
-    </video>
+        <source
+          :src="video.url"
+          :type="`video/${video.ext.toLowerCase().replace('.', '')}`"
+        >
+      </video>
+    </transition>
   </div>
 </template>
 
@@ -32,19 +45,25 @@ export default class extends Vue {
   @Mutation updatePlayCount!: UpdatePlayCount;
   @Mutation updateCurrent!: UpdateCurrent;
   @Mutation clearPlaylist!: ClearPlaylist;
-  player!: HTMLVideoElement;
   playlist: string[] = [];
   video: Asset | null = null;
   index = 0;
 
-  playNextVideo(): void {
+  get player(): HTMLVideoElement | undefined {
+    return this.$refs[`VideoPlayer_${this.video?.sum || '?'}`] as HTMLVideoElement | undefined;
+  }
+
+  async playNextVideo(): Promise<void> {
     const video = this.videos.find((v) => v.sum === this.playlist[this.index]);
     if (video) {
       this.video = video;
-      this.player.load();
-      this.player.play();
+      await Vue.nextTick();
+      if (this.player) {
+        this.player.load();
+        this.player.play();
+        this.player.addEventListener('ended', this.videoEnded);
+      }
       this.updateCurrent(video.sum);
-      this.player.addEventListener('ended', this.videoEnded);
     } else {
       this.index += 1;
       this.playNextVideo();
@@ -67,10 +86,11 @@ export default class extends Vue {
 
   stopVideo(): void {
     this.updateCurrent();
-    this.player.removeEventListener('ended', this.videoEnded);
-    this.player.pause();
+    if (this.player) {
+      this.player.removeEventListener('ended', this.videoEnded);
+      this.player.pause();
+    }
     this.video = null;
-    this.player.load();
   }
 
   async startPlaylist(): Promise<void> {
@@ -91,7 +111,6 @@ export default class extends Vue {
   }
 
   mounted(): void {
-    this.player = this.$refs.VideoPlayer as HTMLVideoElement;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const obs = (window as any).obsstudio;
     if (obs) {
@@ -115,5 +134,14 @@ export default class extends Vue {
     margin: 0;
     padding: 0;
     background-color: black;
+  }
+</style>
+
+<style scoped>
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
   }
 </style>

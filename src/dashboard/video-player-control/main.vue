@@ -15,6 +15,8 @@
     <v-btn @click="refresh()">
       Refresh Local Playlist
     </v-btn>
+
+    <current-video-info :style="{ 'margin-top': '10px' }" />
   </v-app>
 </template>
 
@@ -23,12 +25,14 @@ import { Vue, Component } from 'vue-property-decorator';
 import { State, Action, Mutation } from 'vuex-class';
 import AvailableVideos from './components/AvailableVideos.vue';
 import Playlist from './components/Playlist.vue';
+import CurrentVideoInfo from './components/CurrentVideoInfo.vue';
 import { Save, Refresh } from './store';
 
 @Component({
   components: {
     AvailableVideos,
     Playlist,
+    CurrentVideoInfo,
   },
 })
 export default class extends Vue {

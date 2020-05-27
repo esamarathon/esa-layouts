@@ -154,7 +154,7 @@ function initTest(): void {
       message: {
         trailing: 'This is an extra message from the user!',
         tags: {
-          'system-msg': 'ExampleUser subscribed at Tier 1. They\'ve subscribed for'
+          'system-msg': 'ExampleUser subscribed at Tier 1. They\'ve subscribed for '
             + '26 months, currently on a 26 month streak!',
         },
       },

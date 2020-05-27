@@ -40,12 +40,11 @@
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { MediaBox as MediaBoxRep } from 'schemas';
-import { Asset, MediaBox } from 'types';
+import { MediaBox } from 'types';
 import { formatUSD } from '../../helpers';
 
 @Component
 export default class extends Vue {
-  @State mediaBoxImages!: Asset[];
   @State mediaBox!: MediaBoxRep;
   @Prop(Boolean) vertical!: boolean;
   formatUSD = formatUSD;

@@ -82,13 +82,15 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
 sc.on('timerStopped', () => {
   const run = sc.getCurrentRun();
   if (run?.customData.intermission) {
-    const videoName = run.customData.intermission;
-    const asset = assetsVideos.value.find((v) => v.name === videoName);
-    if (asset) {
-      videoPlayer.value.playlist = [asset.sum];
-      nodecg().log.info(`[Misc] Automatically set video player to ${videoName}`);
+    const videoNames = run.customData.intermission.split(',');
+    const assets = assetsVideos.value.filter((v) => videoNames.includes(v.name.trim()));
+    if (assets.length) {
+      videoPlayer.value.playlist = assets.map((a) => a.sum);
+      const successfulVideos = assets.map((a) => a.name).join(', ');
+      nodecg().log.info(`[Misc] Automatically set video player for: ${successfulVideos}`);
     } else {
-      nodecg().log.warn(`[Misc] Cannot automatically set video player to ${videoName}`);
+      nodecg().log.warn('[Misc] Cannot automatically set video player for any:'
+        + ` ${videoNames.join(', ')}`);
     }
   }
 });

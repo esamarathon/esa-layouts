@@ -75,6 +75,7 @@
 
     <!-- Media Box -->
     <media-box
+      vertical
       :style="{
         left: '0px',
         top: '636px',

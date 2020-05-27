@@ -106,6 +106,7 @@
 
     <!-- Media Box -->
     <media-box
+      vertical
       :style="{
         left: '765px',
         top: '390px',

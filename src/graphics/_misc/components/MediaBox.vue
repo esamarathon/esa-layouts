@@ -8,66 +8,99 @@
       }"
     >
       <transition name="fade">
-        <img
-          v-if="currentLoaded"
-          :key="currentLoaded.id"
-          :src="currentLoaded.url"
-          :style="{
-            position: 'absolute',
-            'object-fit': 'contain',
-            width: '100%',
-            height: '100%',
-            padding: '30px',
-            'box-sizing': 'border-box',
-          }"
-        >
+        <image-comp
+          v-if="type === 0"
+          :key="mediaBox.current.id"
+          class="Slide"
+        />
+        <prize
+          v-else-if="type === 1"
+          :key="mediaBox.current.id"
+          class="Slide"
+          :vertical="vertical"
+        />
+        <prize-generic
+          v-else-if="type === 2"
+          :key="mediaBox.current.id"
+          class="Slide"
+          :vertical="vertical"
+        />
+        <donation
+          v-else-if="type === 3"
+          :key="mediaBox.current.id"
+          class="Slide"
+        />
+        <subscription
+          v-else-if="type === 4"
+          :key="mediaBox.current.id"
+          class="Slide"
+        />
+        <cheer
+          v-else-if="type === 5"
+          :key="mediaBox.current.id"
+          class="Slide"
+        />
       </transition>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator';
+import { Vue, Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { MediaBox } from 'schemas';
+import { MediaBox, Prizes } from 'schemas';
 import { Asset } from 'types';
+import ImageComp from './MediaBox/Image.vue';
+import Prize from './MediaBox/Prize.vue';
+import PrizeGeneric from './MediaBox/PrizeGeneric.vue';
+import Donation from './MediaBox/Donation.vue';
+import Subscription from './MediaBox/Subscription.vue';
+import Cheer from './MediaBox/Cheer.vue';
 
-@Component
+@Component({
+  components: {
+    ImageComp,
+    Prize,
+    PrizeGeneric,
+    Donation,
+    Subscription,
+    Cheer,
+  },
+})
 export default class extends Vue {
   @State mediaBoxImages!: Asset[];
+  @State prizes!: Prizes;
   @State mediaBox!: MediaBox;
-  currentLoaded: { id: string; url: string } | null = null;
+  @Prop(Boolean) vertical!: boolean;
 
-  get current(): { id: string; url: string } | undefined {
-    if (!this.mediaBoxImages) {
-      return undefined;
+  get type(): number {
+    switch (this.mediaBox.current?.type) {
+      case 'image':
+        return 0;
+      case 'prize':
+        return 1;
+      case 'prize_generic':
+        return 2;
+      case 'donation':
+        return 3;
+      case 'subscription':
+        return 4;
+      case 'cheer':
+        return 5;
+      default:
+        return -1;
     }
-    const asset = this.mediaBoxImages.find((s) => s.sum === this.mediaBox.current?.mediaUUID);
-    return asset && this.mediaBox.current ? {
-      id: this.mediaBox.current.id,
-      url: asset.url,
-    } : undefined;
-  }
-
-  // Preloads the image and will only show once loaded.
-  @Watch('current', { immediate: true })
-  onCurrentChange(val?: { id: string; url: string }): void {
-    if (!val) {
-      this.currentLoaded = null;
-      return;
-    }
-    const img = new Image();
-    const setAsLoaded = (): void => {
-      this.currentLoaded = val;
-      img.removeEventListener('load', setAsLoaded);
-    };
-    img.addEventListener('load', setAsLoaded);
-    img.src = val.url;
   }
 }
 </script>
 
 <style scoped>
+  .Slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+
   .fade-enter-active, .fade-leave-active {
     transition: opacity 1s;
   }

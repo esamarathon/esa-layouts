@@ -2,7 +2,7 @@ import type { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';
 import { getCurrentEventShort, getOtherStreamEventShort } from './util/helpers';
-import { logRunChange } from './util/logging';
+import { logRunChange, logVideoPlay } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { evt } from './util/rabbitmq';
@@ -102,5 +102,11 @@ nodecg().listenFor('videoPlayerFinished', async () => {
   } catch (err) {
     nodecg().log.warn('[Misc] Could not return to intermission after video finished');
     nodecg().log.debug('[Misc] Could not return to intermission after video finished:', err);
+  }
+});
+
+videoPlayer.on('change', (newVal, oldVal) => {
+  if (newVal.current && newVal.current !== oldVal?.current) {
+    logVideoPlay(newVal.current);
   }
 });

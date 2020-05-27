@@ -5,7 +5,7 @@ import SpeedcontrolUtil from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';
 import { get as nodecg } from './nodecg';
 import { send as mqSend } from './rabbitmq';
-import { assetsMediaBoxImages, mediaBox } from './replicants';
+import { assetsMediaBoxImages, assetsVideos, mediaBox } from './replicants';
 
 const config = nodecg().bundleConfig as Configschema;
 const sc = new SpeedcontrolUtil(nodecg());
@@ -88,4 +88,16 @@ export function logSponsorLogoChange(logo?: MediaBox['current']): void {
       length: logo?.type === 'image' ? logoInfo?.seconds : undefined,
     } as mqTypes.SponsorLogoChanged,
   );
+}
+
+export function logVideoPlay(sum: string): void {
+  const asset = assetsVideos.value.find((a) => a.sum === sum);
+  if (asset) {
+    mqSend(
+      'video.played',
+      {
+        name: asset.name,
+      } as mqTypes.VideoPlayed,
+    );
+  }
 }

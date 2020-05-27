@@ -29,6 +29,7 @@
           v-else-if="type === 3"
           :key="mediaBox.current.id"
           class="Slide"
+          :vertical="vertical"
         />
         <subscription
           v-else-if="type === 4"

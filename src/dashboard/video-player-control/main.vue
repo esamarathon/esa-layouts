@@ -3,18 +3,34 @@
     <available-videos />
     <playlist :style="{ 'margin-top': '20px' }" />
 
-    <!-- Save Button -->
-    <v-btn
-      :loading="disableSave"
-      :disabled="disableSave"
+    <!-- Save/Refresh Buttons -->
+    <div
+      class="d-flex"
       :style="{ 'margin-top': '20px' }"
-      @click="save()"
     >
-      Save
-    </v-btn>
-    <v-btn @click="refresh()">
-      Refresh Local Playlist
-    </v-btn>
+      <v-btn
+        class="flex-grow-1"
+        :loading="disableSave"
+        :disabled="disableSave"
+        @click="save()"
+      >
+        Save
+      </v-btn>
+      <v-tooltip left>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            :style="{ 'margin-left': '5px' }"
+            @click="playlistRefresh()"
+            v-on="on"
+          >
+            <v-icon>
+              mdi-refresh
+            </v-icon>
+          </v-btn>
+        </template>
+        <span>Revert Local Changes</span>
+      </v-tooltip>
+    </div>
 
     <current-video-info :style="{ 'margin-top': '10px' }" />
   </v-app>
@@ -26,7 +42,7 @@ import { State, Action, Mutation } from 'vuex-class';
 import AvailableVideos from './components/AvailableVideos.vue';
 import Playlist from './components/Playlist.vue';
 import CurrentVideoInfo from './components/CurrentVideoInfo.vue';
-import { Save, Refresh } from './store';
+import { Save, PlaylistRefresh } from './store';
 
 @Component({
   components: {
@@ -37,7 +53,7 @@ import { Save, Refresh } from './store';
 })
 export default class extends Vue {
   @State disableSave!: boolean;
-  @Mutation refresh!: Refresh;
+  @Mutation playlistRefresh!: PlaylistRefresh;
   @Action save!: Save;
 }
 </script>

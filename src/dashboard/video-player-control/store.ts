@@ -6,6 +6,7 @@ import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
 Vue.use(Vuex);
+let localEditTimeout: number | undefined;
 
 // Replicants and their types
 const reps: {
@@ -19,18 +20,29 @@ const reps: {
 
 interface StateTypes {
   disableSave: boolean;
+  localEdits: boolean;
   newPlaylist: VideoPlayer['playlist'];
 }
 
 // Types for mutations/actions below
 export type UpdateNewPlaylist = (arr: VideoPlayer['playlist']) => void;
 export type PlaylistAdd = (sum: string) => void;
-export type Refresh = () => void;
+export type PlaylistRemove = (i: number) => void;
+export type PlaylistRefresh = () => void;
 export type Save = () => void;
+
+function onLocalEdits(store: Store<StateTypes>): void {
+  Vue.set(store.state, 'localEdits', true);
+  window.clearTimeout(localEditTimeout);
+  localEditTimeout = window.setTimeout(() => {
+    store.commit('playlistRefresh');
+  }, 30 * 1000);
+}
 
 const store = new Vuex.Store({
   state: {
     disableSave: false,
+    localEdits: false,
     newPlaylist: [],
   } as StateTypes,
   mutations: {
@@ -39,12 +51,19 @@ const store = new Vuex.Store({
     },
     updateNewPlaylist(state, arr: VideoPlayer['playlist']): void {
       Vue.set(state, 'newPlaylist', arr);
+      onLocalEdits(store);
     },
     playlistAdd(state, sum: string): void {
       state.newPlaylist.push(sum);
+      onLocalEdits(store);
     },
-    refresh(state): void {
+    playlistRemove(state, i: number): void {
+      state.newPlaylist.splice(i, 1);
+      onLocalEdits(store);
+    },
+    playlistRefresh(state): void {
       Vue.set(state, 'newPlaylist', clone(reps.videoPlayer.value?.playlist || []));
+      Vue.set(state, 'localEdits', false);
     },
   },
   actions: {
@@ -55,6 +74,8 @@ const store = new Vuex.Store({
       }
       await new Promise((res) => setTimeout(res, 1000)); // Fake 1s wait
       Vue.set(state, 'disableSave', false);
+      window.clearTimeout(localEditTimeout);
+      Vue.set(state, 'localEdits', false);
     },
   },
 });

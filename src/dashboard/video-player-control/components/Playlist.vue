@@ -3,6 +3,14 @@
     <v-toolbar-title>
       Playlist
     </v-toolbar-title>
+    <v-alert
+      v-show="localEdits"
+      type="warning"
+      dense
+      :style="{ 'margin-top': '5px' }"
+    >
+      Local changes have been made.
+    </v-alert>
     <media-card
       v-if="!newPlaylist.length"
       :style="{ 'font-style': 'italic' }"
@@ -24,7 +32,7 @@
         >
           {{ getName(sum) || 'Could not find video name.' }}
         </div>
-        <v-icon @click="remove(i)">
+        <v-icon @click="playlistRemove(i)">
           mdi-delete
         </v-icon>
       </media-card>
@@ -33,13 +41,12 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component, Watch } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
-import clone from 'clone';
 import Draggable from 'vuedraggable';
 import { VideoPlayer } from 'schemas';
 import { Asset } from 'types';
-import { UpdateNewPlaylist } from '../store';
+import { UpdateNewPlaylist, PlaylistRefresh, PlaylistRemove } from '../store';
 import MediaCard from '../../_misc/components/MediaCard.vue';
 
 @Component({
@@ -52,7 +59,10 @@ export default class extends Vue {
   @State videos!: Asset[];
   @State videoPlayer!: VideoPlayer;
   @State('newPlaylist') newPlaylistState!: VideoPlayer['playlist'];
+  @State localEdits!: boolean;
   @Mutation updateNewPlaylist!: UpdateNewPlaylist;
+  @Mutation playlistRemove!: PlaylistRemove;
+  @Mutation playlistRefresh!: PlaylistRefresh;
 
   get newPlaylist(): VideoPlayer['playlist'] {
     return this.newPlaylistState;
@@ -65,12 +75,11 @@ export default class extends Vue {
     return this.videos.find((a) => a.sum === sum)?.name;
   }
 
-  remove(i: number): void {
-    this.newPlaylist.splice(i, 1);
-  }
-
-  created(): void {
-    this.newPlaylist = clone(this.videoPlayer.playlist);
+  @Watch('videoPlayer', { immediate: true })
+  onVideoPlayerChange(): void {
+    if (!this.localEdits) {
+      this.playlistRefresh();
+    }
   }
 }
 </script>

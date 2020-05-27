@@ -58,10 +58,10 @@ export default {
       bids,
       prizes,
     ).then(() => {
-      nodecg.listenFor('newSub', data => newSubs.push(data));
+      // nodecg.listenFor('newSub', data => newSubs.push(data));
       nodecg.listenFor('newTweet', data => newTweets.push(data));
-      nodecg.listenFor('newDonation', data => newDonations.push(data));
-      nodecg.listenFor('newCheer', data => newCheers.push(data));
+      // nodecg.listenFor('newDonation', data => newDonations.push(data));
+      // nodecg.listenFor('newCheer', data => newCheers.push(data));
       nodecg.listenFor('newCrowdControl', data => newCrowdControlExchanges.push(data));
 
       // Puts copies of the objects the functions return

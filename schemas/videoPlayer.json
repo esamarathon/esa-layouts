@@ -3,18 +3,35 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
+    "playlist": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "current": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
     "plays": {
       "type": "object",
       "additionalProperties": {
         "type": "number",
         "default": 0
       }
-    },
-    "selected": {
-      "type": "string"
     }
   },
   "required": [
+    "playlist",
+    "current",
     "plays"
   ]
 }

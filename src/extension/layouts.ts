@@ -133,7 +133,8 @@ sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
   // Switch to the video player scene if there is
   // a selected video when intermission commercials end.
   if (oldVal && oldVal.secondsRemaining > 0 && newVal.secondsRemaining <= 0
-    && videoPlayer.value.selected && obs.isCurrentScene(obsConfig.names.scenes.commercials)) {
+    && videoPlayer.value.playlist.length
+    && obs.isCurrentScene(obsConfig.names.scenes.commercials)) {
     try {
       await obs.changeScene(obsConfig.names.scenes.videoPlayer);
       obsData.value.disableTransitioning = true;

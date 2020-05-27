@@ -6,8 +6,9 @@
  */
 
 export interface VideoPlayer {
+  playlist: string[];
+  current: string | null;
   plays: {
     [k: string]: number;
   };
-  selected?: string;
 }

@@ -17,33 +17,45 @@ const reps: {
   videos: nodecg.Replicant('assets:videos'),
 };
 
-// Types for mutations below
-export type UpdateSelectedVideo = (sum?: string) => void;
-export type UnselectVideo = () => void;
+interface StateTypes {
+  disableSave: boolean;
+  newPlaylist: VideoPlayer['playlist'];
+}
+
+// Types for mutations/actions below
+export type UpdateNewPlaylist = (arr: VideoPlayer['playlist']) => void;
+export type PlaylistAdd = (sum: string) => void;
+export type Refresh = () => void;
+export type Save = () => void;
 
 const store = new Vuex.Store({
-  state: {},
+  state: {
+    disableSave: false,
+    newPlaylist: [],
+  } as StateTypes,
   mutations: {
     setState(state, { name, val }): void {
       Vue.set(state, name, val);
     },
-    /* Mutations to replicants start */
-    updateSelectedVideo(state, sum): void {
-      if (typeof reps.videoPlayer.value !== 'undefined') {
-        reps.videoPlayer.value.selected = sum;
-        /* if (!reps.videoPlayer.value.plays[sum]) {
-          reps.videoPlayer.value.plays[sum] = 1;
-        } else {
-          reps.videoPlayer.value.plays[sum] += 1;
-        } */
-      }
+    updateNewPlaylist(state, arr: VideoPlayer['playlist']): void {
+      Vue.set(state, 'newPlaylist', arr);
     },
-    unselectVideo(): void {
-      if (typeof reps.videoPlayer.value !== 'undefined') {
-        reps.videoPlayer.value.selected = undefined;
-      }
+    playlistAdd(state, sum: string): void {
+      state.newPlaylist.push(sum);
     },
-    /* Mutations to replicants end */
+    refresh(state): void {
+      Vue.set(state, 'newPlaylist', clone(reps.videoPlayer.value?.playlist || []));
+    },
+  },
+  actions: {
+    async save({ state }): Promise<void> {
+      Vue.set(state, 'disableSave', true);
+      if (typeof reps.videoPlayer.value !== 'undefined') {
+        reps.videoPlayer.value.playlist = clone(state.newPlaylist);
+      }
+      await new Promise((res) => setTimeout(res, 1000)); // Fake 1s wait
+      Vue.set(state, 'disableSave', false);
+    },
   },
 });
 
@@ -53,7 +65,7 @@ Object.keys(reps).forEach((key) => {
   });
 });
 
-export default async function (): Promise<Store<{}>> {
+export default async function (): Promise<Store<StateTypes>> {
   return NodeCG.waitForReplicants(
     ...Object.keys(reps).map((key) => reps[key]),
   ).then(() => store);

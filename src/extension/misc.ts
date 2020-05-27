@@ -85,7 +85,7 @@ sc.on('timerStopped', () => {
     const videoName = run.customData.intermission;
     const asset = assetsVideos.value.find((v) => v.name === videoName);
     if (asset) {
-      videoPlayer.value.selected = asset.sum;
+      videoPlayer.value.playlist = [asset.sum];
       nodecg().log.info(`[Misc] Automatically set video player to ${videoName}`);
     } else {
       nodecg().log.warn(`[Misc] Cannot automatically set video player to ${videoName}`);

@@ -18,8 +18,9 @@ const reps: {
 };
 
 // Types for mutations below
-export type UpdatePlayCount = () => void;
-export type UnselectVideo = () => void;
+export type UpdateCurrent = (sum?: string) => void;
+export type UpdatePlayCount = (sum: string) => void;
+export type ClearPlaylist = () => void;
 
 const store = new Vuex.Store({
   state: {},
@@ -28,18 +29,23 @@ const store = new Vuex.Store({
       Vue.set(state, name, val);
     },
     /* Mutations to replicants start */
-    updatePlayCount(): void {
-      if (typeof reps.videoPlayer.value !== 'undefined' && reps.videoPlayer.value.selected) {
-        if (!reps.videoPlayer.value.plays[reps.videoPlayer.value.selected]) {
-          reps.videoPlayer.value.plays[reps.videoPlayer.value.selected] = 1;
+    updateCurrent(state, sum?: string): void {
+      if (typeof reps.videoPlayer.value !== 'undefined') {
+        reps.videoPlayer.value.current = sum || null;
+      }
+    },
+    updatePlayCount(state, sum: string): void {
+      if (typeof reps.videoPlayer.value !== 'undefined' && sum) {
+        if (!reps.videoPlayer.value.plays[sum]) {
+          reps.videoPlayer.value.plays[sum] = 1;
         } else {
-          reps.videoPlayer.value.plays[reps.videoPlayer.value.selected] += 1;
+          reps.videoPlayer.value.plays[sum] += 1;
         }
       }
     },
-    unselectVideo(): void {
+    clearPlaylist(): void {
       if (typeof reps.videoPlayer.value !== 'undefined') {
-        reps.videoPlayer.value.selected = undefined;
+        reps.videoPlayer.value.playlist.length = 0;
       }
     },
     /* Mutations to replicants end */

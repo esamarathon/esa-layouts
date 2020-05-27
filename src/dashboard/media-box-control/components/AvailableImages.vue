@@ -33,7 +33,7 @@ import { State } from 'vuex-class';
 import Draggable from 'vuedraggable';
 import { Asset, MediaBox } from 'types';
 import { clone } from './shared';
-import MediaCard from './MediaCard.vue';
+import MediaCard from '../../_misc/components/MediaCard.vue';
 
 @Component({
   components: {

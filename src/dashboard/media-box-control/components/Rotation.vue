@@ -56,7 +56,7 @@ import Draggable from 'vuedraggable';
 import clone from 'clone';
 import { Prizes, MediaBox as MediaBoxRep } from 'schemas';
 import { Asset, MediaBox } from 'types';
-import MediaCard from './MediaCard.vue';
+import MediaCard from '../../_misc/components/MediaCard.vue';
 import ApplicableIcon from './ApplicableIcon.vue';
 import { UpdateNewRotation } from '../store';
 import { getMediaDetails, isPrizeApplicable } from './shared';

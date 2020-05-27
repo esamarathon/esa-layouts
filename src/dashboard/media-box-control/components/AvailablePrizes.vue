@@ -63,7 +63,7 @@ import Draggable from 'vuedraggable';
 import { Tracker, MediaBox } from 'types';
 import { Prizes } from 'schemas';
 import { clone, isPrizeApplicable } from './shared';
-import MediaCard from './MediaCard.vue';
+import MediaCard from '../../_misc/components/MediaCard.vue';
 import ApplicableIcon from './ApplicableIcon.vue';
 
 @Component({

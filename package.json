@@ -260,7 +260,8 @@
           "jpeg",
           "png",
           "svg",
-          "webp"
+          "webp",
+          "gif"
         ]
       },
       {
@@ -281,7 +282,8 @@
           "svg",
           "mp4",
           "webm",
-          "webp"
+          "webp",
+          "gif"
         ]
       },
       {

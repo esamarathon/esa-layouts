@@ -1,6 +1,7 @@
 import type { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';
+import { Asset } from 'types';
 import { getCurrentEventShort, getOtherStreamEventShort } from './util/helpers';
 import { logRunChange, logVideoPlay } from './util/logging';
 import { get as nodecg } from './util/nodecg';
@@ -83,7 +84,9 @@ sc.on('timerStopped', () => {
   const run = sc.getCurrentRun();
   if (run?.customData.intermission) {
     const videoNames = run.customData.intermission.split(',');
-    const assets = assetsVideos.value.filter((v) => videoNames.includes(v.name.trim()));
+    const assets = videoNames
+      .map((n) => assetsVideos.value.find((v) => v.name === n.trim()))
+      .filter(Boolean) as Asset[];
     if (assets.length) {
       videoPlayer.value.playlist = assets.map((a) => a.sum);
       const successfulVideos = assets.map((a) => a.name).join(', ');

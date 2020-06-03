@@ -163,7 +163,7 @@ class OBS extends EventEmitter {
     status: 'ok';
     sourceName: string;
     sourceType: string;
-    sourceSettings: {};
+    sourceSettings: Record<string, unknown>;
   }> {
     if (!config.enable || !this.connected) {
       // OBS not enabled, don't even try to set.
@@ -185,7 +185,7 @@ class OBS extends EventEmitter {
    * @param sourceSettings Settings you wish to pass to OBS to change.
    */
   // eslint-disable-next-line max-len
-  async setSourceSettings(sourceName: string, sourceType: string, sourceSettings: {}): Promise<void> {
+  async setSourceSettings(sourceName: string, sourceType: string, sourceSettings: Record<string, unknown>): Promise<void> {
     if (!config.enable || !this.connected) {
       // OBS not enabled, don't even try to set.
       throw new Error('No connection available');

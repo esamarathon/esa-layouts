@@ -176,7 +176,7 @@ async function init(): Promise<void> {
       donationTotal.value = eventInfo.reduce((p, e) => p + e.total, 0);
     }
 
-    /* eslint-disable global-require */
+    /* eslint-disable @typescript-eslint/no-var-requires */
     require('./tracker-bids').setup();
     require('./tracker-prizes').setup();
     require('./tracker-donations').setup();

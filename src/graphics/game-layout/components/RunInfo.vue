@@ -71,11 +71,11 @@ export default class extends Vue {
       if (!this.noWrap) {
         [this.fittyGame] = fitty('.RunGame', {
           minSize: 1,
-          maxSize: parseInt(elem.style.fontSize, 0),
+          maxSize: parseInt(elem.style.fontSize, 10),
         });
         [this.fittyInfoExtra] = fitty('.RunInfoExtra', {
           minSize: 1,
-          maxSize: parseInt(elem.style.fontSize, 0) * 0.8,
+          maxSize: parseInt(elem.style.fontSize, 10) * 0.8,
         });
       } else {
         // If there is no horizontal fitting, will crudely attempt to

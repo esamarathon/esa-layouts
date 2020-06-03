@@ -130,7 +130,7 @@ async function setupChan(chan: ConfirmChannel): Promise<void> {
 }
 
 function generateDonationMsg(): Tracker.DonationFullyProcessed {
-  /* eslint-disable @typescript-eslint/camelcase */
+  /* eslint-disable @typescript-eslint/naming-convention */
   return {
     event: 'testevt1',
     _id: Math.random() * 1000000000,
@@ -218,7 +218,8 @@ if (config.enable) {
  * @param key The routing key this message will be published with.
  * @param data The data that should be sent in this message.
  */
-export function send(key: string, data: {}): void {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function send(key: string, data: { [k: string]: any }): void {
   if (!config.enable) {
     // RabbitMQ not enabled, don't even try to send.
     return;

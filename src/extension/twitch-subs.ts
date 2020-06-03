@@ -8,6 +8,7 @@ const refreshTime = 60 * 1000; // Update every 60s.
 async function updateSubscriptionStats(): Promise<void> {
   try {
     nodecg().log.debug('[Twitch Subs] Attempting to update stats');
+    // eslint-disable-next-line camelcase
     const subs: { broadcaster_id: string; user_id: string; tier: string }[] = [];
     let cursor: string | undefined;
     let nextPage = true;

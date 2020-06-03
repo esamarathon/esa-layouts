@@ -84,7 +84,7 @@ export default class extends Vue {
   get newRotation(): MediaBox.RotationElem[] {
     return this.newRotationState;
   }
-  set newRotation(val) {
+  set newRotation(val: MediaBox.RotationElem[]) {
     this.updateNewRotation(val);
   }
 

@@ -1,5 +1,3 @@
-/* eslint-disable global-require */
-
 import type { Configschema } from 'configschema';
 import type { NodeCG } from 'nodecg/types/server';
 import { set } from './util/nodecg';
@@ -35,6 +33,7 @@ export = (nodecg: NodeCG): { obs: any } => {
   // require('./twitch-subs');
 
   return {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     obs: require('./util/obs').default,
   };
 };

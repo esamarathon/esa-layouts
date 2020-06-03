@@ -18,10 +18,10 @@ export function updateCapturePositionData(layout: string): void {
       const bottomBorder = getComputedStyle(el).getPropertyValue('border-bottom-width');
       const leftBorder = getComputedStyle(el).getPropertyValue('border-left-width');
       const calcSizes = {
-        x: sizes.x + parseInt(leftBorder, 0),
-        y: sizes.y + parseInt(topBorder, 0),
-        width: sizes.width - parseInt(rightBorder, 0) - parseInt(leftBorder, 0),
-        height: sizes.height - parseInt(bottomBorder, 0) - parseInt(topBorder, 0),
+        x: sizes.x + parseInt(leftBorder, 10),
+        y: sizes.y + parseInt(topBorder, 10),
+        width: sizes.width - parseInt(rightBorder, 10) - parseInt(leftBorder, 10),
+        height: sizes.height - parseInt(bottomBorder, 10) - parseInt(topBorder, 10),
       };
       pos[el.id] = calcSizes;
     }

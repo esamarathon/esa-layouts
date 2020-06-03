@@ -66,7 +66,7 @@ export default class extends Vue {
   get selected(): TtsVoices['selected'] | undefined {
     return this.voices.selected;
   }
-  set selected(val) {
+  set selected(val: TtsVoices['selected'] | undefined) {
     this.updateSelectedVoice(val);
   }
 

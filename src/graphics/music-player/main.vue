@@ -101,7 +101,7 @@ export default class extends Vue {
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   @Watch('onScene')
-  onSceneChange(val: boolean) {
+  onSceneChange(val: boolean): void {
     if (val) {
       gsap.to(this, { currentVolume: this.defaultVolume, duration: 2 });
     } else {

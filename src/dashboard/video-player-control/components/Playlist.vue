@@ -67,7 +67,7 @@ export default class extends Vue {
   get newPlaylist(): VideoPlayer['playlist'] {
     return this.newPlaylistState;
   }
-  set newPlaylist(val) {
+  set newPlaylist(val: VideoPlayer['playlist']) {
     this.updateNewPlaylist(val);
   }
 

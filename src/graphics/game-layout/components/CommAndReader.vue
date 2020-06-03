@@ -87,11 +87,11 @@ export default class extends Vue {
     const elem = this.$refs.CommAndReader as HTMLElement;
     [this.fittyCommentator] = fitty('.CommentatorText', {
       minSize: 1,
-      maxSize: parseInt(elem.style.fontSize, 0),
+      maxSize: parseInt(elem.style.fontSize, 10),
     });
     [this.fittyReader] = fitty('.ReaderText', {
       minSize: 1,
-      maxSize: parseInt(elem.style.fontSize, 0),
+      maxSize: parseInt(elem.style.fontSize, 10),
     });
   }
 

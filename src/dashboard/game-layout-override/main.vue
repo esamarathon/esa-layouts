@@ -70,7 +70,7 @@ export default class extends Vue {
   get selected(): GameLayouts['selected'] | undefined {
     return this.gameLayouts.selected;
   }
-  set selected(val) {
+  set selected(val: GameLayouts['selected'] | undefined) {
     this.updateSelected(val);
   }
 

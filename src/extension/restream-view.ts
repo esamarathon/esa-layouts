@@ -116,7 +116,7 @@ async function configureMediaSource(url: string): Promise<void> {
       await obs.setSourceSettings(
         obsConfig.names.sources.restreamSource,
         'vlc_source',
-        /* eslint-disable @typescript-eslint/camelcase */
+        /* eslint-disable @typescript-eslint/naming-convention */
         {
           loop: true,
           network_caching: 1000,
@@ -137,7 +137,7 @@ async function configureMediaSource(url: string): Promise<void> {
       await obs.setSourceSettings(
         obsConfig.names.sources.restreamSource,
         'ffmpeg_source',
-        /* eslint-disable @typescript-eslint/camelcase */
+        /* eslint-disable @typescript-eslint/naming-convention */
         {
           buffering_mb: 2,
           clear_on_media_end: false,

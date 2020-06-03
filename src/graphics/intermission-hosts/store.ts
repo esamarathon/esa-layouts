@@ -8,8 +8,8 @@ Vue.use(Vuex);
 export interface Users {
   [k: string]: {
     [k: string]: {
-      display_name: string;
-      country_code?: string;
+      display_name: string; // eslint-disable-line camelcase
+      country_code?: string; // eslint-disable-line camelcase
     };
   };
 }
@@ -37,8 +37,7 @@ Object.keys(reps).forEach((key) => {
   });
 });
 
-export default async function (): Promise<Store<{}>> {
-  return NodeCG.waitForReplicants(
-    ...Object.keys(reps).map((key) => reps[key]),
-  ).then(() => store);
-}
+export default async (): Promise<Store<Record<string, unknown>>> => {
+  await NodeCG.waitForReplicants(...Object.keys(reps).map((key) => reps[key]));
+  return store;
+};

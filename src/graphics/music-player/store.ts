@@ -123,20 +123,18 @@ Object.keys(reps).forEach((key) => {
   });
 });
 
-export default async function (): Promise<Store<StateTypes>> {
-  return NodeCG.waitForReplicants(
-    ...Object.keys(reps).map((key) => reps[key]),
-  )
-    .then(() => {
-      // Updates local state with replicant contents on start.
-      Vue.set(store.state, 'playing', reps.musicPlayer.value?.playing);
-      Vue.set(store.state, 'paused', reps.musicPlayer.value?.paused);
-      Vue.set(store.state, 'sum', reps.musicPlayer.value?.sum);
-      Vue.set(store.state, 'position', reps.musicPlayer.value?.position);
-      Vue.set(store.state.metadata, 'title', reps.musicPlayer.value?.metadata.title);
-      Vue.set(store.state.metadata, 'artist', reps.musicPlayer.value?.metadata.artist);
-      Vue.set(store.state, 'history', clone(reps.musicPlayer.value?.history));
-      Vue.set(store.state, 'recent', clone(reps.musicPlayer.value?.recent));
-    })
-    .then(() => store);
-}
+export default async (): Promise<Store<StateTypes>> => {
+  await NodeCG.waitForReplicants(...Object.keys(reps).map((key) => reps[key]));
+
+  // Updates local state with replicant contents on start.
+  Vue.set(store.state, 'playing', reps.musicPlayer.value?.playing);
+  Vue.set(store.state, 'paused', reps.musicPlayer.value?.paused);
+  Vue.set(store.state, 'sum', reps.musicPlayer.value?.sum);
+  Vue.set(store.state, 'position', reps.musicPlayer.value?.position);
+  Vue.set(store.state.metadata, 'title', reps.musicPlayer.value?.metadata.title);
+  Vue.set(store.state.metadata, 'artist', reps.musicPlayer.value?.metadata.artist);
+  Vue.set(store.state, 'history', clone(reps.musicPlayer.value?.history));
+  Vue.set(store.state, 'recent', clone(reps.musicPlayer.value?.recent));
+
+  return store;
+};

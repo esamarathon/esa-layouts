@@ -1,6 +1,6 @@
+/* eslint-disable camelcase */
 /* eslint-disable object-curly-newline */
 /* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/camelcase */
 
 import L_16x9_1p_2Cams from './16x9-1p-2cams.vue';
 import L_16x9_1p_LargeCam from './16x9-1p-largecam.vue';

@@ -180,7 +180,7 @@ export default class extends Vue {
     if (elem) {
       [this.fittyPlayer] = fitty('.PlayerText', {
         minSize: 1,
-        maxSize: parseInt(elem.style.fontSize, 0),
+        maxSize: parseInt(elem.style.fontSize, 10),
       });
     }
   }

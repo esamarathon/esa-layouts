@@ -43,10 +43,11 @@
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
+import { State2Way } from 'vuex-class-state2way';
 import Draggable from 'vuedraggable';
 import { VideoPlayer } from 'schemas';
 import { Asset } from 'types';
-import { UpdateNewPlaylist, PlaylistRefresh, PlaylistRemove } from '../store';
+import { PlaylistRefresh, PlaylistRemove } from '../store';
 import MediaCard from '../../_misc/components/MediaCard.vue';
 
 @Component({
@@ -58,18 +59,10 @@ import MediaCard from '../../_misc/components/MediaCard.vue';
 export default class extends Vue {
   @State videos!: Asset[];
   @State videoPlayer!: VideoPlayer;
-  @State('newPlaylist') newPlaylistState!: VideoPlayer['playlist'];
+  @State2Way('updateNewPlaylist', 'newPlaylist') newPlaylist!: VideoPlayer['playlist'];
   @State localEdits!: boolean;
-  @Mutation updateNewPlaylist!: UpdateNewPlaylist;
   @Mutation playlistRemove!: PlaylistRemove;
   @Mutation playlistRefresh!: PlaylistRefresh;
-
-  get newPlaylist(): VideoPlayer['playlist'] {
-    return this.newPlaylistState;
-  }
-  set newPlaylist(val: VideoPlayer['playlist']) {
-    this.updateNewPlaylist(val);
-  }
 
   getName(sum: string): string | undefined {
     return this.videos.find((a) => a.sum === sum)?.name;

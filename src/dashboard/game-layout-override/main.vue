@@ -36,15 +36,15 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
-import { State, Mutation } from 'vuex-class';
+import { State } from 'vuex-class';
+import { State2Way } from 'vuex-class-state2way';
 import goTo from 'vuetify/es5/services/goto';
 import { GameLayouts } from 'schemas';
-import { UpdateSelected } from './store';
 
 @Component
 export default class extends Vue {
   @State gameLayouts!: GameLayouts;
-  @Mutation updateSelected!: UpdateSelected;
+  @State2Way('updateSelected', 'gameLayouts.selected') selected!: GameLayouts['selected'];
 
   @Watch('selected')
   async scrollToSelectedLayout(): Promise<void> {
@@ -65,13 +65,6 @@ export default class extends Vue {
     if (this.gameLayouts.available.length) {
       this.scrollToSelectedLayout();
     }
-  }
-
-  get selected(): GameLayouts['selected'] | undefined {
-    return this.gameLayouts.selected;
-  }
-  set selected(val: GameLayouts['selected'] | undefined) {
-    this.updateSelected(val);
   }
 
   mounted(): void {

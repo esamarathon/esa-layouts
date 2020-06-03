@@ -51,14 +51,14 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import { State, Mutation } from 'vuex-class';
+import { State } from 'vuex-class';
+import { State2Way } from 'vuex-class-state2way';
 import Draggable from 'vuedraggable';
 import clone from 'clone';
 import { Prizes, MediaBox as MediaBoxRep } from 'schemas';
 import { Asset, MediaBox } from 'types';
 import MediaCard from '../../_misc/components/MediaCard.vue';
 import ApplicableIcon from './ApplicableIcon.vue';
-import { UpdateNewRotation } from '../store';
 import { getMediaDetails, isPrizeApplicable } from './shared';
 
 @Component({
@@ -71,21 +71,13 @@ import { getMediaDetails, isPrizeApplicable } from './shared';
 export default class extends Vue {
   @State images!: Asset[];
   @State prizes!: Prizes;
-  @State('newRotation') newRotationState!: MediaBox.RotationElem[];
-  @Mutation updateNewRotation!: UpdateNewRotation;
   @State settings!: MediaBoxRep;
+  @State2Way('updateNewRotation', 'newRotation') newRotation!: MediaBox.RotationElem[];
   getMediaDetails = getMediaDetails;
   isPrizeApplicable = isPrizeApplicable;
 
   created(): void {
     this.newRotation = clone(this.settings.rotation);
-  }
-
-  get newRotation(): MediaBox.RotationElem[] {
-    return this.newRotationState;
-  }
-  set newRotation(val: MediaBox.RotationElem[]) {
-    this.updateNewRotation(val);
   }
 
   isApplicable(media: MediaBox.RotationElem): boolean {

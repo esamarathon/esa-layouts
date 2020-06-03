@@ -40,16 +40,16 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
-import { State, Mutation } from 'vuex-class';
+import { State } from 'vuex-class';
+import { State2Way } from 'vuex-class-state2way';
 import goTo from 'vuetify/es5/services/goto';
 import { TtsVoices } from 'schemas';
 import { Configschema } from 'configschema';
-import { UpdateSelectedVoice } from './store';
 
 @Component
 export default class extends Vue {
   @State voices!: TtsVoices;
-  @Mutation updateSelectedVoice!: UpdateSelectedVoice;
+  @State2Way('updateSelectedVoice', 'voices.selected') selected!: TtsVoices['selected'];
   config = (nodecg.bundleConfig as Configschema).tts;
 
   @Watch('voices')
@@ -61,13 +61,6 @@ export default class extends Vue {
 
   playExample(): void {
     nodecg.sendMessage('ttsExample');
-  }
-
-  get selected(): TtsVoices['selected'] | undefined {
-    return this.voices.selected;
-  }
-  set selected(val: TtsVoices['selected'] | undefined) {
-    this.updateSelectedVoice(val);
   }
 
   mounted(): void {

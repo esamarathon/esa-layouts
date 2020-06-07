@@ -1,5 +1,5 @@
 import type { Configschema } from 'configschema';
-import MediaBox from 'esa-layouts-mediabox/extension';
+import MediaBox from 'esa-layouts-shared/mediabox/extension';
 import { logSponsorLogoChange } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';

@@ -32,6 +32,7 @@
   "dependencies": {
     "amqp-connection-manager": "^3.2.0",
     "amqplib": "^0.5.6",
+    "esa-layouts-mediabox": "github:esamarathon/esa-layouts-mediabox#dev-built",
     "lodash": "^4.17.15",
     "moment": "^2.26.0",
     "needle": "^2.5.0",

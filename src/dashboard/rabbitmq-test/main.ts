@@ -1,11 +1,6 @@
-/* eslint no-new: off, @typescript-eslint/explicit-function-return-type: off */
+import type { Configschema } from 'configschema';
+import Component from 'esa-layouts-shared/rabbitmq/dashboard';
 
-import Vue from 'vue';
-import vuetify from '../_misc/vuetify';
-import App from './main.vue';
+const config = (nodecg.bundleConfig as Configschema);
 
-new Vue({
-  vuetify,
-  el: '#App',
-  render: (h) => h(App),
-});
+Component(config.rabbitmq.enable, config.useTestData);

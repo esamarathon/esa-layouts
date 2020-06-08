@@ -4,7 +4,7 @@ import type { MediaBox } from 'schemas';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';
 import { get as nodecg } from './nodecg';
-import { send as mqSend } from './rabbitmq';
+import { mq } from './rabbitmq';
 import { assetsMediaBoxImages, assetsVideos, mediaBox } from './replicants';
 
 const config = nodecg().bundleConfig as Configschema;
@@ -15,7 +15,7 @@ const sc = new SpeedcontrolUtil(nodecg());
  * @param streaming If the streaming was started or stopped.
  */
 export function logStreamingStatusChange(streaming: boolean): void {
-  mqSend(
+  mq.send(
     `obs.stream.${streaming ? 'start' : 'stop'}`,
     {
       streaming,
@@ -30,7 +30,7 @@ export function logStreamingStatusChange(streaming: boolean): void {
  */
 export function logSceneSwitch(name: string, action: 'end' | 'start'): void {
   const isGameScene = name === config.obs.names.scenes.gameLayout;
-  mqSend(
+  mq.send(
     `obs.scene.${name.replace(/[. ]/g, '_')}.${action}${isGameScene ? '.gamescene' : ''}`,
     {
       action,
@@ -49,7 +49,7 @@ export function logTimerChange(
   desc: mqTypes.SCTimerChanged['desc'],
   teamID?: mqTypes.SCTimerChanged['teamID'],
 ): void {
-  mqSend(
+  mq.send(
     `timer.${teamID ? `team.${teamID}.` : ''}${desc}`,
     {
       desc,
@@ -64,7 +64,7 @@ export function logTimerChange(
  * @param run: Run Data object.
  */
 export function logRunChange(run?: RunData): void {
-  mqSend(
+  mq.send(
     'run.changed',
     {
       run,
@@ -81,7 +81,7 @@ export function logRunChange(run?: RunData): void {
 export function logSponsorLogoChange(logo?: MediaBox['current']): void {
   const logoInfo = mediaBox.value.rotation.find((l) => l.id === logo?.id);
   const asset = assetsMediaBoxImages.value.find((a) => a.sum === logo?.mediaUUID);
-  mqSend(
+  mq.send(
     'sponsor.logo.changed',
     {
       logo: logo?.type === 'image' ? asset?.name : undefined,
@@ -93,7 +93,7 @@ export function logSponsorLogoChange(logo?: MediaBox['current']): void {
 export function logVideoPlay(sum: string): void {
   const asset = assetsVideos.value.find((a) => a.sum === sum);
   if (asset) {
-    mqSend(
+    mq.send(
       'video.played',
       {
         name: asset.name,

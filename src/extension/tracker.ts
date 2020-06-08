@@ -3,7 +3,7 @@ import needle from 'needle';
 import type { NeedleResponse } from 'needle';
 import type { Tracker } from 'types';
 import { get as nodecg } from './util/nodecg';
-import { evt } from './util/rabbitmq';
+import { mq } from './util/rabbitmq';
 import { donationTotal, notableDonations } from './util/replicants';
 
 export const eventInfo: Tracker.EventInfo[] = [];
@@ -60,7 +60,7 @@ async function updateDonationTotalFromAPI(): Promise<void> {
 }
 
 // Triggered when a donation total is updated in our tracker.
-evt.on('donationTotalUpdated', (data) => {
+mq.evt.on('donationTotalUpdated', (data) => {
   let total = 0;
   for (const event of eventInfo) {
     if (data.event === event.short) {
@@ -75,7 +75,7 @@ evt.on('donationTotalUpdated', (data) => {
 });
 
 // Triggered when a new donation is fully processed on the tracker.
-evt.on('donationFullyProcessed', (data) => {
+mq.evt.on('donationFullyProcessed', (data) => {
   if (data.comment_state === 'APPROVED') {
     // eslint-disable-next-line no-underscore-dangle
     nodecg().log.debug('[Tracker] Received new donation with ID %s', data._id);

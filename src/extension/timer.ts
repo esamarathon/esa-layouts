@@ -3,13 +3,13 @@ import SpeedcontrolUtil from 'speedcontrol-util';
 import { logTimerChange } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { evt } from './util/rabbitmq';
+import { mq } from './util/rabbitmq';
 
 const config = nodecg().bundleConfig as Configschema;
 const sc = new SpeedcontrolUtil(nodecg());
 
 // Controls the nodecg-speedcontrol timer when the big buttons are pressed.
-evt.on('bigbuttonPressed', async (data) => {
+mq.evt.on('bigbuttonPressed', async (data) => {
   // Only listen to this event on stream 1.
   if (config.event.thisEvent !== 1) {
     return;

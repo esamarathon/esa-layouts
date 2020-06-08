@@ -15,7 +15,7 @@ export const commentators = nodecg().Replicant<Commentators>('commentators');
 export const donationsToRead = nodecg().Replicant<DonationsToRead>('donationsToRead', { persistent: false });
 export const donationTotal = nodecg().Replicant<DonationTotal>('donationTotal');
 export const gameLayouts = nodecg().Replicant<GameLayouts>('gameLayouts');
-export const mediaBox = nodecg().Replicant<MediaBox>('mediaBox');
+export const mediaBox = nodecg().Replicant<MediaBox>('mediaBox'); // try to remove and use esa-layout-shared only
 // @ts-ignore: persistenceInterval not typed yet
 export const musicPlayer = nodecg().Replicant<MusicPlayer>('musicPlayer', { persistenceInterval: 1000 });
 export const nameCycle = nodecg().Replicant<NameCycle>('nameCycle', { persistent: false });

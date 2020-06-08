@@ -6,26 +6,26 @@ import { getCurrentEventShort, getOtherStreamEventShort } from './util/helpers';
 import { logRunChange, logVideoPlay } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { evt } from './util/rabbitmq';
+import { mq } from './util/rabbitmq';
 import { assetsVideos, commentators, otherStreamData, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
 
 const config = (nodecg().bundleConfig as Configschema);
 const sc = new SpeedcontrolUtil(nodecg());
 
 // Screened data from our moderation tool.
-evt.on('newScreenedSub', (data) => {
+mq.evt.on('newScreenedSub', (data) => {
   nodecg().log.debug('[Misc] Received new subscription');
   nodecg().sendMessage('newSub', data);
 });
-evt.on('newScreenedTweet', (data) => {
+mq.evt.on('newScreenedTweet', (data) => {
   nodecg().log.debug('[Misc] Received new tweet');
   nodecg().sendMessage('newTweet', data);
 });
-evt.on('newScreenedCheer', (data) => {
+mq.evt.on('newScreenedCheer', (data) => {
   nodecg().log.debug('[Misc] Received new cheer');
   nodecg().sendMessage('newCheer', data);
 });
-evt.on('newScreenedCrowdControl', (data) => {
+mq.evt.on('newScreenedCrowdControl', (data) => {
   if (config.event.thisEvent === 1) {
     nodecg().log.debug('[Misc] Received new crowd control message');
     nodecg().sendMessage('newCrowdControl', data);
@@ -33,13 +33,13 @@ evt.on('newScreenedCrowdControl', (data) => {
 });
 
 // Information that should come from our 2nd stream.
-evt.on('runChanged', (data) => {
+mq.evt.on('runChanged', (data) => {
   if (getOtherStreamEventShort() === data.event) {
     otherStreamData.value.runData = (data.run as RunData | undefined) || null;
     nodecg().log.debug('[Misc] Received modified run data from other stream');
   }
 });
-evt.on('gameSceneChanged', (data) => {
+mq.evt.on('gameSceneChanged', (data) => {
   if (getOtherStreamEventShort() === data.event) {
     nodecg().log.debug('[Misc] Received game scene change from other stream:', data.action);
     if (data.action === 'start') {
@@ -52,7 +52,7 @@ evt.on('gameSceneChanged', (data) => {
 
 // When someone scans in on one of the big timer buttons.
 // Currently only used for commentators.
-evt.on('bigbuttonTagScanned', (data) => {
+mq.evt.on('bigbuttonTagScanned', (data) => {
   if (getCurrentEventShort() === data.flagcarrier.group) {
     const name = data.user.displayName;
     nodecg().sendMessage('bigbuttonTagScanned', data);

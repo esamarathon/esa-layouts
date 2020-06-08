@@ -3,8 +3,9 @@ import MediaBox from 'esa-layouts-shared/mediabox/extension';
 import { logSponsorLogoChange } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
+import { mq } from './util/rabbitmq';
 
-const mb = new MediaBox(nodecg());
+const mb = new MediaBox(nodecg(), mq.evt);
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 
 /**

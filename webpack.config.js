@@ -8,6 +8,7 @@ const LiveReloadPlugin = require('webpack-livereload-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const globby = require('globby');
 const path = require('path');
+const fs = require('fs');
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -144,6 +145,7 @@ const config = (name) => {
         {
           test: /\.svg?$/,
           include: [
+            fs.realpathSync(path.resolve(__dirname, 'node_modules/esa-layouts-shared/fonts')),
             path.resolve(__dirname, `src/${name}/_misc/fonts`),
           ],
           loader: 'file-loader',
@@ -155,6 +157,7 @@ const config = (name) => {
         {
           test: /\.(png|svg)?$/,
           exclude: [
+            fs.realpathSync(path.resolve(__dirname, 'node_modules/esa-layouts-shared/fonts')),
             path.resolve(__dirname, `src/${name}/_misc/fonts`),
           ],
           loader: 'file-loader',

@@ -106,7 +106,7 @@
           v-if="player.country"
           :key="player.country"
           class="Flag"
-          :src="`/bundles/esa-layouts/static/flags/${player.country}.png`"
+          :src="`/bundles/esa-layouts/flags/${player.country}.png`"
           :style="{
             position: 'absolute',
             right: '0',
@@ -164,7 +164,7 @@ export default class extends Vue {
       };
       img.addEventListener('load', setAsLoaded);
       img.addEventListener('error', setAsLoaded);
-      img.src = `/bundles/esa-layouts/static/flags/${player.country}.png`;
+      img.src = `/bundles/esa-layouts/flags/${player.country}.png`;
     });
   }
 

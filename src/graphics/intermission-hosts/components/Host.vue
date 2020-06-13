@@ -13,7 +13,7 @@
     <img
       v-if="users.hosts[pos].country_code"
       :key="users.hosts[pos].country_code"
-      :src="`/bundles/esa-layouts/static/flags/${users.hosts[pos].country_code.toLowerCase()}.png`"
+      :src="`/bundles/esa-layouts/flags/${users.hosts[pos].country_code.toLowerCase()}.png`"
       :style="{
         height: '100%',
         'padding-left': '10px',

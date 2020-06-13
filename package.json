@@ -250,8 +250,8 @@
     ],
     "mount": [
       {
-        "directory": "static",
-        "endpoint": "static"
+        "directory": "node_modules/esa-layouts-shared/flags",
+        "endpoint": "flags"
       }
     ],
     "assetCategories": [

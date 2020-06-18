@@ -39,8 +39,7 @@
     "obs-websocket-js": "^4.0.1",
     "speedcontrol-util": "^0.5.0",
     "streamdeck-util": "^0.3.3",
-    "string-similarity": "^4.0.1",
-    "xkeys": "^0.1.2"
+    "string-similarity": "^4.0.1"
   },
   "devDependencies": {
     "@esamarathon/mq-events": "github:esamarathon/mq-events",

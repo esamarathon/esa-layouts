@@ -76,6 +76,7 @@
     "src/dashboard/**/*.ts",
     "src/dashboard/**/*.vue",
     "src/graphics/**/*.ts",
-    "src/graphics/**/*.vue"
+    "src/graphics/**/*.vue",
+    "node_modules/esa-layouts-shared/types/**/*.d.ts"
   ]
 }

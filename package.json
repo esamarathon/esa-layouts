@@ -30,26 +30,19 @@
     "watch:extension": "tsc -b tsconfig.extension.json -w"
   },
   "dependencies": {
-    "amqp-connection-manager": "^3.2.0",
-    "amqplib": "^0.5.6",
     "esa-layouts-shared": "github:esamarathon/esa-layouts-shared#dev-built",
     "lodash": "^4.17.15",
     "moment": "^2.26.0",
     "needle": "^2.5.0",
-    "obs-websocket-js": "^4.0.1",
     "speedcontrol-util": "^0.5.0",
-    "streamdeck-util": "^0.3.3",
-    "string-similarity": "^4.0.1"
+    "streamdeck-util": "^0.3.3"
   },
   "devDependencies": {
     "@esamarathon/mq-events": "github:esamarathon/mq-events",
     "@mdi/font": "^5.3.45",
-    "@types/amqp-connection-manager": "^2.0.10",
-    "@types/amqplib": "^0.5.13",
     "@types/clone": "^0.1.30",
     "@types/lodash": "^4.14.155",
     "@types/needle": "^2.0.4",
-    "@types/string-similarity": "^3.0.0",
     "@types/uuid": "^8.0.0",
     "@typescript-eslint/eslint-plugin": "^3.2.0",
     "@typescript-eslint/parser": "^3.2.0",

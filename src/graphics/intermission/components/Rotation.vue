@@ -39,12 +39,12 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import UpcomingRuns from './rotation/UpcomingRuns.vue';
-import Bid from './rotation/Bid.vue';
-import Prize from './rotation/Prize.vue';
-import Media from './rotation/Media.vue';
-import { setCurrentBid } from './rotation/Bid';
-import { setCurrentPrize } from './rotation/Prize';
+import UpcomingRuns from './Rotation/UpcomingRuns.vue';
+import Bid from './Rotation/Bid.vue';
+import Prize from './Rotation/Prize.vue';
+import Media from './Rotation/Media.vue';
+import { setCurrentBid } from './Rotation/Bid';
+import { setCurrentPrize } from './Rotation/Prize';
 import { setCurrentMedia } from './Rotation/Media';
 
 @Component({

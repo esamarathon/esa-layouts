@@ -6,6 +6,7 @@ const { theme } = (nodecg.bundleConfig as Configschema).event;
 const defaultTheme = require('./themes/default.theme.css');
 const together = require('./themes/together.theme.css');
 const coronarelief = require('./themes/coronarelief.theme.css');
+const uksg = require('./themes/uksg.theme.css');
 
 defaultTheme.use();
 
@@ -15,6 +16,9 @@ switch (theme) {
     break;
   case 'coronarelief':
     coronarelief.use();
+    break;
+  case 'uksg':
+    uksg.use();
     break;
   default:
     // do nothing

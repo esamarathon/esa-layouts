@@ -4,13 +4,13 @@
     class="Flex"
   >
     <img
-      src="./coronarelief_logo.png"
+      src="./uksg_summer_logo.png"
       :style="{ padding: '0 10px' }"
     >
     <divider></divider>
     <img
-      src="./stc_logo.png"
-      :style="{ padding: '0 5px 0 5px' }"
+      src="./crisis_logo.png"
+      :style="{ padding: '0 10px 0 10px' }"
     >
     <total></total>
     <divider></divider>

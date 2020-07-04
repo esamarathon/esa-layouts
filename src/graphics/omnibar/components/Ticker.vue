@@ -108,10 +108,10 @@ export default {
       this.timestamp = Date.now();
     },
     esaPromo() {
-      return this.genericMsg('This is European Speedrunner Assembly Corona Relief');
+      return this.genericMsg('This is United Kingdom Speedrunner Gathering Summer 2020');
     },
     charityPromo() {
-      return this.genericMsg('#ESACoronaRelief benefits Save the Children');
+      return this.genericMsg('#UKSGSummer2020 benefits Crisis');
     },
     otherStreamPromo() {
       return this.genericMsg(`Watch more great runs over @ twitch.tv/${this.otherChannel}`);

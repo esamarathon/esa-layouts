@@ -8,7 +8,7 @@
         v-if="!videos.length"
         :style="{ 'font-style': 'italic' }"
       >
-        Add videos in the "Assets" tab.
+        Add videos under "Assets" > "esa-layouts" > "Videos".
       </span>
       <template v-else>
         <v-text-field

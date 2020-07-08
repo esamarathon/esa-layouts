@@ -38,7 +38,7 @@ This bundle can hijack the [FrankerFaceZ](https://www.frankerfacez.com/) feature
 
 ### Music Player
 
-A browser based music player has been included; the graphic named `music-player.html` must be added into *all* of your OBS scenes to correctly be paused/resumed and correctly fade in/out when needed. It will only play if the scene name ends in `[M]`, for example, `Intermission [M]`. Music tracks can be added via the "Assets" tab in NodeCG under "Music Tracks".
+A browser based music player has been included; the graphic named `music-player.html` must be added into *all* of your OBS scenes to correctly be paused/resumed and correctly fade in/out when needed. It will only play if the scene name ends in `[M]`, for example, `Intermission [M]`. Music tracks can be added via the "Assets" tab in the NodeCG dashboard under `esa-layouts` > `Music Tracks`.
 
 ### Automatic Twitch Commercials
 

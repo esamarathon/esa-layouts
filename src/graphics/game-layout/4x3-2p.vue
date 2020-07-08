@@ -91,7 +91,6 @@
 
     <!-- Donation Bar -->
     <donation-bar
-      class="BorderLeft"
       :padding="7"
       :style="{
         left: '1209px',

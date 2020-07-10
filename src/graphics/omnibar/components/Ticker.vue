@@ -137,7 +137,7 @@ export default {
       return this.genericMsg('Check out our Twitch team @ twitch.tv/team/esa!');
     },
     donationURL() {
-      return this.genericMsg(`Donate @ donations.esamarathon.com/donate/${getCurrentEventShort()}`);
+      return this.genericMsg(`Donate @ ${nodecg.bundleConfig.tracker.address}`);
     },
     shirts() {
       return this.genericMsg('Check out our merch @ speedrunstore.com!');

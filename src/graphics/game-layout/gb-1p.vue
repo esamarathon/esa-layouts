@@ -43,7 +43,6 @@
         :style="{ flex: '1' }"
       >
         <run-info
-          class="BorderLeft"
           :style="{
             'width': '525px',
             height: '100%',

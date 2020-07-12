@@ -1,37 +1,41 @@
 <template>
-  <div
-    :class="`Flex Timer${timerState}`"
-    :style="{
-      'font-weight': 500,
-      'font-size': '100px',
-      'margin-top': '-0.07em',
-      transition: '1s',
-    }"
-  >
-    <span
-      v-for="(char, i) in timeStr"
-      :key="i"
+  <div>
+    <div
+      :class="`Flex Timer${timerState}`"
       :style="{
-        display: 'inline-block',
-        width: ([2, 5].includes(i)) ? '0.22em' : '0.45em',
-        'text-align': 'center',
-        // Make the colon appear more towards the centre.
-        'margin-top': ([2, 5].includes(i)) ? '-0.1em' : 'unset',
+        'font-weight': 500,
+        'font-size': '100px',
+        'margin-top': topMargin,
+        transition: '1s',
+        height: '100%',
       }"
     >
-      {{ char }}
-    </span>
+      <span
+        v-for="(char, i) in timeStr"
+        :key="i"
+        :style="{
+          display: 'inline-block',
+          width: ([2, 5].includes(i)) ? '0.22em' : '0.45em',
+          'text-align': 'center',
+          // Make the colon appear more towards the centre.
+          'margin-top': ([2, 5].includes(i)) ? '-0.1em' : 'unset',
+        }"
+      >
+        {{ char }}
+      </span>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator';
+import { Vue, Component, Watch, Prop } from 'vue-property-decorator'; // eslint-disable-line object-curly-newline, max-len
 import { State } from 'vuex-class';
 import { Timer } from 'speedcontrol-util/types';
 import { msToTimeStr } from '../../_misc/helpers';
 
 @Component
 export default class extends Vue {
+  @Prop({ type: String, default: '-0.07em' }) topMargin!: string;
   @State timer!: Timer;
   timeStr = '00:00:00';
   backupTimerTO: number | undefined;

@@ -25,7 +25,9 @@
     />
 
     <!-- Camera Captures -->
+    <!-- Online has 2 camera spots -->
     <div
+      v-if="!online"
       id="CameraCapture1"
       class="Capture BorderTop BorderRight BorderLeft"
       :style="{
@@ -35,6 +37,28 @@
         height: '400px',
       }"
     />
+    <template v-else>
+      <div
+        id="CameraCapture1"
+        class="Capture BorderTop BorderRight BorderLeft"
+        :style="{
+          left: '660px',
+          top: '540px',
+          width: '300px',
+          height: '400px',
+        }"
+      />
+      <div
+        id="CameraCapture2"
+        class="Capture BorderTop BorderRight"
+        :style="{
+          left: '960px',
+          top: '540px',
+          width: '300px',
+          height: '400px',
+        }"
+      />
+    </template>
 
     <!-- Player 1/Commentator -->
     <div
@@ -102,6 +126,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
+import { Configschema } from 'configschema';
 import GameCapture from './components/GameCapture.vue';
 import Player from './components/Player.vue';
 import CommAndReader from './components/CommAndReader.vue';
@@ -121,5 +146,7 @@ import DonationBar from './components/DonationBar.vue';
     DonationBar,
   },
 })
-export default class extends Vue {}
+export default class extends Vue {
+  online = (nodecg.bundleConfig as Configschema).event.online;
+}
 </script>

@@ -29,6 +29,12 @@ body {
   background-color: #41245b;
 }
 
+.Player .CustomTitle {
+  font-weight: 600;
+  color: #41245b;
+  background-color: #fff073;
+}
+
 .Player .Icon {
   filter: invert(1);
 }

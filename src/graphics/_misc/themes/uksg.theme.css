@@ -18,6 +18,12 @@ body {
   background-color: #4d83aa;
 }
 
+.Player .CustomTitle {
+  font-weight: 500;
+  color: white;
+  background-color: #8ebcdd;
+}
+
 .GameCapture .TeamFinishTime {
   background-color: rgba(77, 131, 170, 0.5);
 }

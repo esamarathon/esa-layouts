@@ -80,6 +80,17 @@
         >
           <div class="PlayerText">
             /{{ player.social.twitch }}
+            <!-- Custom Title code repeated twice, needs cleaning up! -->
+            <span
+              v-if="player.customData.customTitle"
+              class="CustomTitle"
+              :style="{
+                padding: '3px 5px',
+                'margin-left': '5px',
+              }"
+            >
+              {{ player.customData.customTitle }}
+            </span>
           </div>
         </div>
         <div
@@ -89,6 +100,17 @@
         >
           <div class="PlayerText">
             {{ player.name }}
+            <!-- Custom Title code repeated twice, needs cleaning up! -->
+            <span
+              v-if="player.customData.customTitle"
+              class="CustomTitle"
+              :style="{
+                padding: '3px 5px',
+                'margin-left': '5px',
+              }"
+            >
+              {{ player.customData.customTitle }}
+            </span>
           </div>
         </div>
       </transition>
@@ -243,6 +265,7 @@ export default class extends Vue {
     width: 100%;
     height: 100%;
     position: absolute;
+    white-space: nowrap;
   }
 
   .fade-enter-active, .fade-leave-active {

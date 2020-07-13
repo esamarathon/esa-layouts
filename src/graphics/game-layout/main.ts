@@ -25,6 +25,11 @@ const routes = [
     component: List.L_4x3_2p,
   },
   {
+    name: '4:3 2 Player (Extra Space)',
+    path: '/4x3-2p-extraspace',
+    component: List.L_4x3_2p_ExtraSpace,
+  },
+  {
     name: '4:3 3 Player',
     path: '/4x3-3p',
     component: List.L_4x3_3p,
@@ -63,6 +68,11 @@ const routes = [
     name: 'GameBoy 1 Player',
     path: '/GB-1p',
     component: List.L_GB_1p,
+  },
+  {
+    name: 'GameBoy 2 Player (Extra Space)',
+    path: '/GB-2p-extraspace',
+    component: List.L_GB_2p_ExtraSpace,
   },
   {
     name: 'GBA 1 Player',

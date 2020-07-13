@@ -7,6 +7,7 @@ const defaultTheme = require('./themes/default.theme.css');
 const together = require('./themes/together.theme.css');
 const coronarelief = require('./themes/coronarelief.theme.css');
 const uksg = require('./themes/uksg.theme.css');
+const summeronline = require('./themes/summeronline.theme.css');
 
 defaultTheme.use();
 
@@ -19,6 +20,9 @@ switch (theme) {
     break;
   case 'uksg':
     uksg.use();
+    break;
+  case 'summeronline':
+    summeronline.use();
     break;
   default:
     // do nothing

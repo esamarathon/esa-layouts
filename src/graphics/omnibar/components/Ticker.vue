@@ -11,7 +11,7 @@
         :key="timestamp"
         :data="currentComponent.data"
         @end="showNextMsg"
-      ></component>
+      />
     </transition>
   </div>
 </template>
@@ -23,7 +23,6 @@ import OtherStreamInfo from './Ticker/OtherStreamInfo.vue';
 import Prize from './Ticker/Prize.vue';
 import Bid from './Ticker/Bid.vue';
 import Alert from './Ticker/Alert.vue';
-import { getCurrentEventShort } from '../../_misc/helpers';
 
 const otherStreamData = nodecg.Replicant('otherStreamData');
 const runDataActiveRun = nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol');
@@ -108,10 +107,10 @@ export default {
       this.timestamp = Date.now();
     },
     esaPromo() {
-      return this.genericMsg('This is United Kingdom Speedrunner Gathering Summer 2020');
+      return this.genericMsg('This is European Speedrunner Assembly Summer 2020');
     },
     charityPromo() {
-      return this.genericMsg('#UKSGSummer2020 benefits Crisis');
+      return this.genericMsg('#ESASummerOnline benefits the Swedish Alzheimer\'s Foundation');
     },
     otherStreamPromo() {
       return this.genericMsg(`Watch more great runs over @ twitch.tv/${this.otherChannel}`);

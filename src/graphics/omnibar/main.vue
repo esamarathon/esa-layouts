@@ -4,13 +4,16 @@
     class="Flex"
   >
     <img
-      src="./uksg_summer_logo.png"
+      src="./summer_logo.png"
       :style="{ padding: '0 10px' }"
     >
     <divider></divider>
     <img
-      src="./crisis_logo.png"
-      :style="{ padding: '0 10px 0 10px' }"
+      src="./alzheimerfonden_logo.png"
+      :style="{
+        width: '150px',
+        padding: '0 10px 0 10px'
+      }"
     >
     <total></total>
     <divider></divider>

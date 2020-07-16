@@ -2,32 +2,52 @@
   <div :style="{ display: 'flex', width: '100%', height: '100vh' }">
     <div :style="{ flex: '1' }">
       <div class="Flex StreamEmbed">
-        <template v-if="config.enable && playerStream">
-          <iframe
-            :src="`https://player.twitch.tv/?channel=${playerStream}&autoplay=true&muted=true`"
-            frameborder="0"
-            scrolling="no"
-            allowfullscreen="true"
-            :style="{ width: '100%', height: '100%' }"
-          />
+        <template v-if="playerStreams.length">
+          <div
+            v-for="stream in playerStreams"
+            :key="stream"
+            class="Flex"
+            :style="{
+              width: '100%',
+              height: '100%',
+            }"
+          >
+            <iframe
+              v-if="stream"
+              :src="`https://player.twitch.tv/?channel=${stream}`
+                + `&parent=${domain}&autoplay&muted`"
+              allowfullscreen="true"
+              :style="{
+                width: '100%',
+                height: '100%',
+                border: 0,
+              }"
+            />
+            <template v-else>
+              Player Stream Unavailable
+            </template>
+          </div>
         </template>
         <template v-else>
-          Player Stream Unavailable
+          No Player Streams Set
         </template>
       </div>
       <div class="Flex StreamEmbed">
         <iframe
-          src="https://player.twitch.tv/?channel=esamarathon&autoplay=true&muted=true"
-          frameborder="0"
-          scrolling="no"
+          :src="`https://player.twitch.tv/?channel=esamarathon`
+            + `&parent=${domain}&autoplay&muted`"
           allowfullscreen="true"
-          :style="{ width: '100%', height: '100%' }"
+          :style="{
+            width: '100%',
+            height: '100%',
+            border: 0,
+          }"
         />
       </div>
     </div>
     <div :style="{ width: '340px' }">
       <iframe
-        src="https://www.twitch.tv/embed/esamarathon/chat?darkpopout"
+        :src="`https://www.twitch.tv/embed/esamarathon/chat?darkpopout&parent=${domain}`"
         frameborder="0"
         scrolling="no"
         allowfullscreen="true"
@@ -40,16 +60,17 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { RestreamViewerTool } from 'schemas';
+import { RestreamData } from 'schemas';
 import { Configschema } from 'configschema';
 
 @Component
 export default class extends Vue {
   config = (nodecg.bundleConfig as Configschema).restream;
-  @State restreamViewerTool!: RestreamViewerTool;
+  @State restreamData!: RestreamData;
+  domain = window.location.hostname;
 
-  get playerStream(): string | undefined {
-    return this.restreamViewerTool.channel;
+  get playerStreams(): (string | undefined)[] {
+    return this.restreamData.map((d) => d.channel);
   }
 }
 </script>
@@ -58,7 +79,8 @@ export default class extends Vue {
   body {
     background-color: #19171c;
     color: white;
-    font-size: 5vw;
+    font-size: 30px;
+    text-align: center;
   }
 
   iframe {

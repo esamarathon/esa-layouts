@@ -1,6 +1,6 @@
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import type { RestreamViewerTool } from 'schemas';
+import type { RestreamData } from 'schemas';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
@@ -8,10 +8,10 @@ Vue.use(Vuex);
 
 // Replicants and their types
 const reps: {
-  restreamViewerTool: ReplicantBrowser<RestreamViewerTool>;
+  restreamData: ReplicantBrowser<RestreamData>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
-  restreamViewerTool: nodecg.Replicant('restreamViewerTool'),
+  restreamData: nodecg.Replicant('restreamData'),
 };
 
 const store = new Vuex.Store({

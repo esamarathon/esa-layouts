@@ -7,7 +7,7 @@
 
 export type RestreamData = {
   connected: boolean;
-  uuid: string;
+  uuid?: string;
   channel?: string;
   overridden: boolean;
   lowLatency: boolean;

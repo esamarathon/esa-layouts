@@ -148,8 +148,7 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'; // eslint-
 import { State } from 'vuex-class';
 import fitty, { FittyInstance } from 'fitty';
 import { NameCycle } from 'schemas';
-import { RunDataActiveRun } from 'speedcontrol-util/types';
-import { RunDataTeam, RunDataPlayer } from 'nodecg-speedcontrol/types'; // should expose in sc-util
+import { RunDataActiveRun, RunDataTeam, RunDataPlayer } from 'speedcontrol-util/types';
 
 @Component
 export default class extends Vue {

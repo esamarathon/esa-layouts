@@ -30,8 +30,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'; // eslint-disable-line object-curly-newline, max-len
 import { State } from 'vuex-class';
-import { RunDataActiveRun, Timer } from 'speedcontrol-util/types';
-import { TeamFinishTime } from 'nodecg-speedcontrol/types'; // should expose in sc-util
+import { RunDataActiveRun, Timer, TeamFinishTime } from 'speedcontrol-util/types';
 
 @Component
 export default class extends Vue {

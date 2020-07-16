@@ -31,6 +31,9 @@ export interface OtherStreamData {
         social: {
           twitch?: string;
         };
+        customData: {
+          [k: string]: string;
+        };
       }[];
     }[];
     customData: {

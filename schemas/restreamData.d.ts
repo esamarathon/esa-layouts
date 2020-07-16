@@ -5,8 +5,10 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface RestreamViewerTool {
+export type RestreamData = {
+  connected: boolean;
+  uuid: string;
   channel?: string;
   overridden: boolean;
   lowLatency: boolean;
-}
+}[];

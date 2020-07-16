@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import type { Bids, CapturePositions, Commentators, DonationsToRead, DonationTotal, GameLayouts, MediaBox, MusicPlayer, NameCycle, NotableDonations, ObsData, OtherStreamData, Prizes, RestreamViewerTool, StreamDeckData, TtsVoices, TwitchSubscribers, UpcomingRunID, VideoPlayer } from 'schemas'; // eslint-disable-line object-curly-newline
+import type { Bids, CapturePositions, Commentators, DonationsToRead, DonationTotal, GameLayouts, MediaBox, MusicPlayer, NameCycle, NotableDonations, ObsData, OtherStreamData, Prizes, StreamDeckData, TtsVoices, TwitchSubscribers, UpcomingRunID, VideoPlayer } from 'schemas'; // eslint-disable-line object-curly-newline
 import type { Asset } from 'types';
 import type { TwitchAPIData } from '../../../../nodecg-speedcontrol/schemas';
 import { get as nodecg } from './nodecg';
@@ -23,7 +23,6 @@ export const notableDonations = nodecg().Replicant<NotableDonations>('notableDon
 export const obsData = nodecg().Replicant<ObsData>('obsData', { persistent: false });
 export const otherStreamData = nodecg().Replicant<OtherStreamData>('otherStreamData');
 export const prizes = nodecg().Replicant<Prizes>('prizes', { persistent: false });
-export const restreamViewerTool = nodecg().Replicant<RestreamViewerTool>('restreamViewerTool');
 export const streamDeckData = nodecg().Replicant<StreamDeckData>('streamDeckData');
 export const ttsVoices = nodecg().Replicant<TtsVoices>('ttsVoices');
 export const twitchSubscribers = nodecg().Replicant<TwitchSubscribers>('twitchSubscribers');

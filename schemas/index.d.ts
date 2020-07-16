@@ -12,7 +12,7 @@ export * from './notableDonations';
 export * from './obsData';
 export * from './otherStreamData';
 export * from './prizes';
-export * from './restreamViewerTool';
+export * from './restreamData';
 export * from './streamDeckData';
 export * from './ttsVoices';
 export * from './twitchSubscribers';

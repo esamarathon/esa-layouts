@@ -67,10 +67,5 @@ export const mq = new RabbitMQ(nodecg(), useTestData, {
       exchange,
       key: '*.obs.scene.*.*.gamescene',
     },
-    {
-      name: 'rvtServerStarted',
-      exchange: 'restreamviewertool',
-      key: `${event}.*.server.started`,
-    },
   ],
 });

@@ -32,8 +32,7 @@ export interface Configschema {
   };
   restream: {
     enable: boolean;
-    address: string;
-    key: string;
+    instances: RestreamItem | RestreamItem[];
   };
   obs: {
     enable: boolean;
@@ -71,4 +70,8 @@ export interface Configschema {
     enable: boolean;
     token: string;
   };
+}
+export interface RestreamItem {
+  address: string;
+  key: string;
 }

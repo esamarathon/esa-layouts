@@ -26,7 +26,7 @@ export = (nodecg: NodeCG): { obs: any } => {
   require('./misc');
   require('./streamdeck-buttons');
   require('./timer');
-  require('./restream-view');
+  require('./restream');
   require('./media-box');
   require('./text-to-speech');
   require('./twitch-ext');

@@ -166,7 +166,10 @@
               "type": "array",
               "items": {
                 "$ref": "#/definitions/restreamItem"
-              }
+              },
+              "uniqueItems": true,
+              "minItems": 1,
+              "maxItems": 2
             }
           ],
           "default": {
@@ -256,8 +259,21 @@
                   "type": "string",
                   "default": "Camera Capture 2"
                 },
-                "restreamSource": {
-                  "type": "string",
+                "restreamSources": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "uniqueItems": true,
+                      "minItems": 1,
+                      "maxItems": 2
+                    }
+                  ],
                   "default": "Restream Source"
                 }
               },
@@ -268,7 +284,7 @@
                 "gameCapture4",
                 "cameraCapture1",
                 "cameraCapture2",
-                "restreamSource"
+                "restreamSources"
               ]
             }
           },

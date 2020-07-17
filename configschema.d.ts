@@ -32,7 +32,7 @@ export interface Configschema {
   };
   restream: {
     enable: boolean;
-    instances: RestreamItem | RestreamItem[];
+    instances: RestreamItem | [RestreamItem] | [RestreamItem, RestreamItem];
   };
   obs: {
     enable: boolean;
@@ -52,7 +52,7 @@ export interface Configschema {
         gameCapture4: string;
         cameraCapture1: string;
         cameraCapture2: string;
-        restreamSource: string;
+        restreamSources: string | [string] | [string, string];
       };
     };
   };

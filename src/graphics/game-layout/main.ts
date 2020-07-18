@@ -90,6 +90,11 @@ const routes = [
     component: List.L_DS_1p,
   },
   {
+    name: '5:2 1 Player',
+    path: '/5x2-1p',
+    component: List.L_5x2_1p,
+  },
+  {
     path: '*',
     redirect: '/4x3-1p',
   },

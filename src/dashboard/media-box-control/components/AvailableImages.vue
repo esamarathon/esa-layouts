@@ -5,7 +5,10 @@
     </v-toolbar-title>
     <media-card
       v-if="!images.length"
-      :style="{ 'font-style': 'italic' }"
+      :style="{
+        'font-style': 'italic',
+        'white-space': 'unset',
+      }"
     >
       Add images under "Assets" > "esa-layouts" > "Media Box Images".
     </media-card>

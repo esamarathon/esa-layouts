@@ -4,11 +4,12 @@
     <game-capture
       id="GameCapture1"
       class="BorderBottom"
+      :slot-no="0"
       :style="{
         left: '0px',
         top: '0px',
         width: '1920px',
-        height: '550px',
+        height: '768px',
       }"
     />
 
@@ -17,33 +18,33 @@
       id="CameraCapture1"
       class="Capture BorderRight BorderLeft"
       :style="{
-        left: '660px',
-        top: '550px',
-        width: '600px',
-        height: '390px',
+        left: '711px',
+        top: '768px',
+        width: '498px',
+        height: '232px',
       }"
     />
 
-    <!-- Player 1/Commentator -->
+    <!-- Player 1 -->
     <div
       class="Fixed"
       :style="{
         left: '0px',
-        top: '550px',
-        width: '660px',
+        top: '768px',
+        width: '711px',
       }"
     >
       <player />
     </div>
 
-    <!-- Player 2/General Run Info -->
+    <!-- Commentator/General Run Info -->
     <div
       class="Fixed FlexColumn"
       :style="{
-        left: '1260px',
-        top: '550px',
-        width: '660px',
-        height: '390px',
+        left: '1209px',
+        top: '768px',
+        width: '711px',
+        height: '187px',
       }"
     >
       <comm-and-reader />
@@ -54,14 +55,13 @@
         :style="{
           flex: '1',
           width: '100%',
-          overflow: 'hidden',
         }"
       >
-        <run-info
-          :style="{ 'font-size': '45px' }"
-          no-wrap
+        <run-info :style="{ 'font-size': '35px' }" />
+        <timer
+          top-margin="-0.12em"
+          font-size="70px"
         />
-        <timer :style="{ 'font-size': '120px' }" />
       </div>
     </div>
 
@@ -69,19 +69,20 @@
     <media-box
       :style="{
         left: '0px',
-        top: '630px',
-        width: '660px',
-        height: '310px',
+        top: '818px',
+        width: '711px',
+        height: '182px',
       }"
     />
 
     <!-- Donation Bar -->
     <donation-bar
+      :padding="7"
       :style="{
-        left: '0px',
-        top: '940px',
-        width: '1920px',
-        height: '60px',
+        left: '1209px',
+        top: '955px',
+        width: '711px',
+        height: '45px',
       }"
     />
   </div>

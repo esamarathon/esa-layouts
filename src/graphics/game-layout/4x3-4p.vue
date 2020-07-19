@@ -82,11 +82,7 @@
         }"
       >
         <run-info :style="{ 'font-size': '40px' }" />
-        <timer
-          :style="{
-            'font-size': '90px',
-          }"
-        />
+        <timer font-size="90px" />
       </div>
 
       <!-- Player 1/2 -->

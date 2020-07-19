@@ -123,7 +123,7 @@
           :style="{ 'font-size': '45px' }"
           no-wrap
         />
-        <timer :style="{ 'font-size': '120px' }" />
+        <timer font-size="120px" />
       </div>
     </div>
 

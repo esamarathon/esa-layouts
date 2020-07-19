@@ -96,9 +96,7 @@
         <run-info :style="{ 'font-size': '35px' }" />
         <timer
           top-margin="-0.09em"
-          :style="{
-            'font-size': '80px',
-          }"
+          font-size="80px"
         />
       </div>
     </div>

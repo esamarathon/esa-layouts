@@ -4,7 +4,7 @@
       :class="`Flex Timer${timerState}`"
       :style="{
         'font-weight': 500,
-        'font-size': '100px',
+        'font-size': fontSize,
         'margin-top': topMargin,
         transition: '1s',
         height: '100%',
@@ -36,6 +36,7 @@ import { msToTimeStr } from '../../_misc/helpers';
 @Component
 export default class extends Vue {
   @Prop({ type: String, default: '-0.07em' }) topMargin!: string;
+  @Prop({ type: String, default: '100px' }) fontSize!: string;
   @State timer!: Timer;
   timeStr = '00:00:00';
   backupTimerTO: number | undefined;

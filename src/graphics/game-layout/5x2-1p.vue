@@ -18,9 +18,9 @@
       id="CameraCapture1"
       class="Capture BorderRight BorderLeft"
       :style="{
-        left: '711px',
+        left: '755px',
         top: '768px',
-        width: '498px',
+        width: '410px',
         height: '232px',
       }"
     />
@@ -31,7 +31,7 @@
       :style="{
         left: '0px',
         top: '768px',
-        width: '711px',
+        width: '755px',
       }"
     >
       <player />
@@ -41,9 +41,9 @@
     <div
       class="Fixed FlexColumn"
       :style="{
-        left: '1209px',
+        left: '1165px',
         top: '768px',
-        width: '711px',
+        width: '755px',
         height: '187px',
       }"
     >
@@ -70,7 +70,7 @@
       :style="{
         left: '0px',
         top: '818px',
-        width: '711px',
+        width: '755px',
         height: '182px',
       }"
     />
@@ -79,9 +79,9 @@
     <donation-bar
       :padding="7"
       :style="{
-        left: '1209px',
+        left: '1165px',
         top: '955px',
-        width: '711px',
+        width: '755px',
         height: '45px',
       }"
     />

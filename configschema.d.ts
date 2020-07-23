@@ -59,6 +59,7 @@ export interface Configschema {
   x32: {
     enable: boolean;
     ip: string;
+    localPort: number;
   };
   tracker: {
     enable: boolean;

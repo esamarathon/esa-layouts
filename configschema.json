@@ -312,11 +312,16 @@
         "ip": {
           "type": "string",
           "default": "10.20.30.42"
+        },
+        "localPort": {
+          "type": "number",
+          "default": 52361
         }
       },
       "required": [
         "enable",
-        "ip"
+        "ip",
+        "localPort"
       ]
     },
     "tracker": {

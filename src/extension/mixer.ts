@@ -11,9 +11,10 @@ obs.conn.on('TransitionBegin', (data) => {
     obs.findScene(obsConfig.names.scenes.intermission),
     obs.findScene(obsConfig.names.scenes.videoPlayer),
   ];
-  if (silentScenes.includes(data['to-scene'])) {
+  if (silentScenes.includes(data['to-scene']) && !silentScenes.includes(data['from-scene'])) {
     x32.fade('/dca/1/fader', 0.75, 0, 1000);
-  } else {
+  } else if (!silentScenes.includes(data['to-scene'])
+    && silentScenes.includes(data['from-scene'])) {
     x32.fade('/dca/1/fader', 0, 0.75, 1000);
   }
 });

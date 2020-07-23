@@ -24,6 +24,7 @@ export = (nodecg: NodeCG): { obs: any } => {
   require('./layouts');
   require('./tracker');
   require('./misc');
+  require('./mixer');
   require('./streamdeck-buttons');
   require('./timer');
   require('./restream');

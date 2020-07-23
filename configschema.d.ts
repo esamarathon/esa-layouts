@@ -56,6 +56,10 @@ export interface Configschema {
       };
     };
   };
+  x32: {
+    enable: boolean;
+    ip: string;
+  };
   tracker: {
     enable: boolean;
     address: string;

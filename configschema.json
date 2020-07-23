@@ -301,6 +301,24 @@
         "names"
       ]
     },
+    "x32": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enable": {
+          "type": "boolean",
+          "default": true
+        },
+        "ip": {
+          "type": "string",
+          "default": "10.20.30.42"
+        }
+      },
+      "required": [
+        "enable",
+        "ip"
+      ]
+    },
     "tracker": {
       "type": "object",
       "additionalProperties": false,
@@ -374,6 +392,7 @@
     "rabbitmq",
     "restream",
     "obs",
+    "x32",
     "tracker",
     "tts",
     "twitchExt"

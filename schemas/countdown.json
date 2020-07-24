@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "remaining": {
+      "type": "number",
+      "default": 0
+    },
+    "originalDuration": {
+      "type": "number",
+      "default": 3600000
+    },
+    "timestamp": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "remaining",
+    "originalDuration",
+    "timestamp"
+  ]
+}

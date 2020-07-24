@@ -1,17 +1,18 @@
 /* eslint-disable max-len */
 
-import type { Bids, CapturePositions, Commentators, DonationsToRead, DonationTotal, GameLayouts, MediaBox, MusicPlayer, NameCycle, NotableDonations, ObsData, OtherStreamData, Prizes, StreamDeckData, TtsVoices, TwitchSubscribers, UpcomingRunID, VideoPlayer } from 'schemas'; // eslint-disable-line object-curly-newline
+import type { Bids, CapturePositions, Commentators, Countdown, DonationsToRead, DonationTotal, GameLayouts, MediaBox, MusicPlayer, NameCycle, NotableDonations, ObsData, OtherStreamData, Prizes, StreamDeckData, TtsVoices, TwitchSubscribers, UpcomingRunID, VideoPlayer } from 'schemas'; // eslint-disable-line object-curly-newline
 import type { Asset } from 'types';
 import type { TwitchAPIData } from '../../../../nodecg-speedcontrol/schemas';
 import { get as nodecg } from './nodecg';
 
 export const assetsIntermissionSlides = nodecg().Replicant<Asset[]>('assets:intermission-slides');
-export const assetsMusic = nodecg().Replicant<Asset[]>('assets:music');
 export const assetsMediaBoxImages = nodecg().Replicant<Asset[]>('assets:media-box-images');
+export const assetsMusic = nodecg().Replicant<Asset[]>('assets:music');
 export const assetsVideos = nodecg().Replicant<Asset[]>('assets:videos');
 export const bids = nodecg().Replicant<Bids>('bids', { persistent: false });
 export const capturePositions = nodecg().Replicant<CapturePositions>('capturePositions');
 export const commentators = nodecg().Replicant<Commentators>('commentators');
+export const countdown = nodecg().Replicant<Countdown>('countdown');
 export const donationsToRead = nodecg().Replicant<DonationsToRead>('donationsToRead', { persistent: false });
 export const donationTotal = nodecg().Replicant<DonationTotal>('donationTotal');
 export const gameLayouts = nodecg().Replicant<GameLayouts>('gameLayouts');

@@ -176,6 +176,14 @@
         "headerColor": "#c49215"
       },
       {
+        "name": "countdown-control",
+        "title": "Countdown Control",
+        "width": 2,
+        "file": "countdown-control.html",
+        "workspace": "ESA Advanced",
+        "headerColor": "#c49215"
+      },
+      {
         "name": "rabbitmq-test",
         "title": "RabbitMQ Test",
         "width": 2,
@@ -185,6 +193,11 @@
       }
     ],
     "graphics": [
+      {
+        "file": "countdown.html",
+        "width": 1920,
+        "height": 1080
+      },
       {
         "file": "intermission.html",
         "width": 1920,

@@ -2,7 +2,7 @@ import type { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { capturePositions, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
+import { capturePositions, countdown, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
 
 const evtConfig = (nodecg().bundleConfig as Configschema).event;
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
@@ -170,3 +170,26 @@ nodecg().listenFor('obsChangeScene', async (name: string) => {
     nodecg().log.debug('[Layouts] Could not change scene:', err);
   }
 });
+
+let countdownTimeout: NodeJS.Timeout;
+function updateCountdownTimer(): void {
+  const timer = countdown.value;
+  const remaining = timer.originalDuration - (Date.now() - timer.timestamp);
+  if (remaining > 0) {
+    countdown.value.remaining = remaining;
+    countdownTimeout = setTimeout(updateCountdownTimer, 1000);
+  } else {
+    countdown.value.remaining = 0;
+  }
+}
+
+nodecg().listenFor('startCountdown', (time: number) => {
+  clearTimeout(countdownTimeout);
+  countdown.value = {
+    originalDuration: time,
+    remaining: time,
+    timestamp: Date.now(),
+  };
+  updateCountdownTimer();
+});
+updateCountdownTimer();

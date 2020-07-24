@@ -109,6 +109,7 @@
 
     <!-- Media Box -->
     <media-box
+      vertical
       :font-size="40"
       :style="{
         left: '0px',

@@ -25,7 +25,7 @@
         <template v-else>
           <div v-if="bid.options.length">
             <div
-              v-for="option in bid.options"
+              v-for="option in bid.options.slice(0, 5)"
               :key="`${option.name}${option.total}`"
             >
               {{ option.name }} ({{ formatUSD(option.total) }})

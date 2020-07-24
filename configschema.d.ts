@@ -44,6 +44,7 @@ export interface Configschema {
         gameLayout: string;
         intermission: string;
         videoPlayer: string;
+        countdown: string;
       };
       sources: {
         gameCapture1: string;

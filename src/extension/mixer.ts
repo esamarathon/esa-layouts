@@ -12,6 +12,7 @@ if (config.enable) {
       obs.findScene(obsConfig.names.scenes.commercials),
       obs.findScene(obsConfig.names.scenes.intermission),
       obs.findScene(obsConfig.names.scenes.videoPlayer),
+      obs.findScene(obsConfig.names.scenes.countdown),
     ];
     try {
       if (silentScenes.includes(data['to-scene']) && !silentScenes.includes(data['from-scene'])) {

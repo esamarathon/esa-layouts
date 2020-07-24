@@ -222,13 +222,18 @@
                 "videoPlayer": {
                   "type": "string",
                   "default": "Video Player"
+                },
+                "countdown": {
+                  "type": "string",
+                  "default": "Countdown"
                 }
               },
               "required": [
                 "commercials",
                 "gameLayout",
                 "intermission",
-                "videoPlayer"
+                "videoPlayer",
+                "countdown"
               ]
             },
             "sources": {

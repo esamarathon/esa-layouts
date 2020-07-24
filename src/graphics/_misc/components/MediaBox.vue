@@ -1,10 +1,12 @@
 <template>
   <div class="Fixed">
     <div
+      ref="MediaBox"
       :style="{
         position: 'relative',
         width: '100%',
         height: '100%',
+        'font-size': `${fontSize}px`,
       }"
     >
       <transition name="fade">
@@ -35,11 +37,13 @@
           v-else-if="type === 4"
           :key="mediaBox.current.id"
           class="Slide"
+          :vertical="vertical"
         />
         <cheer
           v-else-if="type === 5"
           :key="mediaBox.current.id"
           class="Slide"
+          :vertical="vertical"
         />
       </transition>
     </div>
@@ -72,6 +76,7 @@ export default class extends Vue {
   @State mediaBoxImages!: Asset[];
   @State prizes!: Prizes;
   @State mediaBox!: MediaBox;
+  @Prop({ type: Number, default: 50 }) fontSize!: number;
   @Prop(Boolean) vertical!: boolean;
 
   get type(): number {

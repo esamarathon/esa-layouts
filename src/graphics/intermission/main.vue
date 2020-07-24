@@ -36,6 +36,7 @@
 
       <!-- Media Box -->
       <media-box
+        :font-size="50"
         :style="{
           left: '26px',
           top: '450px',

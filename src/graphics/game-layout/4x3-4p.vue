@@ -126,6 +126,7 @@
 
     <!-- Media Box -->
     <media-box
+      :font-size="35"
       :style="{
         left: '626px',
         top: '683px',

@@ -3,7 +3,7 @@
     v-show="prize"
     :class="vertical ? 'FlexColumn' : 'Flex'"
     :style="{
-      'font-size': '40px', // move to prop?
+      'font-size': '0.8em', // move to prop?
       padding: '10px',
       'box-sizing': 'border-box',
       'text-align': 'center',
@@ -14,13 +14,14 @@
       :style="{
         height: vertical ? '50%' : '90%',
         'max-height': '350px',
-        'margin-left': '20px',
+        'margin-left': vertical ? 0 : '20px',
+        'margin-bottom': vertical ? '10px' : 0,
       }"
     >
-    <div :style="{ 'margin-left': '20px' }">
+    <div :style="{ 'margin-left': vertical ? 0 : '20px' }">
       <div
         :style="{
-          'font-size': '35px',
+          'font-size': '0.7em',
           color: 'white', // move to theme!
         }"
       >
@@ -35,7 +36,7 @@
           color: 'lightgrey', // move to theme!
         }"
       >
-        See all prizes available @ prizes.esamarathon.com
+        See all prizes available<br>@ prizes.esamarathon.com
       </div>
     </div>
   </div>

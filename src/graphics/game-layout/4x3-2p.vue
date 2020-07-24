@@ -103,6 +103,7 @@
 
     <!-- Media Box -->
     <media-box
+      :font-size="36"
       :style="{
         left: '0px',
         top: '810px',

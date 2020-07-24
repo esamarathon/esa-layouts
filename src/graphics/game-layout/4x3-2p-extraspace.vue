@@ -129,6 +129,7 @@
 
     <!-- Media Box -->
     <media-box
+      :font-size="45"
       :style="{
         left: '0px',
         top: '630px',

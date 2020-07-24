@@ -1,21 +1,21 @@
 <template>
   <div
     v-show="cheer"
-    class="Flex"
+    :class="vertical ? 'FlexColumn' : 'Flex'"
     :style="{
-      'font-size': '50px',
+      'font-size': '0.75em',
       'text-align': 'center',
-      padding: '10px',
+      padding: '25px',
       'box-sizing': 'border-box',
     }"
   >
     <img
-      v-show="!vertical"
       src="./esaWow.png"
+      :style="{ 'margin-bottom': vertical ? '10px' : 0 }"
     >
     <div
       class="FlexColumn"
-      :style="{ 'margin-left': '20px' }"
+      :style="{ 'margin-left': vertical ? 0 : '20px' }"
     >
       <div
         :style="{

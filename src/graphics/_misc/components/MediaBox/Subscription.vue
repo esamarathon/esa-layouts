@@ -1,25 +1,25 @@
 <template>
   <div
     v-show="subscription"
-    class="Flex"
+    :class="vertical ? 'FlexColumn' : 'Flex'"
     :style="{
-      'font-size': '33px',
+      'font-size': '0.75em',
       'text-align': 'center',
-      padding: '10px',
+      padding: '25px',
       'box-sizing': 'border-box',
     }"
   >
     <img
-      v-show="!vertical"
       src="./esaHype.png"
+      :style="{ 'margin-bottom': vertical ? '10px' : 0 }"
     >
     <div
       class="FlexColumn"
-      :style="{ 'margin-left': '20px' }"
+      :style="{ 'margin-left': vertical ? 0 : '10px' }"
     >
       <div
         :style="{
-          'font-size': '1em',
+          'font-size': '0.8em',
           color: 'white', // move to theme!
         }"
       >
@@ -28,7 +28,7 @@
       <div
         v-if="subscription.message"
         :style="{
-          'font-size': '0.9em',
+          'font-size': '0.7em',
           color: 'lightgrey', // move to theme!
         }"
       >

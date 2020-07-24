@@ -1,16 +1,22 @@
 <template>
   <div
     v-show="donation"
-    class="Flex"
-    :style="{ 'font-size': '50px' }"
+    ref="Donation"
+    :class="vertical ? 'FlexColumn' : 'Flex'"
+    :style="{
+      'font-size': '0.75em',
+      'text-align': 'center',
+      padding: '25px',
+      'box-sizing': 'border-box',
+    }"
   >
     <img
-      v-show="!vertical"
       src="./esaDonate.png"
+      :style="{ 'margin-bottom': vertical ? '10px' : 0 }"
     >
     <div
       class="FlexColumn"
-      :style="{ 'margin-left': '20px' }"
+      :style="{ 'margin-left': vertical ? 0 : '20px' }"
     >
       <div
         :style="{
@@ -30,7 +36,7 @@
           color: 'lightgrey', // move to theme!
         }"
       >
-        {{ donation.comment }}
+        {{ `${donation.comment.slice(0, 500)}${donation.comment.length > 500 ? '...' : ''}` }}
       </div>
     </div>
   </div>

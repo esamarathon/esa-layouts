@@ -52,6 +52,7 @@
 
     <!-- Media Box -->
     <media-box
+      :font-size="33"
       :style="{
         left: '0px',
         top: '654px',

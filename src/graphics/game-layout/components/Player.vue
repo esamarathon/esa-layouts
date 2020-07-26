@@ -30,25 +30,25 @@
         <template v-else-if="!coop && typeof slotNo === 'number'">
           <img
             v-if="slotNo === 0"
-            key="`name"
+            key="name"
             class="Icon"
             src="../../_misc/PlayerIcon1.png"
           >
           <img
             v-else-if="slotNo === 1"
-            key="`name"
+            key="name"
             class="Icon"
             src="../../_misc/PlayerIcon2.png"
           >
           <img
             v-else-if="slotNo === 2"
-            key="`name"
+            key="name"
             class="Icon"
             src="../../_misc/PlayerIcon3.png"
           >
           <img
             v-else-if="slotNo === 3"
-            key="`name"
+            key="name"
             class="Icon"
             src="../../_misc/PlayerIcon4.png"
           >

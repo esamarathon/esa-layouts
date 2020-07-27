@@ -50,3 +50,10 @@ obs.on('currentSceneChanged', (current, last) => {
     }
   }
 });
+
+mb.mediaBox.on('change', (newVal, oldVal) => {
+  if (newVal.current?.id !== oldVal?.current?.id
+    && obs.streaming && doesSceneHaveSponsorLogos(obs.currentScene)) {
+    logSponsorLogoChange(newVal.current);
+  }
+});

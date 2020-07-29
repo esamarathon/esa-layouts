@@ -30,9 +30,11 @@ body {
 }
 
 .Player .CustomTitle {
-  font-weight: 600;
-  color: #41245b;
-  background-color: #fff073;
+  font-weight: 400;
+  font-size: 0.8em;
+  color: #cccccc;
+  text-transform: uppercase;
+  background-color: #2d1d3c;
 }
 
 .Player .Icon {
@@ -52,7 +54,7 @@ body {
 }
 
 .CommAndReader {
-  background-color: rgba(65, 36, 91, 0.5);
+  background-color: #2d1d3c;
   color: white;
 }
 

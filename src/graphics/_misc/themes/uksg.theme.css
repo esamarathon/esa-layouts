@@ -19,9 +19,7 @@ body {
 }
 
 .Player .CustomTitle {
-  font-weight: 500;
-  color: white;
-  background-color: #8ebcdd;
+  background-color: #356586;
 }
 
 .GameCapture .TeamFinishTime {
@@ -29,7 +27,7 @@ body {
 }
 
 .CommAndReader {
-  background-color: rgba(77, 131, 170, 0.5);
+  background-color: #356586;
 }
 
 *[class*='DonationBox'] {

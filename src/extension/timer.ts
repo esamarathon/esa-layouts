@@ -52,11 +52,13 @@ mq.evt.on('bigbuttonPressed', async (data) => {
 });
 
 // Enable/disable nodecg-speedcontrol timer changes if on/not on a game layout scene.
-obs.on('currentSceneChanged', () => {
-  if (obs.isCurrentScene(config.obs.names.scenes.gameLayout)) {
-    sc.enableTimerChanges();
-  } else {
-    sc.disableTimerChanges();
+obs.on('currentSceneChanged', (current) => {
+  if (current) {
+    if (obs.isCurrentScene(config.obs.names.scenes.gameLayout)) {
+      sc.enableTimerChanges();
+    } else {
+      sc.disableTimerChanges();
+    }
   }
 });
 

@@ -306,6 +306,34 @@
         "names"
       ]
     },
+    "music": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enable": {
+          "type": "boolean",
+          "default": true
+        },
+        "address": {
+          "type": "string",
+          "default": "localhost:8880"
+        },
+        "username": {
+          "type": "string",
+          "default": ""
+        },
+        "password": {
+          "type": "string",
+          "default": ""
+        }
+      },
+      "required": [
+        "enable",
+        "address",
+        "username",
+        "password"
+      ]
+    },
     "x32": {
       "type": "object",
       "additionalProperties": false,
@@ -402,6 +430,7 @@
     "rabbitmq",
     "restream",
     "obs",
+    "music",
     "x32",
     "tracker",
     "tts",

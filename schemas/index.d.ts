@@ -7,6 +7,7 @@ export * from './donationsToRead';
 export * from './donationTotal';
 export * from './gameLayouts';
 export * from './mediaBox';
+export * from './musicData';
 export * from './musicPlayer';
 export * from './nameCycle';
 export * from './notableDonations';

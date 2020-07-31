@@ -57,6 +57,12 @@ export interface Configschema {
       };
     };
   };
+  music: {
+    enable: boolean;
+    address: string;
+    username: string;
+    password: string;
+  };
   x32: {
     enable: boolean;
     ip: string;

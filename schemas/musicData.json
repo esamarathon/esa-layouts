@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "connected": {
+      "type": "boolean",
+      "default": false
+    },
+    "playing": {
+      "type": "boolean",
+      "default": false
+    },
+    "track": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "artist": {
+          "type": "string"
+        },
+        "position": {
+          "type": "number",
+          "default": 0
+        },
+        "duration": {
+          "type": "number",
+          "default": 0
+        }
+      },
+      "required": [
+        "position",
+        "duration"
+      ]
+    }
+  },
+  "required": [
+    "connected",
+    "playing"
+  ]
+}

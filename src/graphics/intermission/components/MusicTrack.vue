@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="musicPlayer.playing && trackInformation"
+    v-if="musicData.playing && trackInformation"
     class="Flex MusicTrack"
     :style="{ height: '100%' }"
   >
@@ -29,16 +29,16 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { MusicPlayer } from 'schemas';
+import { MusicData } from 'schemas';
 
 @Component
 export default class extends Vue {
-  @State musicPlayer!: MusicPlayer;
+  @State musicData!: MusicData;
 
   get trackInformation(): string | undefined {
     const info = [
-      this.musicPlayer.metadata.title,
-      this.musicPlayer.metadata.artist,
+      this.musicData.track?.title,
+      this.musicData.track?.artist,
     ].filter(Boolean);
     return info.length ? info.join(' - ') : undefined;
   }

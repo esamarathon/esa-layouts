@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import type { Bids, CapturePositions, Commentators, Countdown, DonationsToRead, DonationTotal, GameLayouts, MediaBox, MusicData, MusicPlayer, NameCycle, NotableDonations, ObsData, OtherStreamData, Prizes, StreamDeckData, TtsVoices, TwitchSubscribers, UpcomingRunID, VideoPlayer } from 'schemas'; // eslint-disable-line object-curly-newline
+import type { Bids, CapturePositions, Commentators, Countdown, DonationsToRead, DonationTotal, GameLayouts, MediaBox, MusicData, NameCycle, NotableDonations, ObsData, OtherStreamData, Prizes, StreamDeckData, TtsVoices, TwitchSubscribers, UpcomingRunID, VideoPlayer } from 'schemas'; // eslint-disable-line object-curly-newline
 import type { Asset } from 'types';
 import type { TwitchAPIData } from '../../../../nodecg-speedcontrol/schemas';
 import { get as nodecg } from './nodecg';
@@ -18,8 +18,6 @@ export const donationTotal = nodecg().Replicant<DonationTotal>('donationTotal');
 export const gameLayouts = nodecg().Replicant<GameLayouts>('gameLayouts');
 export const mediaBox = nodecg().Replicant<MediaBox>('mediaBox'); // try to remove and use esa-layout-shared only
 export const musicData = nodecg().Replicant<MusicData>('musicData');
-// @ts-ignore: persistenceInterval not typed yet
-export const musicPlayer = nodecg().Replicant<MusicPlayer>('musicPlayer', { persistenceInterval: 1000 });
 export const nameCycle = nodecg().Replicant<NameCycle>('nameCycle', { persistent: false });
 export const notableDonations = nodecg().Replicant<NotableDonations>('notableDonations');
 export const obsData = nodecg().Replicant<ObsData>('obsData', { persistent: false });

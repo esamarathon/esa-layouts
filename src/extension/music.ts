@@ -88,8 +88,17 @@ async function setup(): Promise<void> {
     nodecg().log.info('[Music] Connection successful');
     const readable = Readable.from(resp.body);
     readable.on('data', (chunk: Buffer) => {
-      const cleaned = chunk.toString().slice(6).replace(/(\r\n|\n|\r)/gm, '');
-      const msg: Foobar2000.UpdateMsg = JSON.parse(cleaned);
+      let msg: Foobar2000.UpdateMsg | undefined;
+      try {
+        const cleaned = chunk.toString().slice(6).replace(/(\r\n|\n|\r)/gm, '');
+        msg = JSON.parse(cleaned);
+      } catch (err) {
+        nodecg().log.warn('[Music] Error parsing message on connection');
+        nodecg().log.debug('[Music] Error parsing message on connection:', err);
+      }
+      if (!msg) {
+        return;
+      }
       if (msg.player) {
         clearInterval(positionInterval);
         musicData.value.playing = msg.player.playbackState === 'playing';
@@ -132,10 +141,10 @@ async function setup(): Promise<void> {
   }
 }
 
-// Listen to OBS scene changes to play/pause correctly.
-obs.on('currentSceneChanged', (current) => {
-  if (current) {
-    if (current.endsWith('[M]')) {
+// Listen to OBS transitions to play/pause correctly.
+obs.conn.on('TransitionBegin', (data) => {
+  if (data['to-scene']) {
+    if (data['to-scene'].endsWith('[M]')) {
       play();
     } else {
       pause();

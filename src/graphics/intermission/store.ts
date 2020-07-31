@@ -1,6 +1,6 @@
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import type { Bids, DonationReader, MediaBox, MusicPlayer, Prizes, UpcomingRunID } from 'schemas'; // eslint-disable-line object-curly-newline, max-len
+import type { Bids, DonationReader, MediaBox, MusicData, Prizes, UpcomingRunID } from 'schemas'; // eslint-disable-line object-curly-newline, max-len
 import SpeedcontrolUtil from 'speedcontrol-util/browser';
 import { RunData, RunDataArray, TwitchCommercialTimer } from 'speedcontrol-util/types';
 import type { Asset, Tracker } from 'types';
@@ -13,7 +13,7 @@ Vue.use(Vuex);
 // Replicants and their types
 const reps: {
   upcomingRunID: ReplicantBrowser<UpcomingRunID>;
-  musicPlayer: ReplicantBrowser<MusicPlayer>;
+  musicData: ReplicantBrowser<MusicData>;
   donationReader: ReplicantBrowser<DonationReader>;
   mediaBoxImages: ReplicantBrowser<Asset[]>;
   mediaBox: ReplicantBrowser<MediaBox>;
@@ -25,7 +25,7 @@ const reps: {
   [k: string]: ReplicantBrowser<unknown>;
 } = {
   upcomingRunID: nodecg.Replicant('upcomingRunID'),
-  musicPlayer: nodecg.Replicant('musicPlayer'),
+  musicData: nodecg.Replicant('musicData'),
   donationReader: nodecg.Replicant('donationReader'),
   mediaBoxImages: nodecg.Replicant('assets:media-box-images'),
   mediaBox: nodecg.Replicant('mediaBox'),

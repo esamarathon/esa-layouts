@@ -5,7 +5,6 @@
     <game-capture
       id="GameCapture1"
       class="BorderRight"
-      :slot-no="0"
       :style="{
         left: '0px',
         top: '0px',
@@ -16,7 +15,7 @@
     <game-capture
       id="GameCapture2"
       class="BorderRight"
-      :slot-no="1"
+      :slot-no="0"
       finish-time-pos="bottomright"
       :style="{
         left: '360px',
@@ -29,7 +28,7 @@
     <game-capture
       id="GameCapture3"
       class="BorderRight"
-      :slot-no="0"
+      :slot-no="1"
       :style="{
         left: '960px',
         top: '0px',
@@ -39,7 +38,6 @@
     />
     <game-capture
       id="GameCapture4"
-      :slot-no="1"
       finish-time-pos="bottomright"
       :style="{
         left: '1560px',

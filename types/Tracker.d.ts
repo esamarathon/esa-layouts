@@ -72,6 +72,7 @@ export namespace Tracker {
       endrun__endtime?: string;
       starttime: string | null;
       endtime: string | null;
+      state: string;
     }
   }
 

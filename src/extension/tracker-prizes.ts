@@ -11,7 +11,7 @@ const refreshTime = 60 * 1000; // Get prizes every 60s.
 
 // Processes the response from the API above.
 function processRawPrizes(rawPrizes: Tracker.Prize[]): Tracker.FormattedPrize[] {
-  return rawPrizes.map((prize) => {
+  return rawPrizes.filter((prize) => prize.fields.state === 'ACCEPTED').map((prize) => {
     const startTime = prize.fields.startrun__starttime || prize.fields.starttime;
     const endTime = prize.fields.endrun__endtime || prize.fields.endtime;
     return {
@@ -32,7 +32,7 @@ async function updatePrizes(): Promise<void> {
   try {
     const resp = await needle(
       'get',
-      `https://${config.address}/search/?event=${eventInfo[0].id}&type=prize&state=ACCEPTED`,
+      `https://${config.address}/search/?event=${eventInfo[0].id}&type=prize`,
       {
         cookies: getCookies(),
       },

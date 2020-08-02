@@ -153,4 +153,6 @@ obs.conn.on('TransitionBegin', (data) => {
 });
 
 musicData.value.connected = false;
-setup();
+if (config.enable) {
+  setup();
+}

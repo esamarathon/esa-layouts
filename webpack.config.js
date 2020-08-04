@@ -52,7 +52,11 @@ const config = (name) => {
         }
       ),
       new ForkTsCheckerWebpackPlugin({
-        vue: true,
+        typescript: {
+          extensions: {
+            vue: true,
+          },
+        },
       }),
     ]
   );
@@ -70,9 +74,11 @@ const config = (name) => {
   }
   if (name === 'graphics') {
     plugins.push(
-      new CopyPlugin([
-        { from: './host-dashboard.*', to: './' },
-      ]),
+      new CopyPlugin({
+        patterns: [
+          { from: './host-dashboard.*', to: './' },
+        ],
+      }),
     );
   }
 
@@ -103,7 +109,12 @@ const config = (name) => {
           exclude: /\.theme.css$/,
           use: [
             (isProd) ? miniCSSOpts : 'vue-style-loader',
-            'css-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                esModule: false,
+              },
+            },
           ],
         },
         {
@@ -115,14 +126,24 @@ const config = (name) => {
                 injectType: 'lazyStyleTag',
               },
             },
-            'css-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                esModule: false,
+              },
+            },
           ]
         },
         {
           test: /\.s(c|a)ss$/,
           use: [
             (isProd) ? miniCSSOpts : 'vue-style-loader',
-            'css-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                esModule: false,
+              },
+            },
             {
               loader: 'sass-loader',
               options: {

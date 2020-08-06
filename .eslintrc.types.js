@@ -10,7 +10,14 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:import/typescript',
   ],
+  settings: {
+    'import/extensions': ['.ts', '.tsx'],
+  },
   rules: {
+    'import/extensions': ['error', 'ignorePackages', {
+      ts: 'never',
+      tsx: 'never',
+    }],
     'import/no-extraneous-dependencies': ['error', {
       devDependencies: true, // Some places have dev deps imported where eslint complains.
       packageDir: ['.', '../..'], // Check for deps in NodeCG folder as well.

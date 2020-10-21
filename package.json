@@ -36,7 +36,7 @@
     "lodash": "^4.17.19",
     "moment": "^2.27.0",
     "needle": "^2.5.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "speedcontrol-util": "^0.5.1",
     "streamdeck-util": "^0.3.3"
   },

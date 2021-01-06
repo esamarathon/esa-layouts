@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "async": "^3.2.0",
-    "esa-layouts-shared": "github:esamarathon/esa-layouts-shared#dev-built",
+    "esa-layouts-shared": "github:esamarathon/esa-layouts-shared",
     "lodash": "^4.17.19",
     "moment": "^2.27.0",
     "needle": "^2.5.0",

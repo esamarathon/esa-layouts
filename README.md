@@ -1,12 +1,34 @@
 # esa-layouts
 
-> The on-screen graphics used during European Speedrunner Assembly (and other relevant) events.
+> The on-screen graphics used during European Speedrunner Assembly's "marathon" events.
 
 *This is a bundle for [NodeCG](https://nodecg.com/); if you do not understand what that is, we advise you read their website first for more information.*
 
-***This documentation isn't fully complete, although all information here is accurate for `master` branch at least.***
+***This documentation isn't fully complete and may have errors, but intends to be as correct as possible.***
 
-This is a [NodeCG](https://nodecg.com) v1 bundle. You will need to have NodeCG v1 or above installed to run it. It also requires you to install the [nodecg-speedcontrol](https://github.com/speedcontrol/nodecg-speedcontrol) bundle.
+This is a [NodeCG](https://nodecg.com) v1.6 bundle. You will need to have NodeCG v1.6 or above installed to run it. It also requires you to install the [nodecg-speedcontrol](https://github.com/speedcontrol/nodecg-speedcontrol) bundle (of which you may also need to use the `dev` branch).
+
+## Installation
+
+You will need [Node.js](https://nodejs.org) (14.x LTS tested) and [git](https://git-scm.com/) installed to install NodeCG, then see the [NodeCG documentation](https://www.nodecg.dev/docs/installing) on how to install that. I also suggest installing `nodecg-cli`; information on that is also on the documentation just linked. You may also need to install the appropriate build tools for whichever platform you are running on; for example if you are on Windows you can either install it while installing Node.js, or using [windows-build-tools](https://github.com/felixrieseberg/windows-build-tools).
+
+Next, clone this repository into your NodeCG `bundle` directory, then install the NPM dependencies and run the build command:
+```
+git clone https://github.com/esamarathon/esa-layouts.git
+cd esa-layouts
+npm install
+npm run build
+```
+
+You will probably also want a default configuration you can fill in, which if you installed `nodecg-cli` can be created using `nodecg defaultconfig`.
+
+If you need the `dev` branch of [nodecg-speedcontrol](https://github.com/speedcontrol/nodecg-speedcontrol), it's similar to above:
+```
+git clone --branch dev https://github.com/speedcontrol/nodecg-speedcontrol.git
+cd nodecg-speedcontrol
+npm install
+npm run build
+```
 
 ## Usage
 
@@ -14,7 +36,7 @@ This is a [NodeCG](https://nodecg.com) v1 bundle. You will need to have NodeCG v
 
 This bundle heavily relies on the [obs-websocket](https://github.com/Palakis/obs-websocket) plugin, so make sure you have this installed (custom address/port and password can be specified in the bundle's config if needed).
 
-This bundle also heavily relies in information from a RabbitMQ server, and an instance of the [GamesDoneQuick donation tracker](https://github.com/GamesDoneQuick/donation-tracker).
+This bundle also heavily relies on information from a RabbitMQ server, and an instance of our fork of the [GamesDoneQuick donation tracker](https://github.com/esamarathon/donation-tracker).
 
 ### Stream Deck Plugin
 
@@ -38,7 +60,7 @@ This bundle can hijack the [FrankerFaceZ](https://www.frankerfacez.com/) feature
 
 ### Music Player
 
-A browser based music player has been included; the graphic named `music-player.html` must be added into *all* of your OBS scenes to correctly be paused/resumed and correctly fade in/out when needed. It will only play if the scene name ends in `[M]`, for example, `Intermission [M]`. Music tracks can be added via the "Assets" tab in the NodeCG dashboard under `esa-layouts` > `Music Tracks`.
+This bundle can interface with [foobar2000](https://www.foobar2000.org/) using the [beefweb](https://github.com/hyperblast/beefweb) plugin. Set up foobar2000 however you want it to play music (we use a long playlist on shuffle, and set a fade in/out on pause), make sure the correct username/password are set in the configuration fiole, and this bundle with automatically play music when needed. It will only play if the scene name ends in `[M]`, for example, `Intermission [M]`.
 
 ### Automatic Twitch Commercials
 
@@ -54,6 +76,11 @@ This bundle no longer handles using this (if it was needed), this is now done by
 
 Here's a list of events this bundle has been used at so far, most recent first.
 
+* UKSG Autumn 2020
+* ESA Summer 2020
+* UKSG Summer 2020
+* ESA Corona Relief
+* ESA Together
 * UKSG Spring 2020
 * ESA Winter 2020
 * UKSG Winter 2020

@@ -68,7 +68,7 @@
     "fitty": "^2.3.2",
     "fork-ts-checker-webpack-plugin": "^5.0.14",
     "globby": "^11.0.1",
-    "gsap": "^3.4.2",
+    "gsap": "^3.6.0",
     "hard-source-webpack-plugin": "^0.13.1",
     "html-webpack-plugin": "^4.3.0",
     "jsmediatags": "^3.9.3",

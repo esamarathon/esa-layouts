@@ -29,8 +29,8 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Configschema } from 'configschema';
-import RestreamComponent from 'esa-layouts-shared/restream/dashboard';
 import { RestreamData } from 'schemas';
+import RestreamComponent from './components/RestreamComponent.vue';
 
 @Component({
   components: {

@@ -1,7 +1,7 @@
 import { queue } from 'async';
 import type { Configschema } from 'configschema';
-import Restream from 'esa-layouts-shared/restream/extension';
 import SpeedcontrolUtil from 'speedcontrol-util';
+import Restream from './RestreamClass';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 

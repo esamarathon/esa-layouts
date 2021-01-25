@@ -176,7 +176,7 @@ export default class extends Vue {
     if (!player) {
       return;
     }
-    await new Promise((res) => {
+    await new Promise<void>((res) => {
       const img = new Image();
       const setAsLoaded = (): void => {
         img.removeEventListener('load', setAsLoaded);

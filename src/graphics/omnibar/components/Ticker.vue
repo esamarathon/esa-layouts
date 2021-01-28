@@ -75,7 +75,8 @@ export default {
         this.bid(),
         this.teamPromo(),
         this.donationURL(),
-        this.esaBtRL(),
+        this.esaUpcomingEvt(),
+        // this.esaBtRL(),
         // this.shirts(),
         // this.twitchCharity(),
       ];
@@ -108,10 +109,10 @@ export default {
       this.timestamp = Date.now();
     },
     esaPromo() {
-      return this.genericMsg('This is United Kingdom Speedrunner Gathering Autumn 2020');
+      return this.genericMsg('This is United Kingdom Speedrunner Gathering Winter 2021');
     },
     charityPromo() {
-      return this.genericMsg('#UKSGAutumn2020 benefits Crisis');
+      return this.genericMsg('#UKSGWinter2021 benefits Crisis');
     },
     otherStreamPromo() {
       return this.genericMsg(`Watch more great runs over @ twitch.tv/${this.otherChannel}`);
@@ -144,6 +145,9 @@ export default {
     },
     twitchCharity() {
       return this.genericMsg('Subscribe or cheer to support the charity!');
+    },
+    esaUpcomingEvt() {
+      return this.genericMsg('Can\'t get enough of speedrunning? Then look forward to ESA Winter 2021: 13th - 21st February');
     },
     esaBtRL() {
       return this.genericMsg('ESA Break the Record: LIVE - Sonic Adventure DX, 30th Oct - 1st Nov! - breaktherecordlive.com');

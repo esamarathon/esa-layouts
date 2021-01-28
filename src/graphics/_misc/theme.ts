@@ -8,6 +8,7 @@ const together = require('./themes/together.theme.css');
 const coronarelief = require('./themes/coronarelief.theme.css');
 const uksgsu = require('./themes/uksgsu.theme.css');
 const uksga = require('./themes/uksga.theme.css');
+const uksgw = require('./themes/uksgw.theme.css');
 const summeronline = require('./themes/summeronline.theme.css');
 
 defaultTheme.use();
@@ -24,6 +25,9 @@ switch (theme) {
     break;
   case 'uksga':
     uksga.use();
+    break;
+  case 'uksgw':
+    uksgw.use();
     break;
   case 'summeronline':
     summeronline.use();

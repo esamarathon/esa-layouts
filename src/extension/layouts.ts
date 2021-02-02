@@ -79,8 +79,7 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
 });
 
 capturePositions.on('change', async (val) => {
-  // Online marathons are not currently using the same OBS logic.
-  if (evtConfig.online || !val || !val['game-layout']) {
+  if (!val || !val['game-layout']) {
     return;
   }
   for (const key of Object.keys(obsSourceKeys)) {

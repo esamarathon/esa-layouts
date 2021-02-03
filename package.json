@@ -158,14 +158,6 @@
         "headerColor": "#c49215"
       },
       {
-        "name": "restream-viewer-tool",
-        "title": "Restream Viewer Tool",
-        "width": 2,
-        "file": "restream-viewer-tool.html",
-        "workspace": "ESA",
-        "headerColor": "#c49215"
-      },
-      {
         "name": "obs-control",
         "title": "OBS Control",
         "width": 3,
@@ -187,14 +179,6 @@
         "width": 2,
         "file": "countdown-control.html",
         "workspace": "ESA Advanced",
-        "headerColor": "#c49215"
-      },
-      {
-        "name": "rabbitmq-test",
-        "title": "RabbitMQ Test",
-        "width": 2,
-        "file": "rabbitmq-test.html",
-        "workspace": "ESA Debug",
         "headerColor": "#c49215"
       }
     ],

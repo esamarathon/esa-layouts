@@ -102,12 +102,12 @@ capturePositions.on('change', async (val) => {
         const areaAR = val['game-layout'][key].width / val['game-layout'][key].height;
         if (areaAR > cameraAR) {
           const newHeight = sceneItemProperties.sourceWidth / areaAR;
-          const cropAmount = Math.floor((sceneItemProperties.sourceWidth - newHeight) / 2);
+          const cropAmount = Math.floor((sceneItemProperties.sourceHeight - newHeight) / 2);
           crop.top = cropAmount;
           crop.bottom = cropAmount;
         } else if (areaAR < cameraAR) {
           const newWidth = sceneItemProperties.sourceHeight * areaAR;
-          const cropAmount = Math.floor((sceneItemProperties.sourceHeight - newWidth) / 2);
+          const cropAmount = Math.floor((sceneItemProperties.sourceWidth - newWidth) / 2);
           crop.left = cropAmount;
           crop.right = cropAmount;
         }

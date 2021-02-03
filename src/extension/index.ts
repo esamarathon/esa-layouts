@@ -32,6 +32,7 @@ export = (nodecg: NodeCG): { obs: any } => {
   require('./text-to-speech');
   require('./twitch-ext');
   require('./music');
+  require('./obsn');
   // require('./twitch-subs');
 
   return {

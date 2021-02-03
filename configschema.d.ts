@@ -82,6 +82,9 @@ export interface Configschema {
     enable: boolean;
     token: string;
   };
+  obsn: {
+    enable: boolean;
+  };
 }
 export interface RestreamItem {
   address: string;

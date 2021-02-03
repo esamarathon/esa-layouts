@@ -90,20 +90,31 @@ capturePositions.on('change', async (val) => {
     };
     // If this is a camera, it may need cropping.
     if (key.includes('Camera') && val['game-layout'][key]) {
-      // Cameras need cropping if not exactly 16:9.
-      // Bigger than 16:9 need top/bottom cropping.
-      // Smaller than 16:9 need left/right cropping.
-      const webcamAR = val['game-layout'][key].width / val['game-layout'][key].height;
-      if (webcamAR > (16 / 9)) {
-        const newHeight = 1920 / webcamAR;
-        const cropAmount = Math.floor((1080 - newHeight) / 2);
-        crop.top = cropAmount;
-        crop.bottom = cropAmount;
-      } else if (webcamAR < (16 / 9)) {
-        const newWidth = 1080 * webcamAR;
-        const cropAmount = Math.floor((1920 - newWidth) / 2);
-        crop.left = cropAmount;
-        crop.right = cropAmount;
+      try {
+        // Cameras need cropping if not exactly 16:9.
+        // Bigger than 16:9 need top/bottom cropping.
+        // Smaller than 16:9 need left/right cropping.
+        const sceneItemProperties = await obs.conn.send('GetSceneItemProperties', {
+          'scene-name': obsConfig.names.scenes.gameLayout,
+          item: obsSourceKeys[key],
+        });
+        const cameraAR = sceneItemProperties.sourceWidth / sceneItemProperties.sourceHeight;
+        const areaAR = val['game-layout'][key].width / val['game-layout'][key].height;
+        if (areaAR > cameraAR) {
+          const newHeight = sceneItemProperties.sourceWidth / areaAR;
+          const cropAmount = Math.floor((sceneItemProperties.sourceWidth - newHeight) / 2);
+          crop.top = cropAmount;
+          crop.bottom = cropAmount;
+        } else if (areaAR < cameraAR) {
+          const newWidth = sceneItemProperties.sourceHeight * areaAR;
+          const cropAmount = Math.floor((sceneItemProperties.sourceHeight - newWidth) / 2);
+          crop.left = cropAmount;
+          crop.right = cropAmount;
+        }
+      } catch (err) {
+        nodecg().log.warn(`[Layouts] Cannot successfuly find camera source to crop [${key}]`);
+        nodecg().log
+          .debug(`[Layouts] Cannot successfuly find camera source to crop [${key}]:`, err);
       }
     }
 

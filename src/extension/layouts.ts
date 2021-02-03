@@ -4,7 +4,6 @@ import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { capturePositions, countdown, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
 
-const evtConfig = (nodecg().bundleConfig as Configschema).event;
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 const sc = new SpeedcontrolUtil(nodecg());
 

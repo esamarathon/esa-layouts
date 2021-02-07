@@ -29,7 +29,9 @@ body {
   background-color: #41245b;
 }
 
-.Player .CustomTitle {
+.Player .CustomTitle,
+.DonationReader .CustomTitle,
+.CommAndReader .CustomTitle {
   font-weight: 400;
   font-size: 0.8em;
   color: #cccccc;

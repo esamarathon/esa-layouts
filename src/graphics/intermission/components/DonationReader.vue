@@ -18,9 +18,22 @@
       >
     </div>
     <div
-      :style="{ padding: '0 15px' }"
+      :style="{
+        display: 'flex',
+        padding: '0 15px',
+      }"
     >
-      {{ donationReader }}
+      {{ name }}
+      <div
+        v-if="pronouns"
+        class="CustomTitle"
+        :style="{
+          padding: '3px 5px',
+          'margin-left': '10px',
+        }"
+      >
+        {{ pronouns }}
+      </div>
     </div>
   </div>
 </template>
@@ -33,5 +46,19 @@ import { DonationReader } from 'schemas';
 @Component
 export default class extends Vue {
   @State donationReader!: DonationReader;
+
+  get name(): string | undefined {
+    if (!this.donationReader) {
+      return undefined;
+    }
+    return this.donationReader.replace(/\((.*?)\)/g, '').trim();
+  }
+
+  get pronouns(): string | undefined {
+    if (!this.donationReader) {
+      return undefined;
+    }
+    return (this.donationReader.match(/\((.*?)\)/g) || [])[0]?.replace(/[()]/g, '');
+  }
 }
 </script>

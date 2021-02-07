@@ -1,6 +1,6 @@
 <template>
   <div
-    v-show="(commentators && commentators.length) || donationReader"
+    v-show="(comms && comms.length) || reader"
     ref="CommAndReader"
     class="Flex CommAndReader"
     :style="{
@@ -13,7 +13,7 @@
     }"
   >
     <div
-      v-show="commentators && commentators.length"
+      v-show="comms && comms.length"
       :style="{
         width: showBoth ? 'calc(65% - 1px)' : '100%',
         overflow: 'hidden',
@@ -27,10 +27,24 @@
       >
         <div class="CommentatorText">
           <span :style="{ 'font-weight': 500 }">
-            <template v-if="commentators.length === 1">Commentator:</template>
+            <template v-if="comms.length === 1">Commentator:</template>
             <template v-else>Commentators:</template>
           </span>
-          {{ commentators.join(', ') }}
+          <template v-for="({ name, pronouns }, i) in comms">
+            {{ name }}<span
+              v-if="pronouns"
+              :key="name"
+              class="CustomTitle"
+              :style="{
+                padding: '1px 3px',
+                'margin-left': '4px',
+                'background-color': '#4b3163',
+              }"
+            >{{ pronouns }}</span><span
+              v-if="i < comms.length -1"
+              :key="name"
+            >, </span>
+          </template>
         </div>
       </div>
     </div>
@@ -43,7 +57,7 @@
       }"
     />
     <div
-      v-show="donationReader"
+      v-show="reader"
       :style="{
         width: showBoth ? 'calc(35% - 1px)' : '100%',
         overflow: 'hidden',
@@ -59,7 +73,20 @@
           <span :style="{ 'font-weight': 500 }">
             Reader:
           </span>
-          {{ donationReader }}
+          <template v-if="reader">
+            {{ reader.name }}
+          </template>
+          <span
+            v-if="reader && reader.pronouns"
+            class="CustomTitle"
+            :style="{
+              padding: '1px 3px',
+              'margin-left': '2px',
+              'background-color': '#4b3163',
+            }"
+          >
+            {{ reader.pronouns }}
+          </span>
         </div>
       </div>
     </div>
@@ -80,7 +107,24 @@ export default class extends Vue {
   fittyReader!: FittyInstance;
 
   get showBoth(): boolean {
-    return !!(this.commentators && this.commentators.length && this.donationReader);
+    return !!(this.comms && this.comms.length && this.reader);
+  }
+
+  get reader(): { name: string, pronouns?: string } | undefined {
+    if (!this.donationReader) {
+      return undefined;
+    }
+    return {
+      name: this.donationReader.replace(/\((.*?)\)/g, '').trim(),
+      pronouns: (this.donationReader.match(/\((.*?)\)/g) || [])[0]?.replace(/[()]/g, ''),
+    };
+  }
+
+  get comms(): { name: string, pronouns?: string }[] {
+    return this.commentators.map((c) => ({
+      name: c.replace(/\((.*?)\)/g, '').trim(),
+      pronouns: (c.match(/\((.*?)\)/g) || [])[0]?.replace(/[()]/g, ''),
+    }));
   }
 
   mounted(): void {

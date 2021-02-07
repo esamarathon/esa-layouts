@@ -34,7 +34,7 @@ import { RunDataActiveRun, Timer, TeamFinishTime } from 'speedcontrol-util/types
 
 @Component
 export default class extends Vue {
-  @State('runDataActiveRun') runData!: RunDataActiveRun;
+  @State('runDataActiveRun') runData!: RunDataActiveRun | undefined;
   @State timer!: Timer;
   @Prop(Number) slotNo!: number;
   @Prop({
@@ -43,7 +43,7 @@ export default class extends Vue {
   }) finishTimePos!: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
 
   get teamFinishTime(): TeamFinishTime | undefined {
-    if (this.runData.teams.length < 2) {
+    if ((this.runData?.teams.length || 0) < 2) {
       return undefined;
     }
     const teamID = this.runData?.teams[this.slotNo]?.id;

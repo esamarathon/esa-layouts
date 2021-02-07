@@ -122,9 +122,29 @@ capturePositions.on('change', async (val) => {
       await obs.configureSceneItem(
         obsConfig.names.scenes.gameLayout,
         obsSourceKeys[key],
-        val['game-layout'][key],
+        (() => {
+          if (key.startsWith('GameCapture')
+          && ['DS-1p', '3DS-1p'].includes(gameLayouts.value.selected || '')) {
+            if (key === 'GameCapture1') {
+              return {
+                x: 0, y: 0, width: 1920, height: 1080,
+              };
+            }
+            return undefined;
+          }
+          return val['game-layout'][key];
+        })(),
         crop,
-        !!val['game-layout'][key],
+        (() => {
+          if (key.startsWith('GameCapture')
+          && ['DS-1p', '3DS-1p'].includes(gameLayouts.value.selected || '')) {
+            if (key === 'GameCapture1') {
+              return true;
+            }
+            return false;
+          }
+          return !!val['game-layout'][key];
+        })(),
       );
     } catch (err) {
       nodecg().log.warn(`[Layouts] Cannot successfully configure capture position [${key}]`);

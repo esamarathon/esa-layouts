@@ -43,6 +43,9 @@ export default class extends Vue {
   }) finishTimePos!: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
 
   get teamFinishTime(): TeamFinishTime | undefined {
+    if (this.runData.teams.length < 2) {
+      return undefined;
+    }
     const teamID = this.runData?.teams[this.slotNo]?.id;
     return teamID ? this.timer.teamFinishTimes[teamID] : undefined;
   }

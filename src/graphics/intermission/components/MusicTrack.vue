@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="musicData.playing && trackInformation"
+    v-if="true"
     class="Flex MusicTrack"
     :style="{ height: '100%' }"
   >
@@ -13,8 +13,8 @@
       }"
     >
       <img
-        src="./MCat.png"
-        :style="{ height: '100%' }"
+        src="./Music.png"
+        :style="{ height: '85%', padding: '0 5px' }"
       >
     </div>
     <div

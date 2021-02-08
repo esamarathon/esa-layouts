@@ -21,6 +21,11 @@ if (config.enable) {
         && silentScenes.includes(data['from-scene'])) {
         x32.fade('/dca/1/fader', 0, 0.75, 1000);
       }
+      if (data['to-scene'] === obs.findScene(obsConfig.names.scenes.gameLayout)) {
+        x32.fade('/ch/08/mix/fader', 0.75, 0, 1000);
+      } else {
+        x32.fade('/ch/08/mix/fader', 0, 0.75, 1000);
+      }
     } catch (err) {
       nodecg().log.warn('[Mixer] Could not change mixer fader');
       nodecg().log.debug('[Mixer] Could not change mixer fader:', err);

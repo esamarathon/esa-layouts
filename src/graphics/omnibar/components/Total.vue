@@ -17,6 +17,17 @@
 import { TweenLite } from 'gsap';
 
 const totalRep = nodecg.Replicant('donationTotal');
+const sfxElem = new Audio(require('./sfx/smb3_coin.wav')); // eslint-disable-line global-require
+
+async function playSound() {
+  try {
+    sfxElem.volume = 1;
+    await sfxElem.play();
+  } catch (err) {
+    // console.log(err);
+  }
+}
+playSound();
 
 export default {
   name: 'Total',
@@ -29,8 +40,10 @@ export default {
     };
   },
   watch: {
-    total(val) {
+    async total(val) {
       if (this.init) {
+        playSound();
+        await new Promise((res) => setTimeout(res, 500));
         TweenLite.to(this.$data, 5, { tweenedTotal: val });
       } else {
         this.tweenedTotal = this.total;

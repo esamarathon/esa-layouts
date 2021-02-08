@@ -195,6 +195,14 @@ const config = (name) => {
             appendTsSuffixTo: [/\.vue$/],
           },
         },
+        {
+          test: /\.wav?$/,
+          loader: 'file-loader',
+          options: {
+            name: 'sfx/[name].[ext]',
+            esModule: false,
+          },
+        },
       ],
     },
     plugins,

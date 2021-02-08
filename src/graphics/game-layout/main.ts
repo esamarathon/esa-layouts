@@ -30,6 +30,11 @@ const routes = [
     component: List.L_4x3_2p_ExtraSpace,
   },
   {
+    name: '4:3 2 Player (Extra Middle Space)',
+    path: '/4x3-2p-extramiddlespace',
+    component: List.L_4x3_2p_ExtraMiddleSpace,
+  },
+  {
     name: '4:3 3 Player',
     path: '/4x3-3p',
     component: List.L_4x3_3p,

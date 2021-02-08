@@ -4,14 +4,14 @@
     class="Flex"
   >
     <img
-      src="./uksg_winter_logo.png"
+      src="./winter_logo.png"
       :style="{ padding: '0 10px' }"
     >
     <divider></divider>
     <img
-      src="./crisis_logo.png"
+      src="./alzheimerfonden_logo.png"
       :style="{
-        /* width: '150px', */
+        width: '150px',
         padding: '0 10px 0 10px'
       }"
     >

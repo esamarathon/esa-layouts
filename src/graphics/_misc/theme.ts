@@ -10,6 +10,7 @@ const uksgsu = require('./themes/uksgsu.theme.css');
 const uksga = require('./themes/uksga.theme.css');
 const uksgw = require('./themes/uksgw.theme.css');
 const summeronline = require('./themes/summeronline.theme.css');
+const winter = require('./themes/winter.theme.css');
 
 defaultTheme.use();
 
@@ -31,6 +32,9 @@ switch (theme) {
     break;
   case 'summeronline':
     summeronline.use();
+    break;
+  case 'winter':
+    winter.use();
     break;
   default:
     // do nothing

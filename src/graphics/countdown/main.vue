@@ -19,7 +19,7 @@
           Event Starts In
         </span>
         <span v-else>
-          Event Starts Soom™
+          Event Starts Soon
         </span>
       </div>
       <div
@@ -49,6 +49,9 @@ export default class extends Vue {
 
   get currentCountdown(): string {
     const seconds = Math.round(this.countdown.remaining / 1000);
+    if (seconds >= 60 * 60 * 10) {
+      return msToTimeStr(seconds * 1000);
+    }
     if (seconds >= (60 * 60)) {
       return msToTimeStr(seconds * 1000).slice(1);
     }

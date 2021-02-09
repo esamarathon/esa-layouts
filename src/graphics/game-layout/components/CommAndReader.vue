@@ -34,7 +34,7 @@
             {{ name }}<span
               v-if="pronouns"
               :key="name"
-              class="CustomTitle"
+              class="Pronouns"
               :style="{
                 padding: '1px 3px',
                 'margin-left': '4px',
@@ -78,7 +78,7 @@
           </template>
           <span
             v-if="reader && reader.pronouns"
-            class="CustomTitle"
+            class="Pronouns"
             :style="{
               padding: '1px 3px',
               'margin-left': '2px',

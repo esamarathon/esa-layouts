@@ -28,6 +28,7 @@ export interface OtherStreamData {
         id: string;
         teamID: string;
         country?: string;
+        pronouns?: string;
         social: {
           twitch?: string;
         };

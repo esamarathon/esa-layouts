@@ -82,14 +82,14 @@
             /{{ player.social.twitch }}
             <!-- Custom Title code repeated twice, needs cleaning up! -->
             <span
-              v-if="player.customData.customTitle"
-              class="CustomTitle"
+              v-if="formattedPronouns"
+              class="Pronouns"
               :style="{
                 padding: '3px 5px',
                 'margin-left': '5px',
               }"
             >
-              {{ player.customData.customTitle }}
+              {{ formattedPronouns }}
             </span>
           </div>
         </div>
@@ -102,14 +102,14 @@
             {{ player.name }}
             <!-- Custom Title code repeated twice, needs cleaning up! -->
             <span
-              v-if="player.customData.customTitle"
-              class="CustomTitle"
+              v-if="formattedPronouns"
+              class="Pronouns"
               :style="{
                 padding: '3px 5px',
                 'margin-left': '5px',
               }"
             >
-              {{ player.customData.customTitle }}
+              {{ formattedPronouns }}
             </span>
           </div>
         </div>
@@ -161,6 +161,26 @@ export default class extends Vue {
   playerIndex = 0;
   nameCycle = 0; // "Local" name cycle used so we can let flags load.
   fittyPlayer: FittyInstance | undefined;
+
+  get formattedPronouns(): string | undefined {
+    if (!this.player?.pronouns) {
+      return undefined;
+    }
+    const split = this.player.pronouns.split(',').map((p) => p.trim().toLowerCase());
+    if (split.length > 1) {
+      if (split.includes('they/them')) {
+        if (split.includes('he/him') && !split.includes('she/her')) {
+          return 'he/them';
+        }
+        if (split.includes('she/her') && !split.includes('he/him')) {
+          return 'she/them';
+        }
+        return 'they/them';
+      }
+      return undefined;
+    }
+    return split[0];
+  }
 
   updateTeam(): void {
     if (this.coop && typeof this.slotNo === 'number') {

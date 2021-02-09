@@ -26,7 +26,7 @@
       {{ name }}
       <div
         v-if="pronouns"
-        class="CustomTitle"
+        class="Pronouns"
         :style="{
           padding: '3px 5px',
           'margin-left': '10px',

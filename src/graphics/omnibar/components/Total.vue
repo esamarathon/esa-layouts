@@ -27,7 +27,6 @@ async function playSound() {
     // console.log(err);
   }
 }
-playSound();
 
 export default {
   name: 'Total',

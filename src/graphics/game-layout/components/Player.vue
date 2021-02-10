@@ -170,12 +170,15 @@ export default class extends Vue {
     if (split.length > 1) {
       if (split.includes('they/them')) {
         if (split.includes('he/him') && !split.includes('she/her')) {
-          return 'he/them';
+          return 'he or they';
         }
         if (split.includes('she/her') && !split.includes('he/him')) {
-          return 'she/them';
+          return 'she or they';
         }
         return 'they/them';
+      }
+      if (split.includes('he/him') && split.includes('she/her')) {
+        return 'he or she';
       }
       return undefined;
     }

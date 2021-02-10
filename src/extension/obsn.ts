@@ -48,24 +48,10 @@ async function processCurrentRunAudioChange(
   });
   if (obs.connected && getTotalDelay(newRoom) !== getTotalDelay(oldRoom)) {
     try {
-      const settings = {
-        source: 'Mics',
-      };
       await obs.conn.send('SetSyncOffset', {
-        ...settings,
-        ...{
-          offset: 0,
-        },
+        source: 'Mics',
+        offset: getTotalDelay(newRoom) * 1000000, // Nanoseconds
       });
-      if (getTotalDelay(newRoom) !== 0) {
-        await new Promise((res) => setTimeout(res, 500));
-        await obs.conn.send('SetSyncOffset', {
-          ...settings,
-          ...{
-            offset: getTotalDelay(newRoom) * 1000000, // Nanoseconds
-          },
-        });
-      }
     } catch (err) {
       // catch
     }

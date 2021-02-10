@@ -6,6 +6,15 @@ import x32 from './util/x32';
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 const config = (nodecg().bundleConfig as Configschema).x32;
 
+export function setFaderName(fader: string, name: string): void {
+  if (config.enable) {
+    x32.conn?.send({
+      address: `${fader}/config/name`,
+      args: [{ type: 's', value: name }],
+    });
+  }
+}
+
 if (config.enable) {
   obs.conn.on('TransitionBegin', (data) => {
     const silentScenes = [

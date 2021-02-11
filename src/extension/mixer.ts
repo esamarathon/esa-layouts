@@ -81,7 +81,9 @@ if (config.enable) {
       obs.findScene(obsConfig.names.scenes.intermission),
     ];
     toggleFadeHelper('/dca/1/fader', nonGameScenes, data);
-    toggleFadeHelper('/dca/2/fader', nonGameScenes, data, true, true); // Hard cut as backup!
+    setTimeout(() => { // Delayed hard cut as backup!
+      toggleFadeHelper('/dca/2/fader', nonGameScenes, data, true, true);
+    }, 1500);
     toggleFadeHelper('/dca/3/fader', intermissionScenes, data, false);
   });
 }

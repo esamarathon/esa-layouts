@@ -196,7 +196,7 @@ const config = (name) => {
           },
         },
         {
-          test: /\.wav?$/,
+          test: /\.mp3?$/,
           loader: 'file-loader',
           options: {
             name: 'sfx/[name].[ext]',

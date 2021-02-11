@@ -3,6 +3,12 @@
     id="Total"
     class="Flex"
   >
+    <audio ref="SFX">
+      <source
+        src="./sfx/mario_coin.mp3"
+        type="audio/mpeg"
+      >
+    </audio>
     <span
       v-for="(char, i) in totalSplitString"
       :key="i"
@@ -17,16 +23,6 @@
 import { TweenLite } from 'gsap';
 
 const totalRep = nodecg.Replicant('donationTotal');
-const sfxElem = new Audio(require('./sfx/smb3_coin.wav')); // eslint-disable-line global-require
-
-async function playSound() {
-  try {
-    sfxElem.volume = 1;
-    await sfxElem.play();
-  } catch (err) {
-    // console.log(err);
-  }
-}
 
 export default {
   name: 'Total',
@@ -41,7 +37,7 @@ export default {
   watch: {
     async total(val) {
       if (this.init) {
-        playSound();
+        this.playSound();
         await new Promise((res) => setTimeout(res, 500));
         TweenLite.to(this.$data, 5, { tweenedTotal: val });
       } else {
@@ -54,10 +50,30 @@ export default {
       this.totalSplitString = string.split('');
     },
   },
-  mounted() {
+  async mounted() {
     totalRep.on('change', (newVal) => {
       this.total = newVal;
     });
+
+    // Keep the SFX playing constantly but on mute to avoid garbage collection (hopefully).
+    this.$refs.SFX.muted = true;
+    await this.$refs.SFX.play();
+    this.$refs.SFX.addEventListener('ended', async () => {
+      this.$refs.SFX.muted = true;
+      await this.$refs.SFX.play();
+    });
+  },
+  methods: {
+    async playSound() {
+      try {
+        await this.$refs.SFX.pause();
+        this.$refs.SFX.currentTime = 0;
+        await this.$refs.SFX.play();
+        this.$refs.SFX.muted = false;
+      } catch (err) {
+        // catch
+      }
+    },
   },
 };
 </script>

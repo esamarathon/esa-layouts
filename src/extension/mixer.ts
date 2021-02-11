@@ -20,12 +20,18 @@ function toggleFadeHelper(
   address: string,
   scenes: (string | undefined)[],
   data: { 'from-scene': string, 'to-scene': string },
+  mute = true,
 ): void {
   try {
-    if (scenes.includes(data['to-scene']) && !scenes.includes(data['from-scene'])) {
+    let scene1 = scenes.includes(data['to-scene']);
+    let scene2 = scenes.includes(data['from-scene']);
+    if (!mute) {
+      scene1 = scenes.includes(data['from-scene']);
+      scene2 = scenes.includes(data['to-scene']);
+    }
+    if (scene1 && !scene2) {
       x32.fade(address, 0.75, 0, 1000);
-    } else if (!scenes.includes(data['to-scene'])
-      && scenes.includes(data['from-scene'])) {
+    } else if (!scene1 && scene2) {
       x32.fade(address, 0, 0.75, 1000);
     }
   } catch (err) {
@@ -50,6 +56,6 @@ if (config.enable) {
     ];
     toggleFadeHelper('/dca/1/fader', nonGameScenes, data);
     toggleFadeHelper('/dca/2/fader', nonGameScenes, data); // TODO: add "negative" delay somehow
-    toggleFadeHelper('/dca/3/fader', intermissionScenes, data);
+    toggleFadeHelper('/dca/3/fader', intermissionScenes, data, false);
   });
 }

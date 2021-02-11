@@ -77,7 +77,8 @@ export default {
         this.donationURL(),
         // this.esaUpcomingEvt(),
         // this.esaBtRL(),
-        // this.shirts(),
+        this.merch(),
+        this.ticket(),
         // this.twitchCharity(),
       ];
 
@@ -135,16 +136,19 @@ export default {
       return { name: Bid };
     },
     teamPromo() {
-      return this.genericMsg('Check out our Twitch team @ twitch.tv/team/esa!');
+      return this.genericMsg('Check out our Twitch team @ twitch.tv/team/esa');
     },
     donationURL() {
       return this.genericMsg(`Donate @ ${nodecg.bundleConfig.tracker.address}`);
     },
-    shirts() {
-      return this.genericMsg('Check out our merch @ speedrunstore.com!');
+    merch() {
+      return this.genericMsg('Check out our merch @ esamarathon.com/esa-store');
+    },
+    ticket() {
+      return this.genericMsg('Buy your supporter ticket @ esamarathon.com');
     },
     twitchCharity() {
-      return this.genericMsg('Subscribe or cheer to support the charity!');
+      return this.genericMsg('Subscribe or cheer to support the charity');
     },
     esaUpcomingEvt() {
       return this.genericMsg('Can\'t get enough of speedrunning? Then look forward to ESA Winter 2021: 13th - 21st February');

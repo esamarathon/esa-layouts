@@ -28,13 +28,25 @@
           Disconnected
         </span>
       </div>
-      <div
-        :style="{
-          'font-style': 'italic',
-          'margin-bottom': '5px',
-        }"
-      >
-        Change Scene:
+      <div class="d-flex">
+        <div
+          :style="{
+            'font-style': 'italic',
+            'margin-bottom': '5px',
+          }"
+        >
+          Change Scene:
+        </div>
+        <v-spacer />
+        <div
+          v-if="delayTimestamp > currentTime"
+          class="red--text font-weight-bold"
+        >
+          Transitioning in {{ ((delayTimestamp - currentTime) / 1000).toFixed(1) }}s
+          <v-icon color="red">
+            mdi-alert
+          </v-icon>
+        </div>
       </div>
       <v-btn
         v-for="(scene, i) in obsData.sceneList"
@@ -44,6 +56,14 @@
         @click="changeScene(scene)"
       >
         {{ scene }}
+        <template
+          v-if="scene !== obsData.scene && (currentRunDelay
+            && (scene === obsConfig.names.scenes.gameLayout
+              || (scene !== obsConfig.names.scenes.gameLayout
+                && obsData.scene === obsConfig.names.scenes.gameLayout)))"
+        >
+          ({{ (currentRunDelay / 1000).toFixed(1) }}s delay)
+        </template>
       </v-btn>
       <template v-if="obsData.gameLayoutScreenshot && gameLayoutPreviewToggle">
         <div
@@ -72,14 +92,21 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { ObsData } from 'schemas';
+import { CurrentRunDelay, ObsData } from 'schemas';
 import { Configschema } from 'configschema';
 
 @Component
 export default class extends Vue {
   @State obsData!: ObsData;
+  @State currentRunDelay!: CurrentRunDelay;
   obsConfig = (nodecg.bundleConfig as Configschema).obs;
   gameLayoutPreviewToggle = true;
+  currentTime = Date.now();
+  delayTimestamp = 0;
+
+  created(): void {
+    window.setInterval(() => { this.currentTime = Date.now(); }, 100);
+  }
 
   disableButton(scene: string): boolean {
     return this.obsData.transitioning
@@ -87,8 +114,11 @@ export default class extends Vue {
     || this.obsData.disableTransitioning;
   }
 
-  changeScene(scene: string): void {
-    nodecg.sendMessage('obsChangeScene', scene);
+  async changeScene(scene: string): Promise<void> {
+    const delay = await nodecg.sendMessage('obsChangeScene', scene) as number;
+    if (delay > 0) {
+      this.delayTimestamp = this.currentTime + delay;
+    }
   }
 }
 </script>

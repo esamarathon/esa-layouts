@@ -1,8 +1,9 @@
 import type { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
+import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { capturePositions, countdown, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
+import { capturePositions, countdown, currentRunDelay, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
 
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 const sc = new SpeedcontrolUtil(nodecg());
@@ -179,24 +180,40 @@ sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
 // Enable transitioning if we just changed to
 // the game layout or intermission (without commercials).
 obs.on('currentSceneChanged', () => {
-  if (obs.isCurrentScene(obsConfig.names.scenes.gameLayout)
-    || obs.isCurrentScene(obsConfig.names.scenes.intermission)) {
+  if (!obs.isCurrentScene(obsConfig.names.scenes.videoPlayer)) {
     obsData.value.disableTransitioning = false;
   }
 });
 
-nodecg().listenFor('obsChangeScene', async (name: string) => {
+nodecg().listenFor('obsChangeScene', async (name: string, ack) => {
   // Don't change scene if identical, we're currently transitioning, or transitioning is disabled.
   if (obsData.value.scene === name
     || obsData.value.transitioning
     || obsData.value.disableTransitioning) {
     return;
   }
+  let delay = 0;
   try {
-    await obs.changeScene(name);
+    if (currentRunDelay.value === 0
+      || (!obs.isCurrentScene(obsConfig.names.scenes.gameLayout)
+      && obs.findScene(name) !== obsConfig.names.scenes.gameLayout)) {
+      await obs.changeScene(name);
+    } else {
+      delay = currentRunDelay.value;
+      obsData.value.disableTransitioning = true;
+      setTimeout(async () => {
+        try {
+          await obs.changeScene(name);
+        } catch (err) {
+          logError('[Layouts] Could not change scene (on delay) [name: %s]', err, name);
+        }
+      }, delay);
+    }
   } catch (err) {
-    nodecg().log.warn('[Layouts] Could not change scene');
-    nodecg().log.debug('[Layouts] Could not change scene:', err);
+    logError('[Layouts] Could not change scene [name: %s]', err, name);
+  }
+  if (ack && !ack?.handled) {
+    ack(null, delay);
   }
 });
 

@@ -229,11 +229,26 @@ function updateCountdownTimer(): void {
   }
 }
 
-nodecg().listenFor('startCountdown', (time: number) => {
+nodecg().listenFor('startCountdown', (time: string) => {
+  if (!/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(time)) {
+    return;
+  }
+  const now = new Date();
+  const then = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    Number(time.split(':')[0]),
+    Number(time.split(':')[1]),
+  );
   clearTimeout(countdownTimeout);
+  const diff = then.getTime() - now.getTime();
+  if (diff <= 0) {
+    return;
+  }
   countdown.value = {
-    originalDuration: time,
-    remaining: time,
+    originalDuration: diff,
+    remaining: diff,
     timestamp: Date.now(),
   };
   updateCountdownTimer();

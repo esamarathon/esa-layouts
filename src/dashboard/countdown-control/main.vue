@@ -3,23 +3,14 @@
     <div>
       Current Countdown: {{ currentCountdown }}
     </div>
-    <div class="d-flex">
-      <v-text-field
-        v-model="entry"
-        label="Start Time (MM:SS)"
-        hide-details
-        filled
-        :spellcheck="false"
-        @keyup.enter="change(); $event.target.blur();"
-      />
-      <v-btn
-        height="56px"
-        :style="{ 'min-width': '0', 'margin-left': '5px' }"
-        @click="change"
-      >
-        <v-icon>mdi-check</v-icon>
-      </v-btn>
-    </div>
+    <v-time-picker
+      v-model="entry"
+      format="24hr"
+      full-width
+    />
+    <v-btn @click="change()">
+      Apply
+    </v-btn>
   </v-app>
 </template>
 
@@ -27,7 +18,7 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Countdown } from 'schemas';
-import { timeStrToMS, msToTimeStr } from '../_misc/helpers';
+import { msToTimeStr } from '../_misc/helpers';
 
 @Component
 export default class extends Vue {
@@ -40,11 +31,8 @@ export default class extends Vue {
   }
 
   change(): void {
-    if (this.entry.match(/^(\d+:)?(?:\d{1}|\d{2}):\d{2}$/)) {
-      const ms = timeStrToMS(this.entry);
-      nodecg.sendMessage('startCountdown', ms);
-      this.entry = '';
-    }
+    nodecg.sendMessage('startCountdown', this.entry);
+    this.entry = '';
   }
 }
 </script>

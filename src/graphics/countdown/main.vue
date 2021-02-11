@@ -6,13 +6,14 @@
       class="Flex"
       :style="{
         'flex-direction': 'column',
+        height: '1000px',
       }"
     >
       <img class="Logo">
       <div
         :style="{
           'font-size': '70px',
-          'margin-top': '100px',
+          'margin-top': '50px',
         }"
       >
         <span v-if="countdown.remaining > 0">

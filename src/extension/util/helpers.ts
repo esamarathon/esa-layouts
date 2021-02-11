@@ -1,4 +1,5 @@
 import type { Configschema } from 'configschema';
+import util from 'util';
 import { get as nodecg } from './nodecg';
 
 const config = nodecg().bundleConfig as Configschema;
@@ -30,4 +31,16 @@ export function getOtherStreamEventShort(): string | undefined {
   }
   const eventNumber = config.event.thisEvent === 1 ? 2 : 1;
   return config.event.shorts[eventNumber - 1];
+}
+
+/**
+ * Error log helper that logs a basic warn but a more detailed debug.
+ * @param msg String to be logged.
+ * @param err Error to be logged.
+ * @param args List of argments to be supplied/substitued in the msg string.
+ */
+export function logError(msg: string, err: Error, ...args: unknown[]): void {
+  const msgWithArgs = util.format(msg, ...args);
+  nodecg().log.warn(msgWithArgs);
+  nodecg().log.debug(`${msgWithArgs}: %s`, err);
 }

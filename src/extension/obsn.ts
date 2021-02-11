@@ -2,10 +2,10 @@ import { Configschema } from 'configschema';
 import { isEqual, throttle } from 'lodash';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { RunDataPlayer } from 'speedcontrol-util/types';
-import util from 'util';
 import { ExtensionReturn as ExtensionReturnOBSN } from '../../../nodecg-obsninja/src/types';
 import { ActiveRooms, ObsnRooms } from '../../../nodecg-obsninja/src/types/schemas';
 import { setFaderName } from './mixer';
+import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 
@@ -32,12 +32,6 @@ const defaultFaderNames = [
   'Ninja 6',
   'Ninja 7',
 ];
-
-function logError(msg: string, err: Error, ...args: unknown[]): void {
-  const msgWithArgs = util.format(msg, ...args);
-  nodecg().log.warn(msgWithArgs);
-  nodecg().log.debug(`${msgWithArgs}: %s`, err);
-}
 
 function getTotalDelay(room?: ObsnRooms[0]): number {
   if (!room?.delay.apply) {

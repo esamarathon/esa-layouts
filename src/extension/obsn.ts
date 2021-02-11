@@ -1,5 +1,5 @@
 import { Configschema } from 'configschema';
-import { isEqual } from 'lodash';
+import { isEqual, throttle } from 'lodash';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { RunDataPlayer } from 'speedcontrol-util/types';
 import { ExtensionReturn as ExtensionReturnOBSN } from '../../../nodecg-obsninja/src/types';
@@ -48,15 +48,34 @@ async function processCurrentRunAudioChange(
   });
   if (obs.connected && getTotalDelay(newRoom) !== getTotalDelay(oldRoom)) {
     try {
-      await obs.conn.send('SetSyncOffset', {
+      const settings = {
         source: 'Mics',
-        offset: getTotalDelay(newRoom) * 1000000, // Nanoseconds
+      };
+      await obs.conn.send('SetSyncOffset', {
+        ...settings,
+        ...{
+          // Using 1ms, OBS really doesn't like going directly up from 0 and it doesn't work.
+          offset: 1 * 1000000,
+        },
       });
+      if (getTotalDelay(newRoom) !== 0) {
+        await new Promise((res) => setTimeout(res, 500));
+        await obs.conn.send('SetSyncOffset', {
+          ...settings,
+          ...{
+            offset: getTotalDelay(newRoom) * 1000000, // Nanoseconds
+          },
+        });
+      }
     } catch (err) {
       // catch
     }
   }
 }
+
+const processCurrentRunAudioChangeThrottle = throttle(
+  processCurrentRunAudioChange, 20, { trailing: false },
+);
 
 async function processCurrentRunVideoChange(
   newRoom?: ObsnRooms[0],
@@ -92,6 +111,10 @@ async function processCurrentRunVideoChange(
     }
   }
 }
+
+const processCurrentRunVideoChangeThrottle = throttle(
+  processCurrentRunVideoChange, 20, { trailing: false },
+);
 
 async function setup(): Promise<void> {
   if (!cfg.obsn.enable) {
@@ -165,12 +188,12 @@ async function setup(): Promise<void> {
 
     // If the current run audio room has changed at all, apply updates.
     if (!isEqual(roomNew.audio, roomOld.audio)) {
-      await processCurrentRunAudioChange(roomNew.audio, roomOld.audio);
+      await processCurrentRunAudioChangeThrottle(roomNew.audio, roomOld.audio);
     }
 
     // If the current run video room delay changed, apply updates.
     if (!isEqual(roomNew.video?.delay, roomOld.video?.delay)) {
-      await processCurrentRunVideoChange(roomNew.video, roomOld.video);
+      await processCurrentRunVideoChangeThrottle(roomNew.video, roomOld.video);
     }
   });
 
@@ -188,12 +211,12 @@ async function setup(): Promise<void> {
     if (activeRoomNew.audio?.id !== activeRoomOld.audio?.id) {
       const roomNew = obsnRooms.value.find((r) => r.id === activeRoomNew.audio?.id);
       const roomOld = obsnRooms.value.find((r) => r.id === activeRoomOld.audio?.id);
-      await processCurrentRunAudioChange(roomNew, roomOld);
+      await processCurrentRunAudioChangeThrottle(roomNew, roomOld);
     }
     if (activeRoomNew.video?.id !== activeRoomOld.video?.id) {
       const roomNew = obsnRooms.value.find((r) => r.id === activeRoomNew.video?.id);
       const roomOld = obsnRooms.value.find((r) => r.id === activeRoomOld.video?.id);
-      await processCurrentRunVideoChange(roomNew, roomOld);
+      await processCurrentRunVideoChangeThrottle(roomNew, roomOld);
     }
   });
 }

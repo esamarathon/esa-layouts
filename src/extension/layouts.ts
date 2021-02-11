@@ -1,5 +1,6 @@
 import type { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
+import { toggleLiveMics } from './mixer';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
@@ -194,6 +195,7 @@ nodecg().listenFor('obsChangeScene', async (name: string, ack) => {
   }
   let delay = 0;
   try {
+    toggleLiveMics(name);
     if (currentRunDelay.value === 0
       || (!obs.isCurrentScene(obsConfig.names.scenes.gameLayout)
       && obs.findScene(name) !== obsConfig.names.scenes.gameLayout)) {

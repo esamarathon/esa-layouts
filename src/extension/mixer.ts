@@ -2,10 +2,21 @@ import type { Configschema } from 'configschema';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
+import { obsData } from './util/replicants';
 import x32 from './util/x32';
 
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 const config = (nodecg().bundleConfig as Configschema).x32;
+
+function getNonGameScenes(): string[] {
+  // These scenes will *not* have "LIVE Game/Mics" DCAs audible.
+  return [
+    obs.findScene(obsConfig.names.scenes.commercials),
+    obs.findScene(obsConfig.names.scenes.intermission),
+    obs.findScene(obsConfig.names.scenes.videoPlayer),
+    obs.findScene(obsConfig.names.scenes.countdown),
+  ].filter(Boolean) as string[];
+}
 
 export function setFaderName(fader: string, name: string): void {
   if (config.enable) {
@@ -21,6 +32,7 @@ function toggleFadeHelper(
   scenes: (string | undefined)[],
   data: { 'from-scene': string, 'to-scene': string },
   mute = true,
+  nofade = false,
 ): void {
   try {
     let scene1 = scenes.includes(data['to-scene']);
@@ -30,9 +42,17 @@ function toggleFadeHelper(
       scene2 = scenes.includes(data['to-scene']);
     }
     if (scene1 && !scene2) {
-      x32.fade(address, 0.75, 0, 1000);
+      if (nofade) {
+        x32.setFader(address, 0);
+      } else {
+        x32.fade(address, 0.75, 0, 1000);
+      }
     } else if (!scene1 && scene2) {
-      x32.fade(address, 0, 0.75, 1000);
+      if (nofade) {
+        x32.setFader(address, 0.75);
+      } else {
+        x32.fade(address, 0, 0.75, 1000);
+      }
     }
   } catch (err) {
     logError(
@@ -42,20 +62,26 @@ function toggleFadeHelper(
   }
 }
 
+export function toggleLiveMics(scene: string): void {
+  const nonGameScenes = getNonGameScenes();
+  const fromScene = obsData.value.scene;
+  const toScene = obs.findScene(scene);
+  if (fromScene && toScene) {
+    toggleFadeHelper('/dca/2/fader', nonGameScenes, {
+      'from-scene': fromScene, 'to-scene': toScene,
+    });
+  }
+}
+
 if (config.enable) {
   obs.conn.on('TransitionBegin', async (data) => {
-    const nonGameScenes = [ // These scenes will *not* have "LIVE Game/Mics" DCAs audible.
-      obs.findScene(obsConfig.names.scenes.commercials),
-      obs.findScene(obsConfig.names.scenes.intermission),
-      obs.findScene(obsConfig.names.scenes.videoPlayer),
-      obs.findScene(obsConfig.names.scenes.countdown),
-    ];
+    const nonGameScenes = getNonGameScenes(); // These scenes will *not* have "LIVE" DCAs audible.
     const intermissionScenes = [ // These scenes *will* have "Intrmsn Mics" DCA audible.
       obs.findScene(obsConfig.names.scenes.commercials),
       obs.findScene(obsConfig.names.scenes.intermission),
     ];
     toggleFadeHelper('/dca/1/fader', nonGameScenes, data);
-    toggleFadeHelper('/dca/2/fader', nonGameScenes, data); // TODO: add "negative" delay somehow
+    toggleFadeHelper('/dca/2/fader', nonGameScenes, data, true, true); // Hard cut as backup!
     toggleFadeHelper('/dca/3/fader', intermissionScenes, data, false);
   });
 }

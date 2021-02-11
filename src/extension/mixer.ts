@@ -1,4 +1,5 @@
 import type { Configschema } from 'configschema';
+import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import x32 from './util/x32';
@@ -15,29 +16,40 @@ export function setFaderName(fader: string, name: string): void {
   }
 }
 
+function toggleFadeHelper(
+  address: string,
+  scenes: (string | undefined)[],
+  data: { 'from-scene': string, 'to-scene': string },
+): void {
+  try {
+    if (scenes.includes(data['to-scene']) && !scenes.includes(data['from-scene'])) {
+      x32.fade(address, 0.75, 0, 1000);
+    } else if (!scenes.includes(data['to-scene'])
+      && scenes.includes(data['from-scene'])) {
+      x32.fade(address, 0, 0.75, 1000);
+    }
+  } catch (err) {
+    logError(
+      '[Mixer] Error toggling fader [address: %s, scenes: %s, data: %s]',
+      err, address, scenes, data,
+    );
+  }
+}
+
 if (config.enable) {
-  obs.conn.on('TransitionBegin', (data) => {
-    const silentScenes = [
+  obs.conn.on('TransitionBegin', async (data) => {
+    const nonGameScenes = [ // These scenes will *not* have "LIVE Game/Mics" DCAs audible.
       obs.findScene(obsConfig.names.scenes.commercials),
       obs.findScene(obsConfig.names.scenes.intermission),
       obs.findScene(obsConfig.names.scenes.videoPlayer),
       obs.findScene(obsConfig.names.scenes.countdown),
     ];
-    try {
-      if (silentScenes.includes(data['to-scene']) && !silentScenes.includes(data['from-scene'])) {
-        x32.fade('/dca/1/fader', 0.75, 0, 1000);
-      } else if (!silentScenes.includes(data['to-scene'])
-        && silentScenes.includes(data['from-scene'])) {
-        x32.fade('/dca/1/fader', 0, 0.75, 1000);
-      }
-      if (data['to-scene'] === obs.findScene(obsConfig.names.scenes.gameLayout)) {
-        x32.fade('/ch/08/mix/fader', 0.75, 0, 1000);
-      } else {
-        x32.fade('/ch/08/mix/fader', 0, 0.75, 1000);
-      }
-    } catch (err) {
-      nodecg().log.warn('[Mixer] Could not change mixer fader');
-      nodecg().log.debug('[Mixer] Could not change mixer fader:', err);
-    }
+    const intermissionScenes = [ // These scenes *will* have "Intrmsn Mics" DCA audible.
+      obs.findScene(obsConfig.names.scenes.commercials),
+      obs.findScene(obsConfig.names.scenes.intermission),
+    ];
+    toggleFadeHelper('/dca/1/fader', nonGameScenes, data);
+    toggleFadeHelper('/dca/2/fader', nonGameScenes, data); // TODO: add "negative" delay somehow
+    toggleFadeHelper('/dca/3/fader', intermissionScenes, data);
   });
 }

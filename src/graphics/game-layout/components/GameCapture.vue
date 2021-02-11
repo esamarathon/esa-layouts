@@ -87,7 +87,7 @@ export default class extends Vue {
   }
 
   get teamFinishTime(): TeamFinishTime | undefined {
-    if ((this.runData?.teams.length || 0) < 2) {
+    if (!this.timer || (this.runData?.teams.length || 0) < 2) {
       return undefined;
     }
     const teamID = this.runData?.teams[this.slotNo]?.id;

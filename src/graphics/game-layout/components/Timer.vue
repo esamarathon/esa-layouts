@@ -53,6 +53,9 @@ export default class extends Vue {
    */
   backupTimer(): void {
     this.backupTimerTO = window.setTimeout(() => this.backupTimer(), 200);
+    if (!this.timer) {
+      return;
+    }
     if (this.timer.state === 'running') {
       const missedTime = Date.now() - this.timer.timestamp;
       const timeOffset = this.timer.milliseconds + missedTime;
@@ -92,6 +95,9 @@ export default class extends Vue {
   }
 
   get timerState(): string {
+    if (!this.timer) {
+      return 'Stopped';
+    }
     return this.timer.state.charAt(0).toUpperCase() + this.timer.state.slice(1);
   }
 

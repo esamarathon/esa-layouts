@@ -8,6 +8,7 @@ import { setFaderName } from './mixer';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
+import { currentRunDelay } from './util/replicants';
 
 const obsn = nodecg().extensions['nodecg-obsninja'] as unknown as ExtensionReturnOBSN;
 const sc = new SpeedcontrolUtil(nodecg());
@@ -38,6 +39,13 @@ function getTotalDelay(room?: ObsnRooms[0]): number {
     return 0;
   }
   return room.delay.base + room.delay.offset;
+}
+
+// This could also made to be based on Twitch delay instead of OBS.N delay?
+function updateCurrentRunDelay(activeRoom?: ActiveRooms[0]): void {
+  currentRunDelay.value = getTotalDelay(
+    obsnRooms.value.find((r) => r.id === activeRoom?.id),
+  );
 }
 
 async function processCurrentRunAudioChange(
@@ -196,6 +204,9 @@ async function setup(): Promise<void> {
       video: oldVal?.find((r) => r.id === activeRoom.video?.id),
     };
 
+    // Currently setting this value based on video, usually they're the same.
+    updateCurrentRunDelay(activeRoom.video);
+
     // If the current run audio room has changed at all, apply updates.
     if (!isEqual(roomNew.audio, roomOld.audio)) {
       await processCurrentRunAudioChangeThrottle(roomNew.audio, roomOld.audio);
@@ -216,6 +227,9 @@ async function setup(): Promise<void> {
       audio: oldVal?.find((a) => a.type === 'audio' && a.key === 'currentRun'),
       video: oldVal?.find((a) => a.type === 'video' && a.key === 'currentRun'),
     };
+
+    // Currently setting this value based on video, usually they're the same.
+    updateCurrentRunDelay(activeRoomNew.video);
 
     // If the current run room ID has changed, apply updates.
     if (activeRoomNew.audio?.id !== activeRoomOld.audio?.id) {

@@ -2,6 +2,7 @@ export * from './bids';
 export * from './capturePositions';
 export * from './commentators';
 export * from './countdown';
+export * from './currentRunDelay';
 export * from './donationReader';
 export * from './donationsToRead';
 export * from './donationTotal';

@@ -1,6 +1,6 @@
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import type { Commentators, DonationReader, GameLayouts, MediaBox, NameCycle, NotableDonations, Prizes } from 'schemas'; // eslint-disable-line object-curly-newline, max-len
+import type { Commentators, CurrentRunDelay, DonationReader, GameLayouts, MediaBox, NameCycle, NotableDonations, Prizes } from 'schemas'; // eslint-disable-line object-curly-newline, max-len
 import SpeedcontrolUtil from 'speedcontrol-util/browser';
 import type { RunDataActiveRun, Timer } from 'speedcontrol-util/types';
 import type { Asset } from 'types';
@@ -12,28 +12,30 @@ Vue.use(Vuex);
 
 // Replicants and their types
 const reps: {
-  gameLayouts: ReplicantBrowser<GameLayouts>;
-  mediaBoxImages: ReplicantBrowser<Asset[]>;
-  mediaBox: ReplicantBrowser<MediaBox>;
   commentators: ReplicantBrowser<Commentators>;
+  currentRunDelay: ReplicantBrowser<CurrentRunDelay>;
   donationReader: ReplicantBrowser<DonationReader>;
+  gameLayouts: ReplicantBrowser<GameLayouts>;
+  mediaBox: ReplicantBrowser<MediaBox>;
+  mediaBoxImages: ReplicantBrowser<Asset[]>;
   nameCycle: ReplicantBrowser<NameCycle>;
   notableDonations: ReplicantBrowser<NotableDonations>;
   prizes: ReplicantBrowser<Prizes>;
-  timer: ReplicantBrowser<Timer>;
   runDataActiveRun: ReplicantBrowser<RunDataActiveRun>;
+  timer: ReplicantBrowser<Timer>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
-  gameLayouts: nodecg.Replicant('gameLayouts'),
-  mediaBoxImages: nodecg.Replicant('assets:media-box-images'),
-  mediaBox: nodecg.Replicant('mediaBox'),
   commentators: nodecg.Replicant('commentators'),
+  currentRunDelay: nodecg.Replicant('currentRunDelay'),
   donationReader: nodecg.Replicant('donationReader'),
+  gameLayouts: nodecg.Replicant('gameLayouts'),
+  mediaBox: nodecg.Replicant('mediaBox'),
+  mediaBoxImages: nodecg.Replicant('assets:media-box-images'),
   nameCycle: nodecg.Replicant('nameCycle'),
   notableDonations: nodecg.Replicant('notableDonations'),
   prizes: nodecg.Replicant('prizes'),
-  timer: sc.timer,
   runDataActiveRun: sc.runDataActiveRun,
+  timer: sc.timer,
 };
 
 interface StateTypes {

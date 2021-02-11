@@ -28,19 +28,63 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'; // eslint-disable-line object-curly-newline, max-len
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'; // eslint-disable-line object-curly-newline, max-len
 import { State } from 'vuex-class';
 import { RunDataActiveRun, Timer, TeamFinishTime } from 'speedcontrol-util/types';
+import clone from 'clone';
+import { CurrentRunDelay } from 'schemas';
 
 @Component
 export default class extends Vue {
-  @State('runDataActiveRun') runData!: RunDataActiveRun | undefined;
-  @State timer!: Timer;
+  @State('runDataActiveRun') runDataNoDelay!: RunDataActiveRun | undefined;
+  @State('timer') timerNoDelay!: Timer;
+  @State currentRunDelay!: CurrentRunDelay;
   @Prop(Number) slotNo!: number;
   @Prop({
     default: 'bottomleft',
     validator: (v) => ['topleft', 'topright', 'bottomleft', 'bottomright'].includes(v),
   }) finishTimePos!: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
+  runData: RunDataActiveRun | null = null;
+  timer: Timer | null = null;
+  timerDelayTO: number[] = [];
+  runDataDelayTO: number[] = [];
+
+  @Watch('currentRunDelay', { immediate: true })
+  onCurrentRunDelayChange(): void {
+    // Wait 100ms then clear all the timeouts currently active.
+    window.setTimeout(() => {
+      while (this.timerDelayTO.length) {
+        window.clearTimeout(this.timerDelayTO.shift());
+      }
+      while (this.runDataDelayTO.length) {
+        window.clearTimeout(this.runDataDelayTO.shift());
+      }
+    }, 100);
+  }
+
+  @Watch('timerNoDelay', { immediate: true })
+  onTimerNoDelayChange(val: Timer): void {
+    const timerFreeze = clone(val);
+    if (!this.timer || this.currentRunDelay === 0) {
+      Vue.set(this, 'timer', timerFreeze);
+    } else {
+      this.timerDelayTO.push(window.setTimeout(() => {
+        Vue.set(this, 'timer', timerFreeze);
+      }, this.currentRunDelay));
+    }
+  }
+
+  @Watch('runDataNoDelay', { immediate: true })
+  onRunDataNoDelayChange(val: RunDataActiveRun): void {
+    const runDataFreeze = clone(val);
+    if (!this.runData || this.currentRunDelay === 0) {
+      Vue.set(this, 'runData', runDataFreeze);
+    } else {
+      this.runDataDelayTO.push(window.setTimeout(() => {
+        Vue.set(this, 'runData', runDataFreeze);
+      }, this.currentRunDelay));
+    }
+  }
 
   get teamFinishTime(): TeamFinishTime | undefined {
     if ((this.runData?.teams.length || 0) < 2) {
@@ -48,6 +92,15 @@ export default class extends Vue {
     }
     const teamID = this.runData?.teams[this.slotNo]?.id;
     return teamID ? this.timer.teamFinishTimes[teamID] : undefined;
+  }
+
+  beforeDestroy(): void {
+    while (this.timerDelayTO.length) {
+      window.clearTimeout(this.timerDelayTO.shift());
+    }
+    while (this.runDataDelayTO.length) {
+      window.clearTimeout(this.runDataDelayTO.shift());
+    }
   }
 }
 </script>

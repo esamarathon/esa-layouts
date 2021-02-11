@@ -2,6 +2,7 @@ import { Configschema } from 'configschema';
 import { isEqual, throttle } from 'lodash';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { RunDataPlayer } from 'speedcontrol-util/types';
+import util from 'util';
 import { ExtensionReturn as ExtensionReturnOBSN } from '../../../nodecg-obsninja/src/types';
 import { ActiveRooms, ObsnRooms } from '../../../nodecg-obsninja/src/types/schemas';
 import { setFaderName } from './mixer';
@@ -31,6 +32,12 @@ const defaultFaderNames = [
   'Ninja 6',
   'Ninja 7',
 ];
+
+function logError(msg: string, err: Error, ...args: unknown[]): void {
+  const msgWithArgs = util.format(msg, ...args);
+  nodecg().log.warn(msgWithArgs);
+  nodecg().log.debug(`${msgWithArgs}: %s`, err);
+}
 
 function getTotalDelay(room?: ObsnRooms[0]): number {
   if (!room?.delay.apply) {
@@ -68,9 +75,13 @@ async function processCurrentRunAudioChange(
         });
       }
     } catch (err) {
-      // catch
+      logError(
+        '[OBSN] Issue setting current run audio delay in OBS [new room: %s, old room: %s]',
+        err, JSON.stringify(newRoom), JSON.stringify(oldRoom),
+      );
     }
   }
+  nodecg().log.debug('[OBSN] Current Run audio change finished processing');
 }
 
 const processCurrentRunAudioChangeThrottle = throttle(
@@ -107,8 +118,12 @@ async function processCurrentRunVideoChange(
         });
       }
     } catch (err) {
-      // catch
+      logError(
+        '[OBSN] Issue setting current run video delay in OBS [new room: %s, old room: %s]',
+        err, JSON.stringify(newRoom), JSON.stringify(oldRoom),
+      );
     }
+    nodecg().log.debug('[OBSN] Current Run audio change finished processing');
   }
 }
 
@@ -125,6 +140,7 @@ async function setup(): Promise<void> {
   while (typeof obsn === 'undefined') {
     await new Promise((res) => setTimeout(res, 1000));
   }
+  nodecg().log.info('[OBSN] Setting enabled and bundle has been detected, will set up');
 
   // Create new rooms based on nodecg-speedcontrol information about the upcoming run.
   sc.runDataActiveRunSurrounding.on('change', async (newVal, oldVal) => {

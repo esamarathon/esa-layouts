@@ -1,6 +1,6 @@
 import type { Configschema } from 'configschema';
-import needle from 'needle';
 import type { NeedleResponse } from 'needle';
+import needle from 'needle';
 import type { Tracker } from 'types';
 import { get as nodecg } from './util/nodecg';
 import { mq } from './util/rabbitmq';
@@ -49,7 +49,7 @@ async function updateDonationTotalFromAPI(): Promise<void> {
         total += eventTotal;
       }
     }
-    if (donationTotal.value !== total) {
+    if (donationTotal.value < total) {
       nodecg().log.info('[Tracker] API donation total changed: $%s', total);
       donationTotal.value = total;
     }
@@ -68,7 +68,7 @@ mq.evt.on('donationTotalUpdated', (data) => {
     }
     total += event.total;
   }
-  if (donationTotal.value !== total) {
+  if (donationTotal.value < total) {
     nodecg().log.debug('[Tracker] Updated donation total received: $%s', total.toFixed(2));
     donationTotal.value = total;
   }

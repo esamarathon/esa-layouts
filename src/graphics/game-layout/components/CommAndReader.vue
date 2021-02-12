@@ -41,7 +41,7 @@
                 'background-color': '#4b3163',
               }"
             >{{ pronouns }}</span><span
-              v-if="i < comms.length -1"
+              v-if="i < comms.length - 1"
               :key="name"
             >, </span>
           </template>

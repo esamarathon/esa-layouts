@@ -85,6 +85,40 @@
     >
       <player :slot-no="1" />
 
+      <div
+        v-if="extraPlayers.length"
+        class="Flex CommAndReader"
+        :style="{
+          width: '100%',
+          height: '40px',
+          'font-size': '25px',
+          'font-weight': 400,
+          'white-space': 'nowrap',
+        }"
+      >
+        <span :style="{ 'font-weight': 600, 'padding-right': '5px' }">
+          Off Screen:
+        </span>
+        <template v-for="({ name, pronouns }, i) in extraPlayers">
+          <span :key="name">{{ name }}</span>
+          <span
+            v-if="pronouns"
+            :key="name"
+            class="Pronouns"
+            :style="{
+              padding: '1px 3px',
+              'margin-left': '4px',
+              'background-color': '#4b3163',
+            }"
+          >
+            {{ pronouns }}
+          </span><span
+            v-if="i < extraPlayers.length - 1"
+            :key="name"
+          >,&nbsp;</span>
+        </template>
+      </div>
+
       <!-- Run Game Info/Timer -->
       <div
         class="FlexColumn"
@@ -128,6 +162,8 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { Configschema } from 'configschema';
+import { State } from 'vuex-class';
+import { RunDataActiveRun } from 'speedcontrol-util/types';
 import GameCapture from './components/GameCapture.vue';
 import Player from './components/Player.vue';
 import CommAndReader from './components/CommAndReader.vue';
@@ -149,5 +185,36 @@ import DonationBar from './components/DonationBar.vue';
 })
 export default class extends Vue {
   online = (nodecg.bundleConfig as Configschema).event.online;
+  @State('runDataActiveRun') runData!: RunDataActiveRun;
+
+  get extraPlayers(): { name: string, pronouns?: string }[] {
+    return (this.runData?.teams[0].players || []).slice(2).map((p) => ({
+      name: p.name,
+      pronouns: this.formatPronouns(p.pronouns),
+    }));
+  }
+
+  formatPronouns(pronouns?: string): string | undefined {
+    if (!pronouns) {
+      return undefined;
+    }
+    const split = pronouns.split(',').map((p) => p.trim().toLowerCase());
+    if (split.length > 1) {
+      if (split.includes('they/them')) {
+        if (split.includes('he/him') && !split.includes('she/her')) {
+          return 'he or they';
+        }
+        if (split.includes('she/her') && !split.includes('he/him')) {
+          return 'she or they';
+        }
+        return 'they/them';
+      }
+      if (split.includes('he/him') && split.includes('she/her')) {
+        return 'he or she';
+      }
+      return undefined;
+    }
+    return split[0];
+  }
 }
 </script>

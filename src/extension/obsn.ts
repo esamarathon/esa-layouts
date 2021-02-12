@@ -72,7 +72,7 @@ async function processCurrentRunAudioChange(
         await obs.conn.send('SetSyncOffset', {
           ...settings,
           ...{
-            offset: getTotalDelay(newRoom) * 1000000, // Nanoseconds
+            offset: (getTotalDelay(newRoom) - 200) * 1000000, // Nanoseconds
           },
         });
       }
@@ -114,7 +114,7 @@ async function processCurrentRunVideoChange(
           ...settings,
           ...{
             filterSettings: {
-              delay_ms: getTotalDelay(newRoom),
+              delay_ms: getTotalDelay(newRoom) - 200,
             },
           },
         });

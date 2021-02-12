@@ -120,3 +120,4 @@ dist
 /extension/
 /graphics/
 streamdeck-plugin/DistributionTool.exe
+*.psd

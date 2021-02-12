@@ -3,7 +3,8 @@ body {
 }
 
 #Background {
-  background-color: #19171c;
+  background: url("./default/Background.png");
+  /* background: #19171c; */
 }
 
 *[class*='Border'] {

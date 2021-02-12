@@ -3,7 +3,7 @@ body {
 }
 
 #Background {
-  background-color: #1c4762;
+  background: #1c4762;
 }
 
 *[class*='Border'] {

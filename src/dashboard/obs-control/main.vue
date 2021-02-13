@@ -39,10 +39,10 @@
         </div>
         <v-spacer />
         <div
-          v-if="delayTimestamp > currentTime"
+          v-if="obsData.transitionTimestamp > currentTime"
           class="red--text font-weight-bold"
         >
-          Transitioning in {{ ((delayTimestamp - currentTime) / 1000).toFixed(1) }}s
+          Transitioning in {{ ((obsData.transitionTimestamp - currentTime) / 1000).toFixed(1) }}s
           <v-icon color="red">
             mdi-alert
           </v-icon>
@@ -102,7 +102,6 @@ export default class extends Vue {
   obsConfig = (nodecg.bundleConfig as Configschema).obs;
   gameLayoutPreviewToggle = true;
   currentTime = Date.now();
-  delayTimestamp = 0;
 
   created(): void {
     window.setInterval(() => { this.currentTime = Date.now(); }, 100);
@@ -114,11 +113,8 @@ export default class extends Vue {
     || this.obsData.disableTransitioning;
   }
 
-  async changeScene(scene: string): Promise<void> {
-    const delay = await nodecg.sendMessage('obsChangeScene', scene) as number;
-    if (delay > 0) {
-      this.delayTimestamp = this.currentTime + delay;
-    }
+  changeScene(scene: string): void {
+    nodecg.sendMessage('obsChangeScene', scene);
   }
 }
 </script>

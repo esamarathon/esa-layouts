@@ -13,4 +13,5 @@ export interface ObsData {
   streaming: boolean;
   gameLayoutScreenshot?: string;
   disableTransitioning: boolean;
+  transitionTimestamp: number;
 }

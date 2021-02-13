@@ -187,22 +187,22 @@ obs.on('currentSceneChanged', () => {
   }
 });
 
-nodecg().listenFor('obsChangeScene', async (name: string, ack) => {
+nodecg().listenFor('obsChangeScene', async (name: string) => {
   // Don't change scene if identical, we're currently transitioning, or transitioning is disabled.
   if (obsData.value.scene === name
     || obsData.value.transitioning
     || obsData.value.disableTransitioning) {
     return;
   }
-  let delay = 0;
   try {
     if (currentRunDelay.value.audio === 0
       || (!obs.isCurrentScene(obsConfig.names.scenes.gameLayout)
       && obs.findScene(name) !== obsConfig.names.scenes.gameLayout)) {
       await obs.changeScene(name);
     } else {
-      delay = currentRunDelay.value.audio;
+      const delay = currentRunDelay.value.audio;
       obsData.value.disableTransitioning = true;
+      obsData.value.transitionTimestamp = Date.now() + delay;
       if (cfg.obsn.buffer <= 0) {
         toggleLiveMics(name);
       } else {
@@ -218,9 +218,6 @@ nodecg().listenFor('obsChangeScene', async (name: string, ack) => {
     }
   } catch (err) {
     logError('[Layouts] Could not change scene [name: %s]', err, name);
-  }
-  if (ack && !ack?.handled) {
-    ack(null, delay);
   }
 });
 

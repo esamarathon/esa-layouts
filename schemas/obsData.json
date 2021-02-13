@@ -31,6 +31,10 @@
     "disableTransitioning": {
       "type": "boolean",
       "default": false
+    },
+    "transitionTimestamp": {
+      "type": "number",
+      "default": 0
     }
   },
   "required": [
@@ -38,6 +42,7 @@
     "sceneList",
     "transitioning",
     "streaming",
-    "disableTransitioning"
+    "disableTransitioning",
+    "transitionTimestamp"
   ]
 }

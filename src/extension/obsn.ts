@@ -42,10 +42,11 @@ function getTotalDelay(room?: ObsnRooms[0]): number {
 }
 
 // This could also made to be based on Twitch delay instead of OBS.N delay?
-function updateCurrentRunDelay(activeRoom?: ActiveRooms[0]): void {
-  currentRunDelay.value = getTotalDelay(
-    obsnRooms.value.find((r) => r.id === activeRoom?.id),
-  );
+function updateCurrentRunDelay(audio?: ActiveRooms[0], video?: ActiveRooms[0]): void {
+  currentRunDelay.value = {
+    audio: getTotalDelay(obsnRooms.value.find((r) => r.id === audio?.id)),
+    video: getTotalDelay(obsnRooms.value.find((r) => r.id === video?.id)),
+  };
 }
 
 async function processCurrentRunAudioChange(
@@ -67,7 +68,7 @@ async function processCurrentRunAudioChange(
           offset: 1 * 1000000,
         },
       });
-      if (getTotalDelay(newRoom) !== 0) {
+      if ((getTotalDelay(newRoom) - 200) > 1) {
         await new Promise((res) => setTimeout(res, 500));
         await obs.conn.send('SetSyncOffset', {
           ...settings,
@@ -108,7 +109,7 @@ async function processCurrentRunVideoChange(
           },
         },
       });
-      if (getTotalDelay(newRoom) !== 0) {
+      if ((getTotalDelay(newRoom) - 200) > 0) {
         await new Promise((res) => setTimeout(res, 500));
         await obs.conn.send('SetSourceFilterSettings', {
           ...settings,
@@ -204,8 +205,7 @@ async function setup(): Promise<void> {
       video: oldVal?.find((r) => r.id === activeRoom.video?.id),
     };
 
-    // Currently setting this value based on video, usually they're the same.
-    updateCurrentRunDelay(activeRoom.video);
+    updateCurrentRunDelay(activeRoom.audio, activeRoom.video);
 
     // If the current run audio room has changed at all, apply updates.
     if (!isEqual(roomNew.audio, roomOld.audio)) {
@@ -228,8 +228,7 @@ async function setup(): Promise<void> {
       video: oldVal?.find((a) => a.type === 'video' && a.key === 'currentRun'),
     };
 
-    // Currently setting this value based on video, usually they're the same.
-    updateCurrentRunDelay(activeRoomNew.video);
+    updateCurrentRunDelay(activeRoomNew.audio, activeRoomNew.video);
 
     // If the current run room ID has changed, apply updates.
     if (activeRoomNew.audio?.id !== activeRoomOld.audio?.id) {

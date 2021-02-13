@@ -1,5 +1,19 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
-  "type": "number",
-  "default": 0
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "audio": {
+      "type": "number",
+      "default": 0
+    },
+    "video": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "audio",
+    "video"
+  ]
 }

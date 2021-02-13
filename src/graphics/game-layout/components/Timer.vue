@@ -63,7 +63,7 @@ export default class extends Vue {
     }
   }
 
-  @Watch('currentRunDelay', { immediate: true })
+  @Watch('currentRunDelay.video', { immediate: true })
   onCurrentRunDelayChange(): void {
     // Wait 100ms then clear all the timeouts currently active.
     window.setTimeout(() => {
@@ -76,12 +76,12 @@ export default class extends Vue {
   @Watch('timerNoDelay', { immediate: true })
   onTimerNoDelayChange(val: Timer): void {
     const timerFreeze = clone(val);
-    if (!this.timer || this.currentRunDelay === 0) {
+    if (!this.timer || this.currentRunDelay.video === 0) {
       Vue.set(this, 'timer', timerFreeze);
     } else {
       this.timerDelayTO.push(window.setTimeout(() => {
         Vue.set(this, 'timer', timerFreeze);
-      }, this.currentRunDelay));
+      }, this.currentRunDelay.video));
     }
   }
 

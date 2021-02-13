@@ -5,4 +5,7 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type CurrentRunDelay = number;
+export interface CurrentRunDelay {
+  audio: number;
+  video: number;
+}

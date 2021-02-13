@@ -57,12 +57,12 @@
       >
         {{ scene }}
         <template
-          v-if="scene !== obsData.scene && (currentRunDelay
+          v-if="scene !== obsData.scene && (currentRunDelay.audio
             && (scene === obsConfig.names.scenes.gameLayout
               || (scene !== obsConfig.names.scenes.gameLayout
                 && obsData.scene === obsConfig.names.scenes.gameLayout)))"
         >
-          ({{ (currentRunDelay / 1000).toFixed(1) }}s delay)
+          ({{ (currentRunDelay.audio / 1000).toFixed(1) }}s delay)
         </template>
       </v-btn>
       <template v-if="obsData.gameLayoutScreenshot && gameLayoutPreviewToggle">

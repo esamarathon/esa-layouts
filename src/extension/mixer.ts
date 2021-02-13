@@ -2,7 +2,7 @@ import type { Configschema } from 'configschema';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { obsData } from './util/replicants';
+import { currentRunDelay, obsData } from './util/replicants';
 import x32 from './util/x32';
 
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
@@ -81,9 +81,13 @@ if (config.enable) {
       obs.findScene(obsConfig.names.scenes.intermission),
     ];
     toggleFadeHelper('/dca/1/fader', nonGameScenes, data);
-    setTimeout(() => { // Delayed hard cut as backup!
-      toggleFadeHelper('/dca/2/fader', nonGameScenes, data, true, true);
-    }, 1500);
+    if (currentRunDelay.value.audio > 0) {
+      setTimeout(() => { // Delayed hard cut as backup!
+        toggleFadeHelper('/dca/2/fader', nonGameScenes, data, true, true);
+      }, 1500);
+    } else {
+      toggleFadeHelper('/dca/2/fader', nonGameScenes, data);
+    }
     toggleFadeHelper('/dca/3/fader', intermissionScenes, data, false);
   });
 }

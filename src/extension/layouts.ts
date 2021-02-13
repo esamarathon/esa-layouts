@@ -199,7 +199,6 @@ nodecg().listenFor('obsChangeScene', async (name: string, ack) => {
     if (currentRunDelay.value.audio === 0
       || (!obs.isCurrentScene(obsConfig.names.scenes.gameLayout)
       && obs.findScene(name) !== obsConfig.names.scenes.gameLayout)) {
-      toggleLiveMics(name);
       await obs.changeScene(name);
     } else {
       delay = currentRunDelay.value.audio;

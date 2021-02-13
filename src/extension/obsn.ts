@@ -68,12 +68,12 @@ async function processCurrentRunAudioChange(
           offset: 1 * 1000000,
         },
       });
-      if ((getTotalDelay(newRoom) - 200) > 1) {
+      if ((getTotalDelay(newRoom) - cfg.obsn.buffer) > 1) {
         await new Promise((res) => setTimeout(res, 500));
         await obs.conn.send('SetSyncOffset', {
           ...settings,
           ...{
-            offset: (getTotalDelay(newRoom) - 200) * 1000000, // Nanoseconds
+            offset: (getTotalDelay(newRoom) - cfg.obsn.buffer) * 1000000, // Nanoseconds
           },
         });
       }
@@ -109,13 +109,13 @@ async function processCurrentRunVideoChange(
           },
         },
       });
-      if ((getTotalDelay(newRoom) - 200) > 0) {
+      if ((getTotalDelay(newRoom) - cfg.obsn.buffer) > 0) {
         await new Promise((res) => setTimeout(res, 500));
         await obs.conn.send('SetSourceFilterSettings', {
           ...settings,
           ...{
             filterSettings: {
-              delay_ms: getTotalDelay(newRoom) - 200,
+              delay_ms: getTotalDelay(newRoom) - cfg.obsn.buffer,
             },
           },
         });

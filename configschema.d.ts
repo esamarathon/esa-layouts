@@ -84,6 +84,7 @@ export interface Configschema {
   };
   obsn: {
     enable: boolean;
+    buffer: number;
   };
 }
 export interface RestreamItem {

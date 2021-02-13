@@ -428,10 +428,15 @@
         "enable": {
           "type": "boolean",
           "default": true
+        },
+        "buffer": {
+          "type": "number",
+          "default": 0
         }
       },
       "required": [
-        "enable"
+        "enable",
+        "buffer"
       ]
     }
   },

@@ -6,6 +6,7 @@ import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { capturePositions, countdown, currentRunDelay, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
 
+const cfg = nodecg().bundleConfig as Configschema;
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 const sc = new SpeedcontrolUtil(nodecg());
 
@@ -195,14 +196,19 @@ nodecg().listenFor('obsChangeScene', async (name: string, ack) => {
   }
   let delay = 0;
   try {
-    toggleLiveMics(name);
     if (currentRunDelay.value.audio === 0
       || (!obs.isCurrentScene(obsConfig.names.scenes.gameLayout)
       && obs.findScene(name) !== obsConfig.names.scenes.gameLayout)) {
+      toggleLiveMics(name);
       await obs.changeScene(name);
     } else {
       delay = currentRunDelay.value.audio;
       obsData.value.disableTransitioning = true;
+      if (cfg.obsn.buffer <= 0) {
+        toggleLiveMics(name);
+      } else {
+        setTimeout(() => { toggleLiveMics(name); }, cfg.obsn.buffer);
+      }
       setTimeout(async () => {
         try {
           await obs.changeScene(name);

@@ -1,37 +1,19 @@
 <template>
-  <div
+  <video
+    v-show="video"
+    ref="VideoPlayer"
     :style="{
-      position: 'relative',
-      width: '100%',
+      display: 'block',
+      width: '100vw',
       height: '100vh',
     }"
   >
-    <transition
-      name="fade"
-      mode="in-out"
-    >
-      <video
-        v-if="video"
-        :key="video.sum"
-        :ref="`VideoPlayer_${video.sum}`"
-        :style="{
-          display: 'block',
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-        }"
-      >
-        <source
-          :src="video.url"
-          :type="`video/${video.ext.toLowerCase().replace('.', '')}`"
-        >
-      </video>
-    </transition>
-  </div>
+    <source ref="VideoPlayerSrc">
+  </video>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component, Ref } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
 import clone from 'clone';
 import { VideoPlayer } from 'schemas';
@@ -45,24 +27,20 @@ export default class extends Vue {
   @Mutation updatePlayCount!: UpdatePlayCount;
   @Mutation updateCurrent!: UpdateCurrent;
   @Mutation clearPlaylist!: ClearPlaylist;
+  @Ref('VideoPlayer') player!: HTMLVideoElement;
+  @Ref('VideoPlayerSrc') playerSrc!: HTMLSourceElement;
   playlist: string[] = [];
   video: Asset | null = null;
   index = 0;
-
-  get player(): HTMLVideoElement | undefined {
-    return this.$refs[`VideoPlayer_${this.video?.sum || '?'}`] as HTMLVideoElement | undefined;
-  }
 
   async playNextVideo(): Promise<void> {
     const video = this.videos.find((v) => v.sum === this.playlist[this.index]);
     if (video) {
       this.video = video;
-      await Vue.nextTick();
-      if (this.player) {
-        this.player.load();
-        this.player.play();
-        this.player.addEventListener('ended', this.videoEnded);
-      }
+      this.playerSrc.src = video.url;
+      this.playerSrc.type = `video/${video.ext.toLowerCase().replace('.', '')}`;
+      this.player.load();
+      this.player.play();
       this.updateCurrent(video.sum);
     } else {
       this.index += 1;
@@ -86,11 +64,11 @@ export default class extends Vue {
 
   stopVideo(): void {
     this.updateCurrent();
-    if (this.player) {
-      this.player.removeEventListener('ended', this.videoEnded);
-      this.player.pause();
-    }
     this.video = null;
+    this.player.pause();
+    this.playerSrc.removeAttribute('src');
+    this.playerSrc.removeAttribute('type');
+    this.player.load();
   }
 
   async startPlaylist(): Promise<void> {
@@ -124,6 +102,7 @@ export default class extends Vue {
         }
       };
     }
+    this.player.addEventListener('ended', this.videoEnded);
   }
 }
 </script>
@@ -134,14 +113,5 @@ export default class extends Vue {
     margin: 0;
     padding: 0;
     background-color: black;
-  }
-</style>
-
-<style scoped>
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
-  }
-  .fade-enter, .fade-leave-to {
-    opacity: 0;
   }
 </style>

@@ -1,26 +1,77 @@
 <template>
-  <div
-    id="Total"
-    class="Flex"
-  >
-    <audio ref="SFX">
-      <source
-        src="./sfx/mario_coin.mp3"
-        type="audio/mpeg"
-      >
-    </audio>
-    <span
-      v-for="(char, i) in totalSplitString"
-      :key="i"
-      :class="(char === ',' ? 'Comma' : undefined)"
+  <div class="Flex">
+    <div
+      class="Flex"
+      :style="{
+        width: '150px',
+        height: '100%',
+        position: 'relative',
+        padding: '0 10px 0 10px'
+      }"
     >
-      {{ char }}
-    </span>
+      <img
+        src="../alzheimerfonden_logo.png"
+        :style="{
+          position: 'absolute',
+          width: '150px',
+          opacity: alertList.length ? 0.3 : 1,
+          transition: 'opacity 0.5s',
+        }"
+      >
+      <div :style="{ position: 'absolute' }">
+        <transition
+          name="fade"
+          mode="out-in"
+        >
+          <div
+            v-if="alertList[0]"
+            :key="alertList[0].timestamp"
+            class="Flex"
+          >
+            <img
+              src="../RetroCoin.png"
+              :style="{ height: '50px', 'image-rendering': 'pixelated', 'margin-right': '5px' }"
+            >
+            <span
+              :style="{
+                'font-size': '28px',
+                color: '#7FFF00',
+                'font-weight': 600,
+                'background-color': 'rgba(0,0,0,0.6)',
+                padding: '4px 8px',
+                'border-radius': '10px',
+              }"
+            >
+              +{{ alertList[0] ? alertList[0].amount : '$0' }}
+            </span>
+          </div>
+        </transition>
+      </div>
+    </div>
+    <div
+      id="Total"
+      class="Flex"
+    >
+      <audio ref="SFX">
+        <source
+          src="./sfx/mario_coin.mp3"
+          type="audio/mpeg"
+        >
+      </audio>
+      <span
+        v-for="(char, i) in totalSplitString"
+        :key="i"
+        :class="(char === ',' ? 'Comma' : undefined)"
+      >
+        {{ char }}
+      </span>
+    </div>
   </div>
 </template>
 
 <script>
 import { TweenLite } from 'gsap';
+import { formatUSD } from '../../_misc/helpers';
 
 const totalRep = nodecg.Replicant('donationTotal');
 
@@ -32,14 +83,19 @@ export default {
       total: -1,
       tweenedTotal: -1,
       totalSplitString: [],
+      alertList: [],
+      playingAlerts: false,
     };
   },
   watch: {
-    async total(val) {
+    total(newVal, oldVal) {
       if (this.init) {
-        this.playSound();
-        await new Promise((res) => setTimeout(res, 500));
-        TweenLite.to(this.$data, 5, { tweenedTotal: val });
+        this.alertList.push({
+          total: newVal, amount: formatUSD(newVal - oldVal), timestamp: Date.now(),
+        });
+        if (!this.playingAlerts) {
+          this.playNextAlert(true);
+        }
       } else {
         this.tweenedTotal = this.total;
         this.init = true;
@@ -64,6 +120,23 @@ export default {
     });
   },
   methods: {
+    async playNextAlert(start = false) {
+      this.playingAlerts = true;
+      if (!start) {
+        await new Promise((res) => setTimeout(res, 500));
+      }
+      this.playSound();
+      await new Promise((res) => setTimeout(res, 500));
+      TweenLite.to(this.$data, 5, { tweenedTotal: this.alertList[0].total });
+      window.setTimeout(() => {
+        this.alertList.shift();
+        if (this.alertList.length) {
+          this.playNextAlert();
+        } else {
+          this.playingAlerts = false;
+        }
+      }, 6000);
+    },
     async playSound() {
       try {
         await this.$refs.SFX.pause();
@@ -97,5 +170,13 @@ export default {
     display: inline-block;
     width: 0.22em;
     text-align: center;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 0.5s ease;
+  }
+  .fade-enter, .fade-leave-to
+  /* .component-fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
   }
 </style>

@@ -8,13 +8,6 @@
       :style="{ padding: '0 10px' }"
     >
     <divider></divider>
-    <img
-      src="./alzheimerfonden_logo.png"
-      :style="{
-        width: '150px',
-        padding: '0 10px 0 10px'
-      }"
-    >
     <total></total>
     <divider></divider>
     <!--<sub-goal-met></sub-goal-met>

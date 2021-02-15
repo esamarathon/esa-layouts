@@ -128,15 +128,15 @@
           v-if="player.country"
           :key="player.country"
           class="Flag"
-          :src="`/bundles/esa-layouts/flags/${player.country}.png`"
+          :src="player.country ? `/bundles/esa-layouts/flags/${player.country}.png` : ''"
           :style="{
             position: 'absolute',
             right: '0',
             height: 'calc(100% - 4px)',
             'border-size': '2px',
             'border-style': 'solid',
+            opacity: player.country ? 1 : 0,
           }"
-          @error="$event.target.style.opacity = 0"
         >
       </transition>
     </div>
@@ -196,7 +196,7 @@ export default class extends Vue {
   }
 
   async preloadFlag(player: RunDataPlayer | null): Promise<void> {
-    if (!player) {
+    if (!player || !player.country) {
       return;
     }
     await new Promise<void>((res) => {

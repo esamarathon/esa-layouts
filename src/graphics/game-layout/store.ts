@@ -1,6 +1,6 @@
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import type { Commentators, CurrentRunDelay, DonationReader, GameLayouts, MediaBox, NameCycle, NotableDonations, Prizes } from 'schemas'; // eslint-disable-line object-curly-newline, max-len
+import type { Commentators, CurrentRunDelay, DelayedTimer, DonationReader, GameLayouts, MediaBox, NameCycle, NotableDonations, Prizes } from 'schemas'; // eslint-disable-line object-curly-newline, max-len
 import SpeedcontrolUtil from 'speedcontrol-util/browser';
 import type { RunDataActiveRun, Timer } from 'speedcontrol-util/types';
 import type { Asset } from 'types';
@@ -14,6 +14,7 @@ Vue.use(Vuex);
 const reps: {
   commentators: ReplicantBrowser<Commentators>;
   currentRunDelay: ReplicantBrowser<CurrentRunDelay>;
+  delayedTimer: ReplicantBrowser<DelayedTimer>;
   donationReader: ReplicantBrowser<DonationReader>;
   gameLayouts: ReplicantBrowser<GameLayouts>;
   mediaBox: ReplicantBrowser<MediaBox>;
@@ -27,6 +28,7 @@ const reps: {
 } = {
   commentators: nodecg.Replicant('commentators'),
   currentRunDelay: nodecg.Replicant('currentRunDelay'),
+  delayedTimer: nodecg.Replicant('delayedTimer'),
   donationReader: nodecg.Replicant('donationReader'),
   gameLayouts: nodecg.Replicant('gameLayouts'),
   mediaBox: nodecg.Replicant('mediaBox'),

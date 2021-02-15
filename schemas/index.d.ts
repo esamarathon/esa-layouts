@@ -3,6 +3,7 @@ export * from './capturePositions';
 export * from './commentators';
 export * from './countdown';
 export * from './currentRunDelay';
+export * from './delayedTimer';
 export * from './donationReader';
 export * from './donationsToRead';
 export * from './donationTotal';

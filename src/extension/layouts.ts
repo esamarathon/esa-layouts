@@ -1,10 +1,11 @@
+import clone from 'clone';
 import type { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { toggleLiveMics } from './mixer';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { capturePositions, countdown, currentRunDelay, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
+import { capturePositions, countdown, currentRunDelay, delayedTimer, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
 
 const cfg = nodecg().bundleConfig as Configschema;
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
@@ -37,6 +38,39 @@ function cycleNames(reset = false): void {
   nameCycle.value = cycle;
 }
 cycleNames(true);
+
+// This code keeps a delayed copy of the timer synced to a delay value from OBS.Ninja.
+const timerDelayTO: { delay: number, timeout: NodeJS.Timeout }[] = [];
+delayedTimer.value = clone(sc.timer.value);
+currentRunDelay.on('change', (newVal, oldVal) => {
+  if (newVal.video !== oldVal?.video && timerDelayTO.length) {
+    // Wait 100ms then clear all the irrelevant timeouts currently active.
+    const timeouts: NodeJS.Timeout[] = [];
+    for (let i = 0; i < timerDelayTO.length;) {
+      if (timerDelayTO[i] && timerDelayTO[i].delay !== newVal.video) {
+        timeouts.push(timerDelayTO.shift()?.timeout as NodeJS.Timeout);
+      } else {
+        i += 1;
+      }
+    }
+    setTimeout(() => {
+      while (timeouts.length) {
+        clearTimeout(timeouts.shift() as NodeJS.Timeout);
+      }
+    }, 100);
+  }
+});
+sc.timer.on('change', (val) => {
+  const timerFreeze = clone(val);
+  if (!delayedTimer.value || currentRunDelay.value.video === 0) {
+    delayedTimer.value = timerFreeze;
+  } else {
+    timerDelayTO.push({
+      delay: currentRunDelay.value.video,
+      timeout: setTimeout(() => { delayedTimer.value = timerFreeze; }, currentRunDelay.value.video),
+    });
+  }
+});
 
 // Update replicant that stores the ID of the upcoming run,
 // both on timer stopping, if you somehow have no current run
@@ -223,8 +257,8 @@ nodecg().listenFor('obsChangeScene', async (name: string) => {
 
 let countdownTimeout: NodeJS.Timeout;
 function updateCountdownTimer(): void {
-  const timer = countdown.value;
-  const remaining = timer.originalDuration - (Date.now() - timer.timestamp);
+  const cdTimer = countdown.value;
+  const remaining = cdTimer.originalDuration - (Date.now() - cdTimer.timestamp);
   if (remaining > 0) {
     countdown.value.remaining = remaining;
     countdownTimeout = setTimeout(updateCountdownTimer, 1000);

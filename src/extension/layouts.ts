@@ -44,7 +44,10 @@ const timerDelayTO: { delay: number, timeout: NodeJS.Timeout }[] = [];
 delayedTimer.value = clone(sc.timer.value);
 currentRunDelay.on('change', (newVal, oldVal) => {
   if (newVal.video !== oldVal?.video && timerDelayTO.length) {
-    // Wait 100ms then clear all the irrelevant timeouts currently active.
+    // Reset delayed timer to the same as normal timer.
+    delayedTimer.value = clone(sc.timer.value);
+
+    // Clear all the irrelevant timeouts currently active.
     const timeouts: NodeJS.Timeout[] = [];
     for (let i = 0; i < timerDelayTO.length;) {
       if (timerDelayTO[i] && timerDelayTO[i].delay !== newVal.video) {
@@ -53,11 +56,7 @@ currentRunDelay.on('change', (newVal, oldVal) => {
         i += 1;
       }
     }
-    setTimeout(() => {
-      while (timeouts.length) {
-        clearTimeout(timeouts.shift() as NodeJS.Timeout);
-      }
-    }, 100);
+    timeouts.forEach((timeout) => clearTimeout(timeout));
   }
 });
 sc.timer.on('change', (val) => {

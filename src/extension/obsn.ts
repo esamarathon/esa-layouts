@@ -126,7 +126,7 @@ async function processCurrentRunVideoChange(
         err, JSON.stringify(newRoom), JSON.stringify(oldRoom),
       );
     }
-    nodecg().log.debug('[OBSN] Current Run audio change finished processing');
+    nodecg().log.debug('[OBSN] Current Run video change finished processing');
   }
 }
 

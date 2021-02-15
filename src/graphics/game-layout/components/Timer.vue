@@ -31,14 +31,14 @@
 import { Vue, Component, Watch, Prop } from 'vue-property-decorator'; // eslint-disable-line object-curly-newline, max-len
 import { State } from 'vuex-class';
 import { Timer } from 'speedcontrol-util/types';
-import { CurrentRunDelay } from 'schemas';
+import { CurrentRunDelay, DelayedTimer } from 'schemas';
 import { msToTimeStr } from '../../_misc/helpers';
 
 @Component
 export default class extends Vue {
   @Prop({ type: String, default: '-0.07em' }) topMargin!: string;
   @Prop({ type: String, default: '100px' }) fontSize!: string;
-  @State('delayedTimer') timer!: Timer;
+  @State('delayedTimer') timer!: DelayedTimer;
   @State currentRunDelay!: CurrentRunDelay;
   timeStr = '00:00:00';
   backupTimerTO: number | undefined;

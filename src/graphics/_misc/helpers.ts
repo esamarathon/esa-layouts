@@ -51,19 +51,20 @@ export function formatSrcomPronouns(pronouns?: string): string | undefined {
     return undefined;
   }
   if (split.length > 1) {
-    if (split.includes('they/them')) {
-      if (split.includes('he/him') && !split.includes('she/her')) {
-        return 'he or they';
-      }
-      if (split.includes('she/her') && !split.includes('he/him')) {
-        return 'she or they';
-      }
-      return 'they/them';
-    }
-    if (split.includes('he/him') && split.includes('she/her')) {
+    if (split.includes('he/him') && split.includes('she/her') && !split.includes('they/them')) {
       return 'he or she';
     }
-    return undefined;
+    const list: string[] = [];
+    if (split.includes('he/him')) {
+      list.push('he');
+    }
+    if (split.includes('she/her')) {
+      list.push('she');
+    }
+    if (split.includes('they/them')) {
+      list.push('they');
+    }
+    return list.join('/');
   }
   return split[0];
 }

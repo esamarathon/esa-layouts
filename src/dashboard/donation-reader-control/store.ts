@@ -14,24 +14,12 @@ const reps: {
   donationReader: nodecg.Replicant('donationReader'),
 };
 
-// Types for mutations below
-export type Modify = (name: string) => void;
-export type Clear = () => void;
-
 const store = new Vuex.Store({
   state: {},
   mutations: {
     setState(state, { name, val }): void {
       Vue.set(state, name, val);
     },
-    /* Mutations to replicants start */
-    modify(state, name): void {
-      reps.donationReader.value = name;
-    },
-    clear(): void {
-      reps.donationReader.value = null;
-    },
-    /* Mutations to replicants end */
   },
 });
 

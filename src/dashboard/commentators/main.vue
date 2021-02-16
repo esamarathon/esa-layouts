@@ -33,11 +33,13 @@
         hide-details
         filled
         :spellcheck="false"
+        :disabled="disable"
         @keyup.enter="add"
       />
       <v-btn
         height="56px"
         :style="{ 'min-width': '0', 'margin-left': '5px' }"
+        :disabled="disable"
         @click="add"
       >
         <v-icon>mdi-check</v-icon>
@@ -45,6 +47,7 @@
     </div>
     <v-btn
       :style="{ 'margin-top': '10px' }"
+      :disabled="disable"
       @click="clear"
     >
       Manual Clear
@@ -56,18 +59,24 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
 import { Commentators } from 'schemas';
-import { ClearCommentators, AddCommentator } from './store';
+import { ClearCommentators } from './store';
 
 @Component
 export default class extends Vue {
   nameEntry = '';
+  disable = false;
 
   @State commentators!: Commentators;
   @Mutation('clearCommentators') clear!: ClearCommentators;
-  @Mutation addCommentator!: AddCommentator;
 
-  add(): void {
-    this.addCommentator(this.nameEntry);
+  async add(): Promise<void> {
+    this.disable = true;
+    try {
+      await nodecg.sendMessage('commentatorAdd', this.nameEntry);
+    } catch (err) {
+      // catch
+    }
+    this.disable = false;
     this.nameEntry = '';
   }
 }

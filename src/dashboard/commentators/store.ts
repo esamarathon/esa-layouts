@@ -16,7 +16,6 @@ const reps: {
 
 // Types for mutations below
 export type ClearCommentators = () => void;
-export type AddCommentator = (name: string) => void;
 
 const store = new Vuex.Store({
   state: {},
@@ -28,12 +27,6 @@ const store = new Vuex.Store({
     clearCommentators(): void {
       if (typeof reps.commentators.value !== 'undefined') {
         reps.commentators.value.length = 0;
-      }
-    },
-    addCommentator(state, name): void {
-      if (typeof reps.commentators.value !== 'undefined'
-        && !reps.commentators.value.includes(name)) {
-        reps.commentators.value.push(name);
       }
     },
     /* Mutations to replicants end */

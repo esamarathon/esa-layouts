@@ -61,7 +61,7 @@ currentRunDelay.on('change', (newVal, oldVal) => {
 });
 sc.timer.on('change', (val) => {
   const timerFreeze = clone(val);
-  if (!delayedTimer.value || currentRunDelay.value.video === 0) {
+  if (currentRunDelay.value.video === 0) {
     delayedTimer.value = timerFreeze;
   } else {
     timerDelayTO.push({

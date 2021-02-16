@@ -171,6 +171,7 @@ import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
 import MediaBox from '../_misc/components/MediaBox.vue';
 import DonationBar from './components/DonationBar.vue';
+import { formatSrcomPronouns } from '../_misc/helpers';
 
 @Component({
   components: {
@@ -195,26 +196,7 @@ export default class extends Vue {
   }
 
   formatPronouns(pronouns?: string): string | undefined {
-    if (!pronouns) {
-      return undefined;
-    }
-    const split = pronouns.split(',').map((p) => p.trim().toLowerCase());
-    if (split.length > 1) {
-      if (split.includes('they/them')) {
-        if (split.includes('he/him') && !split.includes('she/her')) {
-          return 'he or they';
-        }
-        if (split.includes('she/her') && !split.includes('he/him')) {
-          return 'she or they';
-        }
-        return 'they/them';
-      }
-      if (split.includes('he/him') && split.includes('she/her')) {
-        return 'he or she';
-      }
-      return undefined;
-    }
-    return split[0];
+    return formatSrcomPronouns(pronouns);
   }
 }
 </script>

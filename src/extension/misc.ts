@@ -2,12 +2,12 @@ import type { Configschema } from 'configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';
 import { Asset } from 'types';
-import { getCurrentEventShort, getOtherStreamEventShort } from './util/helpers';
+import { formatSrcomPronouns, getCurrentEventShort, getOtherStreamEventShort } from './util/helpers';
 import { logRunChange, logVideoPlay } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
-import { assetsVideos, commentators, otherStreamData, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
+import { assetsVideos, commentators, donationReader, otherStreamData, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
 
 const config = (nodecg().bundleConfig as Configschema);
 const sc = new SpeedcontrolUtil(nodecg());
@@ -99,6 +99,39 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
   logRunChange(newVal);
 
   init = true;
+});
+
+async function searchSrcomPronouns(val: string): Promise<string> {
+  const name = val.replace(/\((.*?)\)/g, '').trim();
+  let pronouns = (val.match(/\((.*?)\)/g) || [])[0]?.replace(/[()]/g, '');
+  if (!pronouns) {
+    const data = await sc.sendMessage('srcomSearchForUserDataMultiple', [
+      { type: 'twitch', val: name },
+      { type: 'name', val: name },
+    ]);
+    pronouns = formatSrcomPronouns(data?.pronouns || '') || '';
+  }
+  return pronouns ? `${name} (${pronouns})` : name;
+}
+
+nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack) => {
+  if (val && !commentators.value.includes(val)) {
+    commentators.value.push(await searchSrcomPronouns(val));
+  }
+  if (ack && !ack.handled) {
+    ack(null);
+  }
+});
+
+nodecg().listenFor('readerModify', async (val: string | null | undefined, ack) => {
+  if (!val) {
+    donationReader.value = null;
+  } else {
+    donationReader.value = await searchSrcomPronouns(val);
+  }
+  if (ack && !ack.handled) {
+    ack(null);
+  }
 });
 
 // Set the upcoming intermission video.

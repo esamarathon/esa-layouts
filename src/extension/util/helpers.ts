@@ -44,3 +44,27 @@ export function logError(msg: string, err: Error, ...args: unknown[]): void {
   nodecg().log.warn(msgWithArgs);
   nodecg().log.debug(`${msgWithArgs}: %s`, err);
 }
+
+// ALSO IN graphics/_misc/helpers.ts, CHANGE THERE TOO!
+export function formatSrcomPronouns(pronouns?: string): string | undefined {
+  if (!pronouns) {
+    return undefined;
+  }
+  const split = pronouns.split(',').map((p) => p.trim().toLowerCase());
+  if (split.length > 1) {
+    if (split.includes('they/them')) {
+      if (split.includes('he/him') && !split.includes('she/her')) {
+        return 'he or they';
+      }
+      if (split.includes('she/her') && !split.includes('he/him')) {
+        return 'she or they';
+      }
+      return 'they/them';
+    }
+    if (split.includes('he/him') && split.includes('she/her')) {
+      return 'he or she';
+    }
+    return undefined;
+  }
+  return split[0];
+}

@@ -149,6 +149,7 @@ import { State } from 'vuex-class';
 import fitty, { FittyInstance } from 'fitty';
 import { NameCycle } from 'schemas';
 import { RunDataActiveRun, RunDataTeam, RunDataPlayer } from 'speedcontrol-util/types';
+import { formatSrcomPronouns } from '../../_misc/helpers';
 
 @Component
 export default class extends Vue {
@@ -163,26 +164,7 @@ export default class extends Vue {
   fittyPlayer: FittyInstance | undefined;
 
   get formattedPronouns(): string | undefined {
-    if (!this.player?.pronouns) {
-      return undefined;
-    }
-    const split = this.player.pronouns.split(',').map((p) => p.trim().toLowerCase());
-    if (split.length > 1) {
-      if (split.includes('they/them')) {
-        if (split.includes('he/him') && !split.includes('she/her')) {
-          return 'he or they';
-        }
-        if (split.includes('she/her') && !split.includes('he/him')) {
-          return 'she or they';
-        }
-        return 'they/them';
-      }
-      if (split.includes('he/him') && split.includes('she/her')) {
-        return 'he or she';
-      }
-      return undefined;
-    }
-    return split[0];
+    return formatSrcomPronouns(this.player?.pronouns);
   }
 
   updateTeam(): void {

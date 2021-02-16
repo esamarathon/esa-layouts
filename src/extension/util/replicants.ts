@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import { Bids, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationsToRead, DonationTotal, GameLayouts, MediaBox, MusicData, NameCycle, NotableDonations, ObsData, OtherStreamData, Prizes, StreamDeckData, TtsVoices, TwitchSubscribers, UpcomingRunID, VideoPlayer } from 'schemas'; // eslint-disable-line object-curly-newline
+import { Bids, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationReader, DonationsToRead, DonationTotal, GameLayouts, MediaBox, MusicData, NameCycle, NotableDonations, ObsData, OtherStreamData, Prizes, StreamDeckData, TtsVoices, TwitchSubscribers, UpcomingRunID, VideoPlayer } from 'schemas'; // eslint-disable-line object-curly-newline
 import type { Asset } from 'types';
 import type { TwitchAPIData } from '../../../../nodecg-speedcontrol/schemas';
 import { get as nodecg } from './nodecg';
@@ -15,6 +15,7 @@ export const commentators = nodecg().Replicant<Commentators>('commentators');
 export const countdown = nodecg().Replicant<Countdown>('countdown');
 export const currentRunDelay = nodecg().Replicant<CurrentRunDelay>('currentRunDelay');
 export const delayedTimer = nodecg().Replicant<DelayedTimer>('delayedTimer');
+export const donationReader = nodecg().Replicant<DonationReader>('donationReader');
 export const donationsToRead = nodecg().Replicant<DonationsToRead>('donationsToRead', { persistent: false });
 export const donationTotal = nodecg().Replicant<DonationTotal>('donationTotal');
 export const gameLayouts = nodecg().Replicant<GameLayouts>('gameLayouts');

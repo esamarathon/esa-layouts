@@ -40,3 +40,30 @@ export function msToTimeStr(ms: number): string {
 export function formatUSD(amount: number): string {
   return `$${amount.toFixed(2)}`;
 }
+
+// ALSO IN extension/util/helpers.ts, CHANGE THERE TOO!
+export function formatSrcomPronouns(pronouns?: string): string | undefined {
+  if (!pronouns) {
+    return undefined;
+  }
+  const split = pronouns.split(',').map((p) => p.trim().toLowerCase());
+  if (!split.includes('he/him') && !split.includes('she/her') && split.includes('they/them')) {
+    return undefined;
+  }
+  if (split.length > 1) {
+    if (split.includes('they/them')) {
+      if (split.includes('he/him') && !split.includes('she/her')) {
+        return 'he or they';
+      }
+      if (split.includes('she/her') && !split.includes('he/him')) {
+        return 'she or they';
+      }
+      return 'they/them';
+    }
+    if (split.includes('he/him') && split.includes('she/her')) {
+      return 'he or she';
+    }
+    return undefined;
+  }
+  return split[0];
+}

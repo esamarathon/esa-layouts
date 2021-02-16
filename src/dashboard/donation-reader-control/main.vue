@@ -14,7 +14,7 @@
         height="56px"
         :style="{ 'min-width': '0', 'margin-left': '5px' }"
         :disabled="disable"
-        @click="modify"
+        @click="modify()"
       >
         <v-icon>mdi-check</v-icon>
       </v-btn>
@@ -52,6 +52,7 @@ export default class extends Vue {
     } catch (err) {
       // catch
     }
+    this.entry = this.donationReader || '';
     this.disable = false;
   }
 }

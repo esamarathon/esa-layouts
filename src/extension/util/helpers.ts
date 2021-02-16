@@ -51,6 +51,9 @@ export function formatSrcomPronouns(pronouns?: string): string | undefined {
     return undefined;
   }
   const split = pronouns.split(',').map((p) => p.trim().toLowerCase());
+  if (!split.includes('he/him') && !split.includes('she/her') && !split.includes('they/them')) {
+    return undefined;
+  }
   if (split.length > 1) {
     if (split.includes('they/them')) {
       if (split.includes('he/him') && !split.includes('she/her')) {

@@ -109,12 +109,7 @@ async function searchSrcomPronouns(val: string): Promise<string> {
       { type: 'twitch', val: name },
       { type: 'name', val: name },
     ]);
-    const split = (data?.pronouns || '').split(',').map((p) => p.trim().toLowerCase());
-    if (!split.includes('he/him') && !split.includes('she/her') && !split.includes('they/them')) {
-      // no pronouns
-    } else {
-      pronouns = formatPronouns(data?.pronouns || '') || '';
-    }
+    pronouns = formatPronouns(data?.pronouns || '') || '';
   }
   return pronouns ? `${name} (${pronouns})` : name;
 }

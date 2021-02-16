@@ -46,14 +46,11 @@ export function logError(msg: string, err: Error, ...args: unknown[]): void {
 }
 
 // ALSO IN graphics/_misc/helpers.ts, CHANGE THERE TOO!
-export function formatSrcomPronouns(pronouns?: string): string | undefined {
+export function formatPronouns(pronouns?: string): string | undefined {
   if (!pronouns) {
     return undefined;
   }
   const split = pronouns.split(',').map((p) => p.trim().toLowerCase());
-  if (!split.includes('he/him') && !split.includes('she/her') && !split.includes('they/them')) {
-    return undefined;
-  }
   if (split.length > 1) {
     if (split.includes('he/him') && split.includes('she/her') && !split.includes('they/them')) {
       return 'he or she';

@@ -171,7 +171,7 @@ import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
 import MediaBox from '../_misc/components/MediaBox.vue';
 import DonationBar from './components/DonationBar.vue';
-import { formatSrcomPronouns } from '../_misc/helpers';
+import { formatPronouns } from '../_misc/helpers';
 
 @Component({
   components: {
@@ -196,7 +196,7 @@ export default class extends Vue {
   }
 
   formatPronouns(pronouns?: string): string | undefined {
-    return formatSrcomPronouns(pronouns);
+    return formatPronouns(pronouns);
   }
 }
 </script>

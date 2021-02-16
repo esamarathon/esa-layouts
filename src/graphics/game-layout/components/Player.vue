@@ -149,7 +149,7 @@ import { State } from 'vuex-class';
 import fitty, { FittyInstance } from 'fitty';
 import { NameCycle } from 'schemas';
 import { RunDataActiveRun, RunDataTeam, RunDataPlayer } from 'speedcontrol-util/types';
-import { formatSrcomPronouns } from '../../_misc/helpers';
+import { formatPronouns } from '../../_misc/helpers';
 
 @Component
 export default class extends Vue {
@@ -164,7 +164,7 @@ export default class extends Vue {
   fittyPlayer: FittyInstance | undefined;
 
   get formattedPronouns(): string | undefined {
-    return formatSrcomPronouns(this.player?.pronouns);
+    return formatPronouns(this.player?.pronouns);
   }
 
   updateTeam(): void {

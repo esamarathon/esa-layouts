@@ -34,17 +34,17 @@ const defaultFaderNames = [
   'Ninja 7',
 ];
 
-function getTotalDelay(room?: ObsnRooms[0]): number {
+function getTotalDelay(room?: ObsnRooms[0], audio = false): number {
   if (!room?.delay.apply) {
     return 0;
   }
-  return room.delay.base + room.delay.offset;
+  return room.delay.base + room.delay.offset + (audio ? room.delay.audioOffset : 0);
 }
 
 // This could also made to be based on Twitch delay instead of OBS.N delay?
 function updateCurrentRunDelay(audio?: ActiveRooms[0], video?: ActiveRooms[0]): void {
   currentRunDelay.value = {
-    audio: getTotalDelay(obsnRooms.value.find((r) => r.id === audio?.id)),
+    audio: getTotalDelay(obsnRooms.value.find((r) => r.id === audio?.id), true),
     video: getTotalDelay(obsnRooms.value.find((r) => r.id === video?.id)),
   };
 }
@@ -56,7 +56,7 @@ async function processCurrentRunAudioChange(
   faders.forEach((fader, i) => {
     setFaderName(fader, newRoom?.invitedClients[i]?.name || defaultFaderNames[i]);
   });
-  if (obs.connected && getTotalDelay(newRoom) !== getTotalDelay(oldRoom)) {
+  if (obs.connected && getTotalDelay(newRoom, true) !== getTotalDelay(oldRoom, true)) {
     try {
       const settings = {
         source: 'Mics',
@@ -68,12 +68,12 @@ async function processCurrentRunAudioChange(
           offset: 1 * 1000000,
         },
       });
-      if ((getTotalDelay(newRoom) - cfg.obsn.buffer) > 1) {
+      if ((getTotalDelay(newRoom, true) - cfg.obsn.buffer) > 1) {
         await new Promise((res) => setTimeout(res, 500));
         await obs.conn.send('SetSyncOffset', {
           ...settings,
           ...{
-            offset: (getTotalDelay(newRoom) - cfg.obsn.buffer) * 1000000, // Nanoseconds
+            offset: (getTotalDelay(newRoom, true) - cfg.obsn.buffer) * 1000000, // Nanoseconds
           },
         });
       }

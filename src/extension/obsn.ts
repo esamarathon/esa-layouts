@@ -38,7 +38,7 @@ function getTotalDelay(room?: ObsnRooms[0], audio = false): number {
   if (!room?.delay.apply) {
     return 0;
   }
-  return room.delay.base + room.delay.offset + (audio ? room.delay.audioOffset : 0);
+  return room.delay.base + room.delay.offset + (audio ? room.delay.audioOffset ?? 0 : 0);
 }
 
 // This could also made to be based on Twitch delay instead of OBS.N delay?
@@ -61,22 +61,23 @@ async function processCurrentRunAudioChange(
       const settings = {
         source: 'Mics',
       };
-      await obs.conn.send('SetSyncOffset', {
-        ...settings,
-        ...{
-          // Using 1ms, OBS really doesn't like going directly up from 0 and it doesn't work.
-          offset: 1 * 1000000,
-        },
-      });
-      if ((getTotalDelay(newRoom, true) - cfg.obsn.buffer) > 1) {
-        await new Promise((res) => setTimeout(res, 500));
+      if (newRoom?.id !== oldRoom?.id) {
         await obs.conn.send('SetSyncOffset', {
           ...settings,
           ...{
-            offset: (getTotalDelay(newRoom, true) - cfg.obsn.buffer) * 1000000, // Nanoseconds
+            // Using 1ms, OBS really doesn't like going directly up from 0 and it doesn't work.
+            offset: 1 * 1000000,
           },
         });
       }
+      await new Promise((res) => setTimeout(res, 500));
+      await obs.conn.send('SetSyncOffset', {
+        ...settings,
+        ...{
+          // Nanoseconds
+          offset: Math.max((getTotalDelay(newRoom, true) - cfg.obsn.buffer), 1) * 1000000,
+        },
+      });
     } catch (err) {
       logError(
         '[OBSN] Issue setting current run audio delay in OBS [new room: %s, old room: %s]',
@@ -101,25 +102,25 @@ async function processCurrentRunVideoChange(
         sourceName: 'OBSN Cameras',
         filterName: 'Camera Delay',
       };
-      await obs.conn.send('SetSourceFilterSettings', {
-        ...settings,
-        ...{
-          filterSettings: {
-            delay_ms: 0,
-          },
-        },
-      });
-      if ((getTotalDelay(newRoom) - cfg.obsn.buffer) > 0) {
-        await new Promise((res) => setTimeout(res, 500));
+      if (newRoom?.id !== oldRoom?.id) {
         await obs.conn.send('SetSourceFilterSettings', {
           ...settings,
           ...{
             filterSettings: {
-              delay_ms: getTotalDelay(newRoom) - cfg.obsn.buffer,
+              delay_ms: 0,
             },
           },
         });
       }
+      await new Promise((res) => setTimeout(res, 500));
+      await obs.conn.send('SetSourceFilterSettings', {
+        ...settings,
+        ...{
+          filterSettings: {
+            delay_ms: Math.max(getTotalDelay(newRoom) - cfg.obsn.buffer, 0),
+          },
+        },
+      });
     } catch (err) {
       logError(
         '[OBSN] Issue setting current run video delay in OBS [new room: %s, old room: %s]',

@@ -28,8 +28,8 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Configschema } from 'configschema';
-import { RestreamData } from 'schemas';
+import { Configschema } from '@/types/schemas/configschema';
+import { RestreamData } from '@/types/schemas';
 import RestreamComponent from './components/RestreamComponent.vue';
 
 @Component({

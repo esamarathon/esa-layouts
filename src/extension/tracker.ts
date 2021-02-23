@@ -1,7 +1,7 @@
-import type { Configschema } from 'configschema';
+import type { Tracker } from '@/types';
+import type { Configschema } from '@/types/schemas/configschema';
 import type { NeedleResponse } from 'needle';
 import needle from 'needle';
-import type { Tracker } from 'types';
 import { get as nodecg } from './util/nodecg';
 import { mq } from './util/rabbitmq';
 import { donationTotal, notableDonations } from './util/replicants';

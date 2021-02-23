@@ -5,13 +5,7 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface CapturePositions {
-  [k: string]: {
-    [k: string]: {
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-    };
-  };
+export interface CurrentRunDelay {
+	audio: number;
+	video: number;
 }

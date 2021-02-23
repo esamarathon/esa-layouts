@@ -16,8 +16,8 @@
 import { Vue, Component, Ref } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
 import clone from 'clone';
-import { VideoPlayer } from 'schemas';
-import { Asset } from 'types';
+import { VideoPlayer } from '@/types/schemas';
+import { Asset } from '@/types';
 import { UpdatePlayCount, ClearPlaylist, UpdateCurrent } from './store';
 
 @Component

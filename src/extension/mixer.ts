@@ -1,4 +1,4 @@
-import type { Configschema } from 'configschema';
+import type { Configschema } from '@/types/schemas/configschema';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';

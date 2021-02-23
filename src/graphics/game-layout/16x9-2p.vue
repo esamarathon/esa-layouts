@@ -161,7 +161,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import { Configschema } from 'configschema';
+import { Configschema } from '@/types/schemas/configschema';
 import { State } from 'vuex-class';
 import { RunDataActiveRun } from 'speedcontrol-util/types';
 import GameCapture from './components/GameCapture.vue';

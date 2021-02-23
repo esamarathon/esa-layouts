@@ -5,8 +5,12 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface Countdown {
-  remaining: number;
-  originalDuration: number;
-  timestamp: number;
-}
+export type Prizes = {
+	id: number;
+	name: string;
+	provided?: string;
+	minimumBid: number;
+	image?: string;
+	startTime?: number;
+	endTime?: number;
+}[];

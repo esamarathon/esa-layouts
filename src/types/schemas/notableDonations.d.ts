@@ -6,11 +6,11 @@
  */
 
 export type NotableDonations = {
-  event: string;
-  _id: number;
-  donor_visiblename: string;
-  amount: number;
-  comment_state: string;
-  comment: string;
-  time_received: string;
+	event: string;
+	_id: number;
+	donor_visiblename: string;
+	amount: number;
+	comment_state: string;
+	comment: string;
+	time_received: string;
 }[];

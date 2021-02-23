@@ -60,8 +60,8 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { RestreamData } from 'schemas';
-import { Configschema } from 'configschema';
+import { RestreamData } from '@/types/schemas';
+import { Configschema } from '@/types/schemas/configschema';
 
 @Component
 export default class extends Vue {

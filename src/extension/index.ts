@@ -1,6 +1,13 @@
-import type { Configschema } from 'configschema';
+/* eslint-disable global-require */
+
+// This must go first so we can use module aliases!
+/* eslint-disable import/first */
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('module-alias').addAlias('@', require('path').join(__dirname, '.'));
+
+import type { Configschema } from '@/types/schemas/configschema';
+import { set } from '@/util/nodecg';
 import type { NodeCG } from 'nodecg/types/server';
-import { set } from './util/nodecg';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export = (nodecg: NodeCG): { obs: any } => {

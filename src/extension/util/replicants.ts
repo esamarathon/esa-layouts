@@ -1,10 +1,14 @@
 /* eslint-disable max-len */
 
-import { Bids, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationReader, DonationsToRead, DonationTotal, GameLayouts, MediaBox, MusicData, NameCycle, NotableDonations, ObsData, OtherStreamData, Prizes, StreamDeckData, TtsVoices, TwitchSubscribers, UpcomingRunID, VideoPlayer } from 'schemas'; // eslint-disable-line object-curly-newline
-import type { Asset } from 'types';
+import type { Asset } from '@/types';
+import type { Bids, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationReader, DonationsToRead, DonationTotal, GameLayouts, MediaBox, MusicData, NameCycle, NotableDonations, ObsData, OtherStreamData, Prizes, StreamDeckData, TtsVoices, TwitchSubscribers, UpcomingRunID, VideoPlayer } from '@/types/schemas';
 import type { TwitchAPIData } from '../../../../nodecg-speedcontrol/schemas';
 import { get as nodecg } from './nodecg';
 
+/**
+ * This is where you can declare all your replicant to import easily into other files,
+ * and to make sure they have any correct settings on startup.
+ */
 export const assetsIntermissionSlides = nodecg().Replicant<Asset[]>('assets:intermission-slides');
 export const assetsMediaBoxImages = nodecg().Replicant<Asset[]>('assets:media-box-images');
 export const assetsMusic = nodecg().Replicant<Asset[]>('assets:music');

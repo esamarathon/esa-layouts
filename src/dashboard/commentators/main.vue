@@ -58,7 +58,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
-import { Commentators } from 'schemas';
+import { Commentators } from '@/types/schemas';
 import { ClearCommentators } from './store';
 
 @Component

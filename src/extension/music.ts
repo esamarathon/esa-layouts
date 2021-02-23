@@ -1,8 +1,8 @@
-import { Configschema } from 'configschema';
-import fetch from 'node-fetch';
+import type { Foobar2000 } from '@/types';
+import { Configschema } from '@/types/schemas/configschema';
 import type { Response } from 'node-fetch';
+import fetch from 'node-fetch';
 import { Readable } from 'stream';
-import type { Foobar2000 } from 'types';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { musicData } from './util/replicants';

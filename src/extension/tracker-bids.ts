@@ -1,6 +1,6 @@
-import type { Configschema } from 'configschema';
+import type { Tracker } from '@/types';
+import type { Configschema } from '@/types/schemas/configschema';
 import needle from 'needle';
-import type { Tracker } from 'types';
 import { eventInfo, getCookies } from './tracker';
 import { get as nodecg } from './util/nodecg';
 import { bids } from './util/replicants';

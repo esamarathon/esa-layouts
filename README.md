@@ -6,7 +6,7 @@
 
 ***This documentation isn't fully complete and may have errors, but intends to be as correct as possible.***
 
-This is a [NodeCG](https://nodecg.com) v1.6 bundle. You will need to have NodeCG v1.6 or above installed to run it. It also requires you to install the [nodecg-speedcontrol](https://github.com/speedcontrol/nodecg-speedcontrol) bundle (of which you may also need to use the `dev` branch).
+This is a [NodeCG](https://nodecg.com) v1.7.4 bundle. You will need to have NodeCG v1.7.4 or above installed to run it. It also requires you to install the [nodecg-speedcontrol](https://github.com/speedcontrol/nodecg-speedcontrol) bundle (of which you may also need to use the `dev` branch).
 
 ## Installation
 

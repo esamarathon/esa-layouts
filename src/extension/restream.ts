@@ -1,5 +1,5 @@
 import { queue } from 'async';
-import type { Configschema } from 'configschema';
+import type { Configschema } from '@/types/schemas/configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import Restream from './RestreamClass';
 import { get as nodecg } from './util/nodecg';

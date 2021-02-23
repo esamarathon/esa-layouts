@@ -92,8 +92,8 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { CurrentRunDelay, ObsData } from 'schemas';
-import { Configschema } from 'configschema';
+import { CurrentRunDelay, ObsData } from '@/types/schemas';
+import { Configschema } from '@/types/schemas/configschema';
 
 @Component
 export default class extends Vue {

@@ -1,4 +1,4 @@
-import type { Configschema } from 'configschema';
+import type { Configschema } from '@/types/schemas/configschema';
 import StreamdeckUtil from 'streamdeck-util';
 import { get as nodecg } from './nodecg';
 

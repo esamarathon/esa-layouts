@@ -1,9 +1,9 @@
+import type { Asset } from '@/types';
+import type { Commentators, CurrentRunDelay, DelayedTimer, DonationReader, GameLayouts, MediaBox, NameCycle, NotableDonations, Prizes } from '@/types/schemas'; // eslint-disable-line object-curly-newline, max-len
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import type { Commentators, CurrentRunDelay, DelayedTimer, DonationReader, GameLayouts, MediaBox, NameCycle, NotableDonations, Prizes } from 'schemas'; // eslint-disable-line object-curly-newline, max-len
 import SpeedcontrolUtil from 'speedcontrol-util/browser';
 import type { RunDataActiveRun, Timer } from 'speedcontrol-util/types';
-import type { Asset } from 'types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 

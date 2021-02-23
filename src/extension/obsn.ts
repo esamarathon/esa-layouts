@@ -1,4 +1,4 @@
-import { Configschema } from 'configschema';
+import { Configschema } from '@/types/schemas/configschema';
 import { isEqual, throttle } from 'lodash';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { RunDataPlayer } from 'speedcontrol-util/types';

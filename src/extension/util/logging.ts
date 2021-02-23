@@ -1,6 +1,6 @@
+import type { MediaBox } from '@/types/schemas';
+import type { Configschema } from '@/types/schemas/configschema';
 import type { NodeCG as mqTypes } from '@esamarathon/mq-events/types';
-import type { Configschema } from 'configschema';
-import type { MediaBox } from 'schemas';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';
 import { get as nodecg } from './nodecg';

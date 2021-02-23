@@ -1,12 +1,12 @@
 .eslintrc.js
 .eslintrc.*.js
-configschema.d.ts
 webpack.config.js
+vetur.config.js
 dashboard/**/*
 extension/**/*
 graphics/**/*
 node_modules/**/*
 player-templates/**/*
-script/**/*
 schemas/**/*
 streamdeck-plugin/**/*
+src/types/schemas/**/*

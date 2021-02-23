@@ -29,7 +29,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { MusicData } from 'schemas';
+import { MusicData } from '@/types/schemas';
 
 @Component
 export default class extends Vue {

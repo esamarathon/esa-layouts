@@ -5,10 +5,10 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface VideoPlayer {
-  playlist: string[];
-  current: string | null;
-  plays: {
-    [k: string]: number;
-  };
+export interface GameLayouts {
+	available: {
+		name: string;
+		code: string;
+	}[];
+	selected?: string;
 }

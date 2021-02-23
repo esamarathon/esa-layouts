@@ -5,10 +5,10 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface TtsVoices {
-  available: {
-    code: string;
-    name: string;
-  }[];
-  selected?: string;
-}
+export type DonationsToRead = {
+	id: number;
+	name: string;
+	amount: number;
+	comment?: string;
+	timestamp: number;
+}[];

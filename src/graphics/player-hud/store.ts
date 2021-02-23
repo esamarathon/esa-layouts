@@ -1,6 +1,6 @@
+import type { DonationsToRead, StreamDeckData } from '@/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import type { DonationsToRead, StreamDeckData } from 'schemas';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 

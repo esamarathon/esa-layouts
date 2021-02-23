@@ -2,9 +2,9 @@
 
 /** CODE COPY/PASTED FROM esa-layouts-shared FOR NOW! */
 
+import { RestreamData } from '@/types/schemas';
 import { EventEmitter } from 'events';
 import type { NodeCG, Replicant } from 'nodecg/types/server';
-import { RestreamData } from 'schemas';
 import { v4 as uuid } from 'uuid';
 import WebSocket from 'ws';
 import { Restream as RestreamTypes } from './Restream';

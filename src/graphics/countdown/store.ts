@@ -1,6 +1,6 @@
+import type { Countdown } from '@/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import type { Countdown } from 'schemas';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 

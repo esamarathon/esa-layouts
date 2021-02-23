@@ -13,8 +13,8 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { MediaBox } from 'schemas';
-import { Asset } from 'types';
+import { MediaBox } from '@/types/schemas';
+import { Asset } from '@/types';
 
 @Component
 export default class extends Vue {

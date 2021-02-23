@@ -5,7 +5,10 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface TwitchSubscribers {
-  totalCount?: number;
-  totalPoints?: number;
+export interface TtsVoices {
+	available: {
+		code: string;
+		name: string;
+	}[];
+	selected?: string;
 }

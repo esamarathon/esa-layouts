@@ -1,9 +1,9 @@
+import type { Asset, Tracker } from '@/types';
+import type { Bids, DonationReader, MediaBox, MusicData, Prizes, UpcomingRunID } from '@/types/schemas'; // eslint-disable-line object-curly-newline, max-len
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import type { Bids, DonationReader, MediaBox, MusicData, Prizes, UpcomingRunID } from 'schemas'; // eslint-disable-line object-curly-newline, max-len
 import SpeedcontrolUtil from 'speedcontrol-util/browser';
 import { RunData, RunDataArray, TwitchCommercialTimer } from 'speedcontrol-util/types';
-import type { Asset, Tracker } from 'types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 

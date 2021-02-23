@@ -5,13 +5,7 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface ObsData {
-  connected: boolean;
-  scene?: string;
-  sceneList: string[];
-  transitioning: boolean;
-  streaming: boolean;
-  gameLayoutScreenshot?: string;
-  disableTransitioning: boolean;
-  transitionTimestamp: number;
+export interface TwitchSubscribers {
+	totalCount?: number;
+	totalPoints?: number;
 }

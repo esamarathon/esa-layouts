@@ -1,7 +1,7 @@
+import type { Asset, MediaBox } from '@/types';
+import type { MediaBox as MediaBoxRep, Prizes } from '@/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import type { MediaBox as MediaBoxRep, Prizes } from 'schemas';
-import type { Asset, MediaBox } from 'types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 

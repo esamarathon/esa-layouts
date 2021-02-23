@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable max-len */
-
 declare module 'vuetify/es5/services/goto' {
   import Vue from 'vue';
 

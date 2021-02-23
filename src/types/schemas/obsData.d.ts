@@ -5,10 +5,13 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface GameLayouts {
-  available: {
-    name: string;
-    code: string;
-  }[];
-  selected?: string;
+export interface ObsData {
+	connected: boolean;
+	scene?: string;
+	sceneList: string[];
+	transitioning: boolean;
+	streaming: boolean;
+	gameLayoutScreenshot?: string;
+	disableTransitioning: boolean;
+	transitionTimestamp: number;
 }

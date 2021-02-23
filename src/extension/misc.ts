@@ -1,7 +1,7 @@
-import type { Configschema } from 'configschema';
+import { Asset } from '@/types';
+import type { Configschema } from '@/types/schemas/configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';
-import { Asset } from 'types';
 import { formatPronouns, getCurrentEventShort, getOtherStreamEventShort } from './util/helpers';
 import { logRunChange, logVideoPlay } from './util/logging';
 import { get as nodecg } from './util/nodecg';

@@ -54,7 +54,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'; // eslint-disable-line object-curly-newline, max-len
-import { RestreamData } from 'schemas';
+import { RestreamData } from '@/types/schemas';
 
 @Component
 export default class extends Vue {

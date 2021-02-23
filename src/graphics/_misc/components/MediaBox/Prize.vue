@@ -51,8 +51,8 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { MediaBox, Prizes } from 'schemas';
-import { Tracker } from 'types';
+import { MediaBox, Prizes } from '@/types/schemas';
+import { Tracker } from '@/types';
 import { formatUSD } from '../../helpers';
 
 @Component

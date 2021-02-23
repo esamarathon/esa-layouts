@@ -1,4 +1,4 @@
-import type { Tracker } from 'types';
+import type { Tracker } from '@/types';
 import { store } from '../../store';
 
 /**

@@ -61,7 +61,7 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { RunDataActiveRunSurrounding, RunDataArray } from 'speedcontrol-util/types';
-import { UpcomingRunID } from 'schemas';
+import { UpcomingRunID } from '@/types/schemas';
 
 @Component
 export default class IntermissionControl extends Vue {

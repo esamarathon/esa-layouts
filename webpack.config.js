@@ -3,12 +3,11 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const LiveReloadPlugin = require('webpack-livereload-plugin');
+const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const globby = require('globby');
 const path = require('path');
-const fs = require('fs');
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -23,7 +22,6 @@ const config = (name) => {
   const miniCSSOpts = {
     loader: MiniCssExtractPlugin.loader,
     options: {
-      hmr: !isProd,
       publicPath: '../',
     },
   };
@@ -39,7 +37,6 @@ const config = (name) => {
   }
   plugins = plugins.concat(
     [
-      new HardSourceWebpackPlugin(),
       new VueLoaderPlugin(),
       ...Object.keys(entry).map(
         (entryName) => {
@@ -64,6 +61,7 @@ const config = (name) => {
     plugins.push(
       new MiniCssExtractPlugin({
         filename: 'css/[name].css',
+        ignoreOrder: true, // To ignore Vuetify issues, good idea or not?
       })
     );
   }
@@ -97,6 +95,11 @@ const config = (name) => {
       alias: {
         vue: 'vue/dist/vue.esm.js',
       },
+      plugins: [
+        new TsConfigPathsPlugin({
+          configFile: 'tsconfig.browser.json',
+        }),
+      ],
     },
     module: {
       rules: [
@@ -157,35 +160,30 @@ const config = (name) => {
         },
         {
           test: /\.(woff(2)?|ttf|eot)$/,
-          loader: 'file-loader',
-          options: {
-            name: 'font/[name].[ext]',
-            esModule: false,
+          type: 'asset/resource',
+          generator: {
+            filename: 'font/[name][ext]',
           },
         },
         {
           test: /\.svg?$/,
+          type: 'asset/resource',
+          generator: {
+            filename: 'font/[name][ext]',
+          },
           include: [
-            // fs.realpathSync(path.resolve(__dirname, 'node_modules/esa-layouts-shared/fonts')),
             path.resolve(__dirname, `src/${name}/_misc/fonts`),
           ],
-          loader: 'file-loader',
-          options: {
-            name: 'font/[name].[ext]',
-            esModule: false,
-          },
         },
         {
           test: /\.(png|svg)?$/,
+          type: 'asset/resource',
+          generator: {
+            filename: 'img/[name]-[contenthash][ext]',
+          },
           exclude: [
-            // fs.realpathSync(path.resolve(__dirname, 'node_modules/esa-layouts-shared/fonts')),
             path.resolve(__dirname, `src/${name}/_misc/fonts`),
           ],
-          loader: 'file-loader',
-          options: {
-            name: 'img/[name]-[contenthash].[ext]',
-            esModule: false,
-          },
         },
         {
           test: /\.tsx?$/,
@@ -197,23 +195,23 @@ const config = (name) => {
         },
         {
           test: /\.mp3?$/,
-          loader: 'file-loader',
-          options: {
-            name: 'sfx/[name].[ext]',
-            esModule: false,
+          type: 'asset/resource',
+          generator: {
+            filename: 'sfx/[name][ext]',
           },
         },
       ],
     },
     plugins,
     optimization: (isProd) ? {
+      // v5 migration guide says to reconsider this, so maybe change in the future?
       splitChunks: {
         chunks: 'all',
         cacheGroups: {
           common: {
             minChunks: 2,
           },
-          vendors: false,
+          defaultVendors: false,
           default: false,
         },
       },

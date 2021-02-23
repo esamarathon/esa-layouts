@@ -17,7 +17,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Countdown } from 'schemas';
+import { Countdown } from '@/types/schemas';
 import { msToTimeStr } from '../_misc/helpers';
 
 @Component

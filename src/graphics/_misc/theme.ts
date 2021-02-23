@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-import { Configschema } from 'configschema';
+import { Configschema } from '@/types/schemas/configschema';
 
 const { theme } = (nodecg.bundleConfig as Configschema).event;
 const defaultTheme = require('./themes/default.theme.css');

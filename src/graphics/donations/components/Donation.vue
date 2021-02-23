@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { Tracker } from 'types';
+import { Tracker } from '@/types';
 
 @Component
 export default class extends Vue {

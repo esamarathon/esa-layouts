@@ -91,7 +91,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import { Configschema } from 'configschema';
+import { Configschema } from '@/types/schemas/configschema';
 import GameCapture from './components/GameCapture.vue';
 import Player from './components/Player.vue';
 import CommAndReader from './components/CommAndReader.vue';

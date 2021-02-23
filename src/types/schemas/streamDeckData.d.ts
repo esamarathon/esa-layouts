@@ -5,13 +5,6 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface MusicData {
-  connected: boolean;
-  playing: boolean;
-  track?: {
-    title?: string;
-    artist?: string;
-    position: number;
-    duration: number;
-  };
+export interface StreamDeckData {
+	playerHUDTriggerType?: string;
 }

@@ -1,4 +1,4 @@
-import { Asset, MediaBox, Tracker } from 'types';
+import { Asset, MediaBox, Tracker } from '@/types';
 import { v4 as uuid } from 'uuid';
 import { store } from '../store';
 

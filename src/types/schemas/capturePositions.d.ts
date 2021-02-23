@@ -5,10 +5,6 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type DonationsToRead = {
-  id: number;
-  name: string;
-  amount: number;
-  comment?: string;
-  timestamp: number;
-}[];
+export interface CapturePositions {
+	[k: string]: any;
+}

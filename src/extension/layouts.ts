@@ -1,5 +1,5 @@
 import clone from 'clone';
-import type { Configschema } from 'configschema';
+import type { Configschema } from '@/types/schemas/configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { toggleLiveMics } from './mixer';
 import { logError } from './util/helpers';

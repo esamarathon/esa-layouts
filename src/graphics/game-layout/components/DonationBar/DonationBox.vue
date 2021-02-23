@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { NotableDonations } from 'schemas';
+import { NotableDonations } from '@/types/schemas';
 
 @Component
 export default class extends Vue {

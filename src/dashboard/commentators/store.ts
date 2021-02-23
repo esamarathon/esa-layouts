@@ -1,6 +1,6 @@
+import type { Commentators } from '@/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import type { Commentators } from 'schemas';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 

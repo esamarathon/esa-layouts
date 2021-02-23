@@ -1,6 +1,6 @@
+import type { UpcomingRunID } from '@/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import type { UpcomingRunID } from 'schemas';
 import SpeedcontrolUtil from 'speedcontrol-util/browser';
 import type { RunDataActiveRunSurrounding, RunDataArray } from 'speedcontrol-util/types';
 import Vue from 'vue';

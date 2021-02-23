@@ -1,6 +1,6 @@
+import type { TtsVoices } from '@/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import type { TtsVoices } from 'schemas';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 

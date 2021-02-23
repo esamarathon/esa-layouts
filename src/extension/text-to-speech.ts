@@ -1,7 +1,7 @@
-import type { Configschema } from 'configschema';
+import type { TextToSpeech, Tracker } from '@/types';
+import type { TtsVoices } from '@/types/schemas';
+import type { Configschema } from '@/types/schemas/configschema';
 import needle from 'needle';
-import type { TtsVoices } from 'schemas';
-import type { TextToSpeech, Tracker } from 'types';
 import { get as nodecg } from './util/nodecg';
 import { ttsVoices } from './util/replicants';
 

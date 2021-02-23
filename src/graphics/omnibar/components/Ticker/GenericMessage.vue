@@ -30,10 +30,9 @@ export default {
       };
     },
     normalisedData() {
-      return Object.assign({
-        size: 33,
+      return { size: 33,
         time: 25,
-      }, this.data);
+        ...this.data };
     },
   },
   mounted() {

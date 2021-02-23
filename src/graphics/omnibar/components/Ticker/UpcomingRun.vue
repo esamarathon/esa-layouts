@@ -85,7 +85,7 @@ export default {
       let namesList = 'No Player(s)';
       run.teams.forEach((team) => {
         const teamPlayerArray = [];
-        team.players.forEach(player => teamPlayerArray.push(player.name));
+        team.players.forEach((player) => teamPlayerArray.push(player.name));
         namesArray.push(teamPlayerArray.join(', '));
       });
       if (namesList.length) {
@@ -95,7 +95,7 @@ export default {
     },
     checkForTotalPlayers(run) {
       let amount = 0;
-      run.teams.forEach(team => team.players.forEach(() => {
+      run.teams.forEach((team) => team.players.forEach(() => {
         amount += 1;
       }));
       return amount;
@@ -108,7 +108,7 @@ export default {
       if (!runDataActiveRun.value) {
         return -1;
       }
-      return clone(runDataArray.value).findIndex(run => run.id === runDataActiveRun.value.id);
+      return clone(runDataArray.value).findIndex((run) => run.id === runDataActiveRun.value.id);
     },
   },
 };

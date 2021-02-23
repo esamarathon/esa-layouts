@@ -21,19 +21,19 @@ export namespace MediaBox {
     type: 'donation' | 'subscription' | 'cheer';
     id: string;
     data:
-      | {
-          name: string;
-          amount: number;
-          comment?: string;
-        }
-      | {
-          systemMsg: string;
-          message?: string;
-        }
-      | {
-          name: string;
-          amount: number;
-          message: string;
-        };
+    | {
+      name: string;
+      amount: number;
+      comment?: string;
+    }
+    | {
+      systemMsg: string;
+      message?: string;
+    }
+    | {
+      name: string;
+      amount: number;
+      message: string;
+    };
   }
 }

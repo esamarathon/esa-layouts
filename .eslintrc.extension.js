@@ -50,10 +50,10 @@ module.exports = {
     // 'import/no-unresolved': [2, { commonjs: true, caseSensitive: false }],
 
     // '@typescript-eslint/ban-ts-comment': 'off',
-    // 'no-restricted-syntax': 'off',
-    // 'import/prefer-default-export': 'off',
-    // 'no-await-in-loop': 'off',
-    // 'global-require': 'off', // Apparently deprecated but still need to turn it off. :)
+    'no-restricted-syntax': 'off',
+    'import/prefer-default-export': 'off',
+    'no-await-in-loop': 'off',
+    'global-require': 'off', // Apparently deprecated but still need to turn it off. :)
   },
 
   // Overrides for types.

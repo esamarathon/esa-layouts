@@ -58,10 +58,10 @@ export default {
       prizes,
     ).then(() => {
       // nodecg.listenFor('newSub', data => newSubs.push(data));
-      nodecg.listenFor('newTweet', data => newTweets.push(data));
+      nodecg.listenFor('newTweet', (data) => newTweets.push(data));
       // nodecg.listenFor('newDonation', data => newDonations.push(data));
       // nodecg.listenFor('newCheer', data => newCheers.push(data));
-      nodecg.listenFor('newCrowdControl', data => newCrowdControlExchanges.push(data));
+      nodecg.listenFor('newCrowdControl', (data) => newCrowdControlExchanges.push(data));
 
       // Puts copies of the objects the functions return
       // into an array for easy random-ness access.
@@ -185,7 +185,7 @@ export default {
       // Regex removes Twitter URL shortener links.
       message = message.replace(/https:\/\/t\.co\/\w+/g, (match) => {
         if (tweetData.message.entities && tweetData.message.entities.urls && tweetData.message.entities.urls.length > 0) {
-          const replacementUrl = tweetData.message.entities.urls.find(urlInfo => urlInfo.url === match);
+          const replacementUrl = tweetData.message.entities.urls.find((urlInfo) => urlInfo.url === match);
           if (replacementUrl) return replacementUrl.display_url;
         }
         return '';

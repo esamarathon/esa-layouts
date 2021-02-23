@@ -57,7 +57,7 @@ import { formatUSD } from '../../helpers';
 
 @Component
 export default class extends Vue {
-  @State prizes!: Prizes
+  @State prizes!: Prizes;
   @State mediaBox!: MediaBox;
   @Prop(Boolean) vertical!: boolean;
   formatUSD = formatUSD;

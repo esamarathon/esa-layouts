@@ -7,14 +7,14 @@
       src="./winter_logo.png"
       :style="{ padding: '0 10px' }"
     >
-    <divider></divider>
-    <total></total>
-    <divider></divider>
+    <divider/>
+    <total/>
+    <divider/>
     <!--<sub-goal-met></sub-goal-met>
     <divider></divider>-->
-    <ticker></ticker>
-    <divider></divider>
-    <clock></clock>
+    <ticker/>
+    <divider/>
+    <clock/>
   </div>
 </template>
 

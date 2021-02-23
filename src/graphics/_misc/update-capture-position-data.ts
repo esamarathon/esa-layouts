@@ -7,7 +7,7 @@ export function updateCapturePositionData(layout: string): void {
       return;
     }
     const captureElems = document.getElementsByClassName('Capture');
-    const pos: { [k: string]: { x: number; y: number; width: number; height: number}} = {};
+    const pos: { [k: string]: { x: number; y: number; width: number; height: number } } = {};
 
     for (const el of captureElems) {
       const sizes = el.getBoundingClientRect();

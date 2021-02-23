@@ -81,8 +81,8 @@ module.exports = {
     // 'import/no-unresolved': [2, { commonjs: true, caseSensitive: false }],
 
     // '@typescript-eslint/ban-ts-comment': 'off',
-    // 'no-restricted-syntax': 'off',
-    // 'import/prefer-default-export': 'off',
+    'no-restricted-syntax': 'off',
+    'import/prefer-default-export': 'off',
     // 'no-await-in-loop': 'off',
   }
 };

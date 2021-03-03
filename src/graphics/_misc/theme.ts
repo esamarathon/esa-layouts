@@ -3,14 +3,14 @@
 import { Configschema } from '@/types/schemas/configschema';
 
 const { theme } = (nodecg.bundleConfig as Configschema).event;
-const defaultTheme = require('./themes/default.theme.css');
-const together = require('./themes/together.theme.css');
-const coronarelief = require('./themes/coronarelief.theme.css');
-const uksgsu = require('./themes/uksgsu.theme.css');
-const uksga = require('./themes/uksga.theme.css');
-const uksgw = require('./themes/uksgw.theme.css');
-const summeronline = require('./themes/summeronline.theme.css');
-const winter = require('./themes/winter.theme.css');
+const { default: defaultTheme } = require('./themes/default.theme.css');
+const { default: together } = require('./themes/together.theme.css');
+const { default: coronarelief } = require('./themes/coronarelief.theme.css');
+const { default: uksgsu } = require('./themes/uksgsu.theme.css');
+const { default: uksga } = require('./themes/uksga.theme.css');
+const { default: uksgw } = require('./themes/uksgw.theme.css');
+const { default: summeronline } = require('./themes/summeronline.theme.css');
+const { default: winter } = require('./themes/winter.theme.css');
 
 defaultTheme.use();
 

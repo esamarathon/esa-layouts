@@ -1,8 +1,8 @@
 name: Build
 
 on:
-  #push:
-    #branches: [ master ]
+  push:
+    branches: [ master ]
 
   workflow_dispatch:
 
@@ -12,52 +12,59 @@ jobs:
 
     steps:
     # Clone NodeCG
-    - uses: actions/checkout@v2
+    - name: Clone nodecg/nodecg
+      uses: actions/checkout@v2
       with:
         token: ${{ secrets['GH_PAT'] }}
         repository: nodecg/nodecg
-        ref: 'legacy-1.x'
+        ref: legacy-1.x
         path: ./nodecg-temp
     
     # Copies cloned NodeCG into permanent folder.
     # If I didn't do this, some bundles seemed to not actually clone successfully later. 
-    - run: cp -r ./nodecg-temp ./nodecg
+    - name: Copy ./nodecg-temp > ./nodecg
+      run: cp -r ./nodecg-temp ./nodecg
 
     # Clone nodecg-speedcontrol (dev branch)
-    - uses: actions/checkout@v2
+    - name: Clone speedcontrol/nodecg-speedcontrol#dev
+      uses: actions/checkout@v2
       with:
         token: ${{ secrets['GH_PAT'] }}
         repository: speedcontrol/nodecg-speedcontrol
-        ref: 'dev'
+        ref: dev
         path: ./nodecg/bundles/nodecg-speedcontrol
 
     # Clone nodecg-obsninja
-    - uses: actions/checkout@v2
+    - name: Clone esamarathon/nodecg-obsninja
+      uses: actions/checkout@v2
       with:
         token: ${{ secrets['GH_PAT'] }}
         repository: esamarathon/nodecg-obsninja
         path: ./nodecg/bundles/nodecg-obsninja
 
     # Clone this repoisitory
-    - uses: actions/checkout@v2
+    - name: Clone this repository
+      uses: actions/checkout@v2
       with:
         path: ./nodecg/bundles/esa-layouts
 
     # Setup some Node stuff
-    - uses: actions/setup-node@v2
+    - name: Node.js setup
+      uses: actions/setup-node@v2
       with:
         node-version: '14'
 
-    # Install NPM dependencies
-    - working-directory: ./nodecg/bundles/esa-layouts
-      run: npm ci
-
-    # Build
-    - working-directory: ./nodecg/bundles/esa-layouts
-      run: npm run build
+    # Install NPM dependencies, clean and build
+    - name: Install NPM dependencies, clean and build
+      working-directory: ./nodecg/bundles/esa-layouts
+      run: |
+        npm ci
+        npm run clean
+        npm run build
 
     # Commit newly built files
-    - working-directory: ./nodecg/bundles/esa-layouts
+    - name: Commit built files
+      working-directory: ./nodecg/bundles/esa-layouts
       run: |
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
@@ -65,7 +72,8 @@ jobs:
         git commit -m "Built files" -a
 
     # Pushes the built files to a specific branch
-    - uses: ad-m/github-push-action@master
+    - name: Push built files to "build" branch
+      uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets['GH_PAT'] }}
         branch: build

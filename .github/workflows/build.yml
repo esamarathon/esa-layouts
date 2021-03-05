@@ -67,6 +67,7 @@ jobs:
 
     # Pushes the built files to a specific branch
     - uses: ad-m/github-push-action@master
+      working-directory: ./nodecg/bundles/esa-layouts
       with:
         github_token: ${{ secrets['GH_PAT'] }}
         branch: 'build'

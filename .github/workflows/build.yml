@@ -15,7 +15,7 @@ jobs:
     # Clone NodeCG
     - uses: actions/checkout@v2
       with:
-        token: ${{ secrets['GitHub_PAT'] }}
+        token: ${{ secrets['GH_PAT'] }}
         repository: nodecg/nodecg
         ref: 'legacy-1.x'
         path: ./nodecg-temp
@@ -27,7 +27,7 @@ jobs:
     # Clone nodecg-speedcontrol (dev branch)
     - uses: actions/checkout@v2
       with:
-        token: ${{ secrets['GitHub_PAT'] }}
+        token: ${{ secrets['GH_PAT'] }}
         repository: speedcontrol/nodecg-speedcontrol
         ref: 'dev'
         path: ./nodecg/bundles/nodecg-speedcontrol
@@ -35,7 +35,7 @@ jobs:
     # Clone nodecg-obsninja
     - uses: actions/checkout@v2
       with:
-        token: ${{ secrets['GitHub_PAT'] }}
+        token: ${{ secrets['GH_PAT'] }}
         repository: esamarathon/nodecg-obsninja
         path: ./nodecg/bundles/nodecg-obsninja
 

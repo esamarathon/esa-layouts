@@ -59,9 +59,9 @@ jobs:
     # Commit newly built files
     - working-directory: ./nodecg/bundles/esa-layouts
       run: |
-        cp .gitignore.build .gitignore
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
+        git add -f dashboard graphics extension
         git commit -m "Built files" -a
 
     # Pushes the built files to a specific branch

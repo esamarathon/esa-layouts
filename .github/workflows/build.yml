@@ -17,7 +17,6 @@ jobs:
       with:
         token: ${{ secrets['GH_PAT'] }}
         repository: nodecg/nodecg
-        ref: legacy-1.x
         path: ./nodecg-temp
     
     # Copies cloned NodeCG into permanent folder.
@@ -54,12 +53,11 @@ jobs:
       with:
         node-version: '14'
 
-    # Install NPM dependencies, clean and build
-    - name: Install NPM dependencies, clean and build
+    # Install NPM dependencies and build
+    - name: Install NPM dependencies and build
       working-directory: ./nodecg/bundles/esa-layouts
       run: |
         npm ci
-        npm run clean
         npm run build
 
     # Commit newly built files

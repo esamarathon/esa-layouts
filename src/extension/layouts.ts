@@ -1,5 +1,5 @@
-import clone from 'clone';
 import type { Configschema } from '@/types/schemas/configschema';
+import clone from 'clone';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { toggleLiveMics } from './mixer';
 import { logError } from './util/helpers';
@@ -132,7 +132,7 @@ capturePositions.on('change', async (val) => {
         // Smaller than 16:9 need left/right cropping.
         const sceneItemProperties = await obs.conn.send('GetSceneItemProperties', {
           'scene-name': obsConfig.names.scenes.gameLayout,
-          item: obsSourceKeys[key],
+          item: { name: obsSourceKeys[key] },
         });
         const cameraAR = sceneItemProperties.sourceWidth / sceneItemProperties.sourceHeight;
         const areaAR = val['game-layout'][key].width / val['game-layout'][key].height;

@@ -1,3 +1,7 @@
 {
-  "$ref": "../node_modules/esa-layouts-shared/schemas/capturePositions.json"
+  "oneOf": [
+    {
+      "$ref": "../node_modules/@esamarathon/esa-layouts-shared/schemas/capturePositions.json"
+    }
+  ]
 }

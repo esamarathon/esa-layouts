@@ -32,7 +32,7 @@
   "dependencies": {
     "async": "^3.2.0",
     "clone": "^2.1.2",
-    "esa-layouts-shared": "github:esamarathon/esa-layouts-shared",
+    "@esamarathon/esa-layouts-shared": "github:esamarathon/esa-layouts-shared",
     "lodash": "^4.17.21",
     "module-alias": "^2.2.2",
     "moment": "^2.29.1",
@@ -181,6 +181,22 @@
         "width": 2,
         "file": "countdown-control.html",
         "workspace": "Z - ESA Advanced",
+        "headerColor": "#c49215"
+      },
+      {
+        "name": "restream-viewer-tool",
+        "title": "Restream Viewer Tool",
+        "width": 2,
+        "file": "restream-viewer-tool.html",
+        "workspace": "ESA",
+        "headerColor": "#c49215"
+      },
+      {
+        "name": "rabbitmq-test",
+        "title": "RabbitMQ Test",
+        "width": 2,
+        "file": "rabbitmq-test.html",
+        "workspace": "ESA Debug",
         "headerColor": "#c49215"
       }
     ],

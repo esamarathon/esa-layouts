@@ -1,7 +1,7 @@
 /* eslint no-new: off, @typescript-eslint/explicit-function-return-type: off */
 
 import type { Configschema } from '@/types/schemas/configschema';
-import App from 'esa-layouts-shared/rabbitmq/dashboard';
+import App from '@esamarathon/esa-layouts-shared/rabbitmq/dashboard';
 import Vue from 'vue';
 import vuetify from '../_misc/vuetify';
 

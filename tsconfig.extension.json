@@ -83,7 +83,7 @@
     "src/extension/**/*.ts",
     "src/types/**/*.d.ts",
     "../../types/server.d.ts",
-    "node_modules/esa-layouts-shared/types/**/*.d.ts"
+    "node_modules/@esamarathon/esa-layouts-shared/types/**/*.d.ts"
   ],
   "exclude": [
     "node_modules"

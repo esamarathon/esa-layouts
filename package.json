@@ -30,9 +30,9 @@
     "watch:extension": "tsc -b tsconfig.extension.json -w"
   },
   "dependencies": {
+    "@esamarathon/esa-layouts-shared": "github:esamarathon/esa-layouts-shared#build",
     "async": "^3.2.0",
     "clone": "^2.1.2",
-    "@esamarathon/esa-layouts-shared": "github:esamarathon/esa-layouts-shared",
     "lodash": "^4.17.21",
     "module-alias": "^2.2.2",
     "moment": "^2.29.1",

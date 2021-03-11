@@ -53,6 +53,12 @@ jobs:
       with:
         node-version: '14'
 
+    # Setup GitHub SSH key so we can npm install GitHub repositories (even needed for public ones)
+    - name: GitHub SSH setup
+      uses: webfactory/ssh-agent@master
+      with:
+        ssh-private-key: ${{ secrets['GH_SSH'] }}
+
     # Install NPM dependencies and build
     - name: Install NPM dependencies and build
       working-directory: ./nodecg/bundles/esa-layouts

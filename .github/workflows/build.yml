@@ -11,21 +11,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Clone NodeCG
-    - name: Clone nodecg/nodecg
+    # Checkout NodeCG
+    - name: Checkout nodecg/nodecg
       uses: actions/checkout@v2
       with:
         token: ${{ secrets['GH_PAT'] }}
         repository: nodecg/nodecg
         path: ./nodecg-temp
     
-    # Copies cloned NodeCG into permanent folder.
-    # If I didn't do this, some bundles seemed to not actually clone successfully later. 
+    # Copies checked out NodeCG into permanent folder.
+    # If I didn't do this, some bundles seemed to not actually checkout successfully later. 
     - name: Copy ./nodecg-temp > ./nodecg
       run: cp -r ./nodecg-temp ./nodecg
 
-    # Clone nodecg-speedcontrol (dev branch)
-    - name: Clone speedcontrol/nodecg-speedcontrol#dev
+    # Checkout nodecg-speedcontrol (dev branch)
+    - name: Checkout speedcontrol/nodecg-speedcontrol#dev
       uses: actions/checkout@v2
       with:
         token: ${{ secrets['GH_PAT'] }}
@@ -33,19 +33,25 @@ jobs:
         ref: dev
         path: ./nodecg/bundles/nodecg-speedcontrol
 
-    # Clone nodecg-obsninja
-    - name: Clone esamarathon/nodecg-obsninja
+    # Checkout nodecg-obsninja
+    - name: Checkout esamarathon/nodecg-obsninja
       uses: actions/checkout@v2
       with:
         token: ${{ secrets['GH_PAT'] }}
         repository: esamarathon/nodecg-obsninja
         path: ./nodecg/bundles/nodecg-obsninja
 
-    # Clone this repoisitory
-    - name: Clone this repository
+    # Checkout this repository
+    - name: Checkout this repository
       uses: actions/checkout@v2
       with:
         path: ./nodecg/bundles/esa-layouts
+
+    # Set the local git user config to use the GitHub Actions bot account
+    - name: Set local git config user details
+      run: |
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
 
     # Setup some Node stuff
     - name: Node.js setup
@@ -59,19 +65,20 @@ jobs:
       with:
         ssh-private-key: ${{ secrets['GH_SSH'] }}
 
-    # Install NPM dependencies and build
-    - name: Install NPM dependencies and build
+    # Install NPM dependencies
+    - name: Install NPM dependencies
       working-directory: ./nodecg/bundles/esa-layouts
-      run: |
-        npm ci
-        npm run build
+      run: npm ci
+
+    # Actually build everything
+    - name: Build
+      working-directory: ./nodecg/bundles/esa-layouts
+      run: npm run build
 
     # Commit newly built files
     - name: Commit built files
       working-directory: ./nodecg/bundles/esa-layouts
       run: |
-        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git config --local user.name "github-actions[bot]"
         git add -f dashboard graphics extension
         git commit -m "Built files" -a
 

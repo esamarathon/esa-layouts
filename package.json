@@ -30,7 +30,7 @@
     "watch:extension": "tsc -b tsconfig.extension.json -w"
   },
   "dependencies": {
-    "@esamarathon/esa-layouts-shared": "github:esamarathon/esa-layouts-shared#build",
+    "@esamarathon/esa-layouts-shared": "git+https://git@github.com/esamarathon/esa-layouts-shared.git#73225fd",
     "async": "^3.2.0",
     "clone": "^2.1.2",
     "lodash": "^4.17.21",
@@ -44,7 +44,7 @@
     "ws": "^7.4.3"
   },
   "devDependencies": {
-    "@esamarathon/mq-events": "github:esamarathon/mq-events",
+    "@esamarathon/mq-events": "git+https://git@github.com/esamarathon/mq-events.git#fa96a89",
     "@mdi/font": "^5.9.55",
     "@types/async": "^3.2.5",
     "@types/clone": "^2.1.0",

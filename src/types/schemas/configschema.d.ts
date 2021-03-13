@@ -13,9 +13,6 @@ export interface Configschema {
 		thisEvent: number;
 		online: boolean;
 	};
-	xkeys: {
-		enable: boolean;
-	};
 	streamdeck: {
 		enable: boolean;
 		port: number;

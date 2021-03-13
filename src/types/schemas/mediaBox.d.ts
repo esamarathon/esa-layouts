@@ -5,25 +5,19 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type Rotation = {
-	type: 'image' | 'prize' | 'prize_generic';
-	id: string;
-	mediaUUID: string;
-	seconds: number;
-}[];
-export type MediaActive = {
-	type: TypesAll;
-	id: string;
-	mediaUUID: string;
-	index: number;
-	timestamp: number;
-	timeElapsed: number;
-} | null;
-export type TypesAll = 'image' | 'prize' | 'prize_generic' | 'donation' | 'subscription' | 'cheer';
-
-export interface MediaBox {
-	rotation: Rotation;
-	rotationApplicable: Rotation;
+export type MediaBox = {
+	rotation: {
+		type: 'image' | 'prize' | 'prize_generic';
+		id: string;
+		mediaUUID: string;
+		seconds: number;
+	}[];
+	rotationApplicable: {
+		type: 'image' | 'prize' | 'prize_generic';
+		id: string;
+		mediaUUID: string;
+		seconds: number;
+	}[];
 	alertQueue: {
 		type: 'donation' | 'subscription' | 'cheer';
 		id: string;
@@ -43,7 +37,21 @@ export interface MediaBox {
 					message: string;
 			  };
 	}[];
-	paused: MediaActive;
-	current: MediaActive;
+	paused: {
+		type: 'image' | 'prize' | 'prize_generic' | 'donation' | 'subscription' | 'cheer';
+		id: string;
+		mediaUUID: string;
+		index: number;
+		timestamp: number;
+		timeElapsed: number;
+	} | null;
+	current: {
+		type: 'image' | 'prize' | 'prize_generic' | 'donation' | 'subscription' | 'cheer';
+		id: string;
+		mediaUUID: string;
+		index: number;
+		timestamp: number;
+		timeElapsed: number;
+	} | null;
 	lastIndex: number;
-}
+};

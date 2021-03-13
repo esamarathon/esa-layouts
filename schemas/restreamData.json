@@ -1,29 +1,7 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema",
-  "type": "array",
-  "items": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "connected": {
-        "type": "boolean",
-        "default": false
-      },
-      "uuid": {
-        "type": "string"
-      },
-      "channel": {
-        "type": "string"
-      },
-      "overridden": {
-        "type": "boolean",
-        "default": false
-      }
-    },
-    "required": [
-      "connected",
-      "overridden"
-    ]
-  },
-  "default": []
+  "oneOf": [
+    {
+      "$ref": "../node_modules/@esamarathon/esa-layouts-shared/schemas/restreamData.json"
+    }
+  ]
 }

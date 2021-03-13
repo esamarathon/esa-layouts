@@ -1,3 +1,0 @@
-Because of issues turning this dashboard panel into anything that can easily be imported at this time, as to not waste more time, I have currently copy/pasted the dashboard panel's folder here from `esa-layouts`, which should mostly be OK to copy into other bundle(s) as needed that are based off of, or at least similar to, [zoton2/nodecg-vue-ts-template](https://github.com/zoton2/nodecg-vue-ts-template).
-
-Source of these files, to get updated files from if needed: [esamarathon/esa-layouts-shared/tree/dev/mediabox/dashboard](https://github.com/esamarathon/esa-layouts-shared/tree/dev/mediabox/dashboard)

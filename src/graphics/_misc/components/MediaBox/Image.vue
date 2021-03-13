@@ -14,7 +14,7 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { MediaBox } from '@/types/schemas';
-import { Asset } from '@/types';
+import { Asset } from '@esamarathon/esa-layouts-shared/types';
 
 @Component
 export default class extends Vue {

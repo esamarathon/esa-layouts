@@ -1,5 +1,5 @@
-import { Asset } from '@/types';
 import type { Configschema } from '@/types/schemas/configschema';
+import { Asset } from '@esamarathon/esa-layouts-shared/types';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';
 import { formatPronouns, getCurrentEventShort, getOtherStreamEventShort } from './util/helpers';

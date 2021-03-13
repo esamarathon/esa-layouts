@@ -1,6 +1,7 @@
-import type { TextToSpeech, Tracker } from '@/types';
+import type { TextToSpeech } from '@/types';
 import type { TtsVoices } from '@/types/schemas';
 import type { Configschema } from '@/types/schemas/configschema';
+import type { Tracker } from '@esamarathon/esa-layouts-shared/types';
 import needle from 'needle';
 import { get as nodecg } from './util/nodecg';
 import { ttsVoices } from './util/replicants';

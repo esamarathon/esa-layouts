@@ -54,7 +54,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { MediaBox, Prizes } from '@/types/schemas';
-import { Asset } from '@/types';
+import { Asset } from '@esamarathon/esa-layouts-shared/types';
 import ImageComp from './MediaBox/Image.vue';
 import Prize from './MediaBox/Prize.vue';
 import PrizeGeneric from './MediaBox/PrizeGeneric.vue';

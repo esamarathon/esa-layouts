@@ -46,7 +46,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { MediaBox as MediaBoxRep } from '@/types/schemas';
-import { MediaBox } from '@/types';
+import { MediaBox } from '@esamarathon/esa-layouts-shared/types';
 import { formatUSD } from '../../helpers';
 
 @Component

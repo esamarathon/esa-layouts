@@ -1,5 +1,5 @@
-import type { Asset } from '@/types';
 import type { VideoPlayer } from '@/types/schemas';
+import type { Asset } from '@esamarathon/esa-layouts-shared/types';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import Vue from 'vue';

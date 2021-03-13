@@ -46,7 +46,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { MediaBox, Prizes } from '@/types/schemas';
-import { Tracker } from '@/types';
+import { Tracker } from '@esamarathon/esa-layouts-shared/types';
 import { formatUSD } from '../../helpers';
 
 @Component

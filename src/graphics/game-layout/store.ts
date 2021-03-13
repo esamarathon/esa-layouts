@@ -1,5 +1,5 @@
-import type { Asset } from '@/types';
 import type { Commentators, CurrentRunDelay, DelayedTimer, DonationReader, GameLayouts, MediaBox, NameCycle, NotableDonations, Prizes } from '@/types/schemas'; // eslint-disable-line object-curly-newline, max-len
+import type { Asset } from '@esamarathon/esa-layouts-shared/types';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import SpeedcontrolUtil from 'speedcontrol-util/browser';

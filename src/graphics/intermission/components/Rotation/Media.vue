@@ -37,7 +37,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Asset } from '@/types';
+import { Asset } from '@esamarathon/esa-layouts-shared/types';
 
 @Component
 export default class extends Vue {

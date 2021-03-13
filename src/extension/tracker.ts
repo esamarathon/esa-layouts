@@ -1,5 +1,5 @@
-import type { Tracker } from '@/types';
 import type { Configschema } from '@/types/schemas/configschema';
+import type { Tracker } from '@esamarathon/esa-layouts-shared/types';
 import type { NeedleResponse } from 'needle';
 import needle from 'needle';
 import { get as nodecg } from './util/nodecg';

@@ -1,7 +1,3 @@
 {
-  "oneOf": [
-    {
-      "$ref": "../node_modules/@esamarathon/esa-layouts-shared/schemas/restreamData.json"
-    }
-  ]
+  "$ref": "../node_modules/@esamarathon/esa-layouts-shared/schemas/restreamData.json"
 }

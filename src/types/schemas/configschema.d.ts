@@ -9,7 +9,7 @@ export interface Configschema {
 	useTestData: boolean;
 	event: {
 		theme?: string;
-		shorts: string | string[];
+		shorts: string | [string] | [string, string];
 		thisEvent: number;
 		online: boolean;
 	};
@@ -29,7 +29,7 @@ export interface Configschema {
 	};
 	restream: {
 		enable: boolean;
-		instances: RestreamItem | RestreamItem[];
+		instances: RestreamItem | [RestreamItem] | [RestreamItem, RestreamItem];
 	};
 	obs: {
 		enable: boolean;
@@ -50,7 +50,7 @@ export interface Configschema {
 				gameCapture4: string;
 				cameraCapture1: string;
 				cameraCapture2: string;
-				restreamSources: string | string[];
+				restreamSources: string | [string] | [string, string];
 			};
 		};
 	};

@@ -1,3 +1,4 @@
+export * from './configschema';
 export * from './bids';
 export * from './capturePositions';
 export * from './commentators';

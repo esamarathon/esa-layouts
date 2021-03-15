@@ -176,7 +176,7 @@
       {
         "name": "countdown-control",
         "title": "Countdown Control",
-        "width": 2,
+        "width": 3,
         "file": "countdown-control.html",
         "workspace": "Z - ESA Advanced",
         "headerColor": "#c49215"

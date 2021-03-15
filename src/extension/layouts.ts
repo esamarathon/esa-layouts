@@ -1,15 +1,17 @@
 import type { Configschema } from '@/types/schemas/configschema';
+import Countdown from '@esamarathon/esa-layouts-shared/countdown/extension';
 import clone from 'clone';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { toggleLiveMics } from './mixer';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { capturePositions, countdown, currentRunDelay, delayedTimer, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
+import { capturePositions, currentRunDelay, delayedTimer, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
 
 const cfg = nodecg().bundleConfig as Configschema;
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 const sc = new SpeedcontrolUtil(nodecg());
+const countdown = new Countdown(nodecg()); // eslint-disable-line @typescript-eslint/no-unused-vars
 
 // CSS ID -> OBS source name mapping
 const obsSourceKeys: { [key: string]: string } = {
@@ -253,41 +255,3 @@ nodecg().listenFor('obsChangeScene', async (name: string) => {
     logError('[Layouts] Could not change scene [name: %s]', err, name);
   }
 });
-
-let countdownTimeout: NodeJS.Timeout;
-function updateCountdownTimer(): void {
-  const cdTimer = countdown.value;
-  const remaining = cdTimer.originalDuration - (Date.now() - cdTimer.timestamp);
-  if (remaining > 0) {
-    countdown.value.remaining = remaining;
-    countdownTimeout = setTimeout(updateCountdownTimer, 1000);
-  } else {
-    countdown.value.remaining = 0;
-  }
-}
-
-nodecg().listenFor('startCountdown', (time: string) => {
-  if (!/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(time)) {
-    return;
-  }
-  const now = new Date();
-  const then = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    Number(time.split(':')[0]),
-    Number(time.split(':')[1]),
-  );
-  clearTimeout(countdownTimeout);
-  const diff = then.getTime() - now.getTime();
-  if (diff <= 0) {
-    return;
-  }
-  countdown.value = {
-    originalDuration: diff,
-    remaining: diff,
-    timestamp: Date.now(),
-  };
-  updateCountdownTimer();
-});
-updateCountdownTimer();

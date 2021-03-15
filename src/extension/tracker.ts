@@ -38,7 +38,7 @@ async function getEventIDFromShort(short: string): Promise<number> {
 /**
  * Updates donation total from the API as a backup for the RabbitMQ messages.
  */
-async function updateDonationTotalFromAPI(): Promise<void> {
+async function updateDonationTotalFromAPI(init = false): Promise<void> {
   try {
     let total = 0;
     for (const event of eventInfo) {
@@ -49,7 +49,7 @@ async function updateDonationTotalFromAPI(): Promise<void> {
         total += eventTotal;
       }
     }
-    if (donationTotal.value < total) {
+    if (init || donationTotal.value < total) {
       nodecg().log.info('[Tracker] API donation total changed: $%s', total);
       donationTotal.value = total;
     }
@@ -147,7 +147,7 @@ async function loginToTracker(): Promise<void> {
   }
 }
 
-async function init(): Promise<void> {
+async function setup(): Promise<void> {
   if (!eventConfig.shorts.length) {
     nodecg().log.warn('[Tracker] No events found in configuration to query for');
     return;
@@ -170,7 +170,7 @@ async function init(): Promise<void> {
       await loginToTracker();
 
       // Get initial total from API and set an interval as a fallback.
-      updateDonationTotalFromAPI();
+      updateDonationTotalFromAPI(true);
       setInterval(updateDonationTotalFromAPI, 60 * 1000);
     } else {
       donationTotal.value = eventInfo.reduce((p, e) => p + e.total, 0);
@@ -188,5 +188,5 @@ async function init(): Promise<void> {
 }
 
 if (config.enable) {
-  init();
+  setup();
 }

@@ -92,12 +92,12 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { Configschema } from '@/types/schemas/configschema';
+import MediaBox from '@esamarathon/esa-layouts-shared/mediabox/graphics';
 import GameCapture from './components/GameCapture.vue';
 import Player from './components/Player.vue';
 import CommAndReader from './components/CommAndReader.vue';
 import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
-import MediaBox from '../_misc/components/MediaBox.vue';
 import DonationBar from './components/DonationBar.vue';
 
 @Component({

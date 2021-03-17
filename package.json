@@ -30,7 +30,7 @@
     "watch:extension": "tsc -b tsconfig.extension.json -w"
   },
   "dependencies": {
-    "@esamarathon/esa-layouts-shared": "git+https://git@github.com/esamarathon/esa-layouts-shared.git#8ef631f",
+    "@esamarathon/esa-layouts-shared": "git+https://git@github.com/esamarathon/esa-layouts-shared.git#8ef631fcf0957982973232593421ae543c431304",
     "async": "^3.2.0",
     "clone": "^2.1.2",
     "lodash": "^4.17.21",
@@ -43,7 +43,7 @@
     "ws": "^7.4.3"
   },
   "devDependencies": {
-    "@esamarathon/mq-events": "git+https://git@github.com/esamarathon/mq-events.git#fa96a89",
+    "@esamarathon/mq-events": "git+https://git@github.com/esamarathon/mq-events.git#fa96a895d22367928fcb80fe800049669dfe3135",
     "@mdi/font": "^5.9.55",
     "@types/async": "^3.2.5",
     "@types/clone": "^2.1.0",
@@ -75,7 +75,7 @@
     "gsap": "^3.6.0",
     "html-webpack-plugin": "^5.2.0",
     "mini-css-extract-plugin": "^1.3.8",
-    "nodecg-cli": "git+https://git@github.com/zoton2/nodecg-cli.git#d7c7c56",
+    "nodecg-cli": "git+https://git@github.com/zoton2/nodecg-cli.git#d7c7c5673753441d254c31d4f980727cd42505f9",
     "npm-run-all": "^4.1.5",
     "sass": "^1.32.8",
     "sass-loader": "^11.0.1",

@@ -60,7 +60,8 @@ jobs:
       with:
         node-version: '14'
     
-    - name: NPM v7 installation
+    # Update NPM to the latest version
+    - name: Update NPM installation
       run: npm install -g npm@latest
 
     # Setup GitHub SSH key so we can npm install GitHub repositories (even needed for public ones)

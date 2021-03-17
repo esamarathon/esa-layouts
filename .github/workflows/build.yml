@@ -59,6 +59,9 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '14'
+    
+    - name: NPM v7 installation
+      run: npm install -g npm@latest
 
     # Setup GitHub SSH key so we can npm install GitHub repositories (even needed for public ones)
     - name: GitHub SSH setup

@@ -61,7 +61,7 @@ const config = (name) => {
     plugins.push(
       new MiniCssExtractPlugin({
         filename: 'css/[name].css',
-        ignoreOrder: true, // To ignore Vuetify issues, good idea or not?
+        ignoreOrder: name === 'dashboard', // To ignore Vuetify issues, good idea or not?
       })
     );
   }

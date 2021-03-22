@@ -41,10 +41,13 @@ jobs:
         repository: esamarathon/nodecg-obsninja
         path: ./nodecg/bundles/nodecg-obsninja
 
-    # Checkout this repository
+    # Checkout the main branch of this repository with full depth
     - name: Checkout this repository
       uses: actions/checkout@v2
       with:
+        token: ${{ secrets['GH_PAT'] }}
+        ref: master
+        fetch-depth: 0
         path: ./nodecg/bundles/esa-layouts
 
     # Set the local git user config to use the GitHub Actions bot account
@@ -53,6 +56,14 @@ jobs:
       run: |
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
+
+    # Recheckout both the main and build branches and merge the main into build.
+    - name: (Re)checkout both branches and merge main into build
+      working-directory: ./nodecg/bundles/esa-commercials
+      run: |
+        git checkout master
+        git checkout build
+        git merge master
 
     # Setup some Node stuff
     - name: Node.js setup
@@ -87,10 +98,15 @@ jobs:
     # Actually build everything
     - name: Build
       working-directory: ./nodecg/bundles/esa-layouts
-      run: npm run build
+      run: |
+        npm run clean
+        npm run build
 
     # Commit newly built files
+    # This can "fail" if there are no newly changed/built files, but the next step should continue anyway.
     - name: Commit built files
+      id: commit
+      continue-on-error: true
       working-directory: ./nodecg/bundles/esa-layouts
       run: |
         git add -f dashboard graphics extension
@@ -98,9 +114,9 @@ jobs:
 
     # Pushes the built files to a specific branch
     - name: Push built files to "build" branch
+      #if: ${{ steps.commit.outcome == 'success' }}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets['GH_PAT'] }}
         branch: build
-        force: true
         directory: ./nodecg/bundles/esa-layouts

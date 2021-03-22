@@ -19,8 +19,8 @@ jobs:
         repository: nodecg/nodecg
         path: ./nodecg-temp
     
-    # Copies checked out NodeCG into permanent folder.
-    # If I didn't do this, some bundles seemed to not actually checkout successfully later. 
+    # Copies checked out NodeCG into permanent folder
+    # If I didn't do this, some bundles seemed to not actually checkout successfully later
     - name: Copy ./nodecg-temp > ./nodecg
       run: cp -r ./nodecg-temp ./nodecg
 
@@ -57,8 +57,10 @@ jobs:
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
 
-    # Recheckout both the main and build branches and merge the main into build.
+    # Recheckout both the main and build branches and merge the main into build
+    # This can "fail" if the build branch doesn't exist, but we should continue anyway
     - name: (Re)checkout both branches and merge main into build
+      continue-on-error: true
       working-directory: ./nodecg/bundles/esa-commercials
       run: |
         git checkout master
@@ -103,7 +105,7 @@ jobs:
         npm run build
 
     # Commit newly built files
-    # This can "fail" if there are no newly changed/built files, but the next step should continue anyway.
+    # This can "fail" if there are no newly changed/built files, but we should continue anyway
     - name: Commit built files
       id: commit
       continue-on-error: true

@@ -61,7 +61,7 @@ jobs:
     # This can "fail" if the build branch doesn't exist, but we should continue anyway
     - name: (Re)checkout both branches and merge main into build
       continue-on-error: true
-      working-directory: ./nodecg/bundles/esa-commercials
+      working-directory: ./nodecg/bundles/esa-layouts
       run: |
         git checkout master
         git checkout build

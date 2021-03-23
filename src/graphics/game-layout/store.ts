@@ -2,12 +2,12 @@ import type { Commentators, CurrentRunDelay, DelayedTimer, DonationReader, GameL
 import type { Asset } from '@esamarathon/esa-layouts-shared/types';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import SpeedcontrolUtil from 'speedcontrol-util/browser';
+import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import type { RunDataActiveRun, Timer } from 'speedcontrol-util/types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
-const sc = new SpeedcontrolUtil(nodecg);
+const sc = new SpeedcontrolUtilBrowser(nodecg);
 Vue.use(Vuex);
 
 // Replicants and their types

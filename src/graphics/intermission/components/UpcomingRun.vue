@@ -35,7 +35,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { RunData } from 'speedcontrol-util/types';
-import SpeedcontrolUtil from 'speedcontrol-util/browser';
+import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import utc from 'dayjs/plugin/utc';
@@ -53,8 +53,8 @@ export default class extends Vue {
   @State nextRuns!: RunData[];
   @Prop({ default: undefined }) runData!: RunData | undefined;
   @Prop({ default: 0 }) slotNo!: number;
-  getRunTotalPlayers = SpeedcontrolUtil.getRunTotalPlayers;
-  formPlayerNamesStr = SpeedcontrolUtil.formPlayerNamesStr;
+  getRunTotalPlayers = SpeedcontrolUtilBrowser.getRunTotalPlayers;
+  formPlayerNamesStr = SpeedcontrolUtilBrowser.formPlayerNamesStr;
 
   get etaUntil(): string {
     if (this.slotNo === 0) {

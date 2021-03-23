@@ -1,7 +1,7 @@
 /* eslint no-new: off, @typescript-eslint/explicit-function-return-type: off */
 
 import { UpcomingRunID } from '@/types/schemas';
-import SpeedcontrolUtil from 'speedcontrol-util/browser';
+import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';
 import Vue from 'vue';
 import '../_misc/fonts/barlow-condensed.css';
@@ -10,7 +10,7 @@ import './common.css';
 import App from './main.vue';
 import waitForReplicants from './store';
 
-const sc = new SpeedcontrolUtil(nodecg);
+const sc = new SpeedcontrolUtilBrowser(nodecg);
 
 // Gets next 4 runs based on the ID supplied.
 function getNextRuns(id: UpcomingRunID): RunData[] {

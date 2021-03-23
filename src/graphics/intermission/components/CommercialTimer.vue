@@ -13,7 +13,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { TwitchCommercialTimer } from 'speedcontrol-util/types';
+import { TwitchCommercialTimer } from 'speedcontrol-util/schemas';
 import { padTimeNumber } from '../../_misc/helpers';
 
 @Component

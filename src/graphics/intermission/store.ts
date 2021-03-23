@@ -2,12 +2,13 @@ import type { Bids, DonationReader, MediaBox, MusicData, Prizes, UpcomingRunID }
 import type { Asset, Tracker } from '@esamarathon/esa-layouts-shared/types';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import SpeedcontrolUtil from 'speedcontrol-util/browser';
-import { RunData, RunDataArray, TwitchCommercialTimer } from 'speedcontrol-util/types';
+import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
+import type { RunDataArray, TwitchCommercialTimer } from 'speedcontrol-util/schemas';
+import { RunData } from 'speedcontrol-util/types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
-const sc = new SpeedcontrolUtil(nodecg);
+const sc = new SpeedcontrolUtilBrowser(nodecg);
 Vue.use(Vuex);
 
 // Replicants and their types

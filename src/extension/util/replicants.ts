@@ -2,7 +2,7 @@
 
 import type { Bids, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationReader, DonationsToRead, DonationTotal, GameLayouts, MediaBox, MusicData, NameCycle, NotableDonations, ObsData, OtherStreamData, Prizes, StreamDeckData, TtsVoices, TwitchSubscribers, UpcomingRunID, VideoPlayer } from '@/types/schemas';
 import type { Asset } from '@esamarathon/esa-layouts-shared/types';
-import type { TwitchAPIData } from '../../../../nodecg-speedcontrol/schemas';
+import type { TwitchAPIData } from 'speedcontrol-util/schemas';
 import { get as nodecg } from './nodecg';
 
 /**

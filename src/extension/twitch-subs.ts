@@ -1,8 +1,8 @@
-import type { ExtensionReturn } from 'speedcontrol-util/types';
+import SpeedcontrolUtil from 'speedcontrol-util';
 import { get as nodecg } from './util/nodecg';
 import { twitchAPIData, twitchSubscribers } from './util/replicants';
 
-const { sendMessage } = nodecg().extensions['nodecg-speedcontrol'] as unknown as ExtensionReturn;
+const sc = new SpeedcontrolUtil(nodecg());
 const refreshTime = 60 * 1000; // Update every 60s.
 
 async function updateSubscriptionStats(): Promise<void> {
@@ -14,7 +14,7 @@ async function updateSubscriptionStats(): Promise<void> {
     let nextPage = true;
     while (nextPage) {
       const endpoint = `/subscriptions?broadcaster_id=${twitchAPIData.value.channelID}&first=100`;
-      const resp = await sendMessage('twitchAPIRequest', {
+      const resp = await sc.sendMessage('twitchAPIRequest', {
         method: 'get',
         endpoint: `${endpoint}${cursor ? `&after=${cursor}` : ''}`,
         data: null,

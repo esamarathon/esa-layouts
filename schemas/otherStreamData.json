@@ -8,10 +8,9 @@
       "default": false
     },
     "runData": {
-      "$comment": "This requires you have nodecg-speedcontrol installed too, but so do a lot of things!",
       "oneOf": [
         {
-          "$ref": "../../nodecg-speedcontrol/schemas/reused/RunData.json"
+          "$ref": "../node_modules/speedcontrol-util/schemas/reused/RunData.json"
         },
         {
           "type": "null"

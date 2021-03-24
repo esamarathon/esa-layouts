@@ -41,7 +41,6 @@ export = (nodecg: NodeCG): ExtensionReturn => {
   require('./text-to-speech');
   require('./twitch-ext');
   require('./music');
-  require('./obsn');
   // require('./twitch-subs');
 
   return {

@@ -45,6 +45,6 @@ export = (nodecg: NodeCG): ExtensionReturn => {
 
   return {
     obs: require('./util/obs').default,
-    setFaderName: require('./util/mixer').setFaderName,
+    setFaderName: require('./mixer').setFaderName,
   };
 };

@@ -24,15 +24,6 @@ jobs:
     - name: Copy ./nodecg-temp > ./nodecg
       run: cp -r ./nodecg-temp ./nodecg
 
-    # Checkout nodecg-speedcontrol (dev branch)
-    - name: Checkout speedcontrol/nodecg-speedcontrol#dev
-      uses: actions/checkout@v2
-      with:
-        token: ${{ secrets['GH_PAT'] }}
-        repository: speedcontrol/nodecg-speedcontrol
-        ref: dev
-        path: ./nodecg/bundles/nodecg-speedcontrol
-
     # Checkout nodecg-obsninja
     - name: Checkout esamarathon/nodecg-obsninja
       uses: actions/checkout@v2

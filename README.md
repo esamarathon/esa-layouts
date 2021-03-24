@@ -2,33 +2,24 @@
 
 > The on-screen graphics used during European Speedrunner Assembly's "marathon" events.
 
-*This is a bundle for [NodeCG](https://nodecg.com/); if you do not understand what that is, we advise you read their website first for more information.*
+*This is a bundle for [NodeCG](https://nodecg.dev); if you do not understand what that is, we advise you read their website first for more information.*
 
 ***This documentation isn't fully complete and may have errors, but intends to be as correct as possible.***
 
-This is a [NodeCG](https://nodecg.com) v1.7.4 bundle. You will need to have NodeCG v1.7.4 or above installed to run it. It also requires you to install the [nodecg-speedcontrol](https://github.com/speedcontrol/nodecg-speedcontrol) bundle (of which you may also need to use the `dev` branch).
+This is a [NodeCG](https://nodecg.dev) v1.8.1 bundle. You will need to have NodeCG v1.8.1 or above installed to run it. It also requires you to install the [nodecg-speedcontrol](https://github.com/speedcontrol/nodecg-speedcontrol) bundle (of which you may also need to install the latest changes instead of the most stable release).
 
 ## Installation
 
-You will need [Node.js](https://nodejs.org) (14.x LTS tested) and [git](https://git-scm.com/) installed to install NodeCG, then see the [NodeCG documentation](https://www.nodecg.dev/docs/installing) on how to install that. I also suggest installing `nodecg-cli`; information on that is also on the documentation just linked. You may also need to install the appropriate build tools for whichever platform you are running on; for example if you are on Windows you can either install it while installing Node.js, or using [windows-build-tools](https://github.com/felixrieseberg/windows-build-tools).
+You will need [Node.js](https://nodejs.org) (14.x LTS tested) and [git](https://git-scm.com/) installed to install NodeCG, then see the [NodeCG documentation](https://www.nodecg.dev/docs/installing) on how to install that. I also suggest installing `nodecg-cli`; information on that is also on the documentation just linked (**the guide below will assume you have done this!**). You may also need to install the appropriate build tools for whichever platform you are running on; for example if you are on Windows you can either install it while installing Node.js, or using [windows-build-tools](https://github.com/felixrieseberg/windows-build-tools).
 
-Next, clone this repository into your NodeCG `bundle` directory, then install the NPM dependencies and run the build command:
-```
-git clone https://github.com/esamarathon/esa-layouts.git
-cd esa-layouts
-npm install
-npm run build
-```
+Next, install the `build` branch of this bundle by doing:
+> `nodecg install esamarathon/esa-layouts#build`
 
-You will probably also want a default configuration you can fill in, which if you installed `nodecg-cli` can be created using `nodecg defaultconfig`.
+You will probably also want a default configuration you can fill in, which can be created using:
+> `nodecg defaultconfig`.
 
-If you need the `dev` branch of [nodecg-speedcontrol](https://github.com/speedcontrol/nodecg-speedcontrol), it's similar to above:
-```
-git clone --branch dev https://github.com/speedcontrol/nodecg-speedcontrol.git
-cd nodecg-speedcontrol
-npm install
-npm run build
-```
+Then, install the `build` branch of [nodecg-speedcontrol](https://github.com/speedcontrol/nodecg-speedcontrol) by doing:
+> `nodecg install esamarathon/esa-layouts#build`
 
 ## Usage
 
@@ -76,6 +67,8 @@ This bundle no longer handles using this (if it was needed), this is now done by
 
 Here's a list of events this bundle has been used at so far, most recent first.
 
+* ESA Winter 2021
+* UKSG Winter 2021
 * UKSG Autumn 2020
 * ESA Summer 2020
 * UKSG Summer 2020

@@ -257,7 +257,7 @@
     ],
     "mount": [
       {
-        "directory": "node_modules/esa-layouts-shared/flags",
+        "directory": "node_modules/@esamarathon/esa-layouts-shared/flags",
         "endpoint": "flags"
       }
     ],

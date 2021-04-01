@@ -91,6 +91,7 @@ const config = (name) => {
       filename: 'js/[name].js',
     },
     resolve: {
+      symlinks: false, // Helps with npm linked modules in development
       extensions: ['.js', '.ts', '.tsx', '.json'],
       alias: {
         vue: 'vue/dist/vue.esm.js',

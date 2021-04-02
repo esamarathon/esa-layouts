@@ -11,7 +11,7 @@ export interface Configschema {
 		theme?: string;
 		shorts: string | [string] | [string, string];
 		thisEvent: number;
-		online: boolean;
+		online: boolean | ('partial' | 'full');
 	};
 	streamdeck: {
 		enable: boolean;

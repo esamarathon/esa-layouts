@@ -59,8 +59,20 @@
           "default": 1
         },
         "online": {
-          "type": "boolean",
           "$comment": "If this event is ran online and has no on-site presence.",
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$comment": "If set to 'partial', will only do basic changes.",
+              "type": "string",
+              "enum": [
+                "partial",
+                "full"
+              ]
+            }
+          ],
           "default": false
         }
       },

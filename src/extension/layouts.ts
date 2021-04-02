@@ -9,6 +9,7 @@ import obs from './util/obs';
 import { capturePositions, currentRunDelay, delayedTimer, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
 
 const cfg = nodecg().bundleConfig as Configschema;
+const evtConfig = (nodecg().bundleConfig as Configschema).event;
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 const sc = new SpeedcontrolUtil(nodecg());
 const countdown = new Countdown(nodecg()); // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -116,7 +117,7 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
 });
 
 capturePositions.on('change', async (val) => {
-  if (!val || !val['game-layout']) {
+  if ((evtConfig.online && evtConfig.online === 'partial') || !val || !val['game-layout']) {
     return;
   }
   for (const key of Object.keys(obsSourceKeys)) {

@@ -239,10 +239,12 @@ nodecg().listenFor('obsChangeScene', async (name: string) => {
       const delay = currentRunDelay.value.audio;
       obsData.value.disableTransitioning = true;
       obsData.value.transitionTimestamp = Date.now() + delay;
-      if (cfg.obsn.buffer <= 0) {
-        toggleLiveMics(name);
-      } else {
-        setTimeout(() => { toggleLiveMics(name); }, cfg.obsn.buffer);
+      if (cfg.obsn.enable && cfg.x32.enable && cfg.event.online !== 'partial') {
+        if (cfg.obsn.buffer <= 0) {
+          toggleLiveMics(name);
+        } else {
+          setTimeout(() => { toggleLiveMics(name); }, cfg.obsn.buffer);
+        }
       }
       setTimeout(async () => {
         try {

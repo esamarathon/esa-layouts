@@ -5,21 +5,20 @@ import obs from './util/obs';
 import { currentRunDelay, obsData } from './util/replicants';
 import x32 from './util/x32';
 
-const obsConfig = (nodecg().bundleConfig as Configschema).obs;
-const config = (nodecg().bundleConfig as Configschema).x32;
+const config = (nodecg().bundleConfig as Configschema);
 
 function getNonGameScenes(): string[] {
   // These scenes will *not* have "LIVE Game/Mics" DCAs audible.
   return [
-    obs.findScene(obsConfig.names.scenes.commercials),
-    obs.findScene(obsConfig.names.scenes.intermission),
-    obs.findScene(obsConfig.names.scenes.videoPlayer),
-    obs.findScene(obsConfig.names.scenes.countdown),
+    obs.findScene(config.obs.names.scenes.commercials),
+    obs.findScene(config.obs.names.scenes.intermission),
+    obs.findScene(config.obs.names.scenes.videoPlayer),
+    obs.findScene(config.obs.names.scenes.countdown),
   ].filter(Boolean) as string[];
 }
 
 export function setFaderName(fader: string, name: string): void {
-  if (config.enable) {
+  if (config.x32.enable) {
     x32.conn?.send({
       address: `${fader}/config/name`,
       args: [{ type: 's', value: name }],
@@ -73,12 +72,12 @@ export function toggleLiveMics(scene: string): void {
   }
 }
 
-if (config.enable) {
+if (config.x32.enable && config.event.online !== 'partial') {
   obs.conn.on('TransitionBegin', async (data) => {
     const nonGameScenes = getNonGameScenes(); // These scenes will *not* have "LIVE" DCAs audible.
     const intermissionScenes = [ // These scenes *will* have "Intrmsn Mics" DCA audible.
-      obs.findScene(obsConfig.names.scenes.commercials),
-      obs.findScene(obsConfig.names.scenes.intermission),
+      obs.findScene(config.obs.names.scenes.commercials),
+      obs.findScene(config.obs.names.scenes.intermission),
     ];
     toggleFadeHelper('/dca/1/fader', nonGameScenes, data);
     if (currentRunDelay.value.audio > 0) {

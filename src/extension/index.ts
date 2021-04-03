@@ -4,12 +4,12 @@
 // This must go first so we can use module aliases!
 /* eslint-disable import/first */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-require('module-alias').addAlias('@', require('path').join(__dirname, '.'));
+require('module-alias').addAlias('@esa-layouts', require('path').join(__dirname, '.'));
 
-import { ExtensionReturn } from '@/types';
-import type { Configschema } from '@/types/schemas/configschema';
-import { set } from '@/util/nodecg';
+import { ExtensionReturn } from '@esa-layouts/types';
+import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import type { NodeCG } from 'nodecg/types/server';
+import { set } from './util/nodecg';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export = (nodecg: NodeCG): ExtensionReturn => {

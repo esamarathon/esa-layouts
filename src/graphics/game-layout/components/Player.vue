@@ -147,7 +147,7 @@
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'; // eslint-disable-line object-curly-newline, max-len
 import { State } from 'vuex-class';
 import fitty, { FittyInstance } from 'fitty';
-import { NameCycle } from '@/types/schemas';
+import { NameCycle } from '@esa-layouts/types/schemas';
 import { RunDataActiveRun, RunDataTeam, RunDataPlayer } from 'speedcontrol-util/types';
 import { formatPronouns } from '../../_misc/helpers';
 

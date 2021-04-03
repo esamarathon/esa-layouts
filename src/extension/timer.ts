@@ -1,4 +1,4 @@
-import type { Configschema } from '@/types/schemas/configschema';
+import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { logTimerChange } from './util/logging';
 import { get as nodecg } from './util/nodecg';

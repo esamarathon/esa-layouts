@@ -1,4 +1,4 @@
-import type { Configschema } from '@/types/schemas/configschema';
+import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import Countdown from '@esamarathon/esa-layouts-shared/countdown/extension';
 import clone from 'clone';
 import SpeedcontrolUtil from 'speedcontrol-util';

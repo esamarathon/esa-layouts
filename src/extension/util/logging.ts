@@ -1,5 +1,5 @@
-import type { MediaBox } from '@/types/schemas';
-import type { Configschema } from '@/types/schemas/configschema';
+import type { MediaBox } from '@esa-layouts/types/schemas';
+import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import type { NodeCG as mqTypes } from '@esamarathon/mq-events/types';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';

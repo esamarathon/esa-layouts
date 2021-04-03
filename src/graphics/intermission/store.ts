@@ -1,4 +1,4 @@
-import type { Bids, DonationReader, MediaBox, MusicData, Prizes, UpcomingRunID } from '@/types/schemas'; // eslint-disable-line object-curly-newline, max-len
+import type { Bids, DonationReader, MediaBox, MusicData, Prizes, UpcomingRunID } from '@esa-layouts/types/schemas'; // eslint-disable-line object-curly-newline, max-len
 import type { Asset, Tracker } from '@esamarathon/esa-layouts-shared/types';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';

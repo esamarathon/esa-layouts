@@ -43,8 +43,8 @@ import { Vue, Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { State2Way } from 'vuex-class-state2way';
 import goTo from 'vuetify/es5/services/goto';
-import { TtsVoices } from '@/types/schemas';
-import { Configschema } from '@/types/schemas/configschema';
+import { TtsVoices } from '@esa-layouts/types/schemas';
+import { Configschema } from '@esa-layouts/types/schemas/configschema';
 
 @Component
 export default class extends Vue {

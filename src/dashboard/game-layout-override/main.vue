@@ -39,7 +39,7 @@ import { Vue, Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { State2Way } from 'vuex-class-state2way';
 import goTo from 'vuetify/es5/services/goto';
-import { GameLayouts } from '@/types/schemas';
+import { GameLayouts } from '@esa-layouts/types/schemas';
 
 @Component
 export default class extends Vue {

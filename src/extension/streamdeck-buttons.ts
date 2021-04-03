@@ -1,4 +1,4 @@
-import type { Configschema } from '@/types/schemas/configschema';
+import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { speak } from './text-to-speech';
 import { markDonationAsRead } from './tracker-donations';

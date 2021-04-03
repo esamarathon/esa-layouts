@@ -19,7 +19,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { DonationsToRead } from '@/types/schemas';
+import { DonationsToRead } from '@esa-layouts/types/schemas';
 import Donation from './components/Donation.vue';
 
 @Component({

@@ -1,4 +1,4 @@
-import type { Configschema } from '@/types/schemas/configschema';
+import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import OBS from '@esamarathon/esa-layouts-shared/obs/extension';
 import { get as nodecg } from './nodecg';
 

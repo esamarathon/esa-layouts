@@ -1,6 +1,6 @@
 /* eslint no-new: off, @typescript-eslint/explicit-function-return-type: off */
 
-import { UpcomingRunID } from '@/types/schemas';
+import { UpcomingRunID } from '@esa-layouts/types/schemas';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';
 import Vue from 'vue';

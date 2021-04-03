@@ -1,4 +1,4 @@
-import type { Configschema } from '@/types/schemas/configschema';
+import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 
 const config = nodecg.bundleConfig as Configschema;
 

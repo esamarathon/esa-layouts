@@ -1,4 +1,4 @@
-import type { Configschema } from '@/types/schemas/configschema';
+import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import RabbitMQ from '@esamarathon/esa-layouts-shared/rabbitmq/extension';
 import { getCurrentEventShort } from './helpers';
 import { get as nodecg } from './nodecg';

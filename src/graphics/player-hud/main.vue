@@ -28,7 +28,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { StreamDeckData, DonationsToRead } from '@/types/schemas';
+import { StreamDeckData, DonationsToRead } from '@esa-layouts/types/schemas';
 
 @Component
 export default class extends Vue {

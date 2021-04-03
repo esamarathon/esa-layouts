@@ -1,5 +1,5 @@
 import clone from 'clone';
-import type { Configschema } from '@/types/schemas/configschema';
+import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import { logSceneSwitch, logStreamingStatusChange } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';

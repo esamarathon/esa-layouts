@@ -75,7 +75,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
-import { VideoPlayer } from '@/types/schemas';
+import { VideoPlayer } from '@esa-layouts/types/schemas';
 import { Asset } from '@esamarathon/esa-layouts-shared/types';
 import { PlaylistAdd } from '../store';
 

@@ -12,7 +12,7 @@
 import { Route } from 'vue-router';
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
-import { GameLayouts } from '@/types/schemas';
+import { GameLayouts } from '@esa-layouts/types/schemas';
 import { generateClipPath } from '../_misc/cut-background';
 import { ClearList, UpdateList, UpdateSelected } from './store';
 import { defaultCode } from './list';

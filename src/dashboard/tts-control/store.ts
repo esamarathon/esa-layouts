@@ -1,4 +1,4 @@
-import type { TtsVoices } from '@/types/schemas';
+import type { TtsVoices } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import Vue from 'vue';

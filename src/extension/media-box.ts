@@ -1,4 +1,4 @@
-import type { Configschema } from '@/types/schemas/configschema';
+import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import MediaBox from '@esamarathon/esa-layouts-shared/mediabox/extension';
 import { logSponsorLogoChange } from './util/logging';
 import { get as nodecg } from './util/nodecg';

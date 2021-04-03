@@ -1,4 +1,4 @@
-import { Configschema } from '@/types/schemas/configschema';
+import { Configschema } from '@esa-layouts/types/schemas/configschema';
 import Music from '@esamarathon/esa-layouts-shared/music/extension';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';

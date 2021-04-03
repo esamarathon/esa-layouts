@@ -1,4 +1,4 @@
-import type { Configschema } from '@/types/schemas/configschema';
+import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import type { Tracker } from '@esamarathon/esa-layouts-shared/types';
 import needle from 'needle';
 import { eventInfo, getCookies } from './tracker';

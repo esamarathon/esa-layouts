@@ -1,4 +1,4 @@
-import type { UpcomingRunID } from '@/types/schemas';
+import type { UpcomingRunID } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';

@@ -31,7 +31,7 @@
 import { Vue, Component, Watch, Prop } from 'vue-property-decorator'; // eslint-disable-line object-curly-newline, max-len
 import { State } from 'vuex-class';
 import { Timer } from 'speedcontrol-util/types';
-import { CurrentRunDelay, DelayedTimer } from '@/types/schemas';
+import { CurrentRunDelay, DelayedTimer } from '@esa-layouts/types/schemas';
 import { msToTimeStr } from '../../_misc/helpers';
 
 @Component

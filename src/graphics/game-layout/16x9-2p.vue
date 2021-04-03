@@ -161,7 +161,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import { Configschema } from '@/types/schemas/configschema';
+import { Configschema } from '@esa-layouts/types/schemas/configschema';
 import { State } from 'vuex-class';
 import { RunDataActiveRun } from 'speedcontrol-util/types';
 import MediaBox from '@esamarathon/esa-layouts-shared/mediabox/graphics';

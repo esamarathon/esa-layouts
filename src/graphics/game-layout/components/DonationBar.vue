@@ -20,7 +20,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { NotableDonations } from '@/types/schemas';
+import { NotableDonations } from '@esa-layouts/types/schemas';
 import DonationBox from './DonationBar/DonationBox.vue';
 
 @Component({

@@ -3,17 +3,19 @@
     <div
       class="Flex"
       :style="{
-        width: '150px',
-        height: '100%',
+        width: '90px',
+        height: '80px',
         position: 'relative',
-        padding: '0 10px 0 10px'
+        padding: '0 10px 0 10px',
+        overflow: 'hidden'
       }"
     >
       <img
-        src="../alzheimerfonden_logo.png"
+        src="../crisis_logo.png"
         :style="{
           position: 'absolute',
-          width: '150px',
+          height: '70px',
+          'object-fit': 'contain',
           opacity: alertList.length ? 0.3 : 1,
           transition: 'opacity 0.5s',
         }"
@@ -30,11 +32,11 @@
           >
             <img
               src="../RetroCoin.png"
-              :style="{ height: '50px', 'image-rendering': 'pixelated', 'margin-right': '5px' }"
+              :style="{ height: '30px', 'image-rendering': 'pixelated', 'margin-right': '2px' }"
             >
             <span
               :style="{
-                'font-size': '28px',
+                'font-size': '20px',
                 color: '#7FFF00',
                 'font-weight': 600,
                 'background-color': 'rgba(0,0,0,0.6)',
@@ -153,7 +155,7 @@ export default {
 
 <style scoped>
   #Total {
-    padding: 0 13px 0 0;
+    padding: 0 20px 0 0;
     font-size: 40px;
     font-weight: 500;
     min-width: 50px;

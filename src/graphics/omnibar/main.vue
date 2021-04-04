@@ -4,7 +4,7 @@
     class="Flex"
   >
     <img
-      src="./winter_logo.png"
+      src="./uksg_spring_logo.png"
       :style="{ padding: '0 10px' }"
     >
     <divider/>

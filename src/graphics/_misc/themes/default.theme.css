@@ -40,6 +40,10 @@ body {
   background-color: #2d1d3c;
 }
 
+.CommAndReader .Pronouns {
+  background-color: #4b3163;
+}
+
 .Player .Icon {
   filter: invert(1);
 }

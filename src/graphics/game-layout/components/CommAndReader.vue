@@ -38,7 +38,6 @@
               :style="{
                 padding: '1px 3px',
                 'margin-left': '4px',
-                'background-color': '#4b3163',
               }"
             >{{ pronouns }}</span><span
               v-if="i < comms.length - 1"
@@ -82,7 +81,6 @@
             :style="{
               padding: '1px 3px',
               'margin-left': '2px',
-              'background-color': '#4b3163',
             }"
           >
             {{ reader.pronouns }}

@@ -11,7 +11,6 @@ import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import type { NodeCG } from 'nodecg/types/server';
 import { set } from './util/nodecg';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export = (nodecg: NodeCG): ExtensionReturn => {
   set(nodecg);
 
@@ -45,7 +44,7 @@ export = (nodecg: NodeCG): ExtensionReturn => {
 
   return {
     obs: require('./util/obs').default,
-    setFaderName: require('./mixer').setFaderName,
+    mixer: require('./mixer'),
     config: nodecg.bundleConfig,
   };
 };

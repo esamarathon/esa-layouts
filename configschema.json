@@ -419,24 +419,6 @@
         "enable",
         "token"
       ]
-    },
-    "obsn": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "enable": {
-          "type": "boolean",
-          "default": true
-        },
-        "buffer": {
-          "type": "number",
-          "default": 0
-        }
-      },
-      "required": [
-        "enable",
-        "buffer"
-      ]
     }
   },
   "required": [
@@ -450,7 +432,6 @@
     "x32",
     "tracker",
     "tts",
-    "twitchExt",
-    "obsn"
+    "twitchExt"
   ]
 }

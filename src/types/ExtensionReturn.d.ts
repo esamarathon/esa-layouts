@@ -3,6 +3,9 @@ import { Configschema } from './schemas';
 
 export interface ExtensionReturn {
   obs: OBS;
-  setFaderName: (fader: string, name: string) => void;
+  mixer: {
+    setFaderName: (fader: string, name: string) => void;
+    toggleLiveMics: (scene: string) => void;
+  };
   config: Configschema;
 }

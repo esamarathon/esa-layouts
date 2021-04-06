@@ -2,13 +2,11 @@ import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import Countdown from '@esamarathon/esa-layouts-shared/countdown/extension';
 import clone from 'clone';
 import SpeedcontrolUtil from 'speedcontrol-util';
-import { toggleLiveMics } from './mixer';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { capturePositions, currentRunDelay, delayedTimer, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
+import { capturePositions, currentRunDelay, delayedTimer, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants';
 
-const cfg = nodecg().bundleConfig as Configschema;
 const evtConfig = (nodecg().bundleConfig as Configschema).event;
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 const sc = new SpeedcontrolUtil(nodecg());
@@ -239,13 +237,7 @@ nodecg().listenFor('obsChangeScene', async (name: string) => {
       const delay = currentRunDelay.value.audio;
       obsData.value.disableTransitioning = true;
       obsData.value.transitionTimestamp = Date.now() + delay;
-      if (cfg.obsn.enable && cfg.x32.enable && cfg.event.online !== 'partial') {
-        if (cfg.obsn.buffer <= 0) {
-          toggleLiveMics(name);
-        } else {
-          setTimeout(() => { toggleLiveMics(name); }, cfg.obsn.buffer);
-        }
-      }
+      nodecg().sendMessage('obsTransitionQueued', name); // Simple server-to-server message we need.
       setTimeout(async () => {
         try {
           await obs.changeScene(name);

@@ -142,8 +142,9 @@ async function loginToTracker(): Promise<void> {
     nodecg().log.debug('[Tracker] Error authenticating:', err);
     if (!isFirstLogin) {
       setTimeout(loginToTracker, 60 * 1000);
+    } else {
+      throw new Error('Could not log in successfully');
     }
-    throw new Error('Could not log in successfully');
   }
 }
 

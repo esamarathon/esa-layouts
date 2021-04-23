@@ -8,6 +8,13 @@
 </template>
 
 <script>
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 export default {
   name: 'Clock',
   data() {
@@ -21,8 +28,7 @@ export default {
   },
   methods: {
     setTime() {
-      const today = new Date();
-      this.time = `${this.pad(today.getHours())}:${this.pad(today.getMinutes())}`;
+      this.time = dayjs().tz('Europe/London').format('HH:mm');
     },
     pad(num) {
       return num.toString().padStart(2, '0');

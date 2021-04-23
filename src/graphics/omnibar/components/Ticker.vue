@@ -76,7 +76,7 @@ export default {
         this.teamPromo(),
         this.donationURL(),
         // this.esaUpcomingEvt(),
-        // this.esaBtRL(),
+        this.esaBtRL(),
         // this.merch(),
         // this.ticket(),
         // this.twitchCharity(),
@@ -154,7 +154,7 @@ export default {
       return this.genericMsg('Can\'t get enough of speedrunning? Then look forward to ESA Winter 2021: 13th - 21st February');
     },
     esaBtRL() {
-      return this.genericMsg('ESA Break the Record: LIVE - Sonic Adventure DX, 30th Oct - 1st Nov! - breaktherecordlive.com');
+      return this.genericMsg('ESA Break the Record: LIVE - Minecraft, 30th April - 2nd May! - breaktherecordlive.com');
     },
     crowdControl(exchange) {
       const line1 = 'Crowd Control';

@@ -75,6 +75,7 @@ const config = (name) => {
       new CopyPlugin({
         patterns: [
           { from: './host-dashboard.*', to: './' },
+          { from: './*.png', to: './js/img', context: '../../node_modules/@esamarathon/esa-layouts-shared/mediabox/graphics/dist/img' },
         ],
       }),
     );

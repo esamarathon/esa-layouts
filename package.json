@@ -40,7 +40,7 @@
     "speedcontrol-util": "^0.6.0-RC2",
     "streamdeck-util": "^0.3.3",
     "uuid": "^8.3.2",
-    "ws": "^7.4.3"
+    "ws": "^7.4.6"
   },
   "devDependencies": {
     "@esamarathon/mq-events": "git+https://git@github.com/esamarathon/mq-events.git#fa96a895d22367928fcb80fe800049669dfe3135",

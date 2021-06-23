@@ -75,8 +75,8 @@ export default {
         this.bid(),
         this.teamPromo(),
         this.donationURL(),
-        // this.esaUpcomingEvt(),
-        this.esaBtRL(),
+        this.esaUpcomingEvt(),
+        // this.esaBtRL(),
         // this.merch(),
         // this.ticket(),
         // this.twitchCharity(),
@@ -110,10 +110,11 @@ export default {
       this.timestamp = Date.now();
     },
     esaPromo() {
-      return this.genericMsg('This is United Kingdom Speedrunner Gathering Spring 2021');
+      return this.genericMsg('This is United Kingdom Speedrunner Gathering Summer 2021');
     },
     charityPromo() {
-      return this.genericMsg('#UKSGSpring2021 benefits Crisis');
+      // If this UKSG hashtag is wrong then I blame them this time as this is the one on Twitter.
+      return this.genericMsg('#UKSGSummer21 benefits Crisis');
     },
     otherStreamPromo() {
       return this.genericMsg(`Watch more great runs over @ twitch.tv/${this.otherChannel}`);
@@ -151,7 +152,7 @@ export default {
       return this.genericMsg('Subscribe or cheer to support the charity');
     },
     esaUpcomingEvt() {
-      return this.genericMsg('Can\'t get enough of speedrunning? Then look forward to ESA Winter 2021: 13th - 21st February');
+      return this.genericMsg('Can\'t get enough of speedrunning? Then look forward to ESA Summer 2021: 24th - 31st July');
     },
     esaBtRL() {
       return this.genericMsg('ESA Break the Record: LIVE - Minecraft, 30th April - 2nd May! - breaktherecordlive.com');

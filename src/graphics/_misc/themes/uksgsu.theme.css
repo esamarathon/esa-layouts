@@ -1,3 +1,8 @@
 #Intermission .Logo > img {
   content: url('./uksgsu/IntermissionLogo.png');
 }
+
+#Countdown .Logo {
+  content: url('./uksgsu/CountdownLogo.png');
+  height: 400px;
+}

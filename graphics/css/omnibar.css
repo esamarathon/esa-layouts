@@ -358,14 +358,14 @@ Stuff not in this file (yet):
 }
 
 
-#Ticker[data-v-6e5b0401] {
+#Ticker[data-v-e639205a] {
   height: 100%;
   flex: 1;
 }
-.fade-enter-active[data-v-6e5b0401], .fade-leave-active[data-v-6e5b0401] {
+.fade-enter-active[data-v-e639205a], .fade-leave-active[data-v-e639205a] {
   transition: opacity .5s;
 }
-.fade-enter[data-v-6e5b0401], .fade-leave-to[data-v-6e5b0401] /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter[data-v-e639205a], .fade-leave-to[data-v-e639205a] /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
 

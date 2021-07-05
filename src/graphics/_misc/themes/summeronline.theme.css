@@ -1,8 +1,0 @@
-#Intermission .Logo > img {
-  content: url('./summeronline/IntermissionLogo.png');
-}
-
-#Countdown .Logo {
-  content: url('./summeronline/CountdownLogo.svg');
-  height: 500px;
-}

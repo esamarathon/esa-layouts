@@ -126,3 +126,16 @@ body {
 #Intermission .CommercialTimer {
   background-color: rgba(0, 0, 0, 0.3);
 }
+
+#Omnibar {
+  background-color: #41245b;
+}
+
+#Omnibar #Logo {
+  content: url('./default/OmnibarLogo.png');
+  padding: 0 10px;
+}
+
+#Omnibar .Divider {
+  background-color: #fff073;
+}

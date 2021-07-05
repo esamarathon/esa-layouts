@@ -75,7 +75,7 @@ export default {
         this.bid(),
         this.teamPromo(),
         this.donationURL(),
-        this.esaUpcomingEvt(),
+        // this.esaUpcomingEvt(),
         // this.esaBtRL(),
         // this.merch(),
         // this.ticket(),
@@ -110,11 +110,10 @@ export default {
       this.timestamp = Date.now();
     },
     esaPromo() {
-      return this.genericMsg('This is United Kingdom Speedrunner Gathering Summer 2021');
+      return this.genericMsg('This is European Speedrunner Assembly Summer 2021');
     },
     charityPromo() {
-      // If this UKSG hashtag is wrong then I blame them this time as this is the one on Twitter.
-      return this.genericMsg('#UKSGSummer21 benefits Crisis');
+      return this.genericMsg('#ESASummer21 benefits Save the Children');
     },
     otherStreamPromo() {
       return this.genericMsg(`Watch more great runs over @ twitch.tv/${this.otherChannel}`);

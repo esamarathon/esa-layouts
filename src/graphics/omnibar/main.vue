@@ -1,12 +1,6 @@
 <template>
-  <div
-    id="Omnibar"
-    class="Flex"
-  >
-    <img
-      src="./uksg_summer_logo.png"
-      :style="{ padding: '0 10px' }"
-    >
+  <div id="Omnibar" class="Flex">
+    <img id="Logo">
     <divider/>
     <total/>
     <divider/>
@@ -20,7 +14,7 @@
 
 <script>
 import Total from './components/Total.vue';
-import SubGoalMet from './components/SubGoalMet.vue';
+// import SubGoalMet from './components/SubGoalMet.vue';
 import Ticker from './components/Ticker.vue';
 import Clock from './components/Clock.vue';
 import Divider from './components/Divider.vue';
@@ -29,7 +23,7 @@ export default {
   name: 'Omnibar',
   components: {
     Total,
-    SubGoalMet,
+    // SubGoalMet,
     Ticker,
     Clock,
     Divider,

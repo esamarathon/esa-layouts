@@ -6,3 +6,8 @@
   content: url('./uksgsp/CountdownLogo.png');
   height: 400px;
 }
+
+#Omnibar #Logo {
+  content: url('./uksgsp/OmnibarLogo.png');
+  padding: 0 10px;
+}

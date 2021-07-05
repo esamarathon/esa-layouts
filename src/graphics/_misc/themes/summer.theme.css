@@ -6,3 +6,8 @@
   content: url('./summer/CountdownLogo.svg');
   height: 500px;
 }
+
+#Omnibar #Logo {
+  content: url('./summer/OmnibarLogo.png');
+  padding: 0 10px;
+}

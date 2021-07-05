@@ -3,10 +3,7 @@
     id="Omnibar"
     class="Flex"
   >
-    <img
-      src="./uksg_summer_logo.png"
-      :style="{ padding: '0 10px' }"
-    >
+    <img id="Logo">
     <divider/>
     <total/>
     <divider/>

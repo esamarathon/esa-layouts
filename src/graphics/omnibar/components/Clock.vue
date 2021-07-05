@@ -28,7 +28,10 @@ export default {
   },
   methods: {
     setTime() {
-      this.time = dayjs().tz('Europe/London').format('HH:mm');
+      const zone = nodecg.bundleConfig.event.theme.startsWith('uksg')
+        ? 'Europe/London'
+        : 'Europe/Stockholm';
+      this.time = dayjs().tz(zone).format('HH:mm');
     },
     pad(num) {
       return num.toString().padStart(2, '0');

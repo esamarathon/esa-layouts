@@ -220,13 +220,11 @@ Stuff not in this file (yet):
 }
 
 #Omnibar {
-  /* background-color: #41245b; */ /* ESA */
-  background-color: #011961; /* UKSG */
   color: white;
 }
 
 
-#Total[data-v-3f2b1f56] {
+#Total[data-v-3fbded43] {
   padding: 0 20px 0 0;
   font-size: 40px;
   font-weight: 500;
@@ -235,30 +233,22 @@ Stuff not in this file (yet):
 }
 
 /* Each character in the total is in a span; setting width so the numbers appear monospaced. */
-#Total > span[data-v-3f2b1f56] {
+#Total > span[data-v-3fbded43] {
   display: inline-block;
   width: 0.45em;
   text-align: center;
 }
-#Total > .Comma[data-v-3f2b1f56] {
+#Total > .Comma[data-v-3fbded43] {
   display: inline-block;
   width: 0.22em;
   text-align: center;
 }
-.fade-enter-active[data-v-3f2b1f56], .fade-leave-active[data-v-3f2b1f56] {
+.fade-enter-active[data-v-3fbded43], .fade-leave-active[data-v-3fbded43] {
   transition: opacity 0.5s ease;
 }
-.fade-enter[data-v-3f2b1f56], .fade-leave-to[data-v-3f2b1f56]
+.fade-enter[data-v-3fbded43], .fade-leave-to[data-v-3fbded43]
 /* .component-fade-leave-active below version 2.1.8 */ {
   opacity: 0;
-}
-
-
-#SubGoalMet[data-v-74b0a7d3] {
-  font-weight: 500;
-  width: 120px;
-  text-align: center;
-  flex-direction: column;
 }
 
 
@@ -358,30 +348,28 @@ Stuff not in this file (yet):
 }
 
 
-#Ticker[data-v-e639205a] {
+#Ticker[data-v-6c29a503] {
   height: 100%;
   flex: 1;
 }
-.fade-enter-active[data-v-e639205a], .fade-leave-active[data-v-e639205a] {
+.fade-enter-active[data-v-6c29a503], .fade-leave-active[data-v-6c29a503] {
   transition: opacity .5s;
 }
-.fade-enter[data-v-e639205a], .fade-leave-to[data-v-e639205a] /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter[data-v-6c29a503], .fade-leave-to[data-v-6c29a503] /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
 
 
-#Clock[data-v-54d65ed2] {
+#Clock[data-v-661ed9cd] {
   font-size: 35px;
   width: 90px;
 }
 
 
-.Divider[data-v-7620afd6] {
+.Divider[data-v-7e4ffb0a] {
   height: 100%;
   width: 3px;
   min-width: 3px;
-  /* background-color: #fff073; */ /* ESA */
-  background-color: #4d83aa; /* UKSG */
 }
 
 

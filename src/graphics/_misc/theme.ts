@@ -11,7 +11,7 @@ const { default: uksgsp } = require('./themes/uksgsp.theme.css');
 const { default: uksgsu } = require('./themes/uksgsu.theme.css');
 const { default: uksga } = require('./themes/uksga.theme.css');
 const { default: uksgw } = require('./themes/uksgw.theme.css');
-const { default: summeronline } = require('./themes/summeronline.theme.css');
+const { default: summer } = require('./themes/summer.theme.css');
 const { default: winter } = require('./themes/winter.theme.css');
 
 defaultTheme.use();
@@ -39,8 +39,8 @@ switch (theme) {
     uksg.use();
     uksgw.use();
     break;
-  case 'summeronline':
-    summeronline.use();
+  case 'summer':
+    summer.use();
     break;
   case 'winter':
     winter.use();

@@ -1,8 +1,5 @@
 <template>
-  <div
-    id="Omnibar"
-    class="Flex"
-  >
+  <div id="Omnibar" class="Flex">
     <img id="Logo">
     <divider/>
     <total/>
@@ -17,7 +14,7 @@
 
 <script>
 import Total from './components/Total.vue';
-import SubGoalMet from './components/SubGoalMet.vue';
+// import SubGoalMet from './components/SubGoalMet.vue';
 import Ticker from './components/Ticker.vue';
 import Clock from './components/Clock.vue';
 import Divider from './components/Divider.vue';
@@ -26,7 +23,7 @@ export default {
   name: 'Omnibar',
   components: {
     Total,
-    SubGoalMet,
+    // SubGoalMet,
     Ticker,
     Clock,
     Divider,

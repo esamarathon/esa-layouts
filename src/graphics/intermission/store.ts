@@ -3,8 +3,8 @@ import type { Asset, Tracker } from '@esamarathon/esa-layouts-shared/types';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
-import type { RunDataArray, TwitchCommercialTimer } from 'speedcontrol-util/schemas';
 import { RunData } from 'speedcontrol-util/types';
+import type { RunDataArray, TwitchCommercialTimer } from 'speedcontrol-util/types/speedcontrol/schemas';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 

@@ -106,7 +106,7 @@
   "nodecg": {
     "compatibleRange": "^1.8.1",
     "bundleDependencies": {
-      "nodecg-speedcontrol": "^2.2.0"
+      "nodecg-speedcontrol": "^2.3.0"
     },
     "dashboardPanels": [
       {

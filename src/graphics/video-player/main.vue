@@ -29,12 +29,12 @@ export default class extends Vue {
   @Mutation clearPlaylist!: ClearPlaylist;
   @Ref('VideoPlayer') player!: HTMLVideoElement;
   @Ref('VideoPlayerSrc') playerSrc!: HTMLSourceElement;
-  playlist: string[] = [];
+  playlist: VideoPlayer['playlist'] = [];
   video: Asset | null = null;
   index = 0;
 
   async playNextVideo(): Promise<void> {
-    const video = this.videos.find((v) => v.sum === this.playlist[this.index]);
+    const video = this.videos.find((v) => v.sum === this.playlist[this.index].sum);
     if (video) {
       this.video = video;
       this.playerSrc.src = video.url;

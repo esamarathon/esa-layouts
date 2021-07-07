@@ -7,7 +7,7 @@ import { logRunChange, logVideoPlay } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
-import { assetsVideos, commentators, donationReader, otherStreamData, videoPlayer } from './util/replicants'; // eslint-disable-line object-curly-newline, max-len
+import { assetsVideos, commentators, donationReader, otherStreamData, videoPlayer } from './util/replicants';
 
 const config = (nodecg().bundleConfig as Configschema);
 const sc = new SpeedcontrolUtil(nodecg());
@@ -143,7 +143,8 @@ sc.on('timerStopped', () => {
       .map((n) => assetsVideos.value.find((v) => v.name === n.trim()))
       .filter(Boolean) as Asset[];
     if (assets.length) {
-      videoPlayer.value.playlist = assets.map((a) => a.sum);
+      videoPlayer.value.playlist = assets
+        .map((a) => ({ sum: a.sum, commercial: 0 })); // TODO: apply ad lengths
       const successfulVideos = assets.map((a) => a.name).join(', ');
       nodecg().log.info(`[Misc] Automatically set video player for: ${successfulVideos}`);
     } else {

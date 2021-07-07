@@ -27,6 +27,7 @@ interface StateTypes {
 // Types for mutations/actions below
 export type UpdateNewPlaylist = (arr: VideoPlayer['playlist']) => void;
 export type PlaylistAdd = (sum: string) => void;
+export type PlaylistUpdateCommercial = (val: { i: number, length: number }) => void;
 export type PlaylistRemove = (i: number) => void;
 export type PlaylistRefresh = () => void;
 export type Save = () => void;
@@ -53,9 +54,12 @@ const store = new Vuex.Store({
       Vue.set(state, 'newPlaylist', arr);
       onLocalEdits(store);
     },
-    playlistAdd(state, sum: string): void {
-      state.newPlaylist.push(sum);
+    playlistAdd(state, sum?: string): void {
+      state.newPlaylist.push({ sum, commercial: 0 });
       onLocalEdits(store);
+    },
+    playlistUpdateCommercial(state, { i, length }: { i: number, length: string }): void {
+      state.newPlaylist[i].commercial = !Number.isNaN(length) ? Number(length) : 0;
     },
     playlistRemove(state, i: number): void {
       state.newPlaylist.splice(i, 1);

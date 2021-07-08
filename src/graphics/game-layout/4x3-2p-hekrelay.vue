@@ -185,20 +185,20 @@ export default class extends Vue {
 
   get commBiasTeam1Total(): string {
     const opt = this.commBiasBid?.options.find((o) => o.id === this.optionId1);
-    if (!opt) return '$0'; // If either of the above is not found, return neutral value.
+    if (!opt) return '$0'; // If the above is not found, return neutral value.
     return formatUSD(opt.total);
   }
 
   get commBiasTeam2Total(): string {
     const opt = this.commBiasBid?.options.find((o) => o.id === this.optionId2);
-    if (!opt) return '$0'; // If either of the above is not found, return neutral value.
+    if (!opt) return '$0'; // If the above is not found, return neutral value.
     return formatUSD(opt.total);
   }
 
   get commBiasPercentage(): string {
     const opt = this.commBiasBid?.options.find((o) => o.id === this.optionId1);
-    if (!this.commBiasBid || !opt) {
-      return '50%'; // If either of the above is not found, return neutral value.
+    if (!this.commBiasBid || !opt || this.commBiasBid.total <= 0) {
+      return '50%'; // If the bid/option above is not found or $0, return neutral value.
     }
     return `${Math.floor((opt.total / this.commBiasBid.total) * 100)}%`;
   }

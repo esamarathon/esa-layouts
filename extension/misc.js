@@ -9,7 +9,7 @@ const logging_1 = require("./util/logging");
 const nodecg_1 = require("./util/nodecg");
 const obs_1 = __importDefault(require("./util/obs"));
 const rabbitmq_1 = require("./util/rabbitmq");
-const replicants_1 = require("./util/replicants"); // eslint-disable-line object-curly-newline, max-len
+const replicants_1 = require("./util/replicants");
 const config = nodecg_1.get().bundleConfig;
 const sc = new speedcontrol_util_1.default(nodecg_1.get());
 let ranAdLastTime = false;
@@ -137,7 +137,8 @@ sc.on('timerStopped', () => {
             .map((n) => replicants_1.assetsVideos.value.find((v) => v.name === n.trim()))
             .filter(Boolean);
         if (assets.length) {
-            replicants_1.videoPlayer.value.playlist = assets.map((a) => a.sum);
+            replicants_1.videoPlayer.value.playlist = assets
+                .map((a) => ({ sum: a.sum, commercial: 0 })); // TODO: apply ad lengths
             const successfulVideos = assets.map((a) => a.name).join(', ');
             nodecg_1.get().log.info(`[Misc] Automatically set video player for: ${successfulVideos}`);
         }

@@ -2,7 +2,7 @@ import type { UpcomingRunID } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
-import type { RunDataActiveRunSurrounding, RunDataArray } from 'speedcontrol-util/schemas';
+import type { RunDataActiveRunSurrounding, RunDataArray } from 'speedcontrol-util/types/speedcontrol/schemas';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 

@@ -60,7 +60,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { RunDataActiveRunSurrounding, RunDataArray } from 'speedcontrol-util/schemas';
+import { RunDataActiveRunSurrounding, RunDataArray } from 'speedcontrol-util/types/speedcontrol/schemas';
 import { UpcomingRunID } from '@esa-layouts/types/schemas';
 
 @Component

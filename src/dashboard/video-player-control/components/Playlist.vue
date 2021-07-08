@@ -19,10 +19,21 @@
     </media-card>
     <draggable v-model="newPlaylist">
       <media-card
-        v-for="(sum, i) in newPlaylist"
+        v-for="({ sum, commercial }, i) in newPlaylist"
         :key="`${sum}_${i}`"
-        class="d-flex"
+        class="d-flex align-center"
       >
+        <v-text-field
+          :value="commercial"
+          type="number"
+          hide-details
+          outlined
+          dense
+          spellcheck="false"
+          autocomplete="off"
+          :style="{ 'max-width': '75px' }"
+          @input="playlistUpdateCommercial({ i, length: $event })"
+        />
         <div
           class="d-flex justify-center flex-grow-1"
           :style="{
@@ -30,13 +41,19 @@
             'font-style': !getName(sum) ? 'italic' : undefined,
           }"
         >
-          {{ getName(sum) || 'Could not find video name.' }}
+          <template v-if="sum">
+            {{ getName(sum) || 'Could not find video name.' }}
+          </template>
+          <template v-else>
+            BLANK ITEM
+          </template>
         </div>
-        <v-icon @click="playlistRemove(i)">
+        <v-icon @click="playlistRemove(i)" class="mr-1">
           mdi-delete
         </v-icon>
       </media-card>
     </draggable>
+    <v-btn block class="mt-3" @click="playlistAdd()">Add Blank Item to Playlist</v-btn>
   </div>
 </template>
 
@@ -47,7 +64,7 @@ import { State2Way } from 'vuex-class-state2way';
 import Draggable from 'vuedraggable';
 import { VideoPlayer } from '@esa-layouts/types/schemas';
 import { Asset } from '@esamarathon/esa-layouts-shared/types';
-import { PlaylistRefresh, PlaylistRemove } from '../store';
+import { PlaylistAdd, PlaylistRefresh, PlaylistRemove, PlaylistUpdateCommercial } from '../store';
 import MediaCard from '../../_misc/components/MediaCard.vue';
 
 @Component({
@@ -61,6 +78,8 @@ export default class extends Vue {
   @State videoPlayer!: VideoPlayer;
   @State2Way('updateNewPlaylist', 'newPlaylist') newPlaylist!: VideoPlayer['playlist'];
   @State localEdits!: boolean;
+  @Mutation playlistAdd!: PlaylistAdd;
+  @Mutation playlistUpdateCommercial!: PlaylistUpdateCommercial;
   @Mutation playlistRemove!: PlaylistRemove;
   @Mutation playlistRefresh!: PlaylistRefresh;
 

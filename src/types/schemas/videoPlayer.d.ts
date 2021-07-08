@@ -6,7 +6,10 @@
  */
 
 export interface VideoPlayer {
-	playlist: string[];
+	playlist: {
+		sum?: string;
+		commercial: number;
+	}[];
 	current: string | null;
 	plays: {
 		[k: string]: number;

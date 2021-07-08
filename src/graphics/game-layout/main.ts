@@ -35,6 +35,11 @@ const routes = [
     component: List.L_4x3_2p_ExtraMiddleSpace,
   },
   {
+    name: '4:3 2 Player (HEK Relay)',
+    path: '/4x3-2p-hekrelay',
+    component: List.L_4x3_2p_HekRelay,
+  },
+  {
     name: '4:3 3 Player',
     path: '/4x3-3p',
     component: List.L_4x3_3p,

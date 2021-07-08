@@ -79,6 +79,12 @@
           class="Flex TextWrapper"
         >
           <div class="PlayerText">
+            <span
+              v-if="showTeamName && team.name"
+              :style="{ 'font-size': '1.15em', 'font-weight': 600 }"
+            >
+              {{ team.name }}:
+            </span>
             /{{ player.social.twitch }}
             <!-- Custom Title code repeated twice, needs cleaning up! -->
             <span
@@ -99,6 +105,12 @@
           class="Flex TextWrapper"
         >
           <div class="PlayerText">
+            <span
+              v-if="showTeamName && team.name"
+              :style="{ 'font-size': '1.15em', 'font-weight': 600 }"
+            >
+              {{ team.name }}:
+            </span>
             {{ player.name }}
             <!-- Custom Title code repeated twice, needs cleaning up! -->
             <span
@@ -157,6 +169,7 @@ export default class extends Vue {
   @State('nameCycle') nameCycleServer!: NameCycle;
   @State coop!: boolean;
   @Prop(Number) slotNo!: number;
+  @Prop(Boolean) showTeamName!: boolean;
   team: RunDataTeam | null = null;
   player: RunDataPlayer | null = null;
   playerIndex = 0;
@@ -168,10 +181,17 @@ export default class extends Vue {
   }
 
   updateTeam(): void {
-    if (this.coop && typeof this.slotNo === 'number') {
-      // Makes a fake team with just 1 player in it.
-      const player = this.runData?.teams[0]?.players[this.slotNo];
-      this.team = player ? { id: player.id, players: [player] } : null;
+    // Makes a fake team with just 1 player in it.
+    if (typeof this.slotNo === 'number' && (this.coop || this.runData?.relay)) {
+      if (this.runData?.relay) {
+        const team = this.runData.teams[this.slotNo];
+        const player = team?.players.find((p) => p.id === team.relayPlayerID);
+        this.team = player ? { name: team.name, id: player.id, players: [player] } : null;
+      } else if (this.coop) {
+        const team = this.runData?.teams[0];
+        const player = team?.players[this.slotNo];
+        this.team = team && player ? { name: team.name, id: player.id, players: [player] } : null;
+      }
     } else {
       this.team = this.runData?.teams[this.slotNo || 0] || null;
     }

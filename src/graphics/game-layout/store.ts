@@ -1,4 +1,4 @@
-import type { Commentators, CurrentRunDelay, DelayedTimer, DonationReader, GameLayouts, MediaBox, NameCycle, NotableDonations, Prizes } from '@esa-layouts/types/schemas'; // eslint-disable-line object-curly-newline, max-len
+import type { Bids, Commentators, CurrentRunDelay, DelayedTimer, DonationReader, GameLayouts, MediaBox, NameCycle, NotableDonations, Prizes } from '@esa-layouts/types/schemas'; // eslint-disable-line object-curly-newline, max-len
 import type { Asset } from '@esamarathon/esa-layouts-shared/types';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
@@ -12,6 +12,7 @@ Vue.use(Vuex);
 
 // Replicants and their types
 const reps: {
+  bids: ReplicantBrowser<Bids>;
   commentators: ReplicantBrowser<Commentators>;
   currentRunDelay: ReplicantBrowser<CurrentRunDelay>;
   delayedTimer: ReplicantBrowser<DelayedTimer>;
@@ -26,6 +27,7 @@ const reps: {
   timer: ReplicantBrowser<Timer>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
+  bids: nodecg.Replicant('bids'),
   commentators: nodecg.Replicant('commentators'),
   currentRunDelay: nodecg.Replicant('currentRunDelay'),
   delayedTimer: nodecg.Replicant('delayedTimer'),

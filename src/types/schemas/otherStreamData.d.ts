@@ -20,9 +20,11 @@ export interface OtherStreamData {
 		setupTimeS?: number;
 		scheduled?: string;
 		scheduledS?: number;
+		relay?: boolean;
 		teams: {
 			name?: string;
 			id: string;
+			relayPlayerID?: string;
 			players: {
 				name: string;
 				id: string;

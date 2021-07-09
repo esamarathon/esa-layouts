@@ -23,6 +23,7 @@ import OtherStreamInfo from './Ticker/OtherStreamInfo.vue';
 import Prize from './Ticker/Prize.vue';
 import Bid from './Ticker/Bid.vue';
 import Alert from './Ticker/Alert.vue';
+import HekTakeover from './Ticker/HekTakeover.vue';
 
 const otherStreamData = nodecg.Replicant('otherStreamData');
 const runDataActiveRun = nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol');
@@ -158,11 +159,7 @@ export default {
       return this.genericMsg('ESA Break the Record: LIVE - Minecraft, 30th April - 2nd May! - breaktherecordlive.com');
     },
     hekTakeover() {
-      const hek = false; // TODO: FIGURE OUT IF A HEK RUN OR NOT!
-      if (!runDataActiveRun.value || !hek) {
-        this.showNextMsg();
-      }
-      return this.genericMsg('You are currently watching the Hekathon takeover block');
+      return { name: HekTakeover };
     },
     crowdControl(exchange) {
       const line1 = 'Crowd Control';

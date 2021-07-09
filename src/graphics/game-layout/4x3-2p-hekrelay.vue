@@ -25,7 +25,7 @@
     />
 
     <!-- Camera Captures -->
-    <!-- Online has 2 camera spots -->
+    <!-- Online has 3 camera spots -->
     <div
       v-if="!online"
       id="CameraCapture1"
@@ -42,7 +42,7 @@
         id="CameraCapture1"
         class="Capture BorderTop BorderRight BorderLeft"
         :style="{
-          left: '711px',
+          left: '587px',
           top: '770px',
           width: '249px',
           height: '230px',
@@ -52,7 +52,17 @@
         id="CameraCapture2"
         class="Capture BorderTop BorderRight"
         :style="{
-          left: '960px',
+          left: '836px',
+          top: '770px',
+          width: '249px',
+          height: '230px',
+        }"
+      />
+      <div
+        id="CameraCapture3"
+        class="Capture BorderTop BorderRight"
+        :style="{
+          left: '1085px',
           top: '770px',
           width: '249px',
           height: '230px',
@@ -66,7 +76,7 @@
       :style="{
         left: '0px',
         top: '720px',
-        width: '711px',
+        width: '587px',
       }"
     >
       <player :slot-no="0" show-team-name />
@@ -77,9 +87,9 @@
     <div
       class="Fixed FlexColumn"
       :style="{
-        left: '1209px',
+        left: '1334px',
         top: '720px',
-        width: '711px',
+        width: '586px',
         height: '235px',
       }"
     >
@@ -107,9 +117,9 @@
       :style="{
         'justify-content': 'space-between',
         padding: '0 7px',
-        left: '711px',
+        left: '587px',
         top: '720px',
-        width: '498px',
+        width: '747px',
         height: '50px',
         color: 'white',
         'font-size': '25px',
@@ -129,7 +139,7 @@
       :style="{
         left: '0px',
         top: '810px',
-        width: '711px',
+        width: '587px',
         height: '190px',
       }"
     />
@@ -138,9 +148,9 @@
     <donation-bar
       :padding="7"
       :style="{
-        left: '1209px',
+        left: '1334px',
         top: '955px',
-        width: '711px',
+        width: '586px',
         height: '45px',
       }"
     />
@@ -174,9 +184,9 @@ import { formatUSD } from '../_misc/helpers';
 })
 export default class extends Vue {
   @State bids!: Bids;
-  bidId = 0; // ID of relevant bid in the tracker
-  optionId1 = 0; // ID of option of team 1 in the tracker on the above bid
-  optionId2 = 0; // ID of option of team 2 in the tracker on the above bid
+  bidId = 0; // ID of relevant bid in the tracker.
+  optionId1 = 0; // ID of option of team 1 in the tracker on the above bid.
+  optionId2 = 0; // ID of option of team 2 in the tracker on the above bid.
   online = (nodecg.bundleConfig as Configschema).event.online;
 
   get commBiasBid(): Bids[0] | undefined {

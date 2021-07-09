@@ -113,6 +113,30 @@
 
     <!-- Commentary Bias Meter -->
     <div
+      class="Fixed Flex"
+      :style="{
+        left: '587px',
+        top: '685px',
+        width: '747px',
+        height: '35px',
+      }"
+    >
+      <div
+        class="Flex"
+        :style="{
+          'background-color': '#41245b', // HARDCODED COLOUR, BAD!
+          color: 'white', // HARDCODED COLOUR, BAD!
+          height: '100%',
+          padding: '0 10px',
+          'font-size': '25px',
+          'text-transform': 'uppercase',
+          'font-weight': 600,
+        }"
+      >
+        Commentary Bias
+      </div>
+    </div>
+    <div
       class="Fixed Flex BorderTop BorderRight BorderLeft"
       :style="{
         'justify-content': 'space-between',
@@ -123,14 +147,18 @@
         height: '50px',
         color: 'white',
         'font-size': '25px',
-        'text-transform': 'uppercase',
         'font-weight': 600,
         background: `linear-gradient(to right, #e8d53a ${commBiasPercentage}, #af60f7 0)`
       }"
     >
-      <div class="BiasBarText">{{ commBiasTeam1Total }}</div>
-      <div class="BiasBarText">Commentary Bias</div>
-      <div class="BiasBarText">{{ commBiasTeam2Total }}</div>
+      <div class="BiasBarText">
+        {{ commBiasTeam1Total }}
+        <template v-if="commBiasTeam1Diff">({{ commBiasTeam1Diff }})</template>
+      </div>
+      <div class="BiasBarText">
+        <template v-if="commBiasTeam1Diff">({{ commBiasTeam2Diff }})</template>
+        {{ commBiasTeam2Total }}
+      </div>
     </div>
 
     <!-- Media Box -->
@@ -203,6 +231,24 @@ export default class extends Vue {
     const opt = this.commBiasBid?.options.find((o) => o.id === this.optionId2);
     if (!opt) return '$0'; // If the above is not found, return neutral value.
     return formatUSD(opt.total);
+  }
+
+  get commBiasTeam1Diff(): string | null {
+    const opt1 = this.commBiasBid?.options.find((o) => o.id === this.optionId1);
+    const opt2 = this.commBiasBid?.options.find((o) => o.id === this.optionId2);
+    if (!opt1 || !opt2) return null; // If either of the above is not found, return nothing.
+    const diff = opt1.total - opt2.total;
+    if (!diff) return null; // If there is no difference, return nothing.
+    return `${diff > 0 ? '+' : '-'}${formatUSD(diff)}`;
+  }
+
+  get commBiasTeam2Diff(): string | null {
+    const opt1 = this.commBiasBid?.options.find((o) => o.id === this.optionId1);
+    const opt2 = this.commBiasBid?.options.find((o) => o.id === this.optionId2);
+    if (!opt1 || !opt2) return null; // If either of the above is not found, return nothing.
+    const diff = opt2.total - opt1.total;
+    if (!diff) return null; // If there is no difference, return nothing.
+    return `${diff > 0 ? '+' : '-'}${formatUSD(diff)}`;
   }
 
   get commBiasPercentage(): string {

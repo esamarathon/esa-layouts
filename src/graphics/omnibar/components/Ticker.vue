@@ -77,9 +77,10 @@ export default {
         this.donationURL(),
         // this.esaUpcomingEvt(),
         // this.esaBtRL(),
-        // this.merch(),
+        this.merch(),
         // this.ticket(),
         // this.twitchCharity(),
+        this.hekTakeover(),
       ];
 
       this.showNextMsg();
@@ -142,7 +143,7 @@ export default {
       return this.genericMsg(`Donate @ ${nodecg.bundleConfig.tracker.address}`);
     },
     merch() {
-      return this.genericMsg('Check out our merch @ esamarathon.com/esa-store');
+      return this.genericMsg('Check out our merch @ speedrunstore.com');
     },
     ticket() {
       return this.genericMsg('Buy your supporter ticket @ esamarathon.com');
@@ -155,6 +156,13 @@ export default {
     },
     esaBtRL() {
       return this.genericMsg('ESA Break the Record: LIVE - Minecraft, 30th April - 2nd May! - breaktherecordlive.com');
+    },
+    hekTakeover() {
+      const hek = false; // TODO: FIGURE OUT IF A HEK RUN OR NOT!
+      if (!runDataActiveRun.value || !hek) {
+        this.showNextMsg();
+      }
+      return this.genericMsg('You are currently watching the Hekathon takeover block');
     },
     crowdControl(exchange) {
       const line1 = 'Crowd Control';

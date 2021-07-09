@@ -229,7 +229,7 @@ body {
 }
 
 
-.RunInfoExtra > span[data-v-850a45e2]:not(:last-child)::after {
+.RunInfoExtra > span[data-v-33325ee6]:not(:last-child)::after {
   content: ' /';
 }
 
@@ -246,7 +246,7 @@ body {
 }
 
 
-.BiasBarText[data-v-008ab607] {
+.BiasBarText[data-v-3162f07a] {
   background-color: rgba(0, 0, 0, 0.4);
   padding: 3px 7px;
   border-radius: 10px;

@@ -348,14 +348,22 @@ Stuff not in this file (yet):
 }
 
 
-#Ticker[data-v-6c29a503] {
+#GenericMessage[data-v-240241e4] {
+  height: 100%;
+  font-weight: 500;
+  font-size: var(--font-size);
+  text-align: center;
+}
+
+
+#Ticker[data-v-95d891c8] {
   height: 100%;
   flex: 1;
 }
-.fade-enter-active[data-v-6c29a503], .fade-leave-active[data-v-6c29a503] {
+.fade-enter-active[data-v-95d891c8], .fade-leave-active[data-v-95d891c8] {
   transition: opacity .5s;
 }
-.fade-enter[data-v-6c29a503], .fade-leave-to[data-v-6c29a503] /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter[data-v-95d891c8], .fade-leave-to[data-v-95d891c8] /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
 

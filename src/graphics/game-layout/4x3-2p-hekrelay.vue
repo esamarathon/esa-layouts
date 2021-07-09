@@ -113,6 +113,30 @@
 
     <!-- Commentary Bias Meter -->
     <div
+      class="Fixed Flex"
+      :style="{
+        left: '587px',
+        top: '685px',
+        width: '747px',
+        height: '35px',
+      }"
+    >
+      <div
+        class="Flex"
+        :style="{
+          'background-color': '#41245b', // HARDCODED COLOUR, BAD!
+          color: 'white', // HARDCODED COLOUR, BAD!
+          height: '100%',
+          padding: '0 10px',
+          'font-size': '25px',
+          'text-transform': 'uppercase',
+          'font-weight': 600,
+        }"
+      >
+        Commentary Bias
+      </div>
+    </div>
+    <div
       class="Fixed Flex BorderTop BorderRight BorderLeft"
       :style="{
         'justify-content': 'space-between',
@@ -123,7 +147,6 @@
         height: '50px',
         color: 'white',
         'font-size': '25px',
-        'text-transform': 'uppercase',
         'font-weight': 600,
         background: `linear-gradient(to right, #e8d53a ${commBiasPercentage}, #af60f7 0)`
       }"
@@ -132,7 +155,6 @@
         {{ commBiasTeam1Total }}
         <template v-if="commBiasTeam1Diff">({{ commBiasTeam1Diff }})</template>
       </div>
-      <div class="BiasBarText">Commentary Bias</div>
       <div class="BiasBarText">
         <template v-if="commBiasTeam1Diff">({{ commBiasTeam2Diff }})</template>
         {{ commBiasTeam2Total }}

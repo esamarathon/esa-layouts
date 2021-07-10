@@ -13,17 +13,18 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Ref } from 'vue-property-decorator';
+import { Vue, Component, Ref, Watch } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
 import clone from 'clone';
 import { Configschema, VideoPlayer } from '@esa-layouts/types/schemas';
 import { Asset } from '@esamarathon/esa-layouts-shared/types';
-import { UpdatePlayCount, ClearPlaylist, UpdateCurrent } from './store';
+import { UpdatePlayCount, ClearPlaylist, UpdateCurrent, UpdatePlayingState } from './store';
 
 @Component
 export default class extends Vue {
   @State videos!: Asset[];
   @State videoPlayer!: VideoPlayer;
+  @Mutation updatePlayingState!: UpdatePlayingState;
   @Mutation updatePlayCount!: UpdatePlayCount;
   @Mutation updateCurrent!: UpdateCurrent;
   @Mutation clearPlaylist!: ClearPlaylist;
@@ -34,6 +35,12 @@ export default class extends Vue {
   index = 0;
   playing = false;
   cfg = nodecg.bundleConfig as Configschema;
+
+  @Watch('playing', { immediate: true })
+  async onPlayingChange(val: boolean): Promise<void> {
+    await new Promise((res) => window.setTimeout(res, 2000));
+    this.updatePlayingState(val);
+  }
 
   async playNextVideo(): Promise<void> {
     const commercialLength = this.playlist[this.index].commercial;
@@ -118,6 +125,7 @@ export default class extends Vue {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const obs = (window as any).obsstudio;
     if (obs) {
+      this.updatePlayingState(false);
       obs.onActiveChange = (active: boolean): void => {
         if (active && !this.playing) {
           this.startPlaylist();

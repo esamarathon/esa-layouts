@@ -11,6 +11,7 @@ export interface VideoPlayer {
 		commercial: number;
 	}[];
 	current: string | null;
+	playing: boolean;
 	plays: {
 		[k: string]: number;
 	};

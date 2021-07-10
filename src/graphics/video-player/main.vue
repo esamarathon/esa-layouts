@@ -129,10 +129,11 @@ export default class extends Vue {
       obs.onActiveChange = (active: boolean): void => {
         if (active && !this.playing) {
           this.startPlaylist();
-        } else {
-          // These run either on manual or automatic switch.
-          // this.stopVideo();
-          // this.stopPlaylist();
+        } else if (!active && this.playing) {
+          this.stopVideo();
+          this.stopPlaylist();
+          this.playing = false;
+          nodecg.sendMessage('videoPlayerFinished', false);
         }
       };
     }

@@ -164,9 +164,11 @@ nodecg().listenFor('videoPlayerStartCommercial', async (duration: number) => {
 });
 
 // Switch back to the last scene when the video player finishes.
-nodecg().listenFor('videoPlayerFinished', async () => {
+nodecg().listenFor('videoPlayerFinished', async (changeScene = true) => {
   try {
-    await obs.changeScene(config.obs.names.scenes.intermission);
+    if (changeScene) {
+      await obs.changeScene(config.obs.names.scenes.intermission);
+    }
     obsData.value.disableTransitioning = false;
   } catch (err) {
     nodecg().log.warn('[Misc] Could not return to intermission after video finished');

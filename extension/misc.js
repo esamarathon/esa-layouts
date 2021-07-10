@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const speedcontrol_util_1 = __importDefault(require("speedcontrol-util"));
+const layouts_1 = require("./layouts");
 const helpers_1 = require("./util/helpers");
 const logging_1 = require("./util/logging");
 const nodecg_1 = require("./util/nodecg");
@@ -132,30 +133,57 @@ nodecg_1.get().listenFor('readerModify', async (val, ack) => {
 sc.on('timerStopped', () => {
     const run = sc.getCurrentRun();
     if (run === null || run === void 0 ? void 0 : run.customData.intermission) {
-        const videoNames = run.customData.intermission.split(',');
-        const assets = videoNames
-            .map((n) => replicants_1.assetsVideos.value.find((v) => v.name === n.trim()))
-            .filter(Boolean);
-        if (assets.length) {
-            replicants_1.videoPlayer.value.playlist = assets
-                .map((a) => ({ sum: a.sum, commercial: 0 })); // TODO: apply ad lengths
-            const successfulVideos = assets.map((a) => a.name).join(', ');
-            nodecg_1.get().log.info(`[Misc] Automatically set video player for: ${successfulVideos}`);
+        // Creates a compiled list of what videos should be played and
+        // where commercials should be played if needed.
+        const splitList = run.customData.intermission.split(',');
+        const formattedList = [];
+        for (let i = 0; i < splitList.length;) {
+            if (splitList[i].startsWith('ad')) {
+                const replaceStr = splitList[i].startsWith('adwait') ? 'adwait' : 'ad';
+                const commercial = Number(splitList[i].replace(replaceStr, ''));
+                if (commercial) {
+                    let name;
+                    if (!splitList[i].startsWith('adwait')) {
+                        name = splitList[i + 1];
+                        i += 2;
+                    }
+                    else {
+                        i += 1;
+                    }
+                    formattedList.push({ name, commercial });
+                }
+            }
+            else {
+                formattedList.push({ name: splitList[i], commercial: 0 });
+                i += 1;
+            }
         }
-        else {
-            nodecg_1.get().log.warn('[Misc] Cannot automatically set video player for any:'
-                + ` ${videoNames.join(', ')}`);
-        }
+        replicants_1.videoPlayer.value.playlist = formattedList
+            .map(({ name, commercial }) => {
+            const asset = replicants_1.assetsVideos.value.find((v) => v.name === (name === null || name === void 0 ? void 0 : name.trim()));
+            return { sum: asset === null || asset === void 0 ? void 0 : asset.sum, commercial };
+        });
+        nodecg_1.get().log.info('[Misc] Automatically set video player playlist from run data');
+    }
+});
+nodecg_1.get().listenFor('videoPlayerStartCommercial', async (duration) => {
+    try {
+        await sc.sendMessage('twitchStartCommercial', { duration });
+    }
+    catch (err) {
+        nodecg_1.get().log.warn('[Misc] Could not successfully trigger video player commercials');
+        nodecg_1.get().log.debug('[Misc] Could not successfully trigger video player commercials:', err);
     }
 });
 // Switch back to the last scene when the video player finishes.
 nodecg_1.get().listenFor('videoPlayerFinished', async () => {
     try {
-        await obs_1.default.changeScene(config.obs.names.scenes.intermission);
+        await layouts_1.changeScene(config.obs.names.scenes.intermission);
+        replicants_1.obsData.value.disableTransitioning = false;
     }
     catch (err) {
-        nodecg_1.get().log.warn('[Misc] Could not return to intermission after video finished');
-        nodecg_1.get().log.debug('[Misc] Could not return to intermission after video finished:', err);
+        nodecg_1.get().log.warn('[Misc] Could not return to intermission after videos finished');
+        nodecg_1.get().log.debug('[Misc] Could not return to intermission after videos finished:', err);
     }
 });
 replicants_1.videoPlayer.on('change', (newVal, oldVal) => {

@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.changeScene = void 0;
 const extension_1 = __importDefault(require("@esamarathon/esa-layouts-shared/countdown/extension"));
 const clone_1 = __importDefault(require("clone"));
 const speedcontrol_util_1 = __importDefault(require("speedcontrol-util"));
@@ -193,11 +194,13 @@ replicants_1.capturePositions.on('change', async (val) => {
 });
 sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
     // Disable transitioning if on commercials scene and seconds are on the commercial timer.
+    // Not used for ESA, but used for other events still (like UKSG).
     if (obs_1.default.isCurrentScene(obsConfig.names.scenes.commercials)) {
         replicants_1.obsData.value.disableTransitioning = newVal.secondsRemaining > 0;
     }
     // Switch to the video player scene if there is
     // a selected video when intermission commercials end.
+    // Not currently used for ESA, may be used for other events?
     if (oldVal && oldVal.secondsRemaining > 0 && newVal.secondsRemaining <= 0
         && replicants_1.videoPlayer.value.playlist.length
         && obs_1.default.isCurrentScene(obsConfig.names.scenes.commercials)) {
@@ -213,42 +216,69 @@ sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
         }
     }
 });
-// Enable transitioning if we just changed to
-// the game layout or intermission (without commercials).
-obs_1.default.on('currentSceneChanged', () => {
-    if (!obs_1.default.isCurrentScene(obsConfig.names.scenes.videoPlayer)) {
+// Disable transitioning if we just changed to the video player scene.
+let sceneChangeCodeTriggered = 0;
+obs_1.default.on('currentSceneChanged', (current, last) => {
+    // If switched to video player, disable transitioning.
+    if (obs_1.default.isCurrentScene(obsConfig.names.scenes.videoPlayer)) {
+        replicants_1.obsData.value.disableTransitioning = true;
+    }
+    // If we switch from the video player to the intermission while a video is playing,
+    // tell the video player to stop. This will only trigger if we didn't trigger
+    // the change in the last 2 seconds.
+    if (sceneChangeCodeTriggered < (Date.now() - 2000)
+        && last === obs_1.default.findScene(obsConfig.names.scenes.videoPlayer)
+        && obs_1.default.isCurrentScene(obsConfig.names.scenes.intermission)) {
+        nodecg_1.get().sendMessage('endVideoPlayer');
+        replicants_1.obsData.value.disableTransitioning = false;
+    }
+    // If the video player is playing and we switch from either video player or intermission,
+    // tell the video player to stop.
+    if (replicants_1.videoPlayer.value.playing && !obs_1.default.isCurrentScene(obsConfig.names.scenes.videoPlayer)
+        && !obs_1.default.isCurrentScene(obsConfig.names.scenes.intermission)) {
+        nodecg_1.get().sendMessage('endVideoPlayer');
         replicants_1.obsData.value.disableTransitioning = false;
     }
 });
-nodecg_1.get().listenFor('obsChangeScene', async (name) => {
+nodecg_1.get().listenFor('endVideoPlayer', () => {
+    replicants_1.obsData.value.disableTransitioning = false;
+});
+async function changeScene(scene) {
+    sceneChangeCodeTriggered = Date.now();
+    await obs_1.default.changeScene(scene);
+}
+exports.changeScene = changeScene;
+nodecg_1.get().listenFor('obsChangeScene', async ({ scene, force = false }) => {
     // Don't change scene if identical, we're currently transitioning, or transitioning is disabled.
-    if (replicants_1.obsData.value.scene === name
-        || replicants_1.obsData.value.transitioning
-        || replicants_1.obsData.value.disableTransitioning) {
+    if (replicants_1.obsData.value.scene === scene
+        || (!force && (replicants_1.obsData.value.transitioning
+            || replicants_1.obsData.value.disableTransitioning))) {
         return;
     }
     try {
         if (replicants_1.currentRunDelay.value.audio === 0
             || (!obs_1.default.isCurrentScene(obsConfig.names.scenes.gameLayout)
-                && obs_1.default.findScene(name) !== obsConfig.names.scenes.gameLayout)) {
-            await obs_1.default.changeScene(name);
+                && obs_1.default.findScene(scene) !== obsConfig.names.scenes.gameLayout)) {
+            await obs_1.default.changeScene(scene);
+            sceneChangeCodeTriggered = Date.now();
         }
         else {
             const delay = replicants_1.currentRunDelay.value.audio;
             replicants_1.obsData.value.disableTransitioning = true;
             replicants_1.obsData.value.transitionTimestamp = Date.now() + delay;
-            nodecg_1.get().sendMessage('obsTransitionQueued', name); // Simple server-to-server message we need.
+            // Simple server-to-server message we need.
+            nodecg_1.get().sendMessage('obsTransitionQueued', scene);
             setTimeout(async () => {
                 try {
-                    await obs_1.default.changeScene(name);
+                    await obs_1.default.changeScene(scene);
                 }
                 catch (err) {
-                    helpers_1.logError('[Layouts] Could not change scene (on delay) [name: %s]', err, name);
+                    helpers_1.logError('[Layouts] Could not change scene (on delay) [name: %s]', err, scene);
                 }
             }, delay);
         }
     }
     catch (err) {
-        helpers_1.logError('[Layouts] Could not change scene [name: %s]', err, name);
+        helpers_1.logError('[Layouts] Could not change scene [name: %s]', err, scene);
     }
 });

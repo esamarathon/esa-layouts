@@ -2,6 +2,7 @@ import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import { Asset } from '@esamarathon/esa-layouts-shared/types';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';
+import { changeScene } from './layouts';
 import { formatPronouns, getCurrentEventShort, getOtherStreamEventShort } from './util/helpers';
 import { logRunChange, logVideoPlay } from './util/logging';
 import { get as nodecg } from './util/nodecg';
@@ -164,15 +165,13 @@ nodecg().listenFor('videoPlayerStartCommercial', async (duration: number) => {
 });
 
 // Switch back to the last scene when the video player finishes.
-nodecg().listenFor('videoPlayerFinished', async (changeScene = true) => {
+nodecg().listenFor('videoPlayerFinished', async () => {
   try {
-    if (changeScene) {
-      await obs.changeScene(config.obs.names.scenes.intermission);
-    }
+    await changeScene(config.obs.names.scenes.intermission);
     obsData.value.disableTransitioning = false;
   } catch (err) {
-    nodecg().log.warn('[Misc] Could not return to intermission after video finished');
-    nodecg().log.debug('[Misc] Could not return to intermission after video finished:', err);
+    nodecg().log.warn('[Misc] Could not return to intermission after videos finished');
+    nodecg().log.debug('[Misc] Could not return to intermission after videos finished:', err);
   }
 });
 

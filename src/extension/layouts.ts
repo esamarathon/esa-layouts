@@ -220,11 +220,40 @@ sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
 });
 
 // Disable transitioning if we just changed to the video player scene.
-obs.on('currentSceneChanged', () => {
+let sceneChangeCodeTriggered = 0;
+obs.on('currentSceneChanged', (current, last) => {
+  // If switched to video player, disable transitioning.
   if (obs.isCurrentScene(obsConfig.names.scenes.videoPlayer)) {
     obsData.value.disableTransitioning = true;
   }
+
+  // If we switch from the video player to the intermission while a video is playing,
+  // tell the video player to stop. This will only trigger if we didn't trigger
+  // the change in the last 2 seconds.
+  if (sceneChangeCodeTriggered < (Date.now() - 2000)
+  && last === obs.findScene(obsConfig.names.scenes.videoPlayer)
+  && obs.isCurrentScene(obsConfig.names.scenes.intermission)) {
+    nodecg().sendMessage('endVideoPlayer');
+    obsData.value.disableTransitioning = false;
+  }
+
+  // If the video player is playing and we switch from either video player or intermission,
+  // tell the video player to stop.
+  if (videoPlayer.value.playing && !obs.isCurrentScene(obsConfig.names.scenes.videoPlayer)
+  && !obs.isCurrentScene(obsConfig.names.scenes.intermission)) {
+    nodecg().sendMessage('endVideoPlayer');
+    obsData.value.disableTransitioning = false;
+  }
 });
+
+nodecg().listenFor('endVideoPlayer', () => {
+  obsData.value.disableTransitioning = false;
+});
+
+export async function changeScene(scene: string): Promise<void> {
+  sceneChangeCodeTriggered = Date.now();
+  await obs.changeScene(scene);
+}
 
 nodecg().listenFor(
   'obsChangeScene',
@@ -240,6 +269,7 @@ nodecg().listenFor(
         || (!obs.isCurrentScene(obsConfig.names.scenes.gameLayout)
         && obs.findScene(scene) !== obsConfig.names.scenes.gameLayout)) {
         await obs.changeScene(scene);
+        sceneChangeCodeTriggered = Date.now();
       } else {
         const delay = currentRunDelay.value.audio;
         obsData.value.disableTransitioning = true;

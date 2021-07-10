@@ -35,6 +35,7 @@ export default class extends Vue {
   index = 0;
   playing = false;
   cfg = nodecg.bundleConfig as Configschema;
+  commercialWaitTimeout!: number;
 
   @Watch('playing', { immediate: true })
   async onPlayingChange(val: boolean): Promise<void> {
@@ -67,11 +68,9 @@ export default class extends Vue {
         force: true,
       });
       // Wait until the commercials should be finished.
-      await new Promise((res) => window.setTimeout(
-        res,
-        Math.max(this.playlist[this.index].commercial * 1000, 2000),
-      ));
-      this.videoEnded();
+      this.commercialWaitTimeout = window.setTimeout(() => {
+        this.videoEnded();
+      }, Math.max(this.playlist[this.index].commercial * 1000, 2000));
     }
   }
 
@@ -129,15 +128,18 @@ export default class extends Vue {
       obs.onActiveChange = (active: boolean): void => {
         if (active && !this.playing) {
           this.startPlaylist();
-        } else if (!active && this.playing) {
-          this.stopVideo();
-          this.stopPlaylist();
-          this.playing = false;
-          nodecg.sendMessage('videoPlayerFinished', false);
         }
       };
     }
     nodecg.listenFor('startVideoPlayer', this.startPlaylist);
+    nodecg.listenFor('endVideoPlayer', () => {
+      if (this.playing) {
+        window.clearTimeout(this.commercialWaitTimeout);
+        this.stopVideo();
+        this.stopPlaylist();
+        this.playing = false;
+      }
+    });
     this.player.addEventListener('ended', this.videoEnded);
   }
 }

@@ -18,6 +18,7 @@ const reps: {
 };
 
 // Types for mutations below
+export type UpdatePlayingState = (isPlaying: boolean) => void;
 export type UpdateCurrent = (sum?: string) => void;
 export type UpdatePlayCount = (sum: string) => void;
 export type ClearPlaylist = () => void;
@@ -29,6 +30,11 @@ const store = new Vuex.Store({
       Vue.set(state, name, val);
     },
     /* Mutations to replicants start */
+    updatePlayingState(state, isPlaying: boolean): void {
+      if (typeof reps.videoPlayer.value !== 'undefined') {
+        reps.videoPlayer.value.playing = isPlaying;
+      }
+    },
     updateCurrent(state, sum?: string): void {
       if (typeof reps.videoPlayer.value !== 'undefined') {
         reps.videoPlayer.value.current = sum || null;

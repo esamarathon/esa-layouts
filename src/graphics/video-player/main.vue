@@ -13,17 +13,18 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Ref } from 'vue-property-decorator';
+import { Vue, Component, Ref, Watch } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
 import clone from 'clone';
-import { VideoPlayer } from '@esa-layouts/types/schemas';
+import { Configschema, VideoPlayer } from '@esa-layouts/types/schemas';
 import { Asset } from '@esamarathon/esa-layouts-shared/types';
-import { UpdatePlayCount, ClearPlaylist, UpdateCurrent } from './store';
+import { UpdatePlayCount, ClearPlaylist, UpdateCurrent, UpdatePlayingState } from './store';
 
 @Component
 export default class extends Vue {
   @State videos!: Asset[];
   @State videoPlayer!: VideoPlayer;
+  @Mutation updatePlayingState!: UpdatePlayingState;
   @Mutation updatePlayCount!: UpdatePlayCount;
   @Mutation updateCurrent!: UpdateCurrent;
   @Mutation clearPlaylist!: ClearPlaylist;
@@ -32,10 +33,27 @@ export default class extends Vue {
   playlist: VideoPlayer['playlist'] = [];
   video: Asset | null = null;
   index = 0;
+  playing = false;
+  cfg = nodecg.bundleConfig as Configschema;
+  commercialWaitTimeout!: number;
+
+  @Watch('playing', { immediate: true })
+  async onPlayingChange(val: boolean): Promise<void> {
+    await new Promise((res) => window.setTimeout(res, 2000));
+    this.updatePlayingState(val);
+  }
 
   async playNextVideo(): Promise<void> {
+    const commercialLength = this.playlist[this.index].commercial;
+    if (commercialLength > 0) {
+      nodecg.sendMessage('videoPlayerStartCommercial', commercialLength);
+    }
     const video = this.videos.find((v) => v.sum === this.playlist[this.index].sum);
     if (video) {
+      nodecg.sendMessage('obsChangeScene', {
+        scene: this.cfg.obs.names.scenes.videoPlayer,
+        force: true,
+      });
       this.video = video;
       this.playerSrc.src = video.url;
       this.playerSrc.type = `video/${video.ext.toLowerCase().replace('.', '')}`;
@@ -43,12 +61,20 @@ export default class extends Vue {
       this.player.play();
       this.updateCurrent(video.sum);
     } else {
-      this.index += 1;
-      this.playNextVideo();
+      // This also happens if the playlist item is a non-video.
+      this.stopVideo();
+      nodecg.sendMessage('obsChangeScene', {
+        scene: this.cfg.obs.names.scenes.intermission,
+        force: true,
+      });
+      // Wait until the commercials should be finished.
+      this.commercialWaitTimeout = window.setTimeout(() => {
+        this.videoEnded();
+      }, Math.max(this.playlist[this.index].commercial * 1000, 2000));
     }
   }
 
-  videoEnded(): void {
+  async videoEnded(): Promise<void> {
     if (this.video) {
       this.updatePlayCount(this.video.sum);
     }
@@ -57,24 +83,32 @@ export default class extends Vue {
       this.playNextVideo();
     } else {
       // End of playlist.
+      this.stopVideo();
+      this.stopPlaylist();
       this.clearPlaylist();
+      this.playing = false;
       nodecg.sendMessage('videoPlayerFinished');
     }
   }
 
   stopVideo(): void {
     this.updateCurrent();
-    this.video = null;
-    this.player.pause();
-    this.playerSrc.removeAttribute('src');
-    this.playerSrc.removeAttribute('type');
-    this.player.load();
+    window.setTimeout(() => {
+      this.video = null;
+      this.player.pause();
+      this.playerSrc.removeAttribute('src');
+      this.playerSrc.removeAttribute('type');
+      this.player.load();
+    }, 2000);
   }
 
   async startPlaylist(): Promise<void> {
+    this.playing = true;
+    nodecg.sendMessage('videoPlayerStarted');
     // If no videos, just trigger a switch back after a short delay.
     if (!this.videoPlayer.playlist.length) {
       await new Promise((res) => window.setTimeout(res, 2 * 1000));
+      this.playing = false;
       nodecg.sendMessage('videoPlayerFinished');
     } else {
       this.index = 0;
@@ -92,16 +126,22 @@ export default class extends Vue {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const obs = (window as any).obsstudio;
     if (obs) {
+      this.updatePlayingState(false);
       obs.onActiveChange = (active: boolean): void => {
-        if (active) {
+        if (active && !this.playing) {
           this.startPlaylist();
-        } else {
-          // These run either on manual or automatic switch.
-          this.stopVideo();
-          this.stopPlaylist();
         }
       };
     }
+    nodecg.listenFor('startVideoPlayer', this.startPlaylist);
+    nodecg.listenFor('endVideoPlayer', () => {
+      if (this.playing) {
+        window.clearTimeout(this.commercialWaitTimeout);
+        this.stopVideo();
+        this.stopPlaylist();
+        this.playing = false;
+      }
+    });
     this.player.addEventListener('ended', this.videoEnded);
   }
 }

@@ -32,6 +32,8 @@
           spellcheck="false"
           autocomplete="off"
           :style="{ 'max-width': '75px' }"
+          step="30"
+          min="0"
           @input="playlistUpdateCommercial({ i, length: $event })"
         />
         <div
@@ -45,7 +47,7 @@
             {{ getName(sum) || 'Could not find video name.' }}
           </template>
           <template v-else>
-            BLANK ITEM
+            Commercial w/o Video
           </template>
         </div>
         <v-icon @click="playlistRemove(i)" class="mr-1">
@@ -53,7 +55,7 @@
         </v-icon>
       </media-card>
     </draggable>
-    <v-btn block class="mt-3" @click="playlistAdd()">Add Blank Item to Playlist</v-btn>
+    <v-btn block class="mt-3" @click="playlistAdd()">Add Commercial w/o Video to Playlist</v-btn>
   </div>
 </template>
 

@@ -38,7 +38,7 @@ export default {
     },
   },
   mounted() {
-    if (runDataActiveRun.value?.customData.info !== 'HEK') {
+    if (runDataActiveRun.value && runDataActiveRun.value.customData.info !== 'HEK') {
       this.$emit('end');
     } else {
       setTimeout(() => this.$emit('end'), this.normalisedData.time * 1000);

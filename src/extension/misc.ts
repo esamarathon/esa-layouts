@@ -1,13 +1,13 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
-import { Asset } from '@esamarathon/esa-layouts-shared/types';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';
+import { changeScene } from './layouts';
 import { formatPronouns, getCurrentEventShort, getOtherStreamEventShort } from './util/helpers';
 import { logRunChange, logVideoPlay } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
-import { assetsVideos, commentators, donationReader, otherStreamData, videoPlayer } from './util/replicants';
+import { assetsVideos, commentators, donationReader, obsData, otherStreamData, videoPlayer } from './util/replicants';
 
 const config = (nodecg().bundleConfig as Configschema);
 const sc = new SpeedcontrolUtil(nodecg());
@@ -138,29 +138,55 @@ nodecg().listenFor('readerModify', async (val: string | null | undefined, ack) =
 sc.on('timerStopped', () => {
   const run = sc.getCurrentRun();
   if (run?.customData.intermission) {
-    const videoNames = run.customData.intermission.split(',');
-    const assets = videoNames
-      .map((n) => assetsVideos.value.find((v) => v.name === n.trim()))
-      .filter(Boolean) as Asset[];
-    if (assets.length) {
-      videoPlayer.value.playlist = assets
-        .map((a) => ({ sum: a.sum, commercial: 0 })); // TODO: apply ad lengths
-      const successfulVideos = assets.map((a) => a.name).join(', ');
-      nodecg().log.info(`[Misc] Automatically set video player for: ${successfulVideos}`);
-    } else {
-      nodecg().log.warn('[Misc] Cannot automatically set video player for any:'
-        + ` ${videoNames.join(', ')}`);
+    // Creates a compiled list of what videos should be played and
+    // where commercials should be played if needed.
+    const splitList = run.customData.intermission.split(',');
+    const formattedList: { name?: string, commercial: number }[] = [];
+    for (let i = 0; i < splitList.length;) {
+      if (splitList[i].startsWith('ad')) {
+        const replaceStr = splitList[i].startsWith('adwait') ? 'adwait' : 'ad';
+        const commercial = Number(splitList[i].replace(replaceStr, ''));
+        if (commercial) {
+          let name: string | undefined;
+          if (!splitList[i].startsWith('adwait')) {
+            name = splitList[i + 1];
+            i += 2;
+          } else {
+            i += 1;
+          }
+          formattedList.push({ name, commercial });
+        }
+      } else {
+        formattedList.push({ name: splitList[i], commercial: 0 });
+        i += 1;
+      }
     }
+    videoPlayer.value.playlist = formattedList
+      .map(({ name, commercial }) => {
+        const asset = assetsVideos.value.find((v) => v.name === name?.trim());
+        return { sum: asset?.sum, commercial };
+      });
+    nodecg().log.info('[Misc] Automatically set video player playlist from run data');
+  }
+});
+
+nodecg().listenFor('videoPlayerStartCommercial', async (duration: number) => {
+  try {
+    await sc.sendMessage('twitchStartCommercial', { duration });
+  } catch (err) {
+    nodecg().log.warn('[Misc] Could not successfully trigger video player commercials');
+    nodecg().log.debug('[Misc] Could not successfully trigger video player commercials:', err);
   }
 });
 
 // Switch back to the last scene when the video player finishes.
 nodecg().listenFor('videoPlayerFinished', async () => {
   try {
-    await obs.changeScene(config.obs.names.scenes.intermission);
+    await changeScene(config.obs.names.scenes.intermission);
+    obsData.value.disableTransitioning = false;
   } catch (err) {
-    nodecg().log.warn('[Misc] Could not return to intermission after video finished');
-    nodecg().log.debug('[Misc] Could not return to intermission after video finished:', err);
+    nodecg().log.warn('[Misc] Could not return to intermission after videos finished');
+    nodecg().log.debug('[Misc] Could not return to intermission after videos finished:', err);
   }
 });
 

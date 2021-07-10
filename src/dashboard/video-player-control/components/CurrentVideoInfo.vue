@@ -1,10 +1,12 @@
 <template>
   <div
-    v-show="name"
+    v-show="videoPlayer.playing"
     :style="{ 'text-align': 'center' }"
   >
     <span class="font-weight-bold">Currently Playing:</span>
-    <br>{{ name }}
+    <br><span v-if="name">{{ name }}</span>
+    <span v-else>Unknown (Probably Blank Space)</span>
+    <v-btn color="red" class="mt-2" @click="emergencyStop" block>Emergency Stop</v-btn>
   </div>
 </template>
 
@@ -12,15 +14,24 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Asset } from '@esamarathon/esa-layouts-shared/types';
-import { VideoPlayer } from '@esa-layouts/types/schemas';
+import { Configschema, VideoPlayer } from '@esa-layouts/types/schemas';
 
 @Component
 export default class extends Vue {
   @State videos!: Asset[];
   @State videoPlayer!: VideoPlayer;
+  cfg = nodecg.bundleConfig as Configschema;
 
   get name(): string | undefined {
     return this.videos.find((a) => a.sum === this.videoPlayer.current)?.name;
+  }
+
+  emergencyStop(): void {
+    nodecg.sendMessage('obsChangeScene', {
+      scene: this.cfg.obs.names.scenes.intermission,
+      force: true,
+    });
+    nodecg.sendMessage('endVideoPlayer');
   }
 }
 </script>

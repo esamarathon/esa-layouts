@@ -32,6 +32,8 @@
           spellcheck="false"
           autocomplete="off"
           :style="{ 'max-width': '75px' }"
+          step="30"
+          min="0"
           @input="playlistUpdateCommercial({ i, length: $event })"
         />
         <div

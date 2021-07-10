@@ -16,7 +16,7 @@
 import { Vue, Component, Ref } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
 import clone from 'clone';
-import { VideoPlayer } from '@esa-layouts/types/schemas';
+import { Configschema, VideoPlayer } from '@esa-layouts/types/schemas';
 import { Asset } from '@esamarathon/esa-layouts-shared/types';
 import { UpdatePlayCount, ClearPlaylist, UpdateCurrent } from './store';
 
@@ -32,10 +32,20 @@ export default class extends Vue {
   playlist: VideoPlayer['playlist'] = [];
   video: Asset | null = null;
   index = 0;
+  playing = false;
+  cfg = nodecg.bundleConfig as Configschema;
 
   async playNextVideo(): Promise<void> {
+    const commercialLength = this.playlist[this.index].commercial;
+    if (commercialLength > 0) {
+      nodecg.sendMessage('videoPlayerStartCommercial', commercialLength);
+    }
     const video = this.videos.find((v) => v.sum === this.playlist[this.index].sum);
     if (video) {
+      nodecg.sendMessage('obsChangeScene', {
+        scene: this.cfg.obs.names.scenes.videoPlayer,
+        force: true,
+      });
       this.video = video;
       this.playerSrc.src = video.url;
       this.playerSrc.type = `video/${video.ext.toLowerCase().replace('.', '')}`;
@@ -43,12 +53,22 @@ export default class extends Vue {
       this.player.play();
       this.updateCurrent(video.sum);
     } else {
-      this.index += 1;
-      this.playNextVideo();
+      // This also happens if the playlist item is a non-video.
+      window.setTimeout(() => { this.stopVideo(); }, 2000);
+      nodecg.sendMessage('obsChangeScene', {
+        scene: this.cfg.obs.names.scenes.intermission,
+        force: true,
+      });
+      // Wait until the commercials should be finished.
+      await new Promise((res) => window.setTimeout(
+        res,
+        Math.max(this.playlist[this.index].commercial * 1000, 2000),
+      ));
+      this.videoEnded();
     }
   }
 
-  videoEnded(): void {
+  async videoEnded(): Promise<void> {
     if (this.video) {
       this.updatePlayCount(this.video.sum);
     }
@@ -57,7 +77,10 @@ export default class extends Vue {
       this.playNextVideo();
     } else {
       // End of playlist.
+      this.stopVideo();
+      this.stopPlaylist();
       this.clearPlaylist();
+      this.playing = false;
       nodecg.sendMessage('videoPlayerFinished');
     }
   }
@@ -72,9 +95,12 @@ export default class extends Vue {
   }
 
   async startPlaylist(): Promise<void> {
+    this.playing = true;
+    nodecg.sendMessage('videoPlayerStarted');
     // If no videos, just trigger a switch back after a short delay.
     if (!this.videoPlayer.playlist.length) {
       await new Promise((res) => window.setTimeout(res, 2 * 1000));
+      this.playing = false;
       nodecg.sendMessage('videoPlayerFinished');
     } else {
       this.index = 0;
@@ -93,15 +119,16 @@ export default class extends Vue {
     const obs = (window as any).obsstudio;
     if (obs) {
       obs.onActiveChange = (active: boolean): void => {
-        if (active) {
+        if (active && !this.playing) {
           this.startPlaylist();
         } else {
           // These run either on manual or automatic switch.
-          this.stopVideo();
-          this.stopPlaylist();
+          // this.stopVideo();
+          // this.stopPlaylist();
         }
       };
     }
+    nodecg.listenFor('startVideoPlayer', this.startPlaylist);
     this.player.addEventListener('ended', this.videoEnded);
   }
 }

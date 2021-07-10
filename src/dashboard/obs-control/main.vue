@@ -114,7 +114,7 @@ export default class extends Vue {
   }
 
   changeScene(scene: string): void {
-    nodecg.sendMessage('obsChangeScene', scene);
+    nodecg.sendMessage('obsChangeScene', { scene });
   }
 }
 </script>

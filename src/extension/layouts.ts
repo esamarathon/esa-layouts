@@ -196,12 +196,14 @@ capturePositions.on('change', async (val) => {
 
 sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
   // Disable transitioning if on commercials scene and seconds are on the commercial timer.
+  // Not used for ESA, but used for other events still (like UKSG).
   if (obs.isCurrentScene(obsConfig.names.scenes.commercials)) {
     obsData.value.disableTransitioning = newVal.secondsRemaining > 0;
   }
 
   // Switch to the video player scene if there is
   // a selected video when intermission commercials end.
+  // Not currently used for ESA, may be used for other events?
   if (oldVal && oldVal.secondsRemaining > 0 && newVal.secondsRemaining <= 0
     && videoPlayer.value.playlist.length
     && obs.isCurrentScene(obsConfig.names.scenes.commercials)) {
@@ -217,40 +219,43 @@ sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
   }
 });
 
-// Enable transitioning if we just changed to
-// the game layout or intermission (without commercials).
+// Disable transitioning if we just changed to the video player scene.
 obs.on('currentSceneChanged', () => {
-  if (!obs.isCurrentScene(obsConfig.names.scenes.videoPlayer)) {
-    obsData.value.disableTransitioning = false;
+  if (obs.isCurrentScene(obsConfig.names.scenes.videoPlayer)) {
+    obsData.value.disableTransitioning = true;
   }
 });
 
-nodecg().listenFor('obsChangeScene', async (name: string) => {
-  // Don't change scene if identical, we're currently transitioning, or transitioning is disabled.
-  if (obsData.value.scene === name
-    || obsData.value.transitioning
-    || obsData.value.disableTransitioning) {
-    return;
-  }
-  try {
-    if (currentRunDelay.value.audio === 0
-      || (!obs.isCurrentScene(obsConfig.names.scenes.gameLayout)
-      && obs.findScene(name) !== obsConfig.names.scenes.gameLayout)) {
-      await obs.changeScene(name);
-    } else {
-      const delay = currentRunDelay.value.audio;
-      obsData.value.disableTransitioning = true;
-      obsData.value.transitionTimestamp = Date.now() + delay;
-      nodecg().sendMessage('obsTransitionQueued', name); // Simple server-to-server message we need.
-      setTimeout(async () => {
-        try {
-          await obs.changeScene(name);
-        } catch (err) {
-          logError('[Layouts] Could not change scene (on delay) [name: %s]', err, name);
-        }
-      }, delay);
+nodecg().listenFor(
+  'obsChangeScene',
+  async ({ scene, force = false }: { scene: string, force: boolean }) => {
+    // Don't change scene if identical, we're currently transitioning, or transitioning is disabled.
+    if (obsData.value.scene === scene
+      || (!force && (obsData.value.transitioning
+      || obsData.value.disableTransitioning))) {
+      return;
     }
-  } catch (err) {
-    logError('[Layouts] Could not change scene [name: %s]', err, name);
-  }
-});
+    try {
+      if (currentRunDelay.value.audio === 0
+        || (!obs.isCurrentScene(obsConfig.names.scenes.gameLayout)
+        && obs.findScene(scene) !== obsConfig.names.scenes.gameLayout)) {
+        await obs.changeScene(scene);
+      } else {
+        const delay = currentRunDelay.value.audio;
+        obsData.value.disableTransitioning = true;
+        obsData.value.transitionTimestamp = Date.now() + delay;
+        // Simple server-to-server message we need.
+        nodecg().sendMessage('obsTransitionQueued', scene);
+        setTimeout(async () => {
+          try {
+            await obs.changeScene(scene);
+          } catch (err) {
+            logError('[Layouts] Could not change scene (on delay) [name: %s]', err, scene);
+          }
+        }, delay);
+      }
+    } catch (err) {
+      logError('[Layouts] Could not change scene [name: %s]', err, scene);
+    }
+  },
+);

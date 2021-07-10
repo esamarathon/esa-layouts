@@ -7,7 +7,7 @@ import { logRunChange, logVideoPlay } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
-import { assetsVideos, commentators, donationReader, otherStreamData, videoPlayer } from './util/replicants';
+import { assetsVideos, commentators, donationReader, obsData, otherStreamData, videoPlayer } from './util/replicants';
 
 const config = (nodecg().bundleConfig as Configschema);
 const sc = new SpeedcontrolUtil(nodecg());
@@ -154,10 +154,20 @@ sc.on('timerStopped', () => {
   }
 });
 
+nodecg().listenFor('videoPlayerStartCommercial', async (duration: number) => {
+  try {
+    await sc.sendMessage('twitchStartCommercial', { duration });
+  } catch (err) {
+    nodecg().log.warn('[Misc] Could not successfully trigger video player commercials');
+    nodecg().log.debug('[Misc] Could not successfully trigger video player commercials:', err);
+  }
+});
+
 // Switch back to the last scene when the video player finishes.
 nodecg().listenFor('videoPlayerFinished', async () => {
   try {
     await obs.changeScene(config.obs.names.scenes.intermission);
+    obsData.value.disableTransitioning = false;
   } catch (err) {
     nodecg().log.warn('[Misc] Could not return to intermission after video finished');
     nodecg().log.debug('[Misc] Could not return to intermission after video finished:', err);

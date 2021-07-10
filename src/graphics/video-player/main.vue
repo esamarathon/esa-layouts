@@ -62,7 +62,7 @@ export default class extends Vue {
       this.updateCurrent(video.sum);
     } else {
       // This also happens if the playlist item is a non-video.
-      window.setTimeout(() => { this.stopVideo(); }, 2000);
+      this.stopVideo();
       nodecg.sendMessage('obsChangeScene', {
         scene: this.cfg.obs.names.scenes.intermission,
         force: true,
@@ -93,11 +93,13 @@ export default class extends Vue {
 
   stopVideo(): void {
     this.updateCurrent();
-    this.video = null;
-    this.player.pause();
-    this.playerSrc.removeAttribute('src');
-    this.playerSrc.removeAttribute('type');
-    this.player.load();
+    window.setTimeout(() => {
+      this.video = null;
+      this.player.pause();
+      this.playerSrc.removeAttribute('src');
+      this.playerSrc.removeAttribute('type');
+      this.player.load();
+    }, 2000);
   }
 
   async startPlaylist(): Promise<void> {

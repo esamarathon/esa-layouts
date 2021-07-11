@@ -50,6 +50,7 @@ export interface Configschema {
 				gameCapture4: string;
 				cameraCapture1: string;
 				cameraCapture2: string;
+				cameraCapture3: string;
 				restreamSources: string | [string] | [string, string];
 			};
 		};

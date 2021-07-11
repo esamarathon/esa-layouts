@@ -24,6 +24,7 @@ const obsSourceKeys: { [key: string]: string } = {
   GameCapture4: obsConfig.names.sources.gameCapture4,
   CameraCapture1: obsConfig.names.sources.cameraCapture1,
   CameraCapture2: obsConfig.names.sources.cameraCapture2,
+  CameraCapture3: obsConfig.names.sources.cameraCapture3,
 };
 
 // Controls the name cycling ticks for players/hosts

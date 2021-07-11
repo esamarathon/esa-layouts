@@ -263,6 +263,10 @@
                   "type": "string",
                   "default": "Camera Capture 2"
                 },
+                "cameraCapture3": {
+                  "type": "string",
+                  "default": "Camera Capture 3"
+                },
                 "restreamSources": {
                   "oneOf": [
                     {
@@ -288,6 +292,7 @@
                 "gameCapture4",
                 "cameraCapture1",
                 "cameraCapture2",
+                "cameraCapture3",
                 "restreamSources"
               ]
             }

@@ -1,7 +1,8 @@
-import type { VideoPlayer } from '@esa-layouts/types/schemas';
+import type { UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import type { Asset } from '@esamarathon/esa-layouts-shared/types';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
+import { RunData } from 'speedcontrol-util/types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
@@ -9,13 +10,19 @@ Vue.use(Vuex);
 
 // Replicants and their types
 const reps: {
+  upcomingRunID: ReplicantBrowser<UpcomingRunID>;
   videoPlayer: ReplicantBrowser<VideoPlayer>;
   videos: ReplicantBrowser<Asset[]>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
+  upcomingRunID: nodecg.Replicant('upcomingRunID'),
   videoPlayer: nodecg.Replicant('videoPlayer'),
   videos: nodecg.Replicant('assets:videos'),
 };
+
+interface StateTypes {
+  upcomingRunID: UpcomingRunID;
+}
 
 // Types for mutations below
 export type UpdatePlayingState = (isPlaying: boolean) => void;
@@ -24,10 +31,15 @@ export type UpdatePlayCount = (sum: string) => void;
 export type ClearPlaylist = () => void;
 
 const store = new Vuex.Store({
-  state: {},
+  state: {
+    upcomingRunID: null,
+  },
   mutations: {
     setState(state, { name, val }): void {
       Vue.set(state, name, val);
+    },
+    setNextRuns(state, runs: RunData[]): void {
+      Vue.set(state, 'nextRuns', runs);
     },
     /* Mutations to replicants start */
     updatePlayingState(state, isPlaying: boolean): void {
@@ -64,7 +76,7 @@ Object.keys(reps).forEach((key) => {
   });
 });
 
-export default async (): Promise<Store<Record<string, unknown>>> => {
+export default async (): Promise<Store<StateTypes>> => {
   await NodeCG.waitForReplicants(...Object.keys(reps).map((key) => reps[key]));
   return store;
 };

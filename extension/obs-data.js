@@ -61,4 +61,6 @@ obs_1.default.conn.on('TransitionBegin', (data) => {
     replicants_1.obsData.value.transitioning = true;
     clearTimeout(transitioningTimeout);
     transitioningTimeout = setTimeout(() => { replicants_1.obsData.value.transitioning = false; }, data.duration);
+    if (data.name === 'Stinger')
+        nodecg_1.get().sendMessage('showTransition');
 });

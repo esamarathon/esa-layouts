@@ -37,7 +37,6 @@
         :style="{
           flex: 1,
           'background-color': 'rgba(0, 0, 0, 0.3)', // HARDCODED, BAD!
-          color: 'white', // HARDCODED, BAD!
           height: '100%',
           'font-size': '40px',
           'justify-content': 'space-between',
@@ -50,7 +49,6 @@
             class="RunInfoExtra"
             :style="{
               'font-size': '33px',
-              color: '#b7b7b7', // HARDCODED, BAD!
             }"
           >
             <span v-if="nextRuns[0].category">
@@ -68,11 +66,13 @@
           </span>
         </template>
         <template v-else>
-          No More Runs
-          <img
-            src="./esaOhNo.png"
-            :style="{ height: '1.4em', 'margin-left': '10px' }"
-          >
+          <div class="Flex">
+            No More Runs
+            <img
+              src="./esaOhNo.png"
+              :style="{ height: '1.4em', 'margin-left': '10px' }"
+            >
+          </div>
         </template>
       </div>
     </div>

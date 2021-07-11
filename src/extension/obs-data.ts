@@ -1,5 +1,5 @@
-import clone from 'clone';
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
+import clone from 'clone';
 import { logSceneSwitch, logStreamingStatusChange } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
@@ -62,4 +62,5 @@ obs.conn.on('TransitionBegin', (data) => {
   obsData.value.transitioning = true;
   clearTimeout(transitioningTimeout);
   transitioningTimeout = setTimeout(() => { obsData.value.transitioning = false; }, data.duration);
+  if (data.name === 'Stinger') nodecg().sendMessage('showTransition');
 });

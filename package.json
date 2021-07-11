@@ -253,6 +253,11 @@
         "file": "twitch-players.html",
         "width": 1920,
         "height": 1080
+      },
+      {
+        "file": "transition.html",
+        "width": 1920,
+        "height": 1000
       }
     ],
     "mount": [

@@ -1,0 +1,1 @@
+BlankClip(length=72,width=16,height=9,pixel_type="RGB32",fps=60,audio_rate=0)

@@ -5,7 +5,7 @@
   >
     <span class="font-weight-bold">Currently Playing:</span>
     <br><span v-if="name">{{ name }}</span>
-    <span v-else>Unknown (Probably Blank Space)</span>
+    <span v-else>Unknown (Probably Commercial w/o Video)</span>
     <v-btn color="red" class="mt-2" @click="emergencyStop" block>Emergency Stop</v-btn>
   </div>
 </template>

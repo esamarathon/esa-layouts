@@ -195,6 +195,11 @@ capturePositions.on('change', async (val) => {
   }
 });
 
+// Always disable transitioning when one begins.
+obs.conn.on('TransitionBegin', () => {
+  obsData.value.disableTransitioning = true;
+});
+
 sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
   // Disable transitioning if on commercials scene and seconds are on the commercial timer.
   // Not used for ESA, but used for other events still (like UKSG).
@@ -220,29 +225,30 @@ sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
   }
 });
 
-// Disable transitioning if we just changed to the video player scene.
 let sceneChangeCodeTriggered = 0;
 obs.on('currentSceneChanged', (current, last) => {
   // If switched to video player, disable transitioning.
   if (obs.isCurrentScene(obsConfig.names.scenes.videoPlayer)) {
     obsData.value.disableTransitioning = true;
-  }
-
-  // If we switch from the video player to the intermission while a video is playing,
-  // tell the video player to stop. This will only trigger if we didn't trigger
-  // the change in the last 2 seconds.
-  if (sceneChangeCodeTriggered < (Date.now() - 2000)
-  && last === obs.findScene(obsConfig.names.scenes.videoPlayer)
+  // If we switch from the video player to the intermission while a video is playing.
+  } else if (last === obs.findScene(obsConfig.names.scenes.videoPlayer)
   && obs.isCurrentScene(obsConfig.names.scenes.intermission)) {
-    nodecg().sendMessage('endVideoPlayer');
-    obsData.value.disableTransitioning = false;
-  }
-
+    // Tell the video player to stop. Th will only trigger if we didn't trigger
+    // the change in the last 2 seconds.
+    if (sceneChangeCodeTriggered < (Date.now() - 2000)) {
+      nodecg().sendMessage('endVideoPlayer');
+      obsData.value.disableTransitioning = false;
+    // Tell transition to stay disabled otherwise.
+    } else {
+      obsData.value.disableTransitioning = true;
+    }
   // If the video player is playing and we switch from either video player or intermission,
   // tell the video player to stop.
-  if (videoPlayer.value.playing && !obs.isCurrentScene(obsConfig.names.scenes.videoPlayer)
+  } else if (videoPlayer.value.playing && !obs.isCurrentScene(obsConfig.names.scenes.videoPlayer)
   && !obs.isCurrentScene(obsConfig.names.scenes.intermission)) {
     nodecg().sendMessage('endVideoPlayer');
+    obsData.value.disableTransitioning = false;
+  } else {
     obsData.value.disableTransitioning = false;
   }
 });

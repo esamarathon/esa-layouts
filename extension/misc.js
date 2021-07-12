@@ -179,7 +179,6 @@ nodecg_1.get().listenFor('videoPlayerStartCommercial', async (duration) => {
 nodecg_1.get().listenFor('videoPlayerFinished', async () => {
     try {
         await layouts_1.changeScene(config.obs.names.scenes.intermission);
-        replicants_1.obsData.value.disableTransitioning = false;
     }
     catch (err) {
         nodecg_1.get().log.warn('[Misc] Could not return to intermission after videos finished');
@@ -189,5 +188,8 @@ nodecg_1.get().listenFor('videoPlayerFinished', async () => {
 replicants_1.videoPlayer.on('change', (newVal, oldVal) => {
     if (newVal.current && newVal.current !== (oldVal === null || oldVal === void 0 ? void 0 : oldVal.current)) {
         logging_1.logVideoPlay(newVal.current);
+    }
+    if (!newVal.playing && (oldVal === null || oldVal === void 0 ? void 0 : oldVal.playing)) {
+        replicants_1.obsData.value.disableTransitioning = false;
     }
 });

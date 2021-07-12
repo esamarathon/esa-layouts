@@ -192,7 +192,7 @@ body {
 }
 
 
-.RunInfoExtra > span[data-v-a889aec6]:not(:last-child)::after {
+.RunInfoExtra > span[data-v-54f5b557]:not(:last-child)::after {
   content: ' /';
 }
 

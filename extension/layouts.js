@@ -193,6 +193,10 @@ replicants_1.capturePositions.on('change', async (val) => {
         }
     }
 });
+// Always disable transitioning when one begins.
+obs_1.default.conn.on('TransitionBegin', () => {
+    replicants_1.obsData.value.disableTransitioning = true;
+});
 sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
     // Disable transitioning if on commercials scene and seconds are on the commercial timer.
     // Not used for ESA, but used for other events still (like UKSG).
@@ -217,27 +221,34 @@ sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
         }
     }
 });
-// Disable transitioning if we just changed to the video player scene.
 let sceneChangeCodeTriggered = 0;
 obs_1.default.on('currentSceneChanged', (current, last) => {
     // If switched to video player, disable transitioning.
     if (obs_1.default.isCurrentScene(obsConfig.names.scenes.videoPlayer)) {
         replicants_1.obsData.value.disableTransitioning = true;
+        // If we switch from the video player to the intermission while a video is playing.
     }
-    // If we switch from the video player to the intermission while a video is playing,
-    // tell the video player to stop. This will only trigger if we didn't trigger
-    // the change in the last 2 seconds.
-    if (sceneChangeCodeTriggered < (Date.now() - 2000)
-        && last === obs_1.default.findScene(obsConfig.names.scenes.videoPlayer)
+    else if (last === obs_1.default.findScene(obsConfig.names.scenes.videoPlayer)
         && obs_1.default.isCurrentScene(obsConfig.names.scenes.intermission)) {
+        // Tell the video player to stop. Th will only trigger if we didn't trigger
+        // the change in the last 2 seconds.
+        if (sceneChangeCodeTriggered < (Date.now() - 2000)) {
+            nodecg_1.get().sendMessage('endVideoPlayer');
+            replicants_1.obsData.value.disableTransitioning = false;
+            // Tell transition to stay disabled otherwise.
+        }
+        else {
+            replicants_1.obsData.value.disableTransitioning = true;
+        }
+        // If the video player is playing and we switch from either video player or intermission,
+        // tell the video player to stop.
+    }
+    else if (replicants_1.videoPlayer.value.playing && !obs_1.default.isCurrentScene(obsConfig.names.scenes.videoPlayer)
+        && !obs_1.default.isCurrentScene(obsConfig.names.scenes.intermission)) {
         nodecg_1.get().sendMessage('endVideoPlayer');
         replicants_1.obsData.value.disableTransitioning = false;
     }
-    // If the video player is playing and we switch from either video player or intermission,
-    // tell the video player to stop.
-    if (replicants_1.videoPlayer.value.playing && !obs_1.default.isCurrentScene(obsConfig.names.scenes.videoPlayer)
-        && !obs_1.default.isCurrentScene(obsConfig.names.scenes.intermission)) {
-        nodecg_1.get().sendMessage('endVideoPlayer');
+    else {
         replicants_1.obsData.value.disableTransitioning = false;
     }
 });

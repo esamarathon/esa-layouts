@@ -183,7 +183,6 @@ nodecg().listenFor('videoPlayerStartCommercial', async (duration: number) => {
 nodecg().listenFor('videoPlayerFinished', async () => {
   try {
     await changeScene(config.obs.names.scenes.intermission);
-    obsData.value.disableTransitioning = false;
   } catch (err) {
     nodecg().log.warn('[Misc] Could not return to intermission after videos finished');
     nodecg().log.debug('[Misc] Could not return to intermission after videos finished:', err);
@@ -193,5 +192,8 @@ nodecg().listenFor('videoPlayerFinished', async () => {
 videoPlayer.on('change', (newVal, oldVal) => {
   if (newVal.current && newVal.current !== oldVal?.current) {
     logVideoPlay(newVal.current);
+  }
+  if (!newVal.playing && oldVal?.playing) {
+    obsData.value.disableTransitioning = false;
   }
 });

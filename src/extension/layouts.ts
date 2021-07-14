@@ -233,7 +233,7 @@ obs.on('currentSceneChanged', (current, last) => {
   // If we switch from the video player to the intermission while a video is playing.
   } else if (last === obs.findScene(obsConfig.names.scenes.videoPlayer)
   && obs.isCurrentScene(obsConfig.names.scenes.intermission)) {
-    // Tell the video player to stop. Th will only trigger if we didn't trigger
+    // Tell the video player to stop. This will only trigger if we didn't trigger
     // the change in the last 2 seconds.
     if (sceneChangeCodeTriggered < (Date.now() - 2000)) {
       nodecg().sendMessage('endVideoPlayer');
@@ -265,8 +265,10 @@ export async function changeScene(scene: string): Promise<void> {
 nodecg().listenFor(
   'obsChangeScene',
   async ({ scene, force = false }: { scene: string, force: boolean }) => {
-    // Don't change scene if identical, we're currently transitioning, or transitioning is disabled.
-    if (obsData.value.scene === scene
+    // Don't change scene if identical, we're currently transitioning, transitioning is disabled,
+    // or if we triggered a scene change here in the last 2 seconds.
+    if (sceneChangeCodeTriggered > (Date.now() - 2000)
+      || obsData.value.scene === scene
       || (!force && (obsData.value.transitioning
       || obsData.value.disableTransitioning))) {
       return;
@@ -286,6 +288,7 @@ nodecg().listenFor(
         setTimeout(async () => {
           try {
             await obs.changeScene(scene);
+            sceneChangeCodeTriggered = Date.now();
           } catch (err) {
             logError('[Layouts] Could not change scene (on delay) [name: %s]', err, scene);
           }

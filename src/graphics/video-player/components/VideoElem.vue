@@ -45,6 +45,22 @@ export default class extends Vue {
     this.updatePlayingState(val);
   }
 
+  async changeScene(scene: string): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const obs = (window as any).obsstudio;
+    if (obs) {
+      const currScene: { name: string } = await new Promise(
+        (res) => obs.getCurrentScene((s: { name: string }) => res(s)),
+      );
+      if (currScene.name !== scene) {
+        nodecg.sendMessage('obsChangeScene', {
+          scene,
+          force: true,
+        });
+      }
+    }
+  }
+
   async playNextVideo(): Promise<void> {
     const commercialLength = this.playlist[this.index].commercial;
     if (commercialLength > 0) {
@@ -52,10 +68,7 @@ export default class extends Vue {
     }
     const video = this.videos.find((v) => v.sum === this.playlist[this.index].sum);
     if (video) {
-      nodecg.sendMessage('obsChangeScene', {
-        scene: this.cfg.obs.names.scenes.videoPlayer,
-        force: true,
-      });
+      this.changeScene(this.cfg.obs.names.scenes.videoPlayer);
       this.video = video;
       this.playerSrc.src = video.url;
       this.playerSrc.type = `video/${video.ext.toLowerCase().replace('.', '')}`;
@@ -65,10 +78,7 @@ export default class extends Vue {
     } else {
       // This also happens if the playlist item is a non-video.
       this.stopVideo();
-      nodecg.sendMessage('obsChangeScene', {
-        scene: this.cfg.obs.names.scenes.intermission,
-        force: true,
-      });
+      this.changeScene(this.cfg.obs.names.scenes.intermission);
       // Wait until the commercials should be finished.
       this.commercialWaitTimeout = window.setTimeout(() => {
         this.videoEnded();

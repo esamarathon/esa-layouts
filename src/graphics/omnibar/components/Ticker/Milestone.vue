@@ -28,7 +28,7 @@
       <div
         :style="{
           position: 'absolute',
-          width: percentage,
+          width: `${progress}%`,
           height: '100%',
           'background-color': '#e8d53a',
         }"
@@ -79,9 +79,10 @@ export default class extends Vue {
     return formatUSD(total.value || 0);
   }
 
-  get percentage(): string {
-    if (!this.milestone?.amount || !total.value) return '0%';
-    return `${Math.min(total.value / this.milestone.amount, 1) * 100}%`;
+  get progress(): number {
+    if (!this.milestone?.amount || !total.value) return 0;
+    const lower = this.milestone.addition ? this.milestone.amount - this.milestone.addition : 0;
+    return Math.min((total.value - lower) / (this.milestone.amount - lower), 1) * 100;
   }
 
   async created(): Promise<void> {

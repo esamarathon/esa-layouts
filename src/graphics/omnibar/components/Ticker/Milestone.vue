@@ -28,7 +28,7 @@
       <div
         :style="{
           position: 'absolute',
-          width: `${progress}%`,
+          width: `${progressTweened}%`,
           height: '100%',
           'background-color': '#e8d53a',
         }"
@@ -45,12 +45,16 @@
           'box-sizing': 'border-box',
         }"
       >
-        <div class="BarText" :style="{ 'font-size': '25px' }">{{ total }}</div>
+        <div :style="{ width: '20%' }">
+          <span class="BarText" :style="{ 'font-size': '25px' }">{{ total }}</span>
+        </div>
         <div class="BarText" :style="{ 'font-size': '30px' }">
           <span>{{ name }}</span>
           <span v-if="isMet" :style="{ 'color': '#42ff38', 'font-weight': 700 }">- MET!</span>
         </div>
-        <div class="BarText" :style="{ 'font-size': '25px' }">{{ amount }}</div>
+        <div :style="{ width: '20%', 'text-align': 'right' }">
+          <span class="BarText" :style="{ 'font-size': '25px' }">{{ amount }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -62,6 +66,7 @@ import { Vue, Component } from 'vue-property-decorator';
 import { sortBy } from 'lodash';
 import { formatUSD } from '@esa-layouts/graphics/_misc/helpers';
 import clone from 'clone';
+import gsap from 'gsap';
 
 const total = nodecg.Replicant<DonationTotal>('donationTotal');
 const milestones = nodecg.Replicant<DonationTotalMilestones>('donationTotalMilestones');
@@ -69,6 +74,8 @@ const milestones = nodecg.Replicant<DonationTotalMilestones>('donationTotalMiles
 @Component
 export default class extends Vue {
   milestone: DonationTotalMilestones[0] | null = null;
+  progressTweened = 0;
+  totalTweened = 0;
 
   get name(): string {
     return this.milestone?.name || '?';
@@ -79,7 +86,7 @@ export default class extends Vue {
   }
 
   get total(): string {
-    return formatUSD(total.value || 0);
+    return formatUSD(this.totalTweened);
   }
 
   get progress(): number {
@@ -99,14 +106,16 @@ export default class extends Vue {
       const topMilestone = sortBy(availableMilestones, ['amount'])[0];
       if (topMilestone) {
         this.milestone = clone(topMilestone);
+        gsap.to(this, {
+          progressTweened: this.progress,
+          totalTweened: total.value || 0,
+          duration: 2.5,
+        });
+        window.setTimeout(() => this.$emit('end'), 25 * 1000);
       } else {
         this.$emit('end');
       }
     }
-  }
-
-  mounted(): void {
-    window.setTimeout(() => this.$emit('end'), 25 * 1000);
   }
 }
 </script>

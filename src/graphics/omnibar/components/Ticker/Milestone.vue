@@ -46,7 +46,10 @@
         }"
       >
         <div class="BarText" :style="{ 'font-size': '25px' }">{{ total }}</div>
-        <div class="BarText" :style="{ 'font-size': '30px' }">{{ name }}</div>
+        <div class="BarText" :style="{ 'font-size': '30px' }">
+          <span>{{ name }}</span>
+          <span v-if="isMet" :style="{ 'color': '#42ff38', 'font-weight': 700 }">- MET!</span>
+        </div>
         <div class="BarText" :style="{ 'font-size': '25px' }">{{ amount }}</div>
       </div>
     </div>
@@ -83,6 +86,10 @@ export default class extends Vue {
     if (!this.milestone?.amount || !total.value) return 0;
     const lower = this.milestone.addition ? this.milestone.amount - this.milestone.addition : 0;
     return Math.min((total.value - lower) / (this.milestone.amount - lower), 1) * 100;
+  }
+
+  get isMet(): boolean {
+    return !!(this.milestone?.amount && total.value && total.value >= this.milestone.amount);
   }
 
   async created(): Promise<void> {

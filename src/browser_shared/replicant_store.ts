@@ -1,4 +1,4 @@
-// import type { ExampleReplicant } from '@esa-layouts/types/schemas';
+import type { DonationTotal, DonationTotalMilestones } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import Vue from 'vue';
@@ -8,21 +8,28 @@ import { getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators'
 
 // Declaring replicants.
 export const reps: {
-  // exampleReplicant: ReplicantBrowser<ExampleReplicant>;
+  donationTotal: ReplicantBrowser<DonationTotal>;
+  donationTotalMilestones: ReplicantBrowser<DonationTotalMilestones>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
-  exampleReplicant: nodecg.Replicant('exampleReplicant'),
+  donationTotal: nodecg.Replicant('donationTotal'),
+  donationTotalMilestones: nodecg.Replicant('donationTotalMilestones'),
 };
 
 // All the replicant types.
 export interface ReplicantTypes {
-  // exampleReplicant: ExampleReplicant;
+  donationTotal: DonationTotal;
+  donationTotalMilestones: DonationTotalMilestones;
 }
 
 @Module({ name: 'ReplicantModule', namespaced: true })
 export class ReplicantModule extends VuexModule {
   // Replicant values are stored here.
   reps: { [k: string]: unknown } = {};
+
+  get repsTyped(): ReplicantTypes {
+    return this.reps as unknown as ReplicantTypes;
+  }
 
   // This sets the state object above when a replicant sends an update.
   @Mutation

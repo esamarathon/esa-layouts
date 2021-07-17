@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "enabled": {
+        "type": "boolean"
+      },
+      "addition": {
+        "type": "number"
+      },
+      "amount": {
+        "type": "number"
+      }
+    },
+    "required": [
+      "id",
+      "name",
+      "enabled"
+    ]
+  },
+  "default": []
+}

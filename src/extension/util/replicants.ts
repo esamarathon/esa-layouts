@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import type { Bids, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationReader, DonationsToRead, DonationTotal, GameLayouts, MediaBox, MusicData, NameCycle, NotableDonations, ObsData, OtherStreamData, Prizes, StreamDeckData, TtsVoices, TwitchSubscribers, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import { Bids, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, MediaBox, MusicData, NameCycle, NotableDonations, ObsData, OtherStreamData, Prizes, StreamDeckData, TtsVoices, TwitchSubscribers, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import type { Asset } from '@esamarathon/esa-layouts-shared/types';
 import type { TwitchAPIData } from 'speedcontrol-util/types/speedcontrol/schemas';
 import { get as nodecg } from './nodecg';
@@ -22,6 +22,7 @@ export const delayedTimer = nodecg().Replicant<DelayedTimer>('delayedTimer');
 export const donationReader = nodecg().Replicant<DonationReader>('donationReader');
 export const donationsToRead = nodecg().Replicant<DonationsToRead>('donationsToRead', { persistent: false });
 export const donationTotal = nodecg().Replicant<DonationTotal>('donationTotal');
+export const donationTotalMilestones = nodecg().Replicant<DonationTotalMilestones>('donationTotalMilestones');
 export const gameLayouts = nodecg().Replicant<GameLayouts>('gameLayouts');
 export const mediaBox = nodecg().Replicant<MediaBox>('mediaBox'); // try to remove and use esa-layout-shared only
 export const musicData = nodecg().Replicant<MusicData>('musicData');

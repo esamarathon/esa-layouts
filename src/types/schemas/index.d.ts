@@ -8,6 +8,7 @@ export * from './delayedTimer';
 export * from './donationReader';
 export * from './donationsToRead';
 export * from './donationTotal';
+export * from './donationTotalMilestones';
 export * from './gameLayouts';
 export * from './mediaBox';
 export * from './musicData';

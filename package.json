@@ -182,6 +182,14 @@
         "headerColor": "#c49215"
       },
       {
+        "name": "donation-total-milestones",
+        "title": "Donation Total Milestones",
+        "width": 4,
+        "file": "donation-total-milestones.html",
+        "workspace": "Z - ESA Advanced",
+        "headerColor": "#c49215"
+      },
+      {
         "name": "restream-viewer-tool",
         "title": "Restream Viewer Tool",
         "width": 2,

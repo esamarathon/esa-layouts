@@ -24,6 +24,7 @@ import Prize from './Ticker/Prize.vue';
 import Bid from './Ticker/Bid.vue';
 import Alert from './Ticker/Alert.vue';
 import HekTakeover from './Ticker/HekTakeover.vue';
+import Milestone from './Ticker/Milestone.vue';
 
 const otherStreamData = nodecg.Replicant('otherStreamData');
 const runDataActiveRun = nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol');
@@ -74,6 +75,7 @@ export default {
         this.upcomingRun(),
         this.prize(),
         this.bid(),
+        this.milestone(),
         this.teamPromo(),
         this.donationURL(),
         // this.esaUpcomingEvt(),
@@ -136,6 +138,9 @@ export default {
     },
     bid() {
       return { name: Bid };
+    },
+    milestone() {
+      return { name: Milestone };
     },
     teamPromo() {
       return this.genericMsg('Check out our Twitch team @ twitch.tv/team/esa');

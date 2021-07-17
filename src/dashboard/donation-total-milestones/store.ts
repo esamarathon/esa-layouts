@@ -30,7 +30,7 @@ class OurModule extends VuexModule {
   toggleItem({ id, enabled }: { id: string, enabled: boolean }): void {
     const items = clone(replicantModule.repsTyped.donationTotalMilestones);
     const item = items.find((i) => i.id === id);
-    if (item) {
+    if (item && (item.addition || item.amount)) {
       item.enabled = enabled;
       if (item.addition) {
         item.amount = enabled
@@ -55,7 +55,7 @@ class OurModule extends VuexModule {
   removeItem(id: string): void {
     const items = clone(replicantModule.repsTyped.donationTotalMilestones);
     const itemIndex = items.findIndex((i) => i.id === id);
-    if (itemIndex >= 0) {
+    if (itemIndex >= 0 && !items[itemIndex].enabled) {
       items.splice(itemIndex, 1);
       replicantModule.setReplicant({ name: 'donationTotalMilestones', val: items });
     }

@@ -136,7 +136,7 @@ export function setup(): void {
       },
       {
         id: randBidWarID,
-        name: 'Test Bid War',
+        name: 'Test Bid War 1',
         description: 'This is a test description.',
         total: randBidWarAmount,
         game: 'Test Game',
@@ -161,7 +161,7 @@ export function setup(): void {
       },
       {
         id: randBidWarID + 1,
-        name: 'Test Bid War',
+        name: 'Test Bid War 2',
         description: 'This is a test description.',
         total: randBidWarAmount,
         game: 'Test Game',
@@ -181,6 +181,55 @@ export function setup(): void {
             parent: randBidWarID + 1,
             name: 'Test User Option 2',
             total: randBidWarAmount * 0.7,
+          },
+        ],
+      },
+      {
+        id: randBidWarID + 2,
+        name: 'Test Bid War 3',
+        description: 'This is a test description.',
+        total: randBidWarAmount,
+        game: 'Test Game',
+        category: 'Test Category',
+        endTime: Date.now() + 21600000, // Now + 6 hours
+        war: true,
+        allowUserOptions: true,
+        options: [
+          {
+            id: Math.floor(Math.random() * 1000),
+            parent: randBidWarID + 1,
+            name: 'Test Option 1',
+            total: randBidWarAmount * 0.2,
+          },
+          {
+            id: Math.floor(Math.random() * 1000),
+            parent: randBidWarID + 1,
+            name: 'Test Option 2',
+            total: randBidWarAmount * 0.2,
+          },
+          {
+            id: Math.floor(Math.random() * 1000),
+            parent: randBidWarID + 1,
+            name: 'Test Option 3',
+            total: randBidWarAmount * 0.2,
+          },
+          {
+            id: Math.floor(Math.random() * 1000),
+            parent: randBidWarID + 1,
+            name: 'Test Option 4',
+            total: randBidWarAmount * 0.2,
+          },
+          {
+            id: Math.floor(Math.random() * 1000),
+            parent: randBidWarID + 1,
+            name: 'Test Option 5',
+            total: randBidWarAmount * 0.1,
+          },
+          {
+            id: Math.floor(Math.random() * 1000),
+            parent: randBidWarID + 1,
+            name: 'Test Option 6',
+            total: randBidWarAmount * 0.1,
           },
         ],
       },

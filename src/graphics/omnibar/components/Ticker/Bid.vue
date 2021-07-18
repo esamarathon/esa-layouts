@@ -1,168 +1,91 @@
 <template>
-  <div
-    v-if="bid"
-    id="Bid"
-    class="Flex"
-  >
-    <div class="Line1">
-      <span v-if="!bid.war">
-        Upcoming Goal:
-      </span>
-      <span v-else>
-        Upcoming Bid War:
-      </span>
-      {{ bid.game }} - {{ bid.category }}
-    </div>
-    <div
-      ref="Line2"
-      class="Line2"
-      :style="{
-        width: (width > 0) ? `${width}px` : 'inherit'
-      }"
-    >
-      {{ bid.name }}<template v-if="bid.description">
-        &nbsp;({{ bid.description }})
-      </template>:
-      <span v-if="!bid.war">
-        {{ formatUSD(bid.total) }}/{{ formatUSD(bid.goal) }}
-      </span>
-      <span v-else>
-        <span
-          v-if="bid.options.length"
-          id="Options"
-        >
-          <span
-            v-for="option in bid.options"
-            :key="`${option.name}${option.total}`"
-          >
-            {{ option.name }} ({{ formatUSD(option.total) }})
-          </span>
-          <span v-if="bid.allowUserOptions">
-            ...or you could submit your own idea!
-          </span>
-        </span>
-        <span v-else-if="bid.allowUserOptions">
-          No options submitted yet, be the first!
-        </span>
-      </span>
-    </div>
+  <div :style="{ height: '100%' }">
+    <!-- Goal -->
+    <goal v-if="bid && !bid.war" :bid="bid" />
+    <!-- Wars -->
+    <template v-else-if="bid">
+      <!-- If we have exactly 2 options, it's a 1v1 bid war. -->
+      <war1v1 v-if="bid.options.length === 2 && !bid.allowUserOptions" :bid="bid" />
+      <div
+        v-else
+        :style="{
+          display: 'flex',
+          height: '100%',
+          'align-items': 'center',
+          'justify-content': 'center',
+          'font-size': '40px',
+        }"
+      >
+        To Be Implemented!
+      </div>
+    </template>
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
+<script lang="ts">
+import { Bids } from '@esa-layouts/types/schemas';
 import clone from 'clone';
-import { gsap } from 'gsap';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import { Vue, Component } from 'vue-property-decorator';
+import Goal from './Bid/Goal.vue';
+import War1v1 from './Bid/War-1v1.vue';
 
-gsap.registerPlugin(ScrollToPlugin);
+const bids = nodecg.Replicant<Bids>('bids');
+let lastBidId: number | null = null;
 
-const bids = nodecg.Replicant('bids');
-let bid;
-
-export default {
-  name: 'Bid',
-  props: {
-    data: {
-      type: Object,
-      default() {
-        return null;
-      },
-    },
+@Component({
+  components: {
+    Goal,
+    War1v1,
   },
-  data() {
-    return {
-      bid: undefined,
-      lastBidID: null,
-      width: 0,
-    };
-  },
-  created() {
-    const chosenBid = this.getRandomBid();
+})
+export default class extends Vue {
+  bid: Bids[0] | null = null;
 
-    if (!chosenBid) {
-      this.$emit('end');
-    } else {
-      bid = clone(chosenBid);
-    }
-  },
-  mounted() {
-    const fallback = setTimeout(() => this.$emit('end'), 5000);
-    const originalWidth = this.$parent.$el.clientWidth - 34;
-    this.bid = bid;
-    Vue.nextTick().then(() => {
-      if (!this.bid) {
-        return;
-      }
-      this.width = originalWidth;
-      setTimeout(() => {
-        clearTimeout(fallback);
-        const amountToScroll = this.$refs.Line2.scrollWidth - originalWidth;
-        const timeToScroll = (amountToScroll * 13) / 1000;
-        const timeToShow = (timeToScroll > 25) ? timeToScroll : 21;
-        gsap.to(this.$refs.Line2, timeToShow, {
-          scrollTo: { x: 'max' },
-          ease: 'none',
-          onComplete: () => {
-            setTimeout(() => this.$emit('end'), 2 * 1000);
-          },
-        });
-      }, 2 * 1000);
+  getRandomBid(): Bids[0] | null {
+    const bidChoices: { bid: Bids[0], weight: number }[] = [];
+    let totalWeight = 0;
+    const bidsCopy = clone(bids.value);
+    bidsCopy?.forEach((bid) => {
+      // anything within the next 10 minutes has a relative weight of 1,
+      // beyond that theres a quadratic falloff
+      let weight = Math
+        .max(Math.min((10 * 60 * 1000) / ((bid.endTime ?? 0) - Date.now()), 1), 0) ** 2;
+      if (bid.id === lastBidId) weight = 0;
+      bidChoices.push({ bid, weight });
+      totalWeight += weight;
     });
-  },
-  methods: {
-    formatUSD(amount) {
-      return `$${amount.toFixed(2)}`;
-    },
-    getRandomBid() {
-      const bidChoices = [];
-      let totalWeight = 0;
-      const bidsCopy = clone(bids.value);
-      bidsCopy.forEach((_bid) => {
-        // anything within the next 10 minutes has a relative weight of 1,
-        // beyond that theres a quadratic falloff
-        let weight = Math.max(Math.min(10 * 60 * 1000 / (_bid.endTime - Date.now()), 1), 0) ** 2;
-        if (_bid.id === this.lastBidID) weight = 0;
-        bidChoices.push({ bid: _bid, weight });
-        totalWeight += weight;
-      });
-      let randomValue = Math.random();
-      const bidToReturn = bidChoices.find((option) => {
-        // the actual chance is the relative weight divided by the total weight
-        const chance = option.weight / totalWeight;
-        if (chance >= randomValue) {
-          this.lastBidID = option.bid.id;
-          return true;
-        }
-        randomValue -= chance;
-        return false;
-      });
-      if (bidToReturn) return bidToReturn.bid;
-      return null;
-    },
-  },
-};
+    let randomValue = Math.random();
+    const bidToReturn = bidChoices.find((option) => {
+      // the actual chance is the relative weight divided by the total weight
+      const chance = option.weight / totalWeight;
+      if (chance >= randomValue) {
+        lastBidId = option.bid.id;
+        return true;
+      }
+      randomValue -= chance;
+      return false;
+    });
+    if (bidToReturn) return bidToReturn.bid;
+    return null;
+  }
+
+  async created(): Promise<void> {
+    await NodeCG.waitForReplicants(bids);
+    const chosenBid = this.getRandomBid();
+    if (chosenBid) {
+      this.bid = clone(chosenBid);
+      window.setTimeout(() => this.$emit('end'), 25 * 1000);
+    } else {
+      this.$emit('end');
+    }
+  }
+}
 </script>
 
 <style scoped>
-  #Bid {
-    padding: 0 17px;
-    height: 100%;
-    font-weight: 500;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .Line1 {
-    font-size: 25px;
-  }
-  .Line2 {
-    font-size: 23px;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-
-  #Options > span:not(:last-of-type)::after {
-    content: '/'
+  .BarText {
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 7px 10px;
+    border-radius: 15px;
   }
 </style>

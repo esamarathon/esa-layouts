@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="milestone"
     :style="{
       height: '100%',
       display: 'flex',

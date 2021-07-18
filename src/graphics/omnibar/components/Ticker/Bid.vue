@@ -1,5 +1,5 @@
 <template>
-  <div :style="{ height: '100%' }">
+  <div v-if="bid" :style="{ height: '100%' }">
     <!-- Goal -->
     <goal v-if="bid && !bid.war" :bid="bid" @end="$emit('end')" />
     <!-- Wars -->
@@ -40,12 +40,12 @@ export default class extends Vue {
     const bidChoices: { bid: Bids[0], weight: number }[] = [];
     let totalWeight = 0;
     const bidsCopy = clone(bids.value);
-    bidsCopy?.forEach((bid) => {
+    bidsCopy?.forEach((bid, i, arr) => {
       // anything within the next 10 minutes has a relative weight of 1,
       // beyond that theres a quadratic falloff
       let weight = Math
         .max(Math.min((10 * 60 * 1000) / ((bid.endTime ?? 0) - Date.now()), 1), 0) ** 2;
-      if (bid.id === lastBidId) weight = 0;
+      if (bid.id === lastBidId && arr.length > 1) weight = 0;
       bidChoices.push({ bid, weight });
       totalWeight += weight;
     });

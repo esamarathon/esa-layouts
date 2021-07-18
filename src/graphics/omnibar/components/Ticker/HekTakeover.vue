@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="show"
     id="GenericMessage"
     class="Flex"
     :style="cssProps"
@@ -26,6 +27,9 @@ export default {
     },
   },
   computed: {
+    show() {
+      return runDataActiveRun.value && runDataActiveRun.value.customData.info === 'HEK';
+    },
     cssProps() {
       return {
         '--font-size': `${this.normalisedData.size}px`,

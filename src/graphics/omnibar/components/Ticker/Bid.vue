@@ -1,23 +1,16 @@
 <template>
   <div :style="{ height: '100%' }">
     <!-- Goal -->
-    <goal v-if="bid && !bid.war" :bid="bid" />
+    <goal v-if="bid && !bid.war" :bid="bid" @end="$emit('end')" />
     <!-- Wars -->
     <template v-else-if="bid">
       <!-- If we have exactly 2 options, it's a 1v1 bid war. -->
-      <war1v1 v-if="bid.options.length === 2 && !bid.allowUserOptions" :bid="bid" />
-      <div
-        v-else
-        :style="{
-          display: 'flex',
-          height: '100%',
-          'align-items': 'center',
-          'justify-content': 'center',
-          'font-size': '40px',
-        }"
-      >
-        To Be Implemented!
-      </div>
+      <war1v1
+        v-if="bid.options.length === 2 && !bid.allowUserOptions"
+        :bid="bid"
+        @end="$emit('end')"
+      />
+      <war-other v-else :bid="bid" @end="$emit('end')" />
     </template>
   </div>
 </template>
@@ -28,6 +21,7 @@ import clone from 'clone';
 import { Vue, Component } from 'vue-property-decorator';
 import Goal from './Bid/Goal.vue';
 import War1v1 from './Bid/War-1v1.vue';
+import WarOther from './Bid/War-Other.vue';
 
 const bids = nodecg.Replicant<Bids>('bids');
 let lastBidId: number | null = null;
@@ -36,6 +30,7 @@ let lastBidId: number | null = null;
   components: {
     Goal,
     War1v1,
+    WarOther,
   },
 })
 export default class extends Vue {
@@ -74,7 +69,6 @@ export default class extends Vue {
     const chosenBid = this.getRandomBid();
     if (chosenBid) {
       this.bid = clone(chosenBid);
-      window.setTimeout(() => this.$emit('end'), 25 * 1000);
     } else {
       this.$emit('end');
     }

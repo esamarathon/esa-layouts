@@ -98,6 +98,8 @@ export default class extends Vue {
       total2: this.bid.options[1].total,
       duration: 2.5,
     });
+    await new Promise((res) => window.setTimeout(res, 25 * 1000));
+    this.$emit('end');
   }
 }
 </script>

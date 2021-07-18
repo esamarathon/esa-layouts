@@ -234,6 +234,7 @@ export default {
 <style scoped>
   #Ticker {
     height: 100%;
+    min-width: 0;
     flex: 1;
   }
 

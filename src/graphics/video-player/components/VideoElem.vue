@@ -76,7 +76,9 @@ export default class extends Vue {
       this.player.play();
       this.updateCurrent(video.sum);
     } else {
-      // This also happens if the playlist item is a non-video.
+      // This else block also happens if the playlist item is a non-video.
+      // If the first item *is* a non-video, wait 2 seconds so we can transition back.
+      if (this.index === 0) await new Promise((res) => window.setTimeout(res, 2000));
       this.stopVideo();
       this.changeScene(this.cfg.obs.names.scenes.intermission);
       // Wait until the commercials should be finished.

@@ -220,7 +220,7 @@
                 },
                 "videoPlayer": {
                   "type": "string",
-                  "default": "Video Player"
+                  "default": "Intermission Player"
                 },
                 "countdown": {
                   "type": "string",

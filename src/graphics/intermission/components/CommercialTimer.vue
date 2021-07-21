@@ -1,12 +1,14 @@
 <template>
   <div
-    v-if="twitchCommercialTimer.secondsRemaining > 0"
+    v-show="tweened.progress > 0"
     class="CommercialTimer Fixed Flex"
     :style="{
       'font-size': '20px',
+      background:
+        `linear-gradient(to right, rgba(0, 0, 0) ${tweened.progress}%, rgba(0, 0, 0, 0.3) 0)`,
     }"
   >
-    Twitch Commercials Running: {{ commercialTimeRemaining }}
+    Twitch Commercials Running
   </div>
 </template>
 
@@ -14,20 +16,36 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { TwitchCommercialTimer } from 'speedcontrol-util/types/speedcontrol/schemas';
-import { padTimeNumber } from '../../_misc/helpers';
+import gsap from 'gsap';
+
+// Makes sure the tween doesn't break when not visible.
+// Not the best option for this, but fine for now.
+gsap.ticker.lagSmoothing(0);
 
 @Component
 export default class extends Vue {
   @State twitchCommercialTimer!: TwitchCommercialTimer;
+  tweened = { progress: 0 };
 
-  formatSeconds(sec: number): string {
-    const minutes = Math.floor(sec / 60);
-    const seconds = Math.floor(sec - minutes * 60);
-    return `${minutes}:${padTimeNumber(seconds)}`;
+  startAnimation(val?: number): void {
+    this.tweened.progress = val
+      ? 100
+      : Math.min((this.twitchCommercialTimer.secondsRemaining
+        / this.twitchCommercialTimer.originalDuration) * 100, 100);
+    gsap.to(this.tweened, {
+      progress: 0,
+      duration: val ?? this.twitchCommercialTimer.secondsRemaining,
+      ease: 'none',
+    });
   }
 
-  get commercialTimeRemaining(): string {
-    return this.formatSeconds(this.twitchCommercialTimer.secondsRemaining);
+  mounted(): void {
+    if (this.twitchCommercialTimer.secondsRemaining > 0) {
+      this.startAnimation();
+    }
+    nodecg.listenFor('twitchCommercialStarted', 'nodecg-speedcontrol', ({ duration }) => {
+      this.startAnimation(duration);
+    });
   }
 }
 </script>

@@ -122,8 +122,7 @@ body {
 }
 
 #Intermission .BottomBox,
-#Intermission .Content,
-#Intermission .CommercialTimer {
+#Intermission .Content {
   background-color: rgba(0, 0, 0, 0.3);
 }
 

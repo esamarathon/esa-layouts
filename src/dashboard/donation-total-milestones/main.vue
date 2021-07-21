@@ -1,5 +1,5 @@
 <template>
-  <v-app :style="{ 'min-height': '250px' }">
+  <v-app>
     <div class="mb-2 d-flex">
       <div>
         <span class="font-weight-bold">Donation Total:</span>
@@ -18,9 +18,14 @@
     <div v-if="!milestonesSorted.length" class="pa-3 font-italic">
       No milestones created, add a new one with the button above.
     </div>
-    <template v-else>
-      <milestone v-for="milestone in milestonesSorted" :key="milestone.id" :milestone="milestone" />
-    </template>
+    <div v-else :style="{ height: '350px', 'overflow-y': 'scroll', 'margin-top': '10px' }">
+      <milestone
+        v-for="(milestone, i) in milestonesSorted"
+        :key="milestone.id"
+        :milestone="milestone"
+        :index="i"
+      />
+    </div>
   </v-app>
 </template>
 

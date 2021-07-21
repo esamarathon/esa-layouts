@@ -1,7 +1,7 @@
 <template>
   <media-card
     class="d-flex align-center px-2"
-    :style="{ 'text-align': 'unset', height: '40px' }"
+    :style="{ 'text-align': 'unset', height: '40px', 'margin-top': index > 0 ? '10px' : 0 }"
   >
     <v-dialog v-model="dialog">
       <v-card>
@@ -91,6 +91,7 @@ import { storeModule } from '../store';
 })
 export default class extends Vue {
   @Prop({ type: Object, required: true }) readonly milestone!: DonationTotalMilestones[0];
+  @Prop({ type: Number, required: true }) readonly index!: number;
   @replicantNS.State((s) => s.reps.donationTotal) readonly total!: DonationTotal;
   dialog = false;
   nameEdit = '';

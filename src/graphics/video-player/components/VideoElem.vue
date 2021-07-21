@@ -84,7 +84,7 @@ export default class extends Vue {
       // Wait until the commercials should be finished.
       this.commercialWaitTimeout = window.setTimeout(() => {
         this.videoEnded();
-      }, Math.max(this.playlist[this.index].commercial * 1000, 2000));
+      }, Math.max(this.playlist[this.index].commercial * 1000, 2500));
     }
   }
 

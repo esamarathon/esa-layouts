@@ -1,5 +1,6 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import clone from 'clone';
+import sharp from 'sharp';
 import { logSceneSwitch, logStreamingStatusChange } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
@@ -16,7 +17,9 @@ async function takeGameLayoutScreenshot(): Promise<void> {
       embedPictureFormat: 'png',
       height: 360,
     });
-    obsData.value.gameLayoutScreenshot = gameLayoutScreenshot.img;
+    const compressed = await sharp(Buffer.from(gameLayoutScreenshot.img.split(',')[1], 'base64'))
+      .jpeg({ mozjpeg: true }).toBuffer();
+    obsData.value.gameLayoutScreenshot = `data:image/jpeg;base64,${compressed.toString('base64')}`;
   } catch (err) {
     nodecg().log.debug('[OBS Data] Cannot take screenshot of game layout:', err);
   }

@@ -43,25 +43,25 @@
           padding: '0 27px',
         }"
       >
-        <template v-if="nextRuns[0]">
-          {{ nextRuns[0].game }}
+        <template v-if="nextRun">
+          {{ nextRun.game }}
           <span
             class="RunInfoExtra"
             :style="{
               'font-size': '33px',
             }"
           >
-            <span v-if="nextRuns[0].category">
-              {{ nextRuns[0].category }}
+            <span v-if="nextRun.category">
+              {{ nextRun.category }}
             </span>
-            <span v-if="nextRuns[0].system">
-              {{ nextRuns[0].system }}
+            <span v-if="nextRun.system">
+              {{ nextRun.system }}
             </span>
-            <span v-if="getRunTotalPlayers(nextRuns[0]) > 0">
-              {{ formPlayerNamesStr(nextRuns[0]) }}
+            <span v-if="getRunTotalPlayers(nextRun) > 0">
+              {{ formPlayerNamesStr(nextRun) }}
             </span>
-            <span v-if="nextRuns[0].estimate">
-              {{ nextRuns[0].estimate }}
+            <span v-if="nextRun.estimate">
+              {{ nextRun.estimate }}
             </span>
           </span>
         </template>
@@ -92,7 +92,7 @@ import VideoElem from './components/VideoElem.vue';
   },
 })
 export default class extends Vue {
-  @State nextRuns!: RunData[];
+  @State nextRun!: RunData | null;
   getRunTotalPlayers = SpeedcontrolUtilBrowser.getRunTotalPlayers;
   formPlayerNamesStr = SpeedcontrolUtilBrowser.formPlayerNamesStr;
 }

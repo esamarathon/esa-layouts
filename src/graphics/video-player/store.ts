@@ -2,7 +2,7 @@ import type { UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import type { Asset } from '@esamarathon/esa-layouts-shared/types';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
-import { RunData } from 'speedcontrol-util/types';
+import { RunData, RunDataArray } from 'speedcontrol-util/types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
@@ -13,11 +13,13 @@ const reps: {
   upcomingRunID: ReplicantBrowser<UpcomingRunID>;
   videoPlayer: ReplicantBrowser<VideoPlayer>;
   videos: ReplicantBrowser<Asset[]>;
+  runDataArray: ReplicantBrowser<RunDataArray>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
   upcomingRunID: nodecg.Replicant('upcomingRunID'),
   videoPlayer: nodecg.Replicant('videoPlayer'),
   videos: nodecg.Replicant('assets:videos'),
+  runDataArray: nodecg.Replicant('runDataArray', 'nodecg-speedcontrol'),
 };
 
 interface StateTypes {
@@ -33,13 +35,14 @@ export type ClearPlaylist = () => void;
 const store = new Vuex.Store({
   state: {
     upcomingRunID: null,
+    nextRun: null,
   },
   mutations: {
     setState(state, { name, val }): void {
       Vue.set(state, name, val);
     },
-    setNextRuns(state, runs: RunData[]): void {
-      Vue.set(state, 'nextRuns', runs);
+    setNextRun(state, run: RunData): void {
+      Vue.set(state, 'nextRun', run);
     },
     /* Mutations to replicants start */
     updatePlayingState(state, isPlaying: boolean): void {

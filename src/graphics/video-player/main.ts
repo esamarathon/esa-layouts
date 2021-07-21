@@ -12,18 +12,18 @@ import waitForReplicants from './store';
 
 const sc = new SpeedcontrolUtilBrowser(nodecg);
 
-// Gets next 4 runs based on the ID supplied.
-function getNextRuns(id: UpcomingRunID): RunData[] {
+// Gets next run based on the ID supplied.
+function getNextRun(id: UpcomingRunID): RunData | null {
   const runIndex = sc.findRunIndex(id);
   if (runIndex >= 0) {
-    return sc.getRunDataArray().slice(runIndex, runIndex + 4);
+    return sc.getRunDataArray()[runIndex + 1] ?? null;
   }
-  return [];
+  return null;
 }
 
 waitForReplicants().then((store) => {
   store.watch(() => store.state.upcomingRunID, (val) => {
-    store.commit('setNextRuns', getNextRuns(val));
+    store.commit('setNextRun', getNextRun(val));
   }, { immediate: true });
 
   new Vue({

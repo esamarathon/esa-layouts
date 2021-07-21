@@ -1,3 +1,4 @@
+import { VideoPlayer } from '@esa-layouts/types/schemas';
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';
@@ -161,11 +162,17 @@ sc.on('timerStopped', () => {
         i += 1;
       }
     }
-    videoPlayer.value.playlist = formattedList
-      .map(({ name, commercial }) => {
+
+    // This filters out any items that have no asset *and* no commercial, which are useless.
+    videoPlayer.value.playlist = formattedList.reduce<VideoPlayer['playlist']>(
+      (prev, { name, commercial }) => {
         const asset = assetsVideos.value.find((v) => v.name === name?.trim());
-        return { sum: asset?.sum, commercial };
-      });
+        if (asset || commercial) prev.push({ sum: asset?.sum, commercial });
+        return prev;
+      },
+      [],
+    );
+
     nodecg().log.info('[Misc] Automatically set video player playlist from run data');
   }
 });

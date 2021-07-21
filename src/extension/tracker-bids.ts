@@ -8,7 +8,7 @@ import { bids } from './util/replicants';
 const eventConfig = (nodecg().bundleConfig as Configschema).event;
 const config = (nodecg().bundleConfig as Configschema).tracker;
 const { useTestData } = nodecg().bundleConfig as Configschema;
-const refreshTime = 60 * 1000; // Get bids every 60s.
+const refreshTime = 15 * 1000; // Get bids every 15s.
 
 // Processes the response from the API.
 function processRawBids(rawBids: Tracker.Bid[]): Tracker.FormattedBid[] {

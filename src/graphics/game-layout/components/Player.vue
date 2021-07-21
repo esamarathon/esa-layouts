@@ -80,7 +80,7 @@
         >
           <div class="PlayerText">
             <span
-              v-if="showTeamName && team.name"
+              v-if="team.name"
               :style="{ 'font-size': '1.15em', 'font-weight': 600 }"
             >
               {{ team.name }}:
@@ -106,7 +106,7 @@
         >
           <div class="PlayerText">
             <span
-              v-if="showTeamName && team.name"
+              v-if="team.name"
               :style="{ 'font-size': '1.15em', 'font-weight': 600 }"
             >
               {{ team.name }}:
@@ -169,7 +169,6 @@ export default class extends Vue {
   @State('nameCycle') nameCycleServer!: NameCycle;
   @State coop!: boolean;
   @Prop(Number) slotNo!: number;
-  @Prop(Boolean) showTeamName!: boolean;
   team: RunDataTeam | null = null;
   player: RunDataPlayer | null = null;
   playerIndex = 0;

@@ -79,7 +79,7 @@
         width: '587px',
       }"
     >
-      <player :slot-no="0" show-team-name />
+      <player :slot-no="0" />
       <comm-and-reader />
     </div>
 
@@ -93,7 +93,7 @@
         height: '235px',
       }"
     >
-      <player :slot-no="1" show-team-name />
+      <player :slot-no="1" />
 
       <!-- Run Game Info/Timer -->
       <div

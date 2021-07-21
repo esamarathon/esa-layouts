@@ -212,30 +212,28 @@ import { formatUSD } from '../_misc/helpers';
 })
 export default class extends Vue {
   @State bids!: Bids;
-  bidId = 0; // ID of relevant bid in the tracker.
-  optionId1 = 0; // ID of option of team 1 in the tracker on the above bid.
-  optionId2 = 0; // ID of option of team 2 in the tracker on the above bid.
+  ids = (nodecg.bundleConfig as Configschema).tracker.commentaryBias;
   online = (nodecg.bundleConfig as Configschema).event.online;
 
   get commBiasBid(): Bids[0] | undefined {
-    return this.bids.find((b) => b.id === this.bidId);
+    return this.bids.find((b) => b.id === this.ids.bidId);
   }
 
   get commBiasTeam1Total(): string {
-    const opt = this.commBiasBid?.options.find((o) => o.id === this.optionId1);
+    const opt = this.commBiasBid?.options.find((o) => o.id === this.ids.option1Id);
     if (!opt) return '$0'; // If the above is not found, return neutral value.
     return formatUSD(opt.total);
   }
 
   get commBiasTeam2Total(): string {
-    const opt = this.commBiasBid?.options.find((o) => o.id === this.optionId2);
+    const opt = this.commBiasBid?.options.find((o) => o.id === this.ids.option2Id);
     if (!opt) return '$0'; // If the above is not found, return neutral value.
     return formatUSD(opt.total);
   }
 
   get commBiasTeam1Diff(): string | null {
-    const opt1 = this.commBiasBid?.options.find((o) => o.id === this.optionId1);
-    const opt2 = this.commBiasBid?.options.find((o) => o.id === this.optionId2);
+    const opt1 = this.commBiasBid?.options.find((o) => o.id === this.ids.option1Id);
+    const opt2 = this.commBiasBid?.options.find((o) => o.id === this.ids.option2Id);
     if (!opt1 || !opt2) return null; // If either of the above is not found, return nothing.
     const diff = opt1.total - opt2.total;
     if (!diff) return null; // If there is no difference, return nothing.
@@ -243,8 +241,8 @@ export default class extends Vue {
   }
 
   get commBiasTeam2Diff(): string | null {
-    const opt1 = this.commBiasBid?.options.find((o) => o.id === this.optionId1);
-    const opt2 = this.commBiasBid?.options.find((o) => o.id === this.optionId2);
+    const opt1 = this.commBiasBid?.options.find((o) => o.id === this.ids.option1Id);
+    const opt2 = this.commBiasBid?.options.find((o) => o.id === this.ids.option2Id);
     if (!opt1 || !opt2) return null; // If either of the above is not found, return nothing.
     const diff = opt2.total - opt1.total;
     if (!diff) return null; // If there is no difference, return nothing.
@@ -252,7 +250,7 @@ export default class extends Vue {
   }
 
   get commBiasPercentage(): string {
-    const opt = this.commBiasBid?.options.find((o) => o.id === this.optionId1);
+    const opt = this.commBiasBid?.options.find((o) => o.id === this.ids.option1Id);
     if (!this.commBiasBid || !opt || this.commBiasBid.total <= 0) {
       return '50%'; // If the bid/option above is not found or $0, return neutral value.
     }

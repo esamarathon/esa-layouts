@@ -71,6 +71,11 @@ export interface Configschema {
 		address: string;
 		username: string;
 		password: string;
+		commentaryBias: {
+			bidId: number;
+			option1Id: number;
+			option2Id: number;
+		};
 	};
 	tts: {
 		enable: boolean;

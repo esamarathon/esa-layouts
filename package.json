@@ -130,7 +130,6 @@
         "title": "Commentators",
         "width": 2,
         "file": "commentators.html",
-        "workspace": "ESA",
         "headerColor": "#c49215"
       },
       {
@@ -162,7 +161,6 @@
         "title": "OBS Control",
         "width": 3,
         "file": "obs-control.html",
-        "workspace": "ESA",
         "headerColor": "#c49215"
       },
       {
@@ -170,7 +168,6 @@
         "title": "Donation Reader Control",
         "width": 2,
         "file": "donation-reader-control.html",
-        "workspace": "ESA",
         "headerColor": "#c49215"
       },
       {

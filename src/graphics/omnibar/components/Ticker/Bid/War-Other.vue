@@ -28,13 +28,17 @@
     >
       <div
         :style="{
+          display: 'flex',
+          'justify-content': 'center',
+          'flex-direction': 'column',
           'font-size': '23px',
           'text-align': 'center',
           padding: '0 10px',
           'white-space': 'nowrap',
+          'line-height': '100%',
         }"
       >
-        {{ bid.game }} - {{ bid.category }}
+        {{ bid.game }}
         <br>{{ bid.name }}
       </div>
       <div

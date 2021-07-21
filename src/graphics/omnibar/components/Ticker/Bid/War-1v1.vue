@@ -65,8 +65,9 @@
             {{ formatUSD(tweened.total1) }}
           </span>
         </div>
-        <div class="BarText" :style="{ 'font-size': '30px' }">
-          <span>{{ bid.name }}</span>
+        <div class="BarTextFull" :style="{ 'font-size': '23px', 'text-align': 'center' }">
+          {{ bid.game }}
+          <br>{{ bid.name }}
         </div>
         <div :style="{ width: '20%', 'text-align': 'right' }">
           <span class="BarText" :style="{ 'font-size': '25px' }">
@@ -109,5 +110,15 @@ export default class extends Vue {
     background-color: rgba(0, 0, 0, 0.4);
     padding: 7px 10px;
     border-radius: 15px;
+  }
+
+  .BarTextFull {
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 0 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 100%;
+    height: 100%
   }
 </style>

@@ -42,6 +42,7 @@ export interface Configschema {
 				intermission: string;
 				videoPlayer: string;
 				countdown: string;
+				hekIntermission: string;
 			};
 			sources: {
 				gameCapture1: string;

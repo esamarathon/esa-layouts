@@ -225,6 +225,10 @@
                 "countdown": {
                   "type": "string",
                   "default": "Countdown"
+                },
+                "hekIntermission": {
+                  "type": "string",
+                  "default": "HEK Fullscreen"
                 }
               },
               "required": [
@@ -232,7 +236,8 @@
                 "gameLayout",
                 "intermission",
                 "videoPlayer",
-                "countdown"
+                "countdown",
+                "hekIntermission"
               ]
             },
             "sources": {

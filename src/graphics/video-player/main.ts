@@ -16,7 +16,7 @@ const sc = new SpeedcontrolUtilBrowser(nodecg);
 function getNextRun(id: UpcomingRunID): RunData | null {
   const runIndex = sc.findRunIndex(id);
   if (runIndex >= 0) {
-    return sc.getRunDataArray()[runIndex + 1] ?? null;
+    return sc.getRunDataArray()[runIndex] ?? null;
   }
   return null;
 }

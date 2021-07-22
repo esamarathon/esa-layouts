@@ -64,7 +64,7 @@
           v-for="(option, i) in options" :key="option.id"
           class="Option"
           :style="{
-            'background-color': i > 0 ? '#502f59' : '#877520',
+            'background-color': option.winning ? '#877520' : '#502f59',
             'margin-left': i > 0 ? '5px' : '0',
           }"
           :ref="`Option${i + 1}`"
@@ -95,8 +95,10 @@ export default class extends Vue {
   @Ref('OptionsBar') optionsBar!: HTMLElement;
   formatUSD = formatUSD;
 
-  get options(): Bids[0]['options'] {
-    return orderBy(this.bid.options, ['total'], ['desc']);
+  get options(): { id: number, name: string, total: number, winning: boolean }[] {
+    const ordered = orderBy(this.bid.options, ['total'], ['desc']);
+    return ordered.map(({ id, name, total }, i) => (
+      { id, name, total, winning: (i === 0 || total >= ordered[0].total) && total > 0 }));
   }
 
   getRef(name: string): HTMLElement {

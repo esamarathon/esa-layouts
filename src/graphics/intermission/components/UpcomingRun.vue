@@ -54,7 +54,12 @@ export default class extends Vue {
   @Prop({ default: undefined }) runData!: RunData | undefined;
   @Prop({ default: 0 }) slotNo!: number;
   getRunTotalPlayers = SpeedcontrolUtilBrowser.getRunTotalPlayers;
-  formPlayerNamesStr = SpeedcontrolUtilBrowser.formPlayerNamesStr;
+
+  formPlayerNamesStr(runData: RunData): string {
+    return runData.teams.map((team) => (
+      team.name || team.players.map((player) => player.name).join(', ')
+    )).join(' vs. ') || 'N/A';
+  }
 
   get etaUntil(): string {
     if (this.slotNo === 0) {

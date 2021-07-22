@@ -94,7 +94,12 @@ import VideoElem from './components/VideoElem.vue';
 export default class extends Vue {
   @State nextRun!: RunData | null;
   getRunTotalPlayers = SpeedcontrolUtilBrowser.getRunTotalPlayers;
-  formPlayerNamesStr = SpeedcontrolUtilBrowser.formPlayerNamesStr;
+
+  formPlayerNamesStr(runData: RunData): string {
+    return runData.teams.map((team) => (
+      team.name || team.players.map((player) => player.name).join(', ')
+    )).join(' vs. ') || 'N/A';
+  }
 }
 </script>
 

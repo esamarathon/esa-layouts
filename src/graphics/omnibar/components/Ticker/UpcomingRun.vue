@@ -81,17 +81,9 @@ export default {
   },
   methods: {
     formPlayerNamesString(run) {
-      const namesArray = [];
-      let namesList = 'No Player(s)';
-      run.teams.forEach((team) => {
-        const teamPlayerArray = [];
-        team.players.forEach((player) => teamPlayerArray.push(player.name));
-        namesArray.push(teamPlayerArray.join(', '));
-      });
-      if (namesList.length) {
-        namesList = namesArray.join(' vs. ');
-      }
-      return namesList;
+      return run.teams.map((team) => (
+        team.name || team.players.map((player) => player.name).join(', ')
+      )).join(' vs. ') || 'No Player(s)';
     },
     checkForTotalPlayers(run) {
       let amount = 0;

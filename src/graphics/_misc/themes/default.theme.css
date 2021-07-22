@@ -127,7 +127,7 @@ body {
 }
 
 #Omnibar {
-  background-color: #41245b;
+  background: linear-gradient(0deg, rgba(56,31,78,1) 0%, rgba(92,50,130,1) 100%);
 }
 
 #Omnibar #Logo {

@@ -16,8 +16,11 @@
             ((obsData.transitionTimestamp - serverTimestamp) / 1000).toFixed(1) }}s
           <v-icon color="red">mdi-alert</v-icon>
         </span>
-        <span v-else-if="obsData.disableTransitioning" class="red--text font-weight-bold">
+        <span v-else-if="obsData.transitioning" class="red--text font-weight-bold">
           Transitioning
+        </span>
+        <span v-else-if="obsData.disableTransitioning" class="red--text font-weight-bold">
+          Transitioning Disabled
         </span>
         <span v-else class="font-italic">
           Not Currently Transitioning
@@ -122,8 +125,7 @@ export default class extends Vue {
   }
 
   startIntermission(): void {
-    // do thing here
-    this.changeScene(this.obsConfig.names.scenes.videoPlayer); // TEMP
+    nodecg.sendMessage('startIntermission');
   }
 
   changeScene(scene: string): void {

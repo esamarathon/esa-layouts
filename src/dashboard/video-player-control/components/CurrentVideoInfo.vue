@@ -27,11 +27,7 @@ export default class extends Vue {
   }
 
   emergencyStop(): void {
-    nodecg.sendMessage('obsChangeScene', {
-      scene: this.cfg.obs.names.scenes.intermission,
-      force: true,
-    });
-    nodecg.sendMessage('endVideoPlayer');
+    nodecg.sendMessage('stopVideoPlayerEarly');
   }
 }
 </script>

@@ -52,7 +52,7 @@ export default class extends Vue {
     }
     nodecg.listenFor('twitchCommercialStarted', 'nodecg-speedcontrol', ({ duration }) => {
       this.startAnimation(duration);
-    }); */
-  }
+    });
+  } */
 }
 </script>

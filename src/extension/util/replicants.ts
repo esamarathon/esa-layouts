@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import { Bids, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, MediaBox, MusicData, NameCycle, NotableDonations, ObsData, OtherStreamData, Prizes, StreamDeckData, TtsVoices, TwitchSubscribers, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import { Bids, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, MediaBox, MusicData, NameCycle, NotableDonations, ObsData, OtherStreamData, Prizes, ServerTimestamp, StreamDeckData, TtsVoices, TwitchSubscribers, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import type { Asset } from '@esamarathon/esa-layouts-shared/types';
 import type { TwitchAPIData } from 'speedcontrol-util/types/speedcontrol/schemas';
 import { get as nodecg } from './nodecg';
@@ -31,6 +31,7 @@ export const notableDonations = nodecg().Replicant<NotableDonations>('notableDon
 export const obsData = nodecg().Replicant<ObsData>('obsData', { persistent: false });
 export const otherStreamData = nodecg().Replicant<OtherStreamData>('otherStreamData');
 export const prizes = nodecg().Replicant<Prizes>('prizes', { persistent: false });
+export const serverTimestamp = nodecg().Replicant<ServerTimestamp>('serverTimestamp');
 export const streamDeckData = nodecg().Replicant<StreamDeckData>('streamDeckData');
 export const ttsVoices = nodecg().Replicant<TtsVoices>('ttsVoices');
 export const twitchSubscribers = nodecg().Replicant<TwitchSubscribers>('twitchSubscribers');

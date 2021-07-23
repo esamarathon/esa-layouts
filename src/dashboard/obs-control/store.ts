@@ -1,4 +1,4 @@
-import type { CurrentRunDelay, ObsData } from '@esa-layouts/types/schemas';
+import type { CurrentRunDelay, ObsData, ServerTimestamp } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import Vue from 'vue';
@@ -10,10 +10,12 @@ Vue.use(Vuex);
 const reps: {
   currentRunDelay: ReplicantBrowser<CurrentRunDelay>;
   obsData: ReplicantBrowser<ObsData>;
+  serverTimestamp: ReplicantBrowser<ServerTimestamp>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
   currentRunDelay: nodecg.Replicant('currentRunDelay'),
   obsData: nodecg.Replicant('obsData'),
+  serverTimestamp: nodecg.Replicant('serverTimestamp'),
 };
 
 const store = new Vuex.Store({

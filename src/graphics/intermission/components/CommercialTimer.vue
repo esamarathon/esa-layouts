@@ -1,11 +1,11 @@
 <template>
   <div
-    v-show="tweened.progress > 0"
+    v-show="percentage > 0"
     class="CommercialTimer Fixed Flex"
     :style="{
       'font-size': '20px',
       background:
-        `linear-gradient(to right, rgba(0, 0, 0) ${tweened.progress}%, rgba(0, 0, 0, 0.3) 0)`,
+        `linear-gradient(to right, rgba(0, 0, 0) ${percentage}%, rgba(0, 0, 0, 0.3) 0)`,
     }"
   >
     Twitch Commercials Running
@@ -25,27 +25,34 @@ gsap.ticker.lagSmoothing(0);
 @Component
 export default class extends Vue {
   @State twitchCommercialTimer!: TwitchCommercialTimer;
-  tweened = { progress: 0 };
+  // tweened = { progress: 0 };
+  // anim: gsap.core.Tween | null = null;
 
-  startAnimation(val?: number): void {
+  get percentage(): number {
+    return Math.min((this.twitchCommercialTimer.secondsRemaining
+      / this.twitchCommercialTimer.originalDuration) * 100, 100);
+  }
+
+  /* startAnimation(val?: number): void {
+    this.anim?.kill();
     this.tweened.progress = val
       ? 100
       : Math.min((this.twitchCommercialTimer.secondsRemaining
         / this.twitchCommercialTimer.originalDuration) * 100, 100);
-    gsap.to(this.tweened, {
+    this.anim = gsap.to(this.tweened, {
       progress: 0,
       duration: val ?? this.twitchCommercialTimer.secondsRemaining,
       ease: 'none',
     });
-  }
+  } */
 
-  mounted(): void {
+  /* mounted(): void {
     if (this.twitchCommercialTimer.secondsRemaining > 0) {
       this.startAnimation();
     }
     nodecg.listenFor('twitchCommercialStarted', 'nodecg-speedcontrol', ({ duration }) => {
       this.startAnimation(duration);
-    });
+    }); */
   }
 }
 </script>

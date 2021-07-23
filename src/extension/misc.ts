@@ -13,28 +13,6 @@ import { assetsVideos, commentators, donationReader, obsData, otherStreamData, v
 const config = (nodecg().bundleConfig as Configschema);
 const sc = new SpeedcontrolUtil(nodecg());
 
-let ranAdLastTime = false;
-setInterval(async () => {
-  if (ranAdLastTime) {
-    ranAdLastTime = false;
-    return;
-  }
-  const today = new Date();
-  const currentMinute = today.getMinutes();
-  const run = sc.getCurrentRun();
-  if (run && run.externalID && run.externalID === 'BTRLDOOM'
-  && [15, 30, 45, 0].includes(currentMinute)) {
-    try {
-      await sc.sendMessage('twitchStartCommercial', { duration: 60 });
-      ranAdLastTime = true;
-      nodecg().log.info('[Misc] Triggered commercial for BTRLDOOM');
-    } catch (err) {
-      nodecg().log.warn('[Misc] Could not successfully trigger commercial for BTRLDOOM');
-      nodecg().log.debug('[Misc] Could not successfully trigger commercial for BTRLDOOM:', err);
-    }
-  }
-}, 60 * 1000);
-
 // Screened data from our moderation tool.
 mq.evt.on('newScreenedSub', (data) => {
   nodecg().log.debug('[Misc] Received new subscription');

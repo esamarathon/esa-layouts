@@ -48,12 +48,15 @@ export default {
     };
   },
   created() {
-    const fallback = setTimeout(() => this.$emit('end'), 5000);
+    console.log('UpcomingRun: created');
+    const fallback = setTimeout(() => { this.$emit('end'); console.log('UpcomingRun: fallback') }, 5000);
     if (!nextRunsCache.length) {
       const nextRuns = this.getNextRuns();
 
       // Skip if nothing to show.
       if (!nextRuns.length) {
+        clearTimeout(fallback);
+        console.log('UpcomingRun: skipping');
         this.$emit('end');
         return;
       }
@@ -66,6 +69,7 @@ export default {
       && nextRunsCache[randNum].scheduledS < (Date.now() / 1000)) {
       nextRunsCache.splice(randNum, 1);
       clearTimeout(fallback);
+      console.log('UpcomingRun: skipping because run already passed');
       this.$emit('end');
     } else {
       this.run = clone(nextRunsCache[randNum]);
@@ -76,7 +80,8 @@ export default {
       }
       nextRunsCache.splice(randNum, 1);
       clearTimeout(fallback);
-      setTimeout(() => this.$emit('end'), 25 * 1000);
+      console.log('UpcomingRun: showing');
+      setTimeout(() => { this.$emit('end'); console.log('UpcomingRun: ended'); }, 25 * 1000);
     }
   },
   methods: {

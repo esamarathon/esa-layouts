@@ -101,6 +101,7 @@ export default class extends Vue {
   }
 
   async created(): Promise<void> {
+    console.log('Milestone: created');
     await NodeCG.waitForReplicants(total, milestones);
     if (milestones.value) {
       const availableMilestones = milestones.value.filter((m) => m.enabled && m.amount);
@@ -112,8 +113,9 @@ export default class extends Vue {
           totalTweened: total.value || 0,
           duration: 2.5,
         });
-        window.setTimeout(() => this.$emit('end'), 25 * 1000);
+        window.setTimeout(() => { this.$emit('end'); console.log('Milestone: ended'); }, 25 * 1000);
       } else {
+        console.log('Milestone: skipping');
         this.$emit('end');
       }
     }

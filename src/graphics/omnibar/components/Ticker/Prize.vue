@@ -36,19 +36,23 @@ export default {
     };
   },
   created() {
-    const fallback = setTimeout(() => this.$emit('end'), 5000);
-    if (!prizes.value.length) {
+    console.log('Prize: created');
+    const fallback = setTimeout(() => { this.$emit('end'); console.log('Prize: fallback'); }, 5000);
+    // We only want to show prizes that are actually applicable right now!
+    const activePrizes = prizes.value.filter((prize) => (
+      !!prize.startTime && !!prize.endTime
+      && Date.now() > prize.startTime && Date.now() < prize.endTime
+    ));
+    if (!activePrizes.length) {
+      clearTimeout(fallback);
+      console.log('Prize: skipping');
       this.$emit('end');
     } else {
-      // We only want to show prizes that are actually applicable right now!
-      const activePrizes = prizes.value.filter((prize) => (
-        !!prize.startTime && !!prize.endTime
-        && Date.now() > prize.startTime && Date.now() < prize.endTime
-      ));
       const randNum = Math.floor(Math.random() * activePrizes.length);
       this.prize = clone(activePrizes[randNum]);
       clearTimeout(fallback);
-      setTimeout(() => this.$emit('end'), 25 * 1000);
+      console.log('Prize: showing');
+      setTimeout(() => { this.$emit('end'); console.log('Prize: ended'); }, 25 * 1000);
     }
   },
   methods: {

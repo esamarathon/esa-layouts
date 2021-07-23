@@ -91,6 +91,7 @@ export default {
   },
   methods: {
     showNextMsg() {
+      console.log('GOING TO SHOW NEXT MESSAGE');
       let currentComponent;
       if (newCrowdControlExchanges.length) {
         currentComponent = this.crowdControl(newCrowdControlExchanges[0]);
@@ -110,6 +111,7 @@ export default {
       } else {
         currentComponent = this.messageTypes[Math.floor(Math.random() * this.messageTypes.length)];
       }
+      console.log('currentComponent DECIDED: %s', JSON.stringify(currentComponent.name.name));
       this.currentComponent = currentComponent;
       this.timestamp = Date.now();
     },

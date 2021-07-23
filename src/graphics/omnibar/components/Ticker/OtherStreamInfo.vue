@@ -42,15 +42,19 @@ export default {
     };
   },
   created() {
-    const fallback = setTimeout(() => this.$emit('end'), 5000);
+    console.log('OtherStreamInfo: created');
+    const fallback = setTimeout(() => { this.$emit('end'); console.log('OtherStreamInfo: fallback'); }, 5000);
     NodeCG.waitForReplicants(otherStreamData).then(() => {
       // Skip if nothing to show.
       if (!otherStreamData.value || !otherStreamData.value.show) {
+        clearTimeout(fallback);
+        console.log('OtherStreamInfo: skipping');
         this.$emit('end');
       } else {
+        console.log('OtherStreamInfo: showing info');
         this.otherStreamData = clone(otherStreamData.value);
         clearTimeout(fallback);
-        setTimeout(() => this.$emit('end'), 25 * 1000);
+        setTimeout(() => { this.$emit('end'); console.log('OtherStreamInfo: end'); }, 25 * 1000);
       }
     });
   },

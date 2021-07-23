@@ -61,18 +61,20 @@ export default {
     };
   },
   mounted() {
-    const fallback = setTimeout(() => this.$emit('end'), 5000);
+    console.log('Alert: mounted');
+    const fallback = setTimeout(() => { this.$emit('end'); console.log('Alert: fallback'); }, 5000);
     const originalWidth = this.$parent.$el.clientWidth - 34;
     this.line1 = this.data.line1Text;
     this.tweet = this.data.isTweet;
     this.crowdcontrol = this.data.isCrowdControl;
     if (!this.data.line2Text) {
-      setTimeout(() => this.$emit('end'), 10 * 1000);
+      setTimeout(() => { this.$emit('end'); console.log('Alert: 1 line only end'); }, 10 * 1000);
     } else {
       this.line2 = this.data.line2Text;
       Vue.nextTick().then(() => {
         this.width = originalWidth;
         setTimeout(() => {
+          console.log('Alert: starting scroll');
           clearTimeout(fallback);
           const amountToScroll = this.$refs.Line2.scrollWidth - originalWidth;
           const timeToScroll = (amountToScroll * 13) / 1000;
@@ -81,7 +83,8 @@ export default {
             scrollTo: { x: 'max' },
             ease: 'none',
             onComplete: () => {
-              setTimeout(() => this.$emit('end'), 2 * 1000);
+              console.log('Alert: scroll complete');
+              setTimeout(() => { this.$emit('end'); console.log('Alert: 2 line end'); }, 2 * 1000);
             },
           });
         }, 2 * 1000);

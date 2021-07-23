@@ -65,11 +65,14 @@ export default class extends Vue {
   }
 
   async created(): Promise<void> {
+    console.log('Bid: created');
     await NodeCG.waitForReplicants(bids);
     const chosenBid = this.getRandomBid();
     if (chosenBid) {
+      console.log('Bid: showing');
       this.bid = clone(chosenBid);
     } else {
+      console.log('Bid: ended');
       this.$emit('end');
     }
   }

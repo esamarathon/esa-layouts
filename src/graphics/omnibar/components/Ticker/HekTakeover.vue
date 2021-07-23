@@ -42,10 +42,12 @@ export default {
     },
   },
   mounted() {
+    console.log('HekTakeover: mounted');
     if (!runDataActiveRun.value || runDataActiveRun.value.customData.info !== 'HEK') {
+      console.log('HekTakeover: skipping');
       this.$emit('end');
     } else {
-      setTimeout(() => this.$emit('end'), this.normalisedData.time * 1000);
+      setTimeout(() => { this.$emit('end'); console.log('HekTakeover: ended'); }, this.normalisedData.time * 1000);
     }
   },
 };

@@ -1,12 +1,22 @@
 <template>
   <div :style="{ width: '1920px', height: '1080px', position: 'fixed' }">
-    <video-elem
+    <!--<video-elem
       class="Fixed"
       :style="{
         left: '209px',
         top: '25px',
         width: '1503px',
         height: '845px',
+      }"
+    />-->
+    <div
+      class="Fixed"
+      :style="{
+        left: '209px',
+        top: '25px',
+        width: '1503px',
+        height: '845px',
+        'background-color': 'black',
       }"
     />
     <div
@@ -84,6 +94,7 @@ import { RunData } from 'speedcontrol-util/types';
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
+import { VideoPlayer } from '@esa-layouts/types/schemas';
 import VideoElem from './components/VideoElem.vue';
 
 @Component({
@@ -93,12 +104,26 @@ import VideoElem from './components/VideoElem.vue';
 })
 export default class extends Vue {
   @State nextRun!: RunData | null;
+  @State videoPlayer!: VideoPlayer;
   getRunTotalPlayers = SpeedcontrolUtilBrowser.getRunTotalPlayers;
 
   formPlayerNamesStr(runData: RunData): string {
     return runData.teams.map((team) => (
       team.name || team.players.map((player) => player.name).join(', ')
     )).join(' vs. ') || 'N/A';
+  }
+
+  mounted(): void {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const obs = (window as any).obsstudio;
+    if (obs) {
+      obs.onActiveChange = (active: boolean): void => {
+        if (active && !this.videoPlayer.playing) {
+          // If we change to this scene manually, start playing videos.
+          nodecg.sendMessage('startVideoPlayer');
+        }
+      };
+    }
   }
 }
 </script>

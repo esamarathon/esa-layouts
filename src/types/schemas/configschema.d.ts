@@ -53,6 +53,7 @@ export interface Configschema {
 				cameraCapture2: string;
 				cameraCapture3: string;
 				restreamSources: string | [string] | [string, string];
+				videoPlayer: string;
 			};
 		};
 	};

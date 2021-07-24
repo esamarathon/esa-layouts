@@ -288,6 +288,10 @@
                     }
                   ],
                   "default": "Restream Source"
+                },
+                "videoPlayer": {
+                  "type": "string",
+                  "default": "Video Player Source"
                 }
               },
               "required": [
@@ -298,7 +302,8 @@
                 "cameraCapture1",
                 "cameraCapture2",
                 "cameraCapture3",
-                "restreamSources"
+                "restreamSources",
+                "videoPlayer"
               ]
             }
           },

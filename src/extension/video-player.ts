@@ -2,6 +2,7 @@ import { VideoPlayer } from '@esa-layouts/types/schemas';
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import { Asset } from '@esamarathon/esa-layouts-shared/types';
 import clone from 'clone';
+import { cwd } from 'process';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { TwitchCommercialTimer } from 'speedcontrol-util/types/speedcontrol/schemas';
 import { obsChangeScene } from './layouts'; // eslint-disable-line import/no-cycle
@@ -94,6 +95,28 @@ async function waitForCommercialEnd(): Promise<void> {
   });
 }
 
+async function playVideo(video: Asset): Promise<void> {
+  await obs.conn.send('SetSourceSettings', {
+    sourceName: config.obs.names.sources.videoPlayer,
+    sourceSettings: {
+      loop: false,
+      shuffle: false,
+      playback_behavior: 'always_play',
+      playlist: [
+        {
+          hidden: false,
+          selected: false,
+          value: `${cwd()}/assets/${video.namespace}/${video.category}/${video.base}`,
+        },
+      ],
+    },
+  });
+  /* await obs.conn.send('PlayPauseMedia', {
+    sourceName: config.obs.names.sources.videoPlayer,
+    playPause: false, // Yes, false actually means play.
+  }); */
+}
+
 async function playNext(): Promise<void> {
   try {
     const commercialLength = playlist[index].commercial;
@@ -108,7 +131,8 @@ async function playNext(): Promise<void> {
       if (!obs.isCurrentScene(config.obs.names.scenes.videoPlayer)) {
         await obsChangeScene({ scene: config.obs.names.scenes.videoPlayer, force: true });
       }
-      nodecg().sendMessage('playVideo', { url: video.url, ext: video.ext });
+      // nodecg().sendMessage('playVideo', { url: video.url, ext: video.ext });
+      playVideo(video);
     } else {
       // This else block happens for both "commercial w/o video" and non-found assets.
       currVideo = null;
@@ -160,9 +184,10 @@ async function videoEnded(): Promise<void> {
   }
 }
 
-export function stopEarly(): void {
+export async function stopEarly(): Promise<void> {
   if (videoPlayer.value.playing) {
     stopPlaylist();
+    await obs.conn.send('StopMedia', { sourceName: config.obs.names.sources.videoPlayer });
   }
 }
 
@@ -180,8 +205,14 @@ nodecg().listenFor('startVideoPlayer', async () => {
   }
 });
 
+obs.conn.on('MediaEnded', (data) => {
+  if (data.sourceName === config.obs.names.sources.videoPlayer) {
+    videoEnded();
+  }
+});
+
 // Triggered when a video ends playback in the browser.
-nodecg().listenFor('videoEnded', videoEnded);
+// nodecg().listenFor('videoEnded', videoEnded);
 
 // Triggered from the video player control to stop early.
 nodecg().listenFor('stopVideoPlayerEarly', () => {

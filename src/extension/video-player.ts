@@ -199,7 +199,8 @@ async function videoEnded(): Promise<void> {
   } else {
     // End of playlist.
     stopPlaylist();
-    videoPlayer.value.playlist.length = 0; // TEMP DISABLE FOR DEV
+    videoPlayer.value.playlist.length = 0;
+    nodecg().sendMessage('videoPlayerFinished'); // Simple server-to-server message we need.
     if (!obs.isCurrentScene(config.obs.names.scenes.intermission)) {
       await obsChangeScene({ scene: config.obs.names.scenes.intermission, force: true });
     }

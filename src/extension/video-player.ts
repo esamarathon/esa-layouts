@@ -120,10 +120,12 @@ async function playVideo(video: Asset): Promise<void> {
 async function playNext(): Promise<void> {
   try {
     const commercialLength = playlist[index].commercial;
+    let commercialSuccess = false;
     if (commercialLength > 0) {
       await waitForCommercialEnd();
       try {
         await sc.sendMessage('twitchStartCommercial', { duration: commercialLength });
+        commercialSuccess = true;
       } catch (err) { /* err */ }
     }
     const video = assetsVideos.value.find((v) => v.sum === playlist[index].sum);
@@ -138,7 +140,7 @@ async function playNext(): Promise<void> {
     } else {
       // This else block happens for both "commercial w/o video" and non-found assets.
       currVideo = null;
-      if (commercialLength > 0) await waitForCommercialEnd();
+      if (commercialLength > 0 && commercialSuccess) await waitForCommercialEnd();
       else await new Promise((res) => setTimeout(res, 2500));
       videoEnded(); // eslint-disable-line @typescript-eslint/no-use-before-define
     }

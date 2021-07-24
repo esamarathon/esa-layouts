@@ -122,7 +122,9 @@ async function playNext(): Promise<void> {
     const commercialLength = playlist[index].commercial;
     if (commercialLength > 0) {
       await waitForCommercialEnd();
-      sc.sendMessage('twitchStartCommercial', { duration: commercialLength });
+      try {
+        await sc.sendMessage('twitchStartCommercial', { duration: commercialLength });
+      } catch (err) { /* err */ }
     }
     const video = assetsVideos.value.find((v) => v.sum === playlist[index].sum);
     videoPlayer.value.current = video?.sum || null;

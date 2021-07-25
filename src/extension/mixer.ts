@@ -14,6 +14,7 @@ function getNonGameScenes(): string[] {
     obs.findScene(config.obs.names.scenes.intermission),
     obs.findScene(config.obs.names.scenes.videoPlayer),
     obs.findScene(config.obs.names.scenes.countdown),
+    obs.findScene(config.obs.names.scenes.hekIntermission),
   ].filter(Boolean) as string[];
 }
 
@@ -76,10 +77,10 @@ obs.conn.on('TransitionBegin', async (data) => {
   // Auto-fading for HEK's fullscreen intermission.
   const hekIntrmssn = config.obs.names.scenes.hekIntermission;
   if (data['to-scene'].startsWith(hekIntrmssn) && !data['from-scene'].startsWith(hekIntrmssn)) {
-    x32.fade('/ch/21/fader', 0, 0.75, 1000);
+    x32.fade('/ch/21/mix/fader', 0, 0.75, 1000);
   }
   if (data['from-scene'].startsWith(hekIntrmssn) && !data['to-scene'].startsWith(hekIntrmssn)) {
-    x32.fade('/ch/21/fader', 0.75, 0, 1000);
+    x32.fade('/ch/21/mix/fader', 0.75, 0, 1000);
   }
 
   if (config.x32.enable && config.event.online !== 'partial') {

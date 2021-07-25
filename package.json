@@ -291,7 +291,9 @@
         "title": "Videos",
         "allowedTypes": [
           "mp4",
-          "webm"
+          "webm",
+          "MP4",
+          "WEBM"
         ]
       },
       {

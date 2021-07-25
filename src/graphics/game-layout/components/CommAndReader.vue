@@ -41,7 +41,7 @@
               }"
             >{{ pronouns }}</span><span
               v-if="i < comms.length - 1"
-              :key="name"
+              :key="`${name}_comma`"
             >, </span>
           </template>
         </div>

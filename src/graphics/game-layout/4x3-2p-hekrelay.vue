@@ -237,7 +237,7 @@ export default class extends Vue {
     if (!opt1 || !opt2) return null; // If either of the above is not found, return nothing.
     const diff = opt1.total - opt2.total;
     if (!diff) return null; // If there is no difference, return nothing.
-    return `${diff > 0 ? '+' : '-'}${formatUSD(diff)}`;
+    return `${diff > 0 ? '+' : '-'}${formatUSD(Math.abs(diff))}`;
   }
 
   get commBiasTeam2Diff(): string | null {

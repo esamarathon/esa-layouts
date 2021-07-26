@@ -62,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import { DonationTotal, DonationTotalMilestones } from '@esa-layouts/types/schemas';
+import { DonationTotal, DonationTotalMilestones, OmnibarPin } from '@esa-layouts/types/schemas';
 import { Vue, Component } from 'vue-property-decorator';
 import { sortBy } from 'lodash';
 import { formatUSD } from '@esa-layouts/graphics/_misc/helpers';
@@ -71,6 +71,7 @@ import gsap from 'gsap';
 
 const total = nodecg.Replicant<DonationTotal>('donationTotal');
 const milestones = nodecg.Replicant<DonationTotalMilestones>('donationTotalMilestones');
+const pin = nodecg.Replicant<OmnibarPin>('omnibarPin');
 
 @Component
 export default class extends Vue {
@@ -113,7 +114,22 @@ export default class extends Vue {
           totalTweened: total.value || 0,
           duration: 2.5,
         });
-        window.setTimeout(() => { this.$emit('end'); console.log('Milestone: ended'); }, 25 * 1000);
+        if (pin.value?.type === 'milestone' && pin.value.id === this.milestone.id) {
+          console.log('Milestone: is pinned, will not auto-remove');
+          const func = (newVal: OmnibarPin, oldVal?: OmnibarPin) => {
+            if (newVal?.type !== 'milestone' || newVal.id !== this.milestone?.id) {
+              pin.removeListener('change', func);
+              this.$emit('end');
+              console.log('Milestone: ended due to unpinning');
+            }
+          };
+          pin.on('change', func);
+        } else {
+          window.setTimeout(() => {
+            this.$emit('end');
+            console.log('Milestone: ended');
+          }, 25 * 1000);
+        }
       } else {
         console.log('Milestone: skipping');
         this.$emit('end');

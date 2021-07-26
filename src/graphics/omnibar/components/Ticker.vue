@@ -31,6 +31,7 @@ const runDataActiveRun = nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontr
 const runDataArray = nodecg.Replicant('runDataArray', 'nodecg-speedcontrol');
 const bids = nodecg.Replicant('bids');
 const prizes = nodecg.Replicant('prizes');
+const pin = nodecg.Replicant('omnibarPin');
 
 const newDonations = [];
 const newSubs = [];
@@ -93,7 +94,9 @@ export default {
     showNextMsg() {
       console.log('GOING TO SHOW NEXT MESSAGE');
       let currentComponent;
-      if (newCrowdControlExchanges.length) {
+      if (pin.value && pin.value.type === 'milestone') {
+        currentComponent = this.milestone();
+      } else if (newCrowdControlExchanges.length) {
         currentComponent = this.crowdControl(newCrowdControlExchanges[0]);
         newCrowdControlExchanges.shift();
       } else if (newDonations.length) {

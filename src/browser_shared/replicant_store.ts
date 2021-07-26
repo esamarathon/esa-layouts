@@ -1,4 +1,4 @@
-import type { DonationTotal, DonationTotalMilestones } from '@esa-layouts/types/schemas';
+import type { DonationTotal, DonationTotalMilestones, OmnibarPin } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import Vue from 'vue';
@@ -10,16 +10,19 @@ import { getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators'
 export const reps: {
   donationTotal: ReplicantBrowser<DonationTotal>;
   donationTotalMilestones: ReplicantBrowser<DonationTotalMilestones>;
+  omnibarPin: ReplicantBrowser<OmnibarPin>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
   donationTotal: nodecg.Replicant('donationTotal'),
   donationTotalMilestones: nodecg.Replicant('donationTotalMilestones'),
+  omnibarPin: nodecg.Replicant('omnibarPin'),
 };
 
 // All the replicant types.
 export interface ReplicantTypes {
   donationTotal: DonationTotal;
   donationTotalMilestones: DonationTotalMilestones;
+  omnibarPin: OmnibarPin;
 }
 
 @Module({ name: 'ReplicantModule', namespaced: true })

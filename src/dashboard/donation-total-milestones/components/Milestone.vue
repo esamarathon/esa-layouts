@@ -68,6 +68,13 @@
       <v-icon class="pr-1">mdi-cash-plus</v-icon>
       ${{ formatAmount(milestone.addition) }}
     </div>
+    <v-icon
+      @click="pin"
+      :disabled="(!milestone.amount && !milestone.addition) || !milestone.enabled"
+    >
+      <template v-if="isPinned">mdi-pin-off</template>
+      <template v-else>mdi-pin</template>
+    </v-icon>
     <v-icon @click="edit">
       mdi-pencil
     </v-icon>
@@ -80,7 +87,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import MediaCard from '@esa-layouts/dashboard/_misc/components/MediaCard.vue';
-import { DonationTotal, DonationTotalMilestones } from '@esa-layouts/types/schemas';
+import { DonationTotal, DonationTotalMilestones, OmnibarPin } from '@esa-layouts/types/schemas';
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
 import { storeModule } from '../store';
 
@@ -93,6 +100,7 @@ export default class extends Vue {
   @Prop({ type: Object, required: true }) readonly milestone!: DonationTotalMilestones[0];
   @Prop({ type: Number, required: true }) readonly index!: number;
   @replicantNS.State((s) => s.reps.donationTotal) readonly total!: DonationTotal;
+  @replicantNS.State((s) => s.reps.omnibarPin) readonly currentPin!: OmnibarPin;
   dialog = false;
   nameEdit = '';
   additionToggleEdit = false;
@@ -132,6 +140,14 @@ export default class extends Vue {
 
   get isMet(): boolean {
     return !!(this.milestone.amount && this.total >= this.milestone.amount);
+  }
+
+  get isPinned(): boolean {
+    return this.currentPin?.type === 'milestone' && this.currentPin.id === this.milestone.id;
+  }
+
+  pin(): void {
+    storeModule.pinItem({ id: this.milestone.id, pinned: !this.isPinned });
   }
 
   edit(): void {

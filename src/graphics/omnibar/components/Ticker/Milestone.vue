@@ -105,10 +105,15 @@ export default class extends Vue {
     console.log('Milestone: created');
     await NodeCG.waitForReplicants(total, milestones);
     if (milestones.value) {
-      const availableMilestones = milestones.value.filter((m) => m.enabled && m.amount);
-      const topMilestone = sortBy(availableMilestones, ['amount'])[0];
-      if (topMilestone) {
-        this.milestone = clone(topMilestone);
+      let chosenMilestone: DonationTotalMilestones[0] | undefined;
+      if (pin.value?.type === 'milestone') {
+        chosenMilestone = milestones.value.find(({ id }) => pin.value?.id === id);
+      } else {
+        const availableMilestones = milestones.value.filter((m) => m.enabled && m.amount);
+        [chosenMilestone] = sortBy(availableMilestones, ['amount']);
+      }
+      if (chosenMilestone) {
+        this.milestone = clone(chosenMilestone);
         gsap.to(this, {
           progressTweened: this.progress,
           totalTweened: total.value || 0,
@@ -116,8 +121,8 @@ export default class extends Vue {
         });
         if (pin.value?.type === 'milestone' && pin.value.id === this.milestone.id) {
           console.log('Milestone: is pinned, will not auto-remove');
-          const func = (newVal: OmnibarPin, oldVal?: OmnibarPin) => {
-            if (newVal?.type !== 'milestone' || newVal.id !== this.milestone?.id) {
+          const func = (val: OmnibarPin) => {
+            if (val?.type !== 'milestone' || val.id !== this.milestone?.id) {
               pin.removeListener('change', func);
               this.$emit('end');
               console.log('Milestone: ended due to unpinning');

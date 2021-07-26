@@ -47,7 +47,6 @@ export default class extends Vue {
   @replicantNS.State(
     (s) => s.reps.donationTotalMilestones,
   ) readonly milestones!: DonationTotalMilestones;
-  sortByName = false;
   sortOpt = 2;
 
   get milestonesSorted(): DonationTotalMilestones {

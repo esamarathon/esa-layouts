@@ -6,6 +6,6 @@
  */
 
 export type OmnibarPin = {
-	type: 'milestone';
+	type: 'milestone' | 'bid';
 	id: string | number;
 } | null;

@@ -8,7 +8,8 @@
         "type": {
           "type": "string",
           "enum": [
-            "milestone"
+            "milestone",
+            "bid"
           ]
         },
         "id": {

@@ -189,6 +189,14 @@
         "headerColor": "#c49215"
       },
       {
+        "name": "bids",
+        "title": "Bids",
+        "width": 3,
+        "file": "bids.html",
+        "workspace": "Z - ESA Advanced",
+        "headerColor": "#c49215"
+      },
+      {
         "name": "restream-viewer-tool",
         "title": "Restream Viewer Tool",
         "width": 2,

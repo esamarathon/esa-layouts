@@ -47,7 +47,7 @@
             'background-color': '#af60f7',
           }" />
       </div>
-      <!-- Text -->
+      <!-- Both Options -->
       <div
         :style="{
           display: 'flex',
@@ -58,21 +58,46 @@
           height: '100%',
           padding: '0 10px',
           'box-sizing': 'border-box',
+          'z-index': 1,
         }"
       >
-        <div :style="{ width: '20%' }">
+        <div>
           <span class="BarText" :style="{ 'font-size': '25px' }">
-            {{ formatUSD(tweened.total1) }}
+            {{ bid.options[0].name }} - {{ formatUSD(tweened.total1) }}
           </span>
         </div>
-        <div class="BarTextFull" :style="{ 'font-size': '23px', 'text-align': 'center' }">
+        <div :style="{ 'text-align': 'right' }">
+          <span class="BarText" :style="{ 'font-size': '25px' }">
+             {{ formatUSD(tweened.total2) }} - {{ bid.options[0].name }}
+          </span>
+        </div>
+      </div>
+      <!-- Name -->
+      <div
+        :style="{
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+          'z-index': 2,
+          'display': 'flex',
+          'justify-content': 'center',
+        }"
+      >
+        <div
+          :style="{
+            'font-size': '23px',
+            'text-align': 'center',
+            'background-color': 'rgba(0, 0, 0, 0.4)',
+            'padding': '0 10px',
+            'display': 'flex',
+            'flex-direction': 'column',
+            'justify-content': 'center',
+            'line-height': '100%',
+            'height': '100%',
+          }"
+        >
           {{ bid.game }}
           <br>{{ bid.name }}
-        </div>
-        <div :style="{ width: '20%', 'text-align': 'right' }">
-          <span class="BarText" :style="{ 'font-size': '25px' }">
-            {{ formatUSD(tweened.total2) }}
-          </span>
         </div>
       </div>
     </div>
@@ -110,15 +135,5 @@ export default class extends Vue {
     background-color: rgba(0, 0, 0, 0.4);
     padding: 7px 10px;
     border-radius: 15px;
-  }
-
-  .BarTextFull {
-    background-color: rgba(0, 0, 0, 0.4);
-    padding: 0 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    line-height: 100%;
-    height: 100%
   }
 </style>

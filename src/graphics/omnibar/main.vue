@@ -43,7 +43,6 @@ export default {
   created() {
     runDataActiveRun.on('change', (val) => {
       const isHek = runDataActiveRun.value && runDataActiveRun.value.customData.info === 'HEK';
-      console.log(isHek);
       this.isHek = isHek;
     });
   },

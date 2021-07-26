@@ -96,6 +96,8 @@ export default {
       let currentComponent;
       if (pin.value && pin.value.type === 'milestone') {
         currentComponent = this.milestone();
+      } else if (pin.value && pin.value.type === 'bid') {
+        currentComponent = this.bid();
       } else if (newCrowdControlExchanges.length) {
         currentComponent = this.crowdControl(newCrowdControlExchanges[0]);
         newCrowdControlExchanges.shift();

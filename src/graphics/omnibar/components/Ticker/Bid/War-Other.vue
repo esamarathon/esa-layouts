@@ -89,6 +89,8 @@ import { Vue, Component, Prop, Ref } from 'vue-property-decorator';
 import gsap from 'gsap';
 import { orderBy } from 'lodash';
 
+/** This component does not implement the "pin" feature correctly yet! */
+
 @Component
 export default class extends Vue {
   @Prop({ type: Object, required: true }) readonly bid!: Bids[0];

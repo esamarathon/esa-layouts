@@ -109,6 +109,7 @@ import { formatUSD } from '@esa-layouts/graphics/_misc/helpers';
 import { Bids } from '@esa-layouts/types/schemas';
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import gsap from 'gsap';
+import { isPinned, waitForPinFinish } from '../Bid.vue';
 
 @Component
 export default class extends Vue {
@@ -124,7 +125,11 @@ export default class extends Vue {
       total2: this.bid.options[1].total,
       duration: 2.5,
     });
-    await new Promise((res) => window.setTimeout(res, 25 * 1000));
+    if (isPinned(this.bid)) {
+      await waitForPinFinish(this.bid);
+    } else {
+      await new Promise((res) => window.setTimeout(res, 25 * 1000));
+    }
     this.$emit('end');
   }
 }

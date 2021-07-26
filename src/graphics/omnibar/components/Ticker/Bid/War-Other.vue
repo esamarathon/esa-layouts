@@ -94,6 +94,7 @@ export default class extends Vue {
   @Prop({ type: Object, required: true }) readonly bid!: Bids[0];
   @Ref('OptionsBar') optionsBar!: HTMLElement;
   formatUSD = formatUSD;
+  fallback = 0;
 
   get options(): { id: number, name: string, total: number, winning: boolean }[] {
     const ordered = orderBy(this.bid.options, ['total'], ['desc']);
@@ -107,14 +108,22 @@ export default class extends Vue {
   }
 
   async mounted(): Promise<void> {
-    // If no needt scroll, just wait a flat 25 seconds before ending.
+    console.log('Bid: [War-Other] scrollWidth: %s', this.optionsBar.scrollWidth);
+    console.log('Bid: [War-Other] clientWidth: %s', this.optionsBar.clientWidth);
+    // If no need to scroll, just wait a flat 25 seconds before ending.
     if (this.optionsBar.scrollWidth <= this.optionsBar.clientWidth) {
       await new Promise((res) => window.setTimeout(res, 25 * 1000));
       this.$emit('end');
     } else {
+      this.fallback = window.setTimeout(() => { this.$emit('end'); }, 30 * 1000);
       const timeline = gsap.timeline({
         paused: true,
-        onComplete: () => { window.setTimeout(() => { this.$emit('end'); }, 4000); },
+        onComplete: () => {
+          window.setTimeout(() => {
+            window.clearTimeout(this.fallback);
+            this.$emit('end');
+          }, 4000);
+        },
       });
       await new Promise((res) => window.setTimeout(res, 4000));
       const loopLength = this.bid.allowUserOptions ? this.options.length + 1 : this.options.length;
@@ -133,8 +142,8 @@ export default class extends Vue {
         const endPos = this.optionsBar.scrollWidth - this.optionsBar.clientWidth;
         timeline.to(this.optionsBar, {
           scrollLeft: Math.min(rep.offsetLeft, endPos),
-          duration: Math.max(17 / scrollCount, 2),
-        }, i > 1 ? '+=2' : undefined);
+          duration: 2,
+        }, i > 1 ? `+=${Math.max(17 / scrollCount, 2)}` : undefined);
         if (endPos <= rep.offsetLeft) break;
       }
       timeline.resume();

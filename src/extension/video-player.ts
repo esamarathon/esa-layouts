@@ -2,6 +2,7 @@ import { VideoPlayer } from '@esa-layouts/types/schemas';
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import { Asset } from '@esamarathon/esa-layouts-shared/types';
 import clone from 'clone';
+import { getVideoDurationInSeconds } from 'get-video-duration';
 import { cwd } from 'process';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { TwitchCommercialTimer } from 'speedcontrol-util/types/speedcontrol/schemas';
@@ -167,12 +168,35 @@ async function playNext(): Promise<void> {
   }
 }
 
-export function startPlaylist(): void {
+export async function startPlaylist(): Promise<void> {
   obsData.value.disableTransitioning = true;
   videoPlayer.value.playing = true;
   index = 0;
   playlist = clone(videoPlayer.value.playlist);
   playNext();
+
+  // Calculating how long the playlist will actually take (estimated).
+  let totalLength = 0;
+  let leftOverCommercialLength = 0;
+  for (const item of playlist) {
+    const asset = assetsVideos.value.find((a) => a.sum === item.sum);
+    if (asset) {
+      let length = 0;
+      try {
+        length = await getVideoDurationInSeconds(
+          `${cwd()}/assets/${asset.namespace}/${asset.category}/${asset.base}`,
+        );
+      } catch (err) { /* err */ }
+      totalLength += length;
+      leftOverCommercialLength += item.commercial;
+      leftOverCommercialLength = Math.max(leftOverCommercialLength - length, 0);
+    } else if (item.commercial > 0) {
+      totalLength += leftOverCommercialLength + item.commercial;
+      leftOverCommercialLength = 0;
+    }
+  }
+  totalLength += leftOverCommercialLength;
+  videoPlayer.value.estimatedFinishTimestamp = Date.now() + (totalLength * 1000);
 }
 
 function stopPlaylist(): void {

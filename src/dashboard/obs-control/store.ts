@@ -1,4 +1,4 @@
-import type { CurrentRunDelay, ObsData, ServerTimestamp } from '@esa-layouts/types/schemas';
+import type { CurrentRunDelay, ObsData, ServerTimestamp, VideoPlayer } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import Vue from 'vue';
@@ -11,11 +11,13 @@ const reps: {
   currentRunDelay: ReplicantBrowser<CurrentRunDelay>;
   obsData: ReplicantBrowser<ObsData>;
   serverTimestamp: ReplicantBrowser<ServerTimestamp>;
+  videoPlayer: ReplicantBrowser<VideoPlayer>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
   currentRunDelay: nodecg.Replicant('currentRunDelay'),
   obsData: nodecg.Replicant('obsData'),
   serverTimestamp: nodecg.Replicant('serverTimestamp'),
+  videoPlayer: nodecg.Replicant('videoPlayer'),
 };
 
 const store = new Vuex.Store({

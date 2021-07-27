@@ -12,6 +12,7 @@ export interface VideoPlayer {
 	}[];
 	current: string | null;
 	playing: boolean;
+	estimatedFinishTimestamp: number;
 	plays: {
 		[k: string]: number;
 	};

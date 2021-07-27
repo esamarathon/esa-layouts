@@ -33,6 +33,7 @@
     "@esamarathon/esa-layouts-shared": "git+https://git@github.com/esamarathon/esa-layouts-shared.git#7c138b2a329bedc00bf9e861e2d096dfc9fd288b",
     "async": "^3.2.0",
     "clone": "^2.1.2",
+    "get-video-duration": "3.0.2",
     "lodash": "^4.17.21",
     "module-alias": "^2.2.2",
     "moment": "^2.29.1",

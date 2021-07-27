@@ -37,6 +37,10 @@
       "type": "boolean",
       "default": false
     },
+    "estimatedFinishTimestamp": {
+      "type": "number",
+      "default": 0
+    },
     "plays": {
       "type": "object",
       "additionalProperties": {
@@ -49,6 +53,7 @@
     "playlist",
     "current",
     "playing",
+    "estimatedFinishTimestamp",
     "plays"
   ]
 }

@@ -12,14 +12,24 @@
           v-if="obsData.transitionTimestamp > serverTimestamp"
           class="red--text font-weight-bold"
         >
+          <v-icon color="red">mdi-alert</v-icon>
           Transitioning in {{
             ((obsData.transitionTimestamp - serverTimestamp) / 1000).toFixed(1) }}s
-          <v-icon color="red">mdi-alert</v-icon>
         </span>
         <span v-else-if="obsData.transitioning" class="red--text font-weight-bold">
+          <v-icon color="red">mdi-alert</v-icon>
           Transitioning
         </span>
+        <span
+          v-else-if="videoPlayer.estimatedFinishTimestamp > serverTimestamp"
+          class="red--text font-weight-bold"
+        >
+          <v-icon color="red">mdi-alert</v-icon>
+          Playlist will finish in ~{{
+            ((videoPlayer.estimatedFinishTimestamp - serverTimestamp) / 1000).toFixed(1) }}s
+        </span>
         <span v-else-if="obsData.disableTransitioning" class="red--text font-weight-bold">
+          <v-icon color="red">mdi-alert</v-icon>
           Transitioning Disabled
         </span>
         <span v-else class="font-italic">
@@ -94,7 +104,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { CurrentRunDelay, ObsData, ServerTimestamp } from '@esa-layouts/types/schemas';
+import { CurrentRunDelay, ObsData, ServerTimestamp, VideoPlayer } from '@esa-layouts/types/schemas';
 import { Configschema } from '@esa-layouts/types/schemas/configschema';
 
 @Component
@@ -102,6 +112,7 @@ export default class extends Vue {
   @State obsData!: ObsData;
   @State currentRunDelay!: CurrentRunDelay;
   @State serverTimestamp!: ServerTimestamp;
+  @State videoPlayer!: VideoPlayer;
   obsConfig = (nodecg.bundleConfig as Configschema).obs;
   gameLayoutPreviewToggle = true;
 

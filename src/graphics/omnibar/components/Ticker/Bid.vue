@@ -98,7 +98,6 @@ export default class extends Vue {
   async created(): Promise<void> {
     console.log('Bid: created');
     await NodeCG.waitForReplicants(bids);
-    bids.on('change', this.onBidsChange);
     let chosenBid: Bids[0] | null | undefined;
     if (bids.value && pin.value?.type === 'bid') {
       chosenBid = bids.value.find(({ id }) => pin.value?.id === id);
@@ -108,6 +107,7 @@ export default class extends Vue {
     if (chosenBid) {
       console.log('Bid: showing');
       this.bid = clone(chosenBid);
+      bids.on('change', this.onBidsChange);
     } else {
       this.end();
     }

@@ -91,7 +91,7 @@ export default class extends Vue {
     return formatUSD(this.totalTweened);
   }
 
-  get progress(): number {
+  getProgress(): number {
     if (!this.milestone?.amount || !total.value) return 0;
     const lower = this.milestone.addition ? this.milestone.amount - this.milestone.addition : 0;
     return Math.min((total.value - lower) / (this.milestone.amount - lower), 1) * 100;
@@ -99,6 +99,19 @@ export default class extends Vue {
 
   get isMet(): boolean {
     return !!(this.milestone?.amount && total.value && total.value >= this.milestone.amount);
+  }
+
+  tweenValues(): void {
+    gsap.to(this, {
+      progressTweened: this.getProgress(),
+      totalTweened: total.value || 0,
+      duration: 2.5,
+    });
+  }
+
+  end(): void {
+    total.removeListener('change', this.tweenValues);
+    this.$emit('end');
   }
 
   async created(): Promise<void> {
@@ -114,30 +127,27 @@ export default class extends Vue {
       }
       if (chosenMilestone) {
         this.milestone = clone(chosenMilestone);
-        gsap.to(this, {
-          progressTweened: this.progress,
-          totalTweened: total.value || 0,
-          duration: 2.5,
-        });
+        total.on('change', this.tweenValues);
+        this.tweenValues();
         if (pin.value?.type === 'milestone' && pin.value.id === this.milestone.id) {
           console.log('Milestone: is pinned, will not auto-remove');
           const func = (val: OmnibarPin) => {
             if (val?.type !== 'milestone' || val.id !== this.milestone?.id) {
               pin.removeListener('change', func);
-              this.$emit('end');
+              this.end();
               console.log('Milestone: ended due to unpinning');
             }
           };
           pin.on('change', func);
         } else {
           window.setTimeout(() => {
-            this.$emit('end');
+            this.end();
             console.log('Milestone: ended');
           }, 25 * 1000);
         }
       } else {
         console.log('Milestone: skipping');
-        this.$emit('end');
+        this.end();
       }
     }
   }

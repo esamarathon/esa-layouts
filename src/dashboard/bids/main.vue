@@ -18,9 +18,7 @@
         clearable
         label="Search..."
         append-icon="mdi-magnify"
-        :messages="`
-          ${bidsFiltered.length} bid${bidsFiltered.length === 1 ? '' : 's'} found.
-        `"
+        :messages="`${bidsFiltered.length} bid${bidsFiltered.length === 1 ? '' : 's'} found.`"
       />
       <div :style="{ height: '350px', 'overflow-y': 'scroll' }">
         <bid
@@ -36,7 +34,7 @@
 
 <script lang="ts">
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
-import { Bids } from '@esa-layouts/types/schemas';
+import { Bids, OmnibarPin } from '@esa-layouts/types/schemas';
 import { sortBy } from 'lodash';
 import { Vue, Component } from 'vue-property-decorator';
 import Bid from './components/Bid.vue';
@@ -48,8 +46,15 @@ import Bid from './components/Bid.vue';
 })
 export default class extends Vue {
   @replicantNS.State((s) => s.reps.bids) readonly bids!: Bids;
+  @replicantNS.State((s) => s.reps.omnibarPin) readonly currentPin!: OmnibarPin;
   sortOpt = 1;
   searchTerm: string | null = null;
+
+  get pinnedBid(): Bids[0] | undefined {
+    return this.currentPin?.type === 'bid'
+      ? this.bids.find((b) => b.id === this.currentPin?.id)
+      : undefined;
+  }
 
   get bidsSorted(): Bids {
     if (this.sortOpt === 1) {
@@ -58,12 +63,17 @@ export default class extends Vue {
     return sortBy(this.bids, ['game']);
   }
 
-  get bidsFiltered(): Bids {
-    return this.bidsSorted.filter((b) => {
+  get bidsFiltered(): Partial<Bids[0]>[] {
+    const filtered: Partial<Bids[0]>[] = [];
+    if (!this.pinnedBid && this.currentPin?.type === 'bid') {
+      filtered.push({ name: 'Pinned bid no longer available!', id: this.currentPin.id as number });
+    }
+    filtered.push(...this.bidsSorted.filter((b) => {
       const str = (this.searchTerm) ? this.searchTerm.toLowerCase() : '';
       return !str || (str && (b.game?.toLowerCase().includes(str)
         || b.name.toLowerCase().includes(str)));
-    });
+    }));
+    return filtered;
   }
 }
 </script>

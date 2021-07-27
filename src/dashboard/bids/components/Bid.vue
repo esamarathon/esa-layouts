@@ -3,7 +3,14 @@
     class="d-flex align-center px-2"
     :style="{ 'text-align': 'unset', height: '40px', 'margin-top': index > 0 ? '10px' : 0 }"
   >
-    <div class="flex-grow-1">{{ bid.game }} - {{ bid.name }}</div>
+    <div class="flex-grow-1" :style="{ overflow: 'hidden' }">
+      <span
+        :class="{ 'font-italic': isPinned && bid.name.includes('no longer available') }"
+      >
+        {{ bid.game || 'N/A' }} - {{ bid.name }}
+      </span>
+    </div>
+    <v-spacer />
     <v-icon @click="pin">
       <template v-if="isPinned">mdi-pin-off</template>
       <template v-else>mdi-pin</template>

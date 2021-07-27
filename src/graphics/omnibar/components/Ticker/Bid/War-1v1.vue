@@ -68,7 +68,7 @@
         </div>
         <div :style="{ 'text-align': 'right' }">
           <span class="BarText" :style="{ 'font-size': '25px' }">
-             {{ formatUSD(tweened.total2) }} - {{ bid.options[0].name }}
+             {{ formatUSD(tweened.total2) }} - {{ bid.options[1].name }}
           </span>
         </div>
       </div>

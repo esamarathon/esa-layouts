@@ -10,7 +10,7 @@
         :bid="bid"
         @end="end"
       />
-      <war-other v-else :bid="bid" @end="end" />
+      <war-other v-else :bid-original="bid" @end="end" />
     </template>
   </div>
 </template>

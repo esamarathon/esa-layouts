@@ -134,7 +134,7 @@ export default class extends Vue {
   clipPath = 'unset';
 
   get isHek(): boolean {
-    return this.nextRuns[0].customData.info === 'HEK';
+    return this.nextRuns[0]?.customData.info === 'HEK';
   }
 
   mounted(): void {

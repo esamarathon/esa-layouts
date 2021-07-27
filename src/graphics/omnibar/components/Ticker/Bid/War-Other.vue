@@ -111,8 +111,11 @@ export default class extends Vue {
     return Array.isArray(rep) ? rep[0] : rep;
   }
 
-  async mounted(): Promise<void> {
+  created(): void {
     this.bid = clone(this.bidOriginal);
+  }
+
+  async mounted(): Promise<void> {
     console.log('Bid: [War-Other] scrollWidth: %s', this.optionsBar.scrollWidth);
     console.log('Bid: [War-Other] clientWidth: %s', this.optionsBar.clientWidth);
     // If no need to scroll, just wait a flat 25 seconds before ending.

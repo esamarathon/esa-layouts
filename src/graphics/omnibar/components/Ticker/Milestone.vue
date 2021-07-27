@@ -98,7 +98,8 @@ export default class extends Vue {
   }
 
   get isMet(): boolean {
-    return !!(this.milestone?.amount && total.value && total.value >= this.milestone.amount);
+    return !!(this.milestone?.amount
+      && this.totalTweened && this.milestone.amount <= this.totalTweened);
   }
 
   tweenValues(): void {

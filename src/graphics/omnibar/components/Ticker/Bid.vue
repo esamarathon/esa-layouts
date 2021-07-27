@@ -18,7 +18,7 @@
 <script lang="ts">
 import { Bids, OmnibarPin } from '@esa-layouts/types/schemas';
 import clone from 'clone';
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component, Watch } from 'vue-property-decorator';
 import Goal from './Bid/Goal.vue';
 import War1v1 from './Bid/War-1v1.vue';
 import WarOther from './Bid/War-Other.vue';
@@ -32,9 +32,10 @@ export function isPinned(bid: Bids[0]): boolean {
 }
 
 export async function waitForPinFinish(bid: Bids[0]): Promise<void> {
+  const { id } = bid;
   return new Promise((res) => {
     const func = (val: OmnibarPin) => {
-      if (val?.type !== 'bid' || val.id !== bid.id) {
+      if (val?.type !== 'bid' || val.id !== id) {
         pin.removeListener('change', func);
         res();
       }
@@ -81,7 +82,15 @@ export default class extends Vue {
     return null;
   }
 
+  onBidsChange(val: Bids): void {
+    const bid = val.find(({ id }) => this.bid?.id === id);
+    if (bid) {
+      this.bid = clone(bid);
+    }
+  }
+
   end(): void {
+    bids.removeListener('change', this.onBidsChange);
     console.log('Bid: ended');
     this.$emit('end');
   }
@@ -89,6 +98,7 @@ export default class extends Vue {
   async created(): Promise<void> {
     console.log('Bid: created');
     await NodeCG.waitForReplicants(bids);
+    bids.on('change', this.onBidsChange);
     let chosenBid: Bids[0] | null | undefined;
     if (bids.value && pin.value?.type === 'bid') {
       chosenBid = bids.value.find(({ id }) => pin.value?.id === id);

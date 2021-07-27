@@ -88,15 +88,17 @@ import { Bids } from '@esa-layouts/types/schemas';
 import { Vue, Component, Prop, Ref } from 'vue-property-decorator';
 import gsap from 'gsap';
 import { orderBy } from 'lodash';
+import clone from 'clone';
 
 /** This component does not implement the "pin" feature correctly yet! */
 
 @Component
 export default class extends Vue {
-  @Prop({ type: Object, required: true }) readonly bid!: Bids[0];
+  @Prop({ type: Object, required: true }) readonly bidOriginal!: Bids[0];
   @Ref('OptionsBar') optionsBar!: HTMLElement;
   formatUSD = formatUSD;
   fallback = 0;
+  bid!: Bids[0];
 
   get options(): { id: number, name: string, total: number, winning: boolean }[] {
     const ordered = orderBy(this.bid.options, ['total'], ['desc']);
@@ -110,6 +112,7 @@ export default class extends Vue {
   }
 
   async mounted(): Promise<void> {
+    this.bid = clone(this.bidOriginal);
     console.log('Bid: [War-Other] scrollWidth: %s', this.optionsBar.scrollWidth);
     console.log('Bid: [War-Other] clientWidth: %s', this.optionsBar.clientWidth);
     // If no need to scroll, just wait a flat 25 seconds before ending.

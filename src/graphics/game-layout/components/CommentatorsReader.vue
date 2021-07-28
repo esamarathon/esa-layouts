@@ -37,7 +37,7 @@
         overflow: 'hidden',
       }"
     >
-      <div :style="{ width: '100%' }">
+      <div :style="{ width: '100%', 'text-align': 'center' }">
         <span
           ref="Fit"
           :style="{

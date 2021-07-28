@@ -226,6 +226,7 @@ export default class extends Vue {
       [this.fittyPlayer] = fitty('.PlayerText', {
         minSize: 1,
         maxSize: parseInt(elem.style.fontSize, 10),
+        multiLine: false,
       });
     }
   }

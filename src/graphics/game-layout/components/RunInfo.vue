@@ -77,10 +77,12 @@ export default class extends Vue {
         [this.fittyGame] = fitty('.RunGame', {
           minSize: 1,
           maxSize: parseInt(elem.style.fontSize, 10),
+          multiLine: false,
         });
         [this.fittyInfoExtra] = fitty('.RunInfoExtra', {
           minSize: 1,
           maxSize: parseInt(elem.style.fontSize, 10) * 0.8,
+          multiLine: false,
         });
       } else {
         // If there is no horizontal fitting, will crudely attempt to

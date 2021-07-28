@@ -90,6 +90,11 @@ const routes = [
     component: List.L_GBA_1p,
   },
   {
+    name: 'GBA 2 Player',
+    path: '/GBA-2p',
+    component: List.L_GBA_2p,
+  },
+  {
     name: '3DS 1 Player',
     path: '/3DS-1p',
     component: List.L_3DS_1p,

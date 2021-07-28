@@ -70,7 +70,8 @@
       }"
     >
       <player :slot-no="0" />
-      <comm-and-reader />
+      <commentators-reader />
+      <commentators-reader show-reader />
     </div>
 
     <!-- Player 2/General Run Info -->
@@ -141,9 +142,9 @@
       :font-size="40"
       :style="{
         left: '0px',
-        top: '630px',
+        top: '674px',
         width: '660px',
-        height: '310px',
+        height: '266px',
       }"
     />
 
@@ -167,7 +168,7 @@ import { RunDataActiveRun } from 'speedcontrol-util/types';
 import MediaBox from '@esamarathon/esa-layouts-shared/mediabox/graphics';
 import GameCapture from './components/GameCapture.vue';
 import Player from './components/Player.vue';
-import CommAndReader from './components/CommAndReader.vue';
+import CommentatorsReader from './components/CommentatorsReader.vue';
 import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
 import DonationBar from './components/DonationBar.vue';
@@ -177,7 +178,7 @@ import { formatPronouns } from '../_misc/helpers';
   components: {
     GameCapture,
     Player,
-    CommAndReader,
+    CommentatorsReader,
     RunInfo,
     Timer,
     MediaBox,

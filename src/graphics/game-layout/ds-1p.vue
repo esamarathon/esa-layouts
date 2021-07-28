@@ -70,7 +70,8 @@
       }"
     >
       <player />
-      <comm-and-reader />
+      <commentators-reader />
+      <commentators-reader show-reader />
     </div>
 
     <!-- Media Box -->
@@ -103,7 +104,7 @@ import { Vue, Component } from 'vue-property-decorator';
 import MediaBox from '@esamarathon/esa-layouts-shared/mediabox/graphics';
 import GameCapture from './components/GameCapture.vue';
 import Player from './components/Player.vue';
-import CommAndReader from './components/CommAndReader.vue';
+import CommentatorsReader from './components/CommentatorsReader.vue';
 import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
 import DonationBar from './components/DonationBar.vue';
@@ -112,7 +113,7 @@ import DonationBar from './components/DonationBar.vue';
   components: {
     GameCapture,
     Player,
-    CommAndReader,
+    CommentatorsReader,
     RunInfo,
     Timer,
     MediaBox,

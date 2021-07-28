@@ -110,6 +110,11 @@ const routes = [
     component: List.L_5x2_1p,
   },
   {
+    name: 'SM64 (Power Star Pathway 2P)',
+    path: '/sm64-psp-2p',
+    component: List.L_SM64_PSP_2p,
+  },
+  {
     path: '*',
     redirect: '/4x3-1p',
   },

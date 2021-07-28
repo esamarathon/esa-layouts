@@ -163,12 +163,23 @@ capturePositions.on('change', async (val) => {
     }
 
     try {
+      if (['GameCapture1', 'GameCapture2'].includes(key)
+      && gameLayouts.value.selected === 'sm64-psp-2p') {
+        crop.right = key === 'GameCapture1' ? 1920 / 2 : 0; // Hardcoded for 1080p source!
+        crop.left = key === 'GameCapture2' ? 1920 / 2 : 0; // Hardcoded for 1080p source!
+      }
       await obs.configureSceneItem(
         obsConfig.names.scenes.gameLayout,
         obsSourceKeys[key],
         (() => {
           if (key.startsWith('GameCapture')
-          && ['DS-1p', '3DS-1p'].includes(gameLayouts.value.selected || '')) {
+          && ['DS-1p', '3DS-1p', 'sm64-psp-2p'].includes(gameLayouts.value.selected || '')) {
+            if (gameLayouts.value.selected === 'sm64-psp-2p'
+            && ['GameCapture1', 'GameCapture2'].includes(key)) {
+              return {
+                x: key === 'GameCapture2' ? 1920 / 2 : 0, y: 0, width: 1920 / 2, height: 1080,
+              };
+            }
             if (key === 'GameCapture1') {
               return {
                 x: 0, y: 0, width: 1920, height: 1080,
@@ -181,8 +192,11 @@ capturePositions.on('change', async (val) => {
         crop,
         (() => {
           if (key.startsWith('GameCapture')
-          && ['DS-1p', '3DS-1p'].includes(gameLayouts.value.selected || '')) {
+          && ['DS-1p', '3DS-1p', 'sm64-psp-2p'].includes(gameLayouts.value.selected || '')) {
             if (key === 'GameCapture1') {
+              return true;
+            }
+            if (key === 'GameCapture2' && gameLayouts.value.selected === 'sm64-psp-2p') {
               return true;
             }
             return false;

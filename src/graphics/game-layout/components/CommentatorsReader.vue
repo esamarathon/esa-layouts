@@ -14,19 +14,19 @@
     <div
       class="Flex"
       :style="{
-        'min-width': '120px',
+        'min-width': '140px',
         height: '100%',
         background: '#2d1d3c', // HARDCODED, BAD!
-        'justify-content': 'flex-start',
-        'padding-left': '10px',
-        'font-size': '21px',
+        'justify-content': 'center',
+        // 'padding-left': '10px',
+        'font-size': '24px',
         'font-weight': 500,
       }"
     >
-      <template v-if="showReader">Reader:</template>
+      <template v-if="showReader">Reader</template>
       <template v-else>
-        <template v-if="comms.length > 1">Commentators:</template>
-        <template v-else>Commentator:</template>
+        <template v-if="comms.length > 1">Commentators</template>
+        <template v-else>Commentator</template>
       </template>
     </div>
     <div
@@ -37,7 +37,7 @@
         overflow: 'hidden',
       }"
     >
-      <div :style="{ width: '100%', 'text-align': 'right' }">
+      <div :style="{ width: '100%' }">
         <span
           ref="Fit"
           :style="{
@@ -47,13 +47,12 @@
           }"
         >
           <template v-if="showReader">
-            <template v-if="reader">{{ reader.name }}</template>
-            <span v-if="reader && reader.pronouns" class="Pronouns">{{ reader.pronouns }}</span>
+            <template v-if="reader">{{ reader.name }}</template><span
+              v-if="reader && reader.pronouns" class="Pronouns">{{ reader.pronouns }}</span>
           </template>
           <template v-else>
             <span v-for="({ name, pronouns }, i) in comms" :key="i">
-              {{ name }}
-              <span v-if="pronouns" class="Pronouns">
+              {{ name }}<span v-if="pronouns" class="Pronouns">
                 {{ pronouns }}</span><template v-if="i < comms.length - 1">,</template>
             </span>
           </template>
@@ -101,7 +100,7 @@ export default class extends Vue {
   mounted(): void {
     this.fittyInstance = fitty(this.toFit, {
       minSize: 1,
-      maxSize: 21,
+      maxSize: 24,
       multiLine: false,
     });
   }
@@ -114,12 +113,15 @@ export default class extends Vue {
 
 <style scoped>
   .Pronouns {
+    position: relative;
     display: inline-block;
     font-weight: 400;
     font-size: 0.75em;
+    top: -0.1em;
     line-height: 1.5em;
     background: #2d1d3c;
     text-transform: uppercase;
     padding: 0 3px;
+    margin-left: 3px;
   }
 </style>

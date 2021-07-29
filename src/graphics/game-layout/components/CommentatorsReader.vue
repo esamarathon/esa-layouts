@@ -120,6 +120,7 @@ export default class extends Vue {
     top: -0.1em;
     line-height: 1.5em;
     background: #2d1d3c;
+    color: #cccccc;
     text-transform: uppercase;
     padding: 0 3px;
     margin-left: 3px;

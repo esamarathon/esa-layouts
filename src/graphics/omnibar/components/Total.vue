@@ -104,7 +104,7 @@ export default {
       }
     },
     tweenedTotal(val) {
-      const string = `$${val.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+      const string = `$${Math.floor(val).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
       this.totalSplitString = string.split('');
     },
   },

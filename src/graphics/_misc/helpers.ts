@@ -38,6 +38,9 @@ export function msToTimeStr(ms: number): string {
  * @param amount Amount as a integer/float.
  */
 export function formatUSD(amount: number): string {
+  if (amount >= 100) {
+    return `$${Math.floor(amount).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+  }
   return `$${amount.toFixed(2)}`;
 }
 

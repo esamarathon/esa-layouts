@@ -45,9 +45,18 @@
           'box-sizing': 'border-box',
         }"
       >
-        <div :style="{ width: '20%' }">
+        <div :style="{ width: '30%' }">
           <span class="BarText" :style="{ 'font-size': '25px' }">
-            {{ formatUSD(tweened.total) }}
+            <span
+              v-if="bid.goal <= bid.total"
+              :style="{ 'color': '#42ff38', 'font-weight': 700 }"
+            >
+              MET!
+            </span>
+            <span v-else>
+              <span :style="{ 'font-weight': 600 }">Amount Remaining:</span>
+              {{ amountLeft }}
+            </span>
           </span>
         </div>
         <div class="BarTextFull" :style="{ 'font-size': '23px', 'text-align': 'center' }">
@@ -55,12 +64,10 @@
             {{ bid.game }}
             <br>{{ bid.name }}
           </div>
-          <div v-if="bid.goal <= bid.total" :style="{ 'color': '#42ff38', 'font-weight': 700 }">
-            - MET!
-          </div>
         </div>
-        <div :style="{ width: '20%', 'text-align': 'right' }">
+        <div :style="{ width: '30%', 'text-align': 'right' }">
           <span class="BarText" :style="{ 'font-size': '25px' }">
+            <span :style="{ 'font-weight': 600 }">Goal:</span>
             {{ formatUSD(bid.goal || 0) }}
           </span>
         </div>
@@ -81,6 +88,10 @@ export default class extends Vue {
   @Prop({ type: Object, required: true }) readonly bid!: Bids[0];
   formatUSD = formatUSD;
   tweened = { progress: 0, total: 0 };
+
+  get amountLeft(): string {
+    return formatUSD(Math.max((this.bid?.goal ?? 0) - this.tweened.total, 0));
+  }
 
   tweenValues(): void {
     gsap.to(this.tweened, {

@@ -46,15 +46,23 @@
           'box-sizing': 'border-box',
         }"
       >
-        <div :style="{ width: '20%' }">
-          <span class="BarText" :style="{ 'font-size': '25px' }">{{ total }}</span>
+        <div :style="{ width: '30%' }">
+          <span class="BarText" :style="{ 'font-size': '25px' }">
+            <span v-if="isMet" :style="{ 'color': '#42ff38', 'font-weight': 700 }">MET!</span>
+            <span v-else>
+              <span :style="{ 'font-weight': 600 }">Remaining:</span>
+              {{ amountLeft }}
+            </span>
+          </span>
         </div>
         <div class="BarText" :style="{ 'font-size': '30px' }">
           <span>{{ name }}</span>
-          <span v-if="isMet" :style="{ 'color': '#42ff38', 'font-weight': 700 }">- MET!</span>
         </div>
-        <div :style="{ width: '20%', 'text-align': 'right' }">
-          <span class="BarText" :style="{ 'font-size': '25px' }">{{ amount }}</span>
+        <div :style="{ width: '30%', 'text-align': 'right' }">
+          <span class="BarText" :style="{ 'font-size': '25px' }">
+            <span :style="{ 'font-weight': 600 }">Goal:</span>
+            {{ amount }}
+          </span>
         </div>
       </div>
     </div>
@@ -87,8 +95,8 @@ export default class extends Vue {
     return formatUSD(this.milestone?.amount || 0);
   }
 
-  get total(): string {
-    return formatUSD(this.totalTweened);
+  get amountLeft(): string {
+    return formatUSD(Math.max((this.milestone?.amount ?? 0) - this.totalTweened, 0));
   }
 
   getProgress(): number {

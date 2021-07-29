@@ -54,7 +54,7 @@
               MET!
             </span>
             <span v-else>
-              <span :style="{ 'font-weight': 600 }">Amount Remaining:</span>
+              <span :style="{ 'font-weight': 600 }">Remaining:</span>
               {{ amountLeft }}
             </span>
           </span>

@@ -72,7 +72,6 @@
 <script lang="ts">
 import { DonationTotal, DonationTotalMilestones, OmnibarPin } from '@esa-layouts/types/schemas';
 import { Vue, Component } from 'vue-property-decorator';
-import { sortBy } from 'lodash';
 import { formatUSD } from '@esa-layouts/graphics/_misc/helpers';
 import clone from 'clone';
 import gsap from 'gsap';
@@ -132,7 +131,8 @@ export default class extends Vue {
         chosenMilestone = milestones.value.find(({ id }) => pin.value?.id === id);
       } else {
         const availableMilestones = milestones.value.filter((m) => m.enabled && m.amount);
-        [chosenMilestone] = sortBy(availableMilestones, ['amount']);
+        const rand = Math.floor(Math.random() * availableMilestones.length);
+        chosenMilestone = availableMilestones[rand];
       }
       if (chosenMilestone) {
         this.milestone = clone(chosenMilestone);

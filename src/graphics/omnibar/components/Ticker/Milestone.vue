@@ -5,6 +5,7 @@
       height: '100%',
       display: 'flex',
       'align-items': 'center',
+      'white-space': 'nowrap',
     }"
   >
     <div
@@ -12,10 +13,10 @@
         'font-size': '30px',
         'text-align': 'right',
         'margin-left': '15px',
-        'line-height': '80%',
+        'line-height': '100%',
       }"
     >
-      Next<br>Milestone
+      Upcoming<br>Milestone
     </div>
     <div
       :style="{
@@ -46,7 +47,7 @@
           'box-sizing': 'border-box',
         }"
       >
-        <div :style="{ width: '30%' }">
+        <div :style="{ width: '20%' }">
           <span class="BarText" :style="{ 'font-size': '25px' }">
             <span v-if="isMet" :style="{ 'color': '#42ff38', 'font-weight': 700 }">MET!</span>
             <span v-else>
@@ -58,7 +59,7 @@
         <div class="BarText" :style="{ 'font-size': '30px' }">
           <span>{{ name }}</span>
         </div>
-        <div :style="{ width: '30%', 'text-align': 'right' }">
+        <div :style="{ width: '20%', 'text-align': 'right' }">
           <span class="BarText" :style="{ 'font-size': '25px' }">
             <span :style="{ 'font-weight': 600 }">Goal:</span>
             {{ amount }}

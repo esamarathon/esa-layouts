@@ -109,6 +109,7 @@ export default class extends Vue {
       this.bid = clone(chosenBid);
       bids.on('change', this.onBidsChange);
     } else {
+      pin.value = null;
       this.end();
     }
   }

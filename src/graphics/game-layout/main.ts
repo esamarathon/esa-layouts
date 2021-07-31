@@ -115,6 +115,11 @@ const routes = [
     component: List.L_SM64_PSP_2p,
   },
   {
+    name: '2 Cameras Only',
+    path: '/2-cams-only',
+    component: List.L_2CamsOnly,
+  },
+  {
     path: '*',
     redirect: '/4x3-1p',
   },

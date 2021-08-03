@@ -104,7 +104,7 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
     // If there's no old run or we changed to a different run, try to automatically set the layout.
     if (!oldVal || newVal.id !== oldVal.id) {
       const layout = gameLayouts.value.available
-        .find((l) => l.code.toLowerCase() === newVal.customData.layout.toLowerCase());
+        .find((l) => l.code.toLowerCase() === newVal.customData.layout?.toLowerCase());
       gameLayouts.value.selected = layout?.code;
       if (newVal.customData.layout && !layout) {
         nodecg().log.warn('[Layouts] Run specified game layout with code '

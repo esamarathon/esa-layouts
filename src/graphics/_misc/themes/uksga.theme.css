@@ -2,6 +2,11 @@
   content: url('./uksga/IntermissionLogo.png');
 }
 
+#Countdown .Logo {
+  content: url('./uksga/CountdownLogo.png');
+  height: 400px;
+}
+
 #Omnibar #Logo {
   content: url('./uksga/OmnibarLogo.png');
   padding: 0 10px;

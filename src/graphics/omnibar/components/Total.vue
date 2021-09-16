@@ -11,7 +11,7 @@
       }"
     >
       <img
-        src="../stc_logo.png"
+        src="../crisis_logo.png"
         :style="{
           position: 'absolute',
           height: '70px',

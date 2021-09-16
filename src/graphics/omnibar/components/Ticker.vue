@@ -81,10 +81,10 @@ export default {
         this.donationURL(),
         // this.esaUpcomingEvt(),
         // this.esaBtRL(),
-        this.merch(),
+        // this.merch(),
         // this.ticket(),
         // this.twitchCharity(),
-        this.hekTakeover(),
+        // this.hekTakeover(),
       ];
 
       this.showNextMsg();
@@ -121,10 +121,10 @@ export default {
       this.timestamp = Date.now();
     },
     esaPromo() {
-      return this.genericMsg('This is European Speedrunner Assembly Summer 2021');
+      return this.genericMsg('This is United Kingdom Speedrunner Gathering Autumn 2021');
     },
     charityPromo() {
-      return this.genericMsg('#ESASummer21 benefits Save the Children');
+      return this.genericMsg('#UKSGAutumn21 benefits Crisis');
     },
     otherStreamPromo() {
       return this.genericMsg(`Watch more great runs over @ twitch.tv/${this.otherChannel}`);

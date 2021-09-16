@@ -64,8 +64,8 @@
           v-for="(option, i) in options" :key="option.id"
           class="Option"
           :style="{
-            'background-color': option.winning ? '#877520' : '#502f59',
-            'margin-left': i > 0 ? '5px' : '0',
+            // 'background-color': option.winning ? '#877520' : '#502f59', // ESA
+            'background-color': option.winning ? '#68b4ea' : '#4d83aa', // UKSG
           }"
           :ref="`Option${i + 1}`"
         >

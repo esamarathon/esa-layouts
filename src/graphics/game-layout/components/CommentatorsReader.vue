@@ -16,7 +16,8 @@
       :style="{
         'min-width': '140px',
         height: '100%',
-        background: '#2d1d3c', // HARDCODED, BAD!
+        // background: '#2d1d3c', // HARDCODED, BAD! // ESA
+        background: '#2b516b', // HARDCODED, BAD! // UKSG
         'justify-content': 'center',
         // 'padding-left': '10px',
         'font-size': '24px',
@@ -119,7 +120,8 @@ export default class extends Vue {
     font-size: 0.75em;
     top: -0.1em;
     line-height: 1.5em;
-    background: #2d1d3c;
+    /* background: #2d1d3c; /* ESA */
+    background: #2b516b; /* UKSG */
     color: #cccccc;
     text-transform: uppercase;
     padding: 0 3px;

@@ -30,7 +30,8 @@
           position: 'absolute',
           width: `${tweened.progress}%`,
           height: '100%',
-          'background-color': '#e8d53a',
+          // 'background-color': '#e8d53a', // ESA
+          'background-color': '#4d83aa', // UKSG
         }"
       />
       <div

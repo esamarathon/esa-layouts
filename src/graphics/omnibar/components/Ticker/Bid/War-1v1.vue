@@ -38,13 +38,15 @@
         <div
           :style="{
             width: `${tweened.progress1}%`,
-            'background-color': '#e8d53a',
+            // 'background-color': '#e8d53a', // ESA
+            'background-color': '#4d83aa', // UKSG
           }"
         />
         <div
           :style="{
             width: `${tweened.progress2}%`,
-            'background-color': '#af60f7',
+            // 'background-color': '#af60f7', // ESA
+            'background-color': '#003fff', // UKSG
           }" />
       </div>
       <!-- Both Options -->

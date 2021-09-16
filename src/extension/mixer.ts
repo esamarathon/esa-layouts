@@ -30,7 +30,7 @@ export function setFaderName(fader: string, name: string): void {
 function toggleFadeHelper(
   address: string,
   scenes: (string | undefined)[],
-  data: { 'from-scene': string, 'to-scene': string },
+  data: { 'from-scene'?: string, 'to-scene': string },
   mute = true,
   nofade = false,
 ): void {
@@ -76,10 +76,10 @@ export function toggleLiveMics(scene: string): void {
 obs.conn.on('TransitionBegin', async (data) => {
   // Auto-fading for HEK's fullscreen intermission.
   const hekIntrmssn = config.obs.names.scenes.hekIntermission;
-  if (data['to-scene'].startsWith(hekIntrmssn) && !data['from-scene'].startsWith(hekIntrmssn)) {
+  if (data['to-scene'].startsWith(hekIntrmssn) && !data['from-scene']?.startsWith(hekIntrmssn)) {
     x32.fade('/ch/21/mix/fader', 0, 0.75, 1000);
   }
-  if (data['from-scene'].startsWith(hekIntrmssn) && !data['to-scene'].startsWith(hekIntrmssn)) {
+  if (data['from-scene']?.startsWith(hekIntrmssn) && !data['to-scene'].startsWith(hekIntrmssn)) {
     x32.fade('/ch/21/mix/fader', 0.75, 0, 1000);
   }
 

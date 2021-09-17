@@ -327,7 +327,9 @@ nodecg().listenFor('startIntermission', async () => {
       await obsChangeScene({ scene: obsConfig.names.scenes.intermission });
     }
     startPlaylist();
+  } else if (obs.findScene(obsConfig.names.scenes.commercials)) {
+    await obsChangeScene({ scene: obsConfig.names.scenes.commercials });
   } else {
-    obsChangeScene({ scene: obsConfig.names.scenes.intermission });
+    await obsChangeScene({ scene: obsConfig.names.scenes.intermission });
   }
 });

@@ -1,5 +1,5 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
-import Restream from '@esamarathon/esa-layouts-shared/restream/extension';
+import Restream from '@shared/extension/restream';
 import { queue } from 'async';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { get as nodecg } from './util/nodecg';

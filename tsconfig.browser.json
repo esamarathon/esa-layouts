@@ -60,6 +60,9 @@
       "@esa-layouts/types/*": [
         "src/types/*"
       ],
+      "@shared/*": [
+        "shared/*"
+      ],
       "nodecg/*": [
         "../../*"
       ]
@@ -91,13 +94,22 @@
   },
   "include": [
     "src/browser_shared/**/*.ts",
+    "src/browser_shared/**/*.vue",
     "src/dashboard/**/*.ts",
     "src/dashboard/**/*.vue",
     "src/graphics/**/*.ts",
     "src/graphics/**/*.vue",
     "src/types/**/*.d.ts",
     "../../types/browser.d.ts",
-    "node_modules/@esamarathon/esa-layouts-shared/types/**/*.d.ts"
+
+    // esa-layouts-shared
+    "shared/browser_shared/**/*.ts",
+    "shared/browser_shared/**/*.vue",
+    "shared/dashboard/**/*.ts",
+    "shared/dashboard/**/*.vue",
+    "shared/graphics/**/*.ts",
+    "shared/graphics/**/*.vue",
+    "shared/types/**/*.d.ts"
   ],
   "exclude": [
     "node_modules"

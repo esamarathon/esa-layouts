@@ -5,6 +5,7 @@
 /* eslint-disable import/first */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('module-alias').addAlias('@esa-layouts', require('path').join(__dirname, '.'));
+require('module-alias').addAlias('@shared', require('path').join(__dirname, '../shared'));
 
 import { ExtensionReturn } from '@esa-layouts/types';
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';

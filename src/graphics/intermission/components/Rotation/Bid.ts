@@ -1,4 +1,4 @@
-import type { Tracker } from '@esamarathon/esa-layouts-shared/types';
+import type { Tracker } from '@shared/types';
 import { store } from '../../store';
 
 /**

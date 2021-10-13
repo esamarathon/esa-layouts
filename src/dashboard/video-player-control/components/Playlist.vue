@@ -65,7 +65,7 @@ import { State, Mutation } from 'vuex-class';
 import { State2Way } from 'vuex-class-state2way';
 import Draggable from 'vuedraggable';
 import { VideoPlayer } from '@esa-layouts/types/schemas';
-import { Asset } from '@esamarathon/esa-layouts-shared/types';
+import { Asset } from '@shared/types';
 import { PlaylistAdd, PlaylistRefresh, PlaylistRemove, PlaylistUpdateCommercial } from '../store';
 import MediaCard from '../../_misc/components/MediaCard.vue';
 

@@ -53,6 +53,9 @@
       "@esa-layouts/types/*": [
         "src/types/*"
       ],
+      "@shared/*": [
+        "shared/*"
+      ],
       "nodecg/*": [
         "../../*"
       ]
@@ -85,9 +88,19 @@
     "src/extension/**/*.ts",
     "src/types/**/*.d.ts",
     "../../types/server.d.ts",
-    "node_modules/@esamarathon/esa-layouts-shared/types/**/*.d.ts"
+    "shared/types/**/*.d.ts"
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "references": [
+    { "path": "./shared/extension/countdown" },
+    { "path": "./shared/extension/mediabox" },
+    { "path": "./shared/extension/music" },
+    { "path": "./shared/extension/obs" },
+    { "path": "./shared/extension/rabbitmq" },
+    { "path": "./shared/extension/restream" },
+    { "path": "./shared/extension/x32" },
+    { "path": "./shared/extension/xkeys-esa" }
+  ],
 }

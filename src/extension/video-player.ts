@@ -1,6 +1,6 @@
 import { VideoPlayer } from '@esa-layouts/types/schemas';
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
-import { Asset } from '@esamarathon/esa-layouts-shared/types';
+import { Asset } from '@shared/types';
 import clone from 'clone';
 import { getVideoDurationInSeconds } from 'get-video-duration';
 import { cwd } from 'process';

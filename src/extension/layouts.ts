@@ -1,5 +1,5 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
-import Countdown from '@esamarathon/esa-layouts-shared/countdown/extension';
+import Countdown from '@shared/extension/countdown';
 import clone from 'clone';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { logError } from './util/helpers';

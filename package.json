@@ -27,10 +27,10 @@
     "start": "node ../..",
     "watch": "run-p watch:*",
     "watch:browser": "webpack -w",
-    "watch:extension": "tsc -b tsconfig.extension.json -w"
+    "watch:extension": "tsc -b tsconfig.extension.json -w",
+    "postinstall": "cd shared && node postinstall.js"
   },
   "dependencies": {
-    "@esamarathon/esa-layouts-shared": "git+https://git@github.com/esamarathon/esa-layouts-shared.git#bd024f024a5cdfbad43fd3ebd41c11d8cf21b35e",
     "async": "^3.2.0",
     "clone": "^2.1.2",
     "get-video-duration": "3.0.2",
@@ -278,7 +278,7 @@
     ],
     "mount": [
       {
-        "directory": "node_modules/@esamarathon/esa-layouts-shared/flags",
+        "directory": "shared/flags",
         "endpoint": "flags"
       }
     ],

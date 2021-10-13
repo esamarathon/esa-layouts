@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import Countdown from '@esamarathon/esa-layouts-shared/countdown/graphics';
+import Countdown from '@shared/graphics/countdown';
 
 @Component({
   components: {

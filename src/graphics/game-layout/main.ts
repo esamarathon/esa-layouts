@@ -1,6 +1,7 @@
 /* eslint no-new: off, @typescript-eslint/explicit-function-return-type: off */
 
 import type { GameLayouts } from '@esa-layouts/types/schemas';
+import { setUpReplicantsComponent as setUpReplicantsMediabox } from '@shared/graphics/mediabox';
 import { RunDataActiveRun } from 'speedcontrol-util/types';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
@@ -149,7 +150,8 @@ function checkCoop(runData: RunDataActiveRun): boolean {
     && runData.teams[0].players.length > 1) || false;
 }
 
-waitForReplicants().then((store) => {
+waitForReplicants().then(async (store) => {
+  await setUpReplicantsMediabox();
   store.commit('updateList', getAvailable());
   window.addEventListener('beforeunload', () => {
     store.commit('clearList');

@@ -112,7 +112,7 @@ import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { RunData } from 'speedcontrol-util/types';
 // import { generateClipPath } from '../_misc/cut-background';
-import MediaBox from '@esamarathon/esa-layouts-shared/mediabox/graphics';
+import MediaBox from '@shared/graphics/mediabox';
 import CommercialTimer from './components/CommercialTimer.vue';
 import UpcomingRun from './components/UpcomingRun.vue';
 import Rotation from './components/Rotation.vue';

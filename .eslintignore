@@ -10,3 +10,4 @@ player-templates/**/*
 schemas/**/*
 streamdeck-plugin/**/*
 src/types/schemas/**/*
+shared/**/*

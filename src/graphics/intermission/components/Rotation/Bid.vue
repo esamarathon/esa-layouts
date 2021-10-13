@@ -46,7 +46,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Tracker } from '@esamarathon/esa-layouts-shared/types';
+import { Tracker } from '@shared/types';
 import { formatUSD } from '../../../_misc/helpers';
 import Container from '../Container.vue';
 

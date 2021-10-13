@@ -1,0 +1,4 @@
+[submodule "shared"]
+	path = shared
+	url = https://github.com/esamarathon/esa-layouts-shared
+	branch = submodule

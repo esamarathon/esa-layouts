@@ -146,7 +146,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { Configschema } from '@esa-layouts/types/schemas/configschema';
-import MediaBox from '@esamarathon/esa-layouts-shared/mediabox/graphics';
+import MediaBox from '@shared/graphics/mediabox';
 import GameCapture from './components/GameCapture.vue';
 import Player from './components/Player.vue';
 import CommentatorsReader from './components/CommentatorsReader.vue';

@@ -1,6 +1,6 @@
 /* eslint no-new: off, @typescript-eslint/explicit-function-return-type: off */
 
-import App from '@esamarathon/esa-layouts-shared/countdown/dashboard';
+import App from '@shared/dashboard/countdown';
 import Vue from 'vue';
 import vuetify from '../_misc/vuetify';
 

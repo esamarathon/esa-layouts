@@ -41,7 +41,8 @@ jobs:
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
 
-    # Recheckout both the main and build branches and merge the main into build
+    # Recheckout both the main and build branches and merge the main into build.
+    # We also return the submodule back so we can get the latest files to build from that.
     # This can "fail" if the build branch doesn't exist, but we should continue anyway
     - name: (Re)checkout both branches and merge main into build
       continue-on-error: true
@@ -49,7 +50,22 @@ jobs:
       run: |
         git checkout master
         git checkout build
+        rm -rf shared
+        git rm --cached -r shared
+        git checkout master shared
+        git commit -m "Re-add submodule" -a --allow-empty
         git merge master
+
+    # Converts the esa-layouts-shared submodule into a normal directory of files.
+    # This is done as we want to freeze the build at a point in time and this works well.
+    - name: Convert esa-layouts-shared submodule to regular directory
+      working-directory: ./nodecg/bundles/esa-layouts
+      run: |
+        git submodule update --init
+        git rm --cached shared
+        git config -f .git/config --remove-section submodule.shared
+        rm -rf shared/.git
+        git add shared
 
     # Setup some Node stuff
     - name: Node.js setup
@@ -88,7 +104,7 @@ jobs:
         npm run clean
         npm run build
 
-    # Commit newly built files
+    # Commit newly built files, and squash everything down for convenience.
     # This can "fail" if there are no newly changed/built files, but we should continue anyway
     - name: Commit built files
       id: commit
@@ -96,7 +112,10 @@ jobs:
       working-directory: ./nodecg/bundles/esa-layouts
       run: |
         git add -f dashboard graphics extension
-        git commit -m "Built files" -a
+        git add -f ':(glob)./shared/extension/*/dist/**'
+        git commit -m "Built files" -a --allow-empty
+        git reset --soft HEAD~3
+        git commit -m "Merged and built files" -a
 
     # Pushes the built files to a specific branch
     - name: Push built files to "build" branch

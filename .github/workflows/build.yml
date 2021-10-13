@@ -51,7 +51,7 @@ jobs:
         git checkout master
         git checkout build
         rm -rf shared
-        git rm --cached -r shared
+        git rm --ignore-unmatch --cached -r shared
         git checkout master shared
         git commit -m "Re-add submodule" -a --allow-empty
         git merge master

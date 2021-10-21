@@ -20,7 +20,7 @@ jobs:
         ref: 'v1.8.1'
         path: ./nodecg-temp
 
-    # Copies checked out NodeCG into permanent folder
+    # Copies checked out NodeCG into permanent folder.
     # If I didn't do this, some bundles seemed to not actually checkout successfully later
     - name: Copy ./nodecg-temp > ./nodecg
       run: cp -r ./nodecg-temp ./nodecg
@@ -41,20 +41,47 @@ jobs:
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
 
-    # Recheckout both the main and build branches and merge the main into build.
-    # We also return the submodule back so we can get the latest files to build from that.
-    # This can "fail" if the build branch doesn't exist, but we should continue anyway
-    - name: (Re)checkout both branches and merge main into build
+    # Recheckout both the main and build branches.
+    # This can "fail" if the build branch doesn't exist, but we should continue anyway.
+    - name: (Re)checkout both branches
+      id: checkout
       continue-on-error: true
       working-directory: ./nodecg/bundles/esa-layouts
       run: |
         git checkout master
         git checkout build
+
+    # Attempt to start to merge the main branch into build.
+    # This can "error" but we want to continue regardless.
+    # Will only run if the checkout step was successful.
+    - name: Merge main into build (1)
+      if: ${{ steps.checkout.outcome == 'success' }}
+      continue-on-error: true
+      working-directory: ./nodecg/bundles/esa-layouts
+      run: |
+        git merge --no-commit master
+
+    # Do the 2nd part of the merge. This will ignore the main's "shared" submodule stuff.
+    # This can "error" if the merge commit is empty but we want to continue regardless.
+    # Will only run if the checkout step was successful.
+    - name: Merge main into build (2)
+      if: ${{ steps.checkout.outcome == 'success' }}
+      continue-on-error: true
+      working-directory: ./nodecg/bundles/esa-layouts
+      run: |
+        git reset HEAD shared
+        git commit -m "Merge branch 'master' into build"
+
+    # Returns the submodule back so we can get the latest files to build from that.
+    # Will only run if the checkout step was successful.
+    - name: Re-add esa-layouts-shared submodule
+      if: ${{ steps.checkout.outcome == 'success' }}
+      working-directory: ./nodecg/bundles/esa-layouts
+      run: |
         rm -rf shared
         git rm --ignore-unmatch --cached -r shared
         git checkout master shared
         git commit -m "Re-add submodule" -a --allow-empty
-        git merge master
 
     # Converts the esa-layouts-shared submodule into a normal directory of files.
     # This is done as we want to freeze the build at a point in time and this works well.
@@ -104,22 +131,27 @@ jobs:
         npm run clean
         npm run build
 
-    # Commit newly built files, and squash everything down for convenience.
-    # This can "fail" if there are no newly changed/built files, but we should continue anyway
-    - name: Commit built files
-      id: commit
-      continue-on-error: true
+    # Start committing newly built files into a temporary commit.
+    - name: Commit built files (1)
       working-directory: ./nodecg/bundles/esa-layouts
       run: |
         git add -f dashboard graphics extension
         git add -f ':(glob)./shared/extension/*/dist/**'
         git commit -m "Built files" -a --allow-empty
-        git reset --soft HEAD~3
-        git commit -m "Merged and built files" -a
+
+    # Squash the previous 2 commits down for convenience and create the final build commit.
+    # Will only run if the checkout step was successful.
+    # This can "fail" if there are no newly changed/built files, but we should continue anyway.
+    - name: Commit built files (2)
+      continue-on-error: true
+      if: ${{ steps.checkout.outcome == 'success' }}
+      working-directory: ./nodecg/bundles/esa-layouts
+      run: |
+        git reset --soft HEAD~2
+        git commit -m "Built files" -a
 
     # Pushes the built files to a specific branch
     - name: Push built files to "build" branch
-      #if: ${{ steps.commit.outcome == 'success' }}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets['GITHUB_TOKEN'] }}

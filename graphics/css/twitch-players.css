@@ -1,0 +1,43 @@
+/* montserrat-600 - vietnamese_latin-ext_latin_cyrillic-ext_cyrillic */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 600;
+  src: url(../font/montserrat-v14-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600.eot); /* IE9 Compat Modes */
+  src: local('Montserrat SemiBold'), local('Montserrat-SemiBold'),
+       url(../font/montserrat-v14-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600.eot?#iefix) format('embedded-opentype'), /* IE6-IE8 */
+       url(../font/montserrat-v14-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600.woff2) format('woff2'), /* Super Modern Browsers */
+       url(../font/montserrat-v14-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600.woff) format('woff'), /* Modern Browsers */
+       url(../font/montserrat-v14-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600.ttf) format('truetype'), /* Safari, Android, iOS */
+       url(../font/montserrat-v14-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600.svg#Montserrat) format('svg'); /* Legacy iOS */
+}
+
+/* Integrate this into the main "common.css" when rewrite done. */
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+*[class*="Flex"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+body {
+  background-color: #19171c;
+  color: white;
+  font-size: 30px;
+  text-align: center;
+}
+iframe {
+  display: block;
+}
+.StreamEmbed {
+  height: 50vh;
+}
+

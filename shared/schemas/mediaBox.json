@@ -1,0 +1,206 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "definitions": {
+    "typesAll": {
+      "type": "string",
+      "enum": [
+        "image",
+        "prize",
+        "prize_generic",
+        "donation",
+        "subscription",
+        "cheer"
+      ]
+    },
+    "rotation": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "image",
+              "prize",
+              "prize_generic"
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "mediaUUID": {
+            "type": "string"
+          },
+          "seconds": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "mediaUUID",
+          "seconds"
+        ]
+      },
+      "default": []
+    },
+    "mediaActive": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "$ref": "#/definitions/typesAll"
+            },
+            "id": {
+              "type": "string"
+            },
+            "mediaUUID": {
+              "type": "string"
+            },
+            "index": {
+              "type": "number"
+            },
+            "timestamp": {
+              "type": "number",
+              "default": 0
+            },
+            "timeElapsed": {
+              "type": "number",
+              "default": 0
+            }
+          },
+          "required": [
+            "type",
+            "id",
+            "mediaUUID",
+            "index",
+            "timestamp",
+            "timeElapsed"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "rotation": {
+      "$ref": "#/definitions/rotation"
+    },
+    "rotationApplicable": {
+      "$ref": "#/definitions/rotation"
+    },
+    "alertQueue": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "donation",
+              "subscription",
+              "cheer"
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "data": {
+            "oneOf": [
+              {
+                "description": "Donation",
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "amount": {
+                    "type": "number"
+                  },
+                  "comment": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "amount"
+                ]
+              },
+              {
+                "description": "Subscription",
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "systemMsg": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "systemMsg"
+                ]
+              },
+              {
+                "description": "Cheer",
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "amount": {
+                    "type": "number"
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "amount",
+                  "message"
+                ]
+              }
+            ]
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "data"
+        ]
+      },
+      "default": []
+    },
+    "paused": {
+      "$ref": "#/definitions/mediaActive"
+    },
+    "current": {
+      "$ref": "#/definitions/mediaActive"
+    },
+    "lastIndex": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "rotation",
+    "rotationApplicable",
+    "alertQueue",
+    "paused",
+    "current",
+    "lastIndex"
+  ]
+}

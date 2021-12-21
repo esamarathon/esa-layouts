@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html data-sceneid="host-dashboard">
+	<head>
+		<meta charset="UTF-8">
+		<title>Host Dashboard</title>
+		
+		<!-- CSS -->
+		<link href="./host-dashboard.css" rel="stylesheet"/>
+		
+		<!-- JavaScript -->
+		<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+		<script src="./host-dashboard.js"></script>
+	</head>
+	<body>
+		<div id="columnsWrapper">
+			<div id="column1" class="column">
+				<div id="bidsHeader">Upcoming Goals/Bidwars:</div>
+				<div id="bidsContainer"></div>
+			</div>
+			<div id="column2" class="column">
+				<div id="scheduleHeader">Run Schedule:</div>
+				<div id="runsContainer"></div>
+			</div>
+			<div id="column3" class="column">
+				<div id="donationTotalHeader">Donation Total:</div>
+				<div id="donationTotal">$0</div>
+				<div id="videoHeader">Currently Set Intermission Video:</div>
+				<div id="videoName"></div>
+				<br>
+				<div id="prizesHeader">Currently Available Prizes:</div>
+				<div id="prizesContainer"></div>
+			</div>
+		</div>
+	</body>
+</html>

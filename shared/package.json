@@ -1,0 +1,45 @@
+{
+  "name": "@esamarathon/esa-layouts-shared",
+  "version": "1.0.0",
+  "private": true,
+  "homepage": "https://github.com/esamarathon/esa-layouts-shared#readme",
+  "bugs": {
+    "url": "https://github.com/esamarathon/esa-layouts-shared/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/esamarathon/esa-layouts-shared.git"
+  },
+  "license": "MIT",
+  "author": "zoton2",
+  "scripts": {
+    "autofix:browser_shared": "cd browser_shared && node ../../node_modules/eslint/bin/eslint.js --fix --ext .ts,.vue .",
+    "autofix:dashboard": "cd dashboard && node ../../node_modules/eslint/bin/eslint.js --fix --ext .ts,.vue .",
+    "autofix:graphics": "cd graphics && node ../../node_modules/eslint/bin/eslint.js --fix --ext .ts,.vue .",
+    "autofix:types": "cd types && node ../../node_modules/eslint/bin/eslint.js --fix --ext .d.ts .",
+    "schema-types": "nodecg schema-types -o types/schemas --no-config-schema"
+  },
+  "dependencies": {
+    "amqp-connection-manager": "^3.7.0",
+    "amqplib": "^0.8.0",
+    "clone": "^2.1.2",
+    "node-fetch": "^3.1.0",
+    "obs-websocket-js": "^4.0.3",
+    "osc": "^2.4.2",
+    "string-similarity": "^4.0.4",
+    "uuid": "^8.3.2",
+    "ws": "^8.3.0",
+    "xkeys": "^1.1.1"
+  },
+  "devDependencies": {
+    "@esamarathon/mq-events": "git+https://git@github.com/esamarathon/mq-events.git#fa96a895d22367928fcb80fe800049669dfe3135",
+    "@types/amqp-connection-manager": "^2.0.12",
+    "@types/amqplib": "^0.8.2",
+    "@types/clone": "^2.1.1",
+    "@types/string-similarity": "^4.0.0",
+    "@types/uuid": "^8.3.3",
+    "nodecg-cli": "^8.0.0",
+    "vuedraggable": "^2.24.3",
+    "vuex-class-state2way": "^1.0.1"
+  }
+}

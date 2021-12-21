@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "number"
+      },
+      "name": {
+        "type": "string"
+      },
+      "provided": {
+        "type": "string"
+      },
+      "minimumBid": {
+        "type": "number"
+      },
+      "image": {
+        "type": "string"
+      },
+      "startTime": {
+        "type": "number"
+      },
+      "endTime": {
+        "type": "number"
+      }
+    },
+    "required": [
+      "id",
+      "name",
+      "minimumBid"
+    ]
+  },
+  "default": []
+}

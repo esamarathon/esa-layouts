@@ -69,6 +69,8 @@ jobs:
       continue-on-error: true
       working-directory: ./nodecg/bundles/esa-layouts
       run: |
+        rm -rf shared~master
+        git rm --ignore-unmatch --cached -r shared~master
         git reset HEAD shared
         git commit -m "Merge branch 'master' into build"
 

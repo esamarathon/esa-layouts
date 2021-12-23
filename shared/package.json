@@ -1,5 +1,5 @@
 {
-  "name": "@esamarathon/esa-layouts-shared",
+  "name": "esa-layouts-shared",
   "version": "1.0.0",
   "private": true,
   "homepage": "https://github.com/esamarathon/esa-layouts-shared#readme",
@@ -13,10 +13,10 @@
   "license": "MIT",
   "author": "zoton2",
   "scripts": {
-    "autofix:browser_shared": "cd browser_shared && node ../../node_modules/eslint/bin/eslint.js --fix --ext .ts,.vue .",
-    "autofix:dashboard": "cd dashboard && node ../../node_modules/eslint/bin/eslint.js --fix --ext .ts,.vue .",
-    "autofix:graphics": "cd graphics && node ../../node_modules/eslint/bin/eslint.js --fix --ext .ts,.vue .",
-    "autofix:types": "cd types && node ../../node_modules/eslint/bin/eslint.js --fix --ext .d.ts .",
+    "autofix:browser_shared": "cd browser_shared && node ../../node_modules/eslint/bin/eslint.js --ignore-path ../.eslintignore --fix --ext .ts,.vue .",
+    "autofix:dashboard": "cd dashboard && node ../../node_modules/eslint/bin/eslint.js --ignore-path ../.eslintignore --fix --ext .ts,.vue .",
+    "autofix:graphics": "cd graphics && node ../../node_modules/eslint/bin/eslint.js --ignore-path ../.eslintignore --fix --ext .ts,.vue .",
+    "autofix:types": "cd types && node ../../node_modules/eslint/bin/eslint.js --ignore-path ../.eslintignore --fix --ext .d.ts .",
     "schema-types": "nodecg schema-types -o types/schemas --no-config-schema"
   },
   "dependencies": {
@@ -28,7 +28,7 @@
     "osc": "^2.4.2",
     "string-similarity": "^4.0.4",
     "uuid": "^8.3.2",
-    "ws": "^8.3.0",
+    "ws": "^8.4.0",
     "xkeys": "^1.1.1"
   },
   "devDependencies": {

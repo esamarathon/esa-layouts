@@ -88,7 +88,7 @@ var X32 = /** @class */ (function () {
         if (!this.config.enable || !this.conn) {
             throw new Error('No connection available');
         }
-        this.nodecg.log.debug("[X32] Attempting to set fader on " + name + " to " + value);
+        this.nodecg.log.debug("[X32] Attempting to set fader on ".concat(name, " to ").concat(value));
         this.conn.send({
             address: '/subscribe',
             args: [{ type: 's', value: name }, { type: 'i', value: 0 }],
@@ -112,8 +112,8 @@ var X32 = /** @class */ (function () {
             clearInterval(this.fadersInterval[name]);
             delete this.fadersExpected[name];
         }
-        this.nodecg.log.debug("[X32] Attempting to fade " + name + " "
-            + ("(" + startValue + " => " + endValue + ") for " + length + "ms"));
+        this.nodecg.log.debug("[X32] Attempting to fade ".concat(name, " ")
+            + "(".concat(startValue, " => ").concat(endValue, ") for ").concat(length, "ms"));
         var currentValue = startValue;
         var increase = startValue < endValue;
         var stepCount = length / 100;

@@ -10,6 +10,7 @@ const nodecg_1 = require("./nodecg");
 const { useTestData } = (0, nodecg_1.get)().bundleConfig;
 const exchange = 'cg';
 const event = (0, helpers_1.getCurrentEventShort)();
+// eslint-disable-next-line import/prefer-default-export
 exports.mq = new rabbitmq_1.default((0, nodecg_1.get)(), useTestData, {
     config: (0, nodecg_1.get)().bundleConfig.rabbitmq,
     exchange,

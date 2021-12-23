@@ -8,7 +8,7 @@ var path_1 = __importDefault(require("path"));
  * @param schemaName the replicant/schema filename.
  */
 function buildSchemaPath(schemaName) {
-    return path_1.default.resolve(__dirname, '../../../schemas', encodeURIComponent(schemaName) + ".json");
+    return path_1.default.resolve(__dirname, '../../../schemas', "".concat(encodeURIComponent(schemaName), ".json"));
 }
 var MediaBox = /** @class */ (function () {
     function MediaBox(nodecg) {

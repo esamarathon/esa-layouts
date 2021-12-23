@@ -8,7 +8,7 @@ module.exports = {
   parser: 'vue-eslint-parser',
   parserOptions: {
     parser: '@typescript-eslint/parser',
-    // project: 'tsconfig.browser.json',
+    project: path.join(__dirname, 'tsconfig.browser.json'),
     extraFileExtensions: ['.vue'],
     ecmaVersion: 2020,
   },
@@ -30,11 +30,13 @@ module.exports = {
   settings: {
     'import/resolver': {
       typescript: {
-        // This is needed to properly resolve paths.
-        // project: 'tsconfig.browser.json', // Check if needed and how to fix if so!
+        // This is needed to properly resolve paths(?)
+        // Left commented out, might need again in the future.
+        // project: 'tsconfig.browser.json',
       },
+      // This may be wanted/needed in the future.
       /* webpack: {
-        config: path.join(__dirname, '../webpack.config.js'), // Check if needed and how to fix if so!
+        config: path.join(__dirname, '../webpack.config.js'),
       }, */
     },
     'import/extensions': ['.js', '.jsx', '.ts', '.tsx'],

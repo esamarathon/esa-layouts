@@ -209,7 +209,7 @@ replicants_1.capturePositions.on('change', async (val) => {
         }
     }
 });
-sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
+sc.twitchCommercialTimer.on('change', async (newVal) => {
     // Disable transitioning when commercials are run.
     if (!replicants_1.videoPlayer.value.playing) {
         replicants_1.obsData.value.disableTransitioning = newVal.secondsRemaining > 0;
@@ -237,7 +237,7 @@ sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
     } */
 });
 let sceneChangeCodeTriggered = 0;
-obs_1.default.on('currentSceneChanged', (current, last) => {
+obs_1.default.on('currentSceneChanged', () => {
     /* // If switched to video player, disable transitioning.
     if (obs.isCurrentScene(obsConfig.names.scenes.videoPlayer)) {
       obsData.value.disableTransitioning = true;
@@ -270,6 +270,7 @@ obs_1.default.on('currentSceneChanged', (current, last) => {
   sceneChangeCodeTriggered = Date.now();
   await obs.changeScene(scene);
 } */
+// eslint-disable-next-line import/prefer-default-export
 async function obsChangeScene({ scene, force = false }) {
     // Don't change scene if identical, we're currently transitioning, transitioning is disabled,
     // or if we triggered a scene change here in the last 2 seconds.
@@ -293,7 +294,7 @@ async function obsChangeScene({ scene, force = false }) {
             // Simple server-to-server message we need.
             (0, nodecg_1.get)().sendMessage('obsTransitionQueued', scene);
             try {
-                await new Promise((res) => setTimeout(res, delay));
+                await new Promise((res) => { setTimeout(res, delay); });
                 replicants_1.obsData.value.disableTransitioning = false;
                 await obs_1.default.changeScene(scene);
                 sceneChangeCodeTriggered = Date.now();

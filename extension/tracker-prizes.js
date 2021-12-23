@@ -44,6 +44,7 @@ async function updatePrizes() {
     }
     setTimeout(updatePrizes, refreshTime);
 }
+// eslint-disable-next-line import/prefer-default-export
 function setup() {
     if (!useTestData) {
         updatePrizes();

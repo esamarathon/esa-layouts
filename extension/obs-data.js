@@ -65,6 +65,6 @@ obs_1.default.conn.on('TransitionBegin', (data) => {
     if (data.name === 'Stinger')
         (0, nodecg_1.get)().sendMessage('showTransition');
 });
-obs_1.default.conn.on('TransitionEnd', (data) => {
+obs_1.default.conn.on('TransitionEnd', () => {
     replicants_1.obsData.value.transitioning = false;
 });

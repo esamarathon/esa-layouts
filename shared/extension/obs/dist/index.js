@@ -221,8 +221,8 @@ var OBS = /** @class */ (function (_super) {
                     case 4: return [3 /*break*/, 6];
                     case 5:
                         err_2 = _a.sent();
-                        this.nodecg.log.warn("[OBS] Cannot change scene [" + name + "]");
-                        this.nodecg.log.debug("[OBS] Cannot change scene [" + name + "]: " + (err_2.error || err_2));
+                        this.nodecg.log.warn("[OBS] Cannot change scene [".concat(name, "]"));
+                        this.nodecg.log.debug("[OBS] Cannot change scene [".concat(name, "]: ").concat(err_2.error || err_2));
                         throw err_2;
                     case 6: return [2 /*return*/];
                 }
@@ -252,9 +252,9 @@ var OBS = /** @class */ (function (_super) {
                         return [2 /*return*/, resp];
                     case 3:
                         err_3 = _a.sent();
-                        this.nodecg.log.warn("[OBS] Cannot get source settings [" + sourceName + "]");
-                        this.nodecg.log.debug("[OBS] Cannot get source settings [" + sourceName + "]: "
-                            + ("" + (err_3.error || err_3)));
+                        this.nodecg.log.warn("[OBS] Cannot get source settings [".concat(sourceName, "]"));
+                        this.nodecg.log.debug("[OBS] Cannot get source settings [".concat(sourceName, "]: ")
+                            + "".concat(err_3.error || err_3));
                         throw err_3;
                     case 4: return [2 /*return*/];
                 }
@@ -291,9 +291,9 @@ var OBS = /** @class */ (function (_super) {
                         return [3 /*break*/, 4];
                     case 3:
                         err_4 = _a.sent();
-                        this.nodecg.log.warn("[OBS] Cannot set source settings [" + sourceName + "]");
-                        this.nodecg.log.debug("[OBS] Cannot set source settings [" + sourceName + "]: "
-                            + ("" + (err_4.error || err_4)));
+                        this.nodecg.log.warn("[OBS] Cannot set source settings [".concat(sourceName, "]"));
+                        this.nodecg.log.debug("[OBS] Cannot set source settings [".concat(sourceName, "]: ")
+                            + "".concat(err_4.error || err_4));
                         throw err_4;
                     case 4: return [2 /*return*/];
                 }
@@ -349,9 +349,9 @@ var OBS = /** @class */ (function (_super) {
                         return [3 /*break*/, 3];
                     case 2:
                         err_5 = _j.sent();
-                        this.nodecg.log.warn("[OBS] Cannot configure scene item [" + scene + ": " + item + "]");
-                        this.nodecg.log.debug("[OBS] Cannot configure scene item [" + scene + ": " + item + "]: "
-                            + ("" + (err_5.error || err_5)));
+                        this.nodecg.log.warn("[OBS] Cannot configure scene item [".concat(scene, ": ").concat(item, "]"));
+                        this.nodecg.log.debug("[OBS] Cannot configure scene item [".concat(scene, ": ").concat(item, "]: ")
+                            + "".concat(err_5.error || err_5));
                         throw err_5;
                     case 3: return [2 /*return*/];
                 }

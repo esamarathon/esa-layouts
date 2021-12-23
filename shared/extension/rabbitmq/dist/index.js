@@ -138,7 +138,7 @@ var RabbitMQ = /** @class */ (function () {
         }
     }
     RabbitMQ.prototype.url = function () {
-        return this.config.protocol + "://" + this.config.hostname + (this.config.vhost ? "/" + this.config.vhost : '');
+        return "".concat(this.config.protocol, "://").concat(this.config.hostname).concat(this.config.vhost ? "/".concat(this.config.vhost) : '');
     };
     RabbitMQ.prototype.opts = function () {
         if (this.config.username || !this.config.password) {
@@ -152,7 +152,7 @@ var RabbitMQ = /** @class */ (function () {
     };
     RabbitMQ.prototype.validateMsg = function (msg) {
         return msg.fields.exchange !== this.exchange
-            || !msg.fields.routingKey.startsWith(this.event + ".");
+            || !msg.fields.routingKey.startsWith("".concat(this.event, "."));
     };
     RabbitMQ.prototype.setupChan = function (chan) {
         return __awaiter(this, void 0, void 0, function () {
@@ -160,7 +160,7 @@ var RabbitMQ = /** @class */ (function () {
             return __generator(this, function (_a) {
                 chan.assertExchange(this.exchange, 'topic', { durable: true, autoDelete: true });
                 this.listenTopics.forEach(function (topic) {
-                    var queueName = _this.exchange + "-" + _this.event + "-" + topic.name;
+                    var queueName = "".concat(_this.exchange, "-").concat(_this.event, "-").concat(topic.name);
                     chan.assertExchange(topic.exchange, 'topic', { durable: true, autoDelete: true });
                     chan.assertQueue(queueName, { durable: true, expires: 4 * 60 * 60 * 1000 });
                     chan.bindQueue(queueName, topic.exchange, topic.key);
@@ -201,7 +201,7 @@ var RabbitMQ = /** @class */ (function () {
             event: this.event,
             time: getTimeInfo(),
         });
-        var fullKey = this.event + "." + key;
+        var fullKey = "".concat(this.event, ".").concat(key);
         if (this.chan && !this.useTestData) {
             this.chan.publish(this.exchange, fullKey, Buffer.from(JSON.stringify(newData)), { persistent: true });
         }

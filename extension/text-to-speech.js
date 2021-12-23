@@ -12,6 +12,7 @@ const config = (0, nodecg_1.get)().bundleConfig.tts;
  * Will attempt to trigger speech for the supplied donation.
  * @param donation Donation object
  */
+// eslint-disable-next-line import/prefer-default-export
 async function speak(donation) {
     const text = `${donation.name} donated $${donation.amount.toFixed(2)}`
         + `${donation.comment ? `: ${donation.comment}` : ''}`;

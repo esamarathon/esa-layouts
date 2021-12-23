@@ -74,7 +74,7 @@ var XKeysClass = /** @class */ (function (_super) {
             return;
         }
         if (!this.panel) {
-            this.nodecg.log.warn("[XKeys] Cannot set backlight on " + keyIndex + ", panel not connected");
+            this.nodecg.log.warn("[XKeys] Cannot set backlight on ".concat(keyIndex, ", panel not connected"));
             return;
         }
         this.panel.setBacklight(keyIndex, on, redLight, flashing);

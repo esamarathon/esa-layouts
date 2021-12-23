@@ -22,10 +22,6 @@ function init() {
         const buttons = streamdeck_1.default.findButtonsWithAction('com.esamarathon.streamdeck.timer');
         buttons.forEach((button) => {
             switch (val.state) {
-                case 'stopped':
-                default:
-                    streamdeck_1.default.updateButtonText(button.context, defaultTimerText);
-                    break;
                 case 'running':
                     streamdeck_1.default.updateButtonText(button.context, 'Stop\nTimer');
                     break;
@@ -34,6 +30,10 @@ function init() {
                     break;
                 case 'finished':
                     streamdeck_1.default.updateButtonText(button.context, 'Reset\nTimer');
+                    break;
+                case 'stopped':
+                default:
+                    streamdeck_1.default.updateButtonText(button.context, defaultTimerText);
                     break;
             }
         });

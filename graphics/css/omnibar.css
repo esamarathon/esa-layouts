@@ -224,7 +224,7 @@ Stuff not in this file (yet):
 }
 
 
-#Total[data-v-61ea624d] {
+#Total[data-v-7e4fcbdd] {
   padding: 0 20px 0 0;
   font-size: 40px;
   font-weight: 500;
@@ -233,26 +233,26 @@ Stuff not in this file (yet):
 }
 
 /* Each character in the total is in a span; setting width so the numbers appear monospaced. */
-#Total > span[data-v-61ea624d] {
+#Total > span[data-v-7e4fcbdd] {
   display: inline-block;
   width: 0.45em;
   text-align: center;
 }
-#Total > .Comma[data-v-61ea624d] {
+#Total > .Comma[data-v-7e4fcbdd] {
   display: inline-block;
   width: 0.22em;
   text-align: center;
 }
-.fade-enter-active[data-v-61ea624d], .fade-leave-active[data-v-61ea624d] {
+.fade-enter-active[data-v-7e4fcbdd], .fade-leave-active[data-v-7e4fcbdd] {
   transition: opacity 0.5s ease;
 }
-.fade-enter[data-v-61ea624d], .fade-leave-to[data-v-61ea624d]
+.fade-enter[data-v-7e4fcbdd], .fade-leave-to[data-v-7e4fcbdd]
 /* .component-fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
 
 
-#GenericMessage[data-v-2a1208d0] {
+#GenericMessage[data-v-65464698] {
   height: 100%;
   font-weight: 500;
   font-size: var(--font-size);
@@ -260,32 +260,32 @@ Stuff not in this file (yet):
 }
 
 
-#UpcomingRun[data-v-6f1e1dff] {
+#UpcomingRun[data-v-79ef237c] {
   padding: 0 17px;
   height: 100%;
   font-weight: 500;
   flex-direction: column;
   align-items: flex-start;
 }
-.Line1[data-v-6f1e1dff] {
+.Line1[data-v-79ef237c] {
   font-size: 25px;
 }
-.Line2[data-v-6f1e1dff] {
+.Line2[data-v-79ef237c] {
   font-size: 22px;
 }
 
 
-#OtherStreamInfo[data-v-e4544e74] {
+#OtherStreamInfo[data-v-033d4c86] {
   padding: 0 17px;
   height: 100%;
   font-weight: 500;
   flex-direction: column;
   align-items: flex-start;
 }
-.Line1[data-v-e4544e74] {
+.Line1[data-v-033d4c86] {
   font-size: 25px;
 }
-.Line2[data-v-e4544e74] {
+.Line2[data-v-033d4c86] {
   font-size: 22px;
 }
 
@@ -305,12 +305,12 @@ Stuff not in this file (yet):
 }
 
 
-.BarText[data-v-620ed7ba] {
+.BarText[data-v-031b41d4] {
   background-color: rgba(0, 0, 0, 0.4);
   padding: 7px 10px;
   border-radius: 15px;
 }
-.BarTextFull[data-v-620ed7ba] {
+.BarTextFull[data-v-031b41d4] {
   background-color: rgba(0, 0, 0, 0.4);
   padding: 0 10px;
   display: flex;
@@ -321,14 +321,14 @@ Stuff not in this file (yet):
 }
 
 
-.BarText[data-v-f4a4c168] {
+.BarText[data-v-69d43bd1] {
   background-color: rgba(0, 0, 0, 0.4);
   padding: 7px 10px;
   border-radius: 15px;
 }
 
 
-.Option[data-v-0901ce1a] {
+.Option[data-v-7787a41a] {
   display: flex;
   align-items: center;
   height: 100%;
@@ -367,7 +367,7 @@ Stuff not in this file (yet):
 }
 
 
-#GenericMessage[data-v-60acc0ac] {
+#GenericMessage[data-v-765605d4] {
   height: 100%;
   font-weight: 500;
   font-size: var(--font-size);
@@ -382,20 +382,20 @@ Stuff not in this file (yet):
 }
 
 
-#Ticker[data-v-64dd04fe] {
+#Ticker[data-v-046b1590] {
   height: 100%;
   min-width: 0;
   flex: 1;
 }
-.fade-enter-active[data-v-64dd04fe], .fade-leave-active[data-v-64dd04fe] {
+.fade-enter-active[data-v-046b1590], .fade-leave-active[data-v-046b1590] {
   transition: opacity .5s;
 }
-.fade-enter[data-v-64dd04fe], .fade-leave-to[data-v-64dd04fe] /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter[data-v-046b1590], .fade-leave-to[data-v-046b1590] /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
 
 
-#Clock[data-v-661ed9cd] {
+#Clock[data-v-722aca4a] {
   font-size: 35px;
   width: 90px;
 }

@@ -159,7 +159,7 @@ async function playNext() {
             if (commercialLength > 0 && commercialSuccess)
                 await waitForCommercialEnd();
             else
-                await new Promise((res) => setTimeout(res, 2500));
+                await new Promise((res) => { setTimeout(res, 2500); });
             videoEnded(); // eslint-disable-line @typescript-eslint/no-use-before-define
         }
     }
@@ -240,7 +240,7 @@ exports.stopEarly = stopEarly;
 (0, nodecg_1.get)().listenFor('startVideoPlayer', async () => {
     const asset = replicants_1.assetsVideos.value.find((v) => { var _a; return v.sum === ((_a = replicants_1.videoPlayer.value.playlist[0]) === null || _a === void 0 ? void 0 : _a.sum); });
     if (!replicants_1.videoPlayer.value.playlist.length || !asset) {
-        await new Promise((res) => setTimeout(res, 2 * 1000));
+        await new Promise((res) => { setTimeout(res, 2 * 1000); });
         if (!obs_1.default.isCurrentScene(config.obs.names.scenes.intermission)) {
             await (0, layouts_1.obsChangeScene)({ scene: config.obs.names.scenes.intermission, force: true });
         }

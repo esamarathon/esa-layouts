@@ -74,7 +74,7 @@ var ws_1 = __importDefault(require("ws"));
  * @param schemaName the replicant/schema filename.
  */
 function buildSchemaPath(schemaName) {
-    return path_1.default.resolve(__dirname, '../../../schemas', encodeURIComponent(schemaName) + ".json");
+    return path_1.default.resolve(__dirname, '../../../schemas', "".concat(encodeURIComponent(schemaName), ".json"));
 }
 var RestreamInstance = /** @class */ (function (_super) {
     __extends(RestreamInstance, _super);
@@ -83,7 +83,7 @@ var RestreamInstance = /** @class */ (function (_super) {
         _this.nodecg = nodecg;
         _this.address = address;
         _this.key = key;
-        _this.nodecg.log.debug("[Restream, " + _this.address + "] Creating instance");
+        _this.nodecg.log.debug("[Restream, ".concat(_this.address, "] Creating instance"));
         _this.connect();
         return _this;
     }
@@ -92,10 +92,10 @@ var RestreamInstance = /** @class */ (function (_super) {
             var _this = this;
             return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (res) {
-                        _this.nodecg.log.debug("[Restream, " + _this.address + "] Sending mesage:", msg);
+                        _this.nodecg.log.debug("[Restream, ".concat(_this.address, "] Sending mesage:"), msg);
                         if (!_this.ws || _this.ws.readyState !== 1) {
                             // throw new Error('WebSocket not connected');
-                            _this.nodecg.log.warn("[Restream, " + _this.address + "] "
+                            _this.nodecg.log.warn("[Restream, ".concat(_this.address, "] ")
                                 + 'Cannot send mesage: WebSocket not connected');
                             return;
                         }
@@ -104,7 +104,7 @@ var RestreamInstance = /** @class */ (function (_super) {
                         var msgEvt = function (data) {
                             var resp = JSON.parse(data.toString());
                             if (_this.ws && resp.type === 'Response' && resp.msgID === msgID) {
-                                _this.nodecg.log.debug("[Restream, " + _this.address + "] "
+                                _this.nodecg.log.debug("[Restream, ".concat(_this.address, "] ")
                                     + 'Received successful confirmation message');
                                 _this.ws.removeListener('message', msgEvt);
                                 res(resp);
@@ -119,15 +119,15 @@ var RestreamInstance = /** @class */ (function (_super) {
     };
     RestreamInstance.prototype.connect = function () {
         var _this = this;
-        this.nodecg.log.info("[Restream, " + this.address + "] Connecting");
-        this.ws = new ws_1.default("ws://" + this.address + "/ws?key=" + this.key);
+        this.nodecg.log.info("[Restream, ".concat(this.address, "] Connecting"));
+        this.ws = new ws_1.default("ws://".concat(this.address, "/ws?key=").concat(this.key));
         this.ws.once('open', function () {
             _this.emit('connected');
-            _this.nodecg.log.info("[Restream, " + _this.address + "] Connected");
+            _this.nodecg.log.info("[Restream, ".concat(_this.address, "] Connected"));
         });
         this.ws.on('error', function (err) {
-            _this.nodecg.log.warn("[Restream, " + _this.address + "] Connection error");
-            _this.nodecg.log.debug("[Restream, " + _this.address + "] Connection error:", err);
+            _this.nodecg.log.warn("[Restream, ".concat(_this.address, "] Connection error"));
+            _this.nodecg.log.debug("[Restream, ".concat(_this.address, "] Connection error:"), err);
         });
         this.ws.once('close', function () {
             if (_this.ws) {
@@ -135,11 +135,11 @@ var RestreamInstance = /** @class */ (function (_super) {
             }
             _this.emit('disconnected');
             setTimeout(function () { return _this.connect(); }, 5 * 1000);
-            _this.nodecg.log.warn("[Restream, " + _this.address + "] Connection lost, retrying in 5 seconds");
+            _this.nodecg.log.warn("[Restream, ".concat(_this.address, "] Connection lost, retrying in 5 seconds"));
         });
         this.ws.on('message', function (data) {
             var msg = JSON.parse(data.toString());
-            _this.nodecg.log.debug("[Restream, " + _this.address + "] Received mesage:", msg);
+            _this.nodecg.log.debug("[Restream, ".concat(_this.address, "] Received mesage:"), msg);
             _this.channel = msg.channel;
             _this.emit('channelChange', msg.channel);
             if (msg.type === 'Update') {
@@ -238,7 +238,7 @@ var Restream = /** @class */ (function () {
                                 });
                                 // Currently not checking for error msg here, so will always seem successful!
                                 this.nodecg.log.info('[Restream] Successfully overridden stream '
-                                    + ("" + ((data.index || 0) + 1)));
+                                    + "".concat((data.index || 0) + 1));
                                 _c.label = 2;
                             case 2:
                                 if (cb && !cb.handled) {
@@ -263,7 +263,7 @@ var Restream = /** @class */ (function () {
                                 _a = _b.sent(), channel = _a.channel, uuid_ = _a.uuid;
                                 this.updateData(data.index || 0, { channel: channel, uuid: uuid_ });
                                 // Currently not checking for error msg here, so will always seem successful!
-                                this.nodecg.log.info("[Restream] Successfully restarted stream " + ((data.index || 0) + 1));
+                                this.nodecg.log.info("[Restream] Successfully restarted stream ".concat((data.index || 0) + 1));
                                 _b.label = 2;
                             case 2:
                                 if (cb && !cb.handled) {
@@ -288,7 +288,7 @@ var Restream = /** @class */ (function () {
                                 _a = _b.sent(), channel = _a.channel, uuid_ = _a.uuid;
                                 this.updateData(data.index || 0, { channel: channel, uuid: uuid_ });
                                 // Currently not checking for error msg here, so will always seem successful!
-                                this.nodecg.log.info("[Restream] Successfully stopped stream " + ((data.index || 0) + 1));
+                                this.nodecg.log.info("[Restream] Successfully stopped stream ".concat((data.index || 0) + 1));
                                 _b.label = 2;
                             case 2:
                                 if (cb && !cb.handled) {
@@ -320,7 +320,7 @@ var Restream = /** @class */ (function () {
                         _a = _c.sent(), channel = _a.channel, uuid_ = _a.uuid;
                         this.updateData(i, { channel: channel, uuid: uuid_ });
                         // Currently not checking for error msg here, so will always seem successful!
-                        this.nodecg.log.info("[Restream] Successfully stopped stream " + (i + 1));
+                        this.nodecg.log.info("[Restream] Successfully stopped stream ".concat(i + 1));
                         return [3 /*break*/, 4];
                     case 2:
                         if (!(newChan && newChan !== instance.channel)) return [3 /*break*/, 4];
@@ -333,7 +333,7 @@ var Restream = /** @class */ (function () {
                             uuid: uuid_,
                         });
                         // Currently not checking for error msg here, so will always seem successful!
-                        this.nodecg.log.info("[Restream] Successfully started stream " + (i + 1));
+                        this.nodecg.log.info("[Restream] Successfully started stream ".concat(i + 1));
                         _c.label = 4;
                     case 4: return [2 /*return*/];
                 }
@@ -342,7 +342,7 @@ var Restream = /** @class */ (function () {
     };
     Restream.prototype.updateData = function (i, opts) {
         var _a;
-        this.nodecg.log.debug("[Restream] Updating restreamData[" + i + "]:", opts);
+        this.nodecg.log.debug("[Restream] Updating restreamData[".concat(i, "]:"), opts);
         this.restreamData.value[i] = {
             connected: this.restreamData.value[i].connected,
             overridden: (_a = opts.overridden) !== null && _a !== void 0 ? _a : this.restreamData.value[i].overridden,

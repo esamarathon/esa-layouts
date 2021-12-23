@@ -160,7 +160,7 @@ async function setup() {
         else {
             replicants_1.donationTotal.value = exports.eventInfo.reduce((p, e) => p + e.total, 0);
         }
-        /* eslint-disable @typescript-eslint/no-var-requires */
+        /* eslint-disable @typescript-eslint/no-var-requires, global-require */
         require('./tracker-bids').setup();
         require('./tracker-prizes').setup();
         require('./tracker-donations').setup();

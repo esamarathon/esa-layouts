@@ -46,7 +46,7 @@ var stream_1 = require("stream");
  * @param schemaName the replicant/schema filename.
  */
 function buildSchemaPath(schemaName) {
-    return path_1.default.resolve(__dirname, '../../../schemas', encodeURIComponent(schemaName) + ".json");
+    return path_1.default.resolve(__dirname, '../../../schemas', "".concat(encodeURIComponent(schemaName), ".json"));
 }
 var Music = /** @class */ (function () {
     function Music(nodecg, config) {
@@ -55,7 +55,7 @@ var Music = /** @class */ (function () {
         this.nodecg = nodecg;
         this.config = config;
         this.auth = (config.username && config.password)
-            ? "Basic " + Buffer.from(config.username + ":" + config.password).toString('base64')
+            ? "Basic ".concat(Buffer.from("".concat(config.username, ":").concat(config.password)).toString('base64'))
             : undefined;
         this.headers = this.auth ? { Authorization: this.auth } : undefined;
         this.musicData = nodecg.Replicant('musicData', { schemaPath: buildSchemaPath('musicData') });
@@ -75,8 +75,8 @@ var Music = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.nodecg.log.debug("[Music] API " + method.toUpperCase() + " request processing on " + endpoint);
-                        return [4 /*yield*/, (0, node_fetch_1.default)("http://" + this.config.address + "/api" + endpoint, {
+                        this.nodecg.log.debug("[Music] API ".concat(method.toUpperCase(), " request processing on ").concat(endpoint));
+                        return [4 /*yield*/, (0, node_fetch_1.default)("http://".concat(this.config.address, "/api").concat(endpoint), {
                                 method: method,
                                 headers: this.headers,
                             })];
@@ -87,10 +87,10 @@ var Music = /** @class */ (function () {
                     case 2:
                         text = _a.sent();
                         this.nodecg.log
-                            .debug("[Music] API " + method.toUpperCase() + " request error on " + endpoint + ":", text);
+                            .debug("[Music] API ".concat(method.toUpperCase(), " request error on ").concat(endpoint, ":"), text);
                         throw new Error(text);
                     case 3:
-                        this.nodecg.log.debug("[Music] API " + method.toUpperCase() + " request successful on " + endpoint);
+                        this.nodecg.log.debug("[Music] API ".concat(method.toUpperCase(), " request successful on ").concat(endpoint));
                         return [2 /*return*/, resp];
                 }
             });

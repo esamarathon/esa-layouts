@@ -1,3 +1,4 @@
+import CopyPlugin from 'copy-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { globbySync } from 'globby';
 import HtmlWebpackPlugin from 'html-webpack-plugin';

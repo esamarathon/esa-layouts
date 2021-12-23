@@ -1,30 +1,23 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
-const LiveReloadPlugin = require('webpack-livereload-plugin');
-const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
-const globby = require('globby');
-const path = require('path');
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import { globbySync } from 'globby';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import path from 'path';
+import sass from 'sass';
+import TsConfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
+import VueLoaderPlugin from 'vue-loader/lib/plugin.js';
+import VuetifyLoaderPlugin from 'vuetify-loader/lib/plugin.js';
+import LiveReloadPlugin from 'webpack-livereload-plugin';
 
 const isProd = process.env.NODE_ENV === 'production';
+const __dirname = path.resolve();
 
 const config = (name) => {
-  const entry = globby
-    .sync('*/main.ts', {cwd: `src/${name}`})
+  const entry = globbySync('*/main.ts', {cwd: `src/${name}`})
     .reduce((prev, curr) => {
       prev[path.basename(path.dirname(curr))] = `./${curr}`;
       return prev;
     }, {});
-
-  const miniCSSOpts = {
-    loader: MiniCssExtractPlugin.loader,
-    options: {
-      publicPath: '../',
-    },
-  };
 
   let plugins = [];
   if (!isProd) {
@@ -39,14 +32,13 @@ const config = (name) => {
     [
       new VueLoaderPlugin(),
       ...Object.keys(entry).map(
-        (entryName) => {
-          return new HtmlWebpackPlugin({
+        (entryName) =>
+          new HtmlWebpackPlugin({
             filename: `${entryName}.html`,
             chunks: [entryName],
             title: entryName,
-            template: './template.html',
-          });
-        }
+            template: 'template.html',
+          }),
       ),
       new ForkTsCheckerWebpackPlugin({
         typescript: {
@@ -66,8 +58,8 @@ const config = (name) => {
     );
   }
   if (name === 'dashboard') {
-    plugins.push(    
-      new VuetifyLoaderPlugin()
+    plugins.push(
+      new VuetifyLoaderPlugin(),
     );
   }
   if (name === 'graphics') {
@@ -91,10 +83,10 @@ const config = (name) => {
       filename: 'js/[name].js',
     },
     resolve: {
-      symlinks: false, // Helps with npm linked modules in development
       extensions: ['.js', '.ts', '.tsx', '.json'],
       alias: {
-        vue: 'vue/dist/vue.esm.js',
+        // vue: 'vue/dist/vue.esm.js',
+        vue: path.resolve(__dirname, 'node_modules/vue/dist/vue.esm.js'),
       },
       plugins: [
         new TsConfigPathsPlugin({
@@ -112,7 +104,7 @@ const config = (name) => {
           test: /\.css$/,
           exclude: /\.theme.css$/,
           use: [
-            (isProd) ? miniCSSOpts : 'vue-style-loader',
+            (isProd) ? MiniCssExtractPlugin.loader : 'vue-style-loader',
             {
               loader: 'css-loader',
               options: {
@@ -141,7 +133,7 @@ const config = (name) => {
         {
           test: /\.s(c|a)ss$/,
           use: [
-            (isProd) ? miniCSSOpts : 'vue-style-loader',
+            (isProd) ? MiniCssExtractPlugin.loader : 'vue-style-loader',
             {
               loader: 'css-loader',
               options: {
@@ -151,7 +143,7 @@ const config = (name) => {
             {
               loader: 'sass-loader',
               options: {
-                implementation: require('sass'),
+                implementation: sass,
               },
             },
           ],
@@ -217,7 +209,7 @@ const config = (name) => {
   };
 }
 
-module.exports = [
+export default [
   config('dashboard'),
   config('graphics'),
 ];

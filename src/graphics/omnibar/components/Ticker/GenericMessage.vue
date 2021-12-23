@@ -37,7 +37,9 @@ export default {
   },
   mounted() {
     console.log('GenericMessage: mounted');
-    setTimeout(() => { this.$emit('end'); console.log('GenericMessage: ended'); }, this.normalisedData.time * 1000);
+    setTimeout(() => {
+      this.$emit('end'); console.log('GenericMessage: ended');
+    }, this.normalisedData.time * 1000);
   },
 };
 </script>

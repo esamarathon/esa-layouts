@@ -3,6 +3,7 @@ import { store } from '../../store';
 /**
  * Sets the current prize to be shown.
  */
+// eslint-disable-next-line import/prefer-default-export
 export function setCurrentPrize(): boolean {
   // We only want to show prizes that are actually applicable right now!
   const activePrizes = store.state.prizes.filter((prize) => (

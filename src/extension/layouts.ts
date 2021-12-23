@@ -211,7 +211,7 @@ capturePositions.on('change', async (val) => {
   }
 });
 
-sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
+sc.twitchCommercialTimer.on('change', async (newVal) => {
   // Disable transitioning when commercials are run.
   if (!videoPlayer.value.playing) {
     obsData.value.disableTransitioning = newVal.secondsRemaining > 0;
@@ -242,7 +242,7 @@ sc.twitchCommercialTimer.on('change', async (newVal, oldVal) => {
 });
 
 let sceneChangeCodeTriggered = 0;
-obs.on('currentSceneChanged', (current, last) => {
+obs.on('currentSceneChanged', () => {
   /* // If switched to video player, disable transitioning.
   if (obs.isCurrentScene(obsConfig.names.scenes.videoPlayer)) {
     obsData.value.disableTransitioning = true;
@@ -278,6 +278,7 @@ nodecg().listenFor('endVideoPlayer', () => {
   await obs.changeScene(scene);
 } */
 
+// eslint-disable-next-line import/prefer-default-export
 export async function obsChangeScene(
   { scene, force = false }: { scene: string, force?: boolean },
 ): Promise<void> {
@@ -302,7 +303,7 @@ export async function obsChangeScene(
       // Simple server-to-server message we need.
       nodecg().sendMessage('obsTransitionQueued', scene);
       try {
-        await new Promise((res) => setTimeout(res, delay));
+        await new Promise((res) => { setTimeout(res, delay); });
         obsData.value.disableTransitioning = false;
         await obs.changeScene(scene);
         sceneChangeCodeTriggered = Date.now();

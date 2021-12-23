@@ -1,6 +1,7 @@
-import { makeCoors, outputCss, sortBoxCoor } from './clip';
 import type { BoxCoor } from './clip';
+import { makeCoors, outputCss, sortBoxCoor } from './clip';
 
+// eslint-disable-next-line import/prefer-default-export
 export function generateClipPath(): string {
   const captureElems = document.getElementsByClassName('Capture');
 

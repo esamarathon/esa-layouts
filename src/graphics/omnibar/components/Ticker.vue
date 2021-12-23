@@ -165,9 +165,11 @@ export default {
       return this.genericMsg('Subscribe or cheer to support the charity');
     },
     esaUpcomingEvt() {
+      // eslint-disable-next-line max-len
       return this.genericMsg('Can\'t get enough of speedrunning? Then look forward to ESA Summer 2021: 24th - 31st July');
     },
     esaBtRL() {
+      // eslint-disable-next-line max-len
       return this.genericMsg('ESA Break the Record: LIVE - Minecraft, 30th April - 2nd May! - breaktherecordlive.com');
     },
     hekTakeover() {
@@ -179,6 +181,7 @@ export default {
       return this.alert(line1, line2, false, true);
     },
     donation(donation) {
+      // eslint-disable-next-line max-len
       const line1 = `New Donation: ${donation.donor_visiblename} (${this.formatUSD(parseFloat(donation.amount))})`;
       const line2 = donation.comment;
       return this.alert(line1, line2);
@@ -190,6 +193,7 @@ export default {
       return this.alert(line1, line2);
     },
     cheer(cheerData) {
+      // eslint-disable-next-line max-len
       const line1 = `${cheerData.message.tags['display-name']} just cheered ${cheerData.message.tags.bits} bits!`;
       const line2 = cheerData.message.trailing;
       return this.alert(line1, line2);
@@ -201,8 +205,10 @@ export default {
 
       // Regex removes Twitter URL shortener links.
       message = message.replace(/https:\/\/t\.co\/\w+/g, (match) => {
+        // eslint-disable-next-line max-len
         if (tweetData.message.entities && tweetData.message.entities.urls && tweetData.message.entities.urls.length > 0) {
-          const replacementUrl = tweetData.message.entities.urls.find((urlInfo) => urlInfo.url === match);
+          const replacementUrl = tweetData.message.entities.urls
+            .find((urlInfo) => urlInfo.url === match);
           if (replacementUrl) return replacementUrl.display_url;
         }
         return '';

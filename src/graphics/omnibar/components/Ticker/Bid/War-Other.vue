@@ -120,7 +120,7 @@ export default class extends Vue {
     console.log('Bid: [War-Other] clientWidth: %s', this.optionsBar.clientWidth);
     // If no need to scroll, just wait a flat 25 seconds before ending.
     if (this.optionsBar.scrollWidth <= this.optionsBar.clientWidth) {
-      await new Promise((res) => window.setTimeout(res, 25 * 1000));
+      await new Promise((res) => { window.setTimeout(res, 25 * 1000); });
       this.$emit('end');
     } else {
       this.fallback = window.setTimeout(() => { this.$emit('end'); }, 30 * 1000);
@@ -133,7 +133,7 @@ export default class extends Vue {
           }, 4000);
         },
       });
-      await new Promise((res) => window.setTimeout(res, 4000));
+      await new Promise((res) => { window.setTimeout(res, 4000); });
       const loopLength = this.bid.allowUserOptions ? this.options.length + 1 : this.options.length;
 
       // Check how many times we need to scroll along to fit everything in.

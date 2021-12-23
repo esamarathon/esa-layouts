@@ -43,7 +43,9 @@ export default {
   },
   created() {
     console.log('OtherStreamInfo: created');
-    const fallback = setTimeout(() => { this.$emit('end'); console.log('OtherStreamInfo: fallback'); }, 5000);
+    const fallback = setTimeout(() => {
+      this.$emit('end'); console.log('OtherStreamInfo: fallback');
+    }, 5000);
     NodeCG.waitForReplicants(otherStreamData).then(() => {
       // Skip if nothing to show.
       if (!otherStreamData.value || !otherStreamData.value.show) {

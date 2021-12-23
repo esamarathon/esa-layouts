@@ -76,7 +76,7 @@ const store = new Vuex.Store({
       if (typeof reps.videoPlayer.value !== 'undefined') {
         reps.videoPlayer.value.playlist = clone(state.newPlaylist);
       }
-      await new Promise((res) => setTimeout(res, 1000)); // Fake 1s wait
+      await new Promise((res) => { setTimeout(res, 1000); }); // Fake 1s wait
       Vue.set(state, 'disableSave', false);
       window.clearTimeout(localEditTimeout);
       Vue.set(state, 'localEdits', false);

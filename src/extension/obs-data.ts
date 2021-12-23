@@ -66,6 +66,6 @@ obs.conn.on('TransitionBegin', (data) => {
   obsData.value.transitioning = true;
   if (data.name === 'Stinger') nodecg().sendMessage('showTransition');
 });
-obs.conn.on('TransitionEnd', (data) => {
+obs.conn.on('TransitionEnd', () => {
   obsData.value.transitioning = false;
 });

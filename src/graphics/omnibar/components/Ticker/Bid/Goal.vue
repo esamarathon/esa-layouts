@@ -112,7 +112,7 @@ export default class extends Vue {
     if (isPinned(this.bid)) {
       await waitForPinFinish(this.bid);
     } else {
-      await new Promise((res) => window.setTimeout(res, 25 * 1000));
+      await new Promise((res) => { window.setTimeout(res, 25 * 1000); });
     }
     this.$emit('end');
   }

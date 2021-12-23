@@ -69,6 +69,8 @@ jobs:
       continue-on-error: true
       working-directory: ./nodecg/bundles/esa-layouts
       run: |
+        rm -rf shared~master
+        git rm --ignore-unmatch --cached -r shared~master
         git reset HEAD shared
         git commit -m "Merge branch 'master' into build"
 
@@ -98,7 +100,7 @@ jobs:
     - name: Node.js setup
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '16'
 
     # Set NPM cache options
     - name: Set NPM cache

@@ -20,10 +20,6 @@ function init(): void {
     const buttons = sd.findButtonsWithAction('com.esamarathon.streamdeck.timer');
     buttons.forEach((button) => {
       switch (val.state) {
-        case 'stopped':
-        default:
-          sd.updateButtonText(button.context, defaultTimerText);
-          break;
         case 'running':
           sd.updateButtonText(button.context, 'Stop\nTimer');
           break;
@@ -32,6 +28,10 @@ function init(): void {
           break;
         case 'finished':
           sd.updateButtonText(button.context, 'Reset\nTimer');
+          break;
+        case 'stopped':
+        default:
+          sd.updateButtonText(button.context, defaultTimerText);
           break;
       }
     });

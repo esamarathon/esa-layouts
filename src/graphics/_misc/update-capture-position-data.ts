@@ -1,5 +1,6 @@
 import type { CapturePositions } from '@esa-layouts/types/schemas';
 
+// eslint-disable-next-line import/prefer-default-export
 export function updateCapturePositionData(layout: string): void {
   const capturePositions = nodecg.Replicant<CapturePositions>('capturePositions');
   NodeCG.waitForReplicants(capturePositions).then(() => {

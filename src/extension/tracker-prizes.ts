@@ -47,6 +47,7 @@ async function updatePrizes(): Promise<void> {
   setTimeout(updatePrizes, refreshTime);
 }
 
+// eslint-disable-next-line import/prefer-default-export
 export function setup(): void {
   if (!useTestData) {
     updatePrizes();

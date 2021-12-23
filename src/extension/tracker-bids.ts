@@ -112,6 +112,7 @@ async function updateBids(): Promise<void> {
   setTimeout(updateBids, refreshTime);
 }
 
+// eslint-disable-next-line import/prefer-default-export
 export function setup(): void {
   if (!useTestData) {
     updateBids();

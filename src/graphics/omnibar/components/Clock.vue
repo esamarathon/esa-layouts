@@ -24,7 +24,7 @@ export default {
   },
   created() {
     this.setTime();
-    setInterval(this.setTime, 1000);
+    setInterval(() => { this.setTime(); }, 1000);
   },
   methods: {
     setTime() {

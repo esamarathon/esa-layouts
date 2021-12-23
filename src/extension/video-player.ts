@@ -160,7 +160,7 @@ async function playNext(): Promise<void> {
       // This else block happens for both "commercial w/o video" and non-found assets.
       currVideo = null;
       if (commercialLength > 0 && commercialSuccess) await waitForCommercialEnd();
-      else await new Promise((res) => setTimeout(res, 2500));
+      else await new Promise((res) => { setTimeout(res, 2500); });
       videoEnded(); // eslint-disable-line @typescript-eslint/no-use-before-define
     }
   } catch (err) {
@@ -242,7 +242,7 @@ export async function stopEarly(): Promise<void> {
 nodecg().listenFor('startVideoPlayer', async () => {
   const asset = assetsVideos.value.find((v) => v.sum === videoPlayer.value.playlist[0]?.sum);
   if (!videoPlayer.value.playlist.length || !asset) {
-    await new Promise((res) => setTimeout(res, 2 * 1000));
+    await new Promise((res) => { setTimeout(res, 2 * 1000); });
     if (!obs.isCurrentScene(config.obs.names.scenes.intermission)) {
       await obsChangeScene({ scene: config.obs.names.scenes.intermission, force: true });
     }

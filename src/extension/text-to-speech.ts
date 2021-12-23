@@ -12,6 +12,7 @@ const config = (nodecg().bundleConfig as Configschema).tts;
  * Will attempt to trigger speech for the supplied donation.
  * @param donation Donation object
  */
+// eslint-disable-next-line import/prefer-default-export
 export async function speak(donation: Tracker.FormattedDonation): Promise<void> {
   const text = `${donation.name} donated $${donation.amount.toFixed(2)}`
     + `${donation.comment ? `: ${donation.comment}` : ''}`;

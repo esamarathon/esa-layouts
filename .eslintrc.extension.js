@@ -39,11 +39,8 @@ module.exports = {
       tsx: 'never',
     }],
 
-    // '@typescript-eslint/ban-ts-comment': 'off',
     'no-restricted-syntax': 'off',
-    'import/prefer-default-export': 'off',
     'no-await-in-loop': 'off',
-    'global-require': 'off', // Apparently deprecated but still need to turn it off. :)
   },
 
   // Overrides for types.
@@ -56,8 +53,6 @@ module.exports = {
       'import/prefer-default-export': 'off',
       // Types are only used for development (usually!) so dev dependencies are fine.
       'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
-
-      // 'camelcase': 'off',
     }
   }],
 };

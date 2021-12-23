@@ -63,11 +63,8 @@ module.exports = {
       ts: 'never',
       tsx: 'never',
     }],
-    // 'import/no-unresolved': [2, { commonjs: true, caseSensitive: false }],
 
-    // '@typescript-eslint/ban-ts-comment': 'off',
     'no-restricted-syntax': 'off',
-    'import/prefer-default-export': 'off',
-    // 'no-await-in-loop': 'off',
+    'vue/multi-word-component-names': 'off', // Check about this once things are all using decorators!
   }
 };

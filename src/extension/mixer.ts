@@ -57,7 +57,10 @@ function toggleFadeHelper(
   } catch (err) {
     logError(
       '[Mixer] Error toggling fader [address: %s, scenes: %s, data: %s]',
-      err, address, scenes, data,
+      err,
+      address,
+      scenes,
+      data,
     );
   }
 }

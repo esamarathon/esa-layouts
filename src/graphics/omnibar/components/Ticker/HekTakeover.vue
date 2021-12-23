@@ -47,7 +47,9 @@ export default {
       console.log('HekTakeover: skipping');
       this.$emit('end');
     } else {
-      setTimeout(() => { this.$emit('end'); console.log('HekTakeover: ended'); }, this.normalisedData.time * 1000);
+      setTimeout(() => {
+        this.$emit('end'); console.log('HekTakeover: ended');
+      }, this.normalisedData.time * 1000);
     }
   },
 };

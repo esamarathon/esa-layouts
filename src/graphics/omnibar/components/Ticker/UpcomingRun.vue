@@ -49,7 +49,9 @@ export default {
   },
   created() {
     console.log('UpcomingRun: created');
-    const fallback = setTimeout(() => { this.$emit('end'); console.log('UpcomingRun: fallback') }, 5000);
+    const fallback = setTimeout(() => {
+      this.$emit('end'); console.log('UpcomingRun: fallback');
+    }, 5000);
     if (!nextRunsCache.length) {
       const nextRuns = this.getNextRuns();
 

@@ -125,10 +125,10 @@ export default {
     async playNextAlert(start = false) {
       this.playingAlerts = true;
       if (!start) {
-        await new Promise((res) => setTimeout(res, 500));
+        await new Promise((res) => { setTimeout(res, 500); });
       }
       this.playSound();
-      await new Promise((res) => setTimeout(res, 500));
+      await new Promise((res) => { setTimeout(res, 500); });
       TweenLite.to(this.$data, 5, { tweenedTotal: this.alertList[0].total });
       window.setTimeout(() => {
         this.alertList.shift();

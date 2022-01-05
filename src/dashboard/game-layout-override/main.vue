@@ -38,7 +38,6 @@
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { State2Way } from 'vuex-class-state2way';
-import goTo from 'vuetify/es5/services/goto';
 import { GameLayouts } from '@esa-layouts/types/schemas';
 
 @Component
@@ -51,9 +50,9 @@ export default class extends Vue {
     try {
       await Vue.nextTick();
       if (this.selected) {
-        goTo(`#layout-${this.selected}`, { container: '#LayoutList', offset: 25 });
+        this.$vuetify.goTo(`#layout-${this.selected}`, { container: '#LayoutList', offset: 25 });
       } else {
-        goTo(0, { container: '#LayoutList' });
+        this.$vuetify.goTo(0, { container: '#LayoutList' });
       }
     } catch (err) {
       // Not sure if this can error, but better be safe

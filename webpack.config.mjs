@@ -1,4 +1,3 @@
-import CopyPlugin from 'copy-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { globbySync } from 'globby';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -61,15 +60,6 @@ const config = (name) => {
   if (name === 'dashboard') {
     plugins.push(
       new VuetifyLoaderPlugin(),
-    );
-  }
-  if (name === 'graphics') {
-    plugins.push(
-      new CopyPlugin({
-        patterns: [
-          { from: './host-dashboard.*', to: './' },
-        ],
-      }),
     );
   }
 

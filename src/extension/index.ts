@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable global-require */
 
 // This must go first so we can use module aliases!
-/* eslint-disable import/first */
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+/* eslint-disable import/first, @typescript-eslint/no-var-requires */
 require('module-alias').addAlias('@esa-layouts', require('path').join(__dirname, '.'));
 require('module-alias').addAlias('@shared', require('path').join(__dirname, '../shared'));
 

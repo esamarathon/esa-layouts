@@ -1,5 +1,6 @@
 {
   "eslint.workingDirectories": [
     { "pattern": "shared" }
-  ]
+  ],
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }

@@ -1,4 +1,4 @@
-@import url('./fonts/barlow-condensed.css');
+@import url('@fontsource/barlow-condensed');
 
 body {
   font-family: 'Barlow Condensed', sans-serif;

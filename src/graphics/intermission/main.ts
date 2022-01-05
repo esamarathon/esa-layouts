@@ -1,11 +1,11 @@
 /* eslint no-new: off, @typescript-eslint/explicit-function-return-type: off */
 
 import { UpcomingRunID } from '@esa-layouts/types/schemas';
+import '@fontsource/barlow-condensed/latin.css';
 import { setUpReplicantsComponent as setUpReplicantsMediabox } from '@shared/graphics/mediabox';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';
 import Vue from 'vue';
-import '../_misc/fonts/barlow-condensed.css';
 import '../_misc/theme';
 import './common.css';
 import App from './main.vue';

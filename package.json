@@ -45,6 +45,8 @@
   },
   "devDependencies": {
     "@esamarathon/mq-events": "git+https://git@github.com/esamarathon/mq-events.git#fa96a895d22367928fcb80fe800049669dfe3135",
+    "@fontsource/barlow-condensed": "^4.5.0",
+    "@fontsource/montserrat": "^4.5.1",
     "@fontsource/roboto": "^4.5.1",
     "@mdi/font": "^6.5.95",
     "@types/async": "^3.2.10",

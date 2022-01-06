@@ -1,0 +1,19 @@
+/* Lazy-load/include every possible version of Montserrat. */
+@import url('@fontsource/montserrat/100-italic.css');
+@import url('@fontsource/montserrat/100.css');
+@import url('@fontsource/montserrat/200-italic.css');
+@import url('@fontsource/montserrat/200.css');
+@import url('@fontsource/montserrat/300-italic.css');
+@import url('@fontsource/montserrat/300.css');
+@import url('@fontsource/montserrat/400-italic.css');
+@import url('@fontsource/montserrat/400.css');
+@import url('@fontsource/montserrat/500-italic.css');
+@import url('@fontsource/montserrat/500.css');
+@import url('@fontsource/montserrat/600-italic.css');
+@import url('@fontsource/montserrat/600.css');
+@import url('@fontsource/montserrat/700-italic.css');
+@import url('@fontsource/montserrat/700.css');
+@import url('@fontsource/montserrat/800-italic.css');
+@import url('@fontsource/montserrat/800.css');
+@import url('@fontsource/montserrat/900-italic.css');
+@import url('@fontsource/montserrat/900.css');

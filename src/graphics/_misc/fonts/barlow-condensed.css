@@ -1,0 +1,19 @@
+/* Lazy-load/include every possible version of Barlow Condensed. */
+@import url('@fontsource/barlow-condensed/100-italic.css');
+@import url('@fontsource/barlow-condensed/100.css');
+@import url('@fontsource/barlow-condensed/200-italic.css');
+@import url('@fontsource/barlow-condensed/200.css');
+@import url('@fontsource/barlow-condensed/300-italic.css');
+@import url('@fontsource/barlow-condensed/300.css');
+@import url('@fontsource/barlow-condensed/400-italic.css');
+@import url('@fontsource/barlow-condensed/400.css');
+@import url('@fontsource/barlow-condensed/500-italic.css');
+@import url('@fontsource/barlow-condensed/500.css');
+@import url('@fontsource/barlow-condensed/600-italic.css');
+@import url('@fontsource/barlow-condensed/600.css');
+@import url('@fontsource/barlow-condensed/700-italic.css');
+@import url('@fontsource/barlow-condensed/700.css');
+@import url('@fontsource/barlow-condensed/800-italic.css');
+@import url('@fontsource/barlow-condensed/800.css');
+@import url('@fontsource/barlow-condensed/900-italic.css');
+@import url('@fontsource/barlow-condensed/900.css');

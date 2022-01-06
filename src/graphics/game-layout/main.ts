@@ -1,11 +1,11 @@
 /* eslint no-new: off, @typescript-eslint/explicit-function-return-type: off */
 
 import type { GameLayouts } from '@esa-layouts/types/schemas';
-import '@fontsource/barlow-condensed/latin.css';
 import { setUpReplicantsComponent as setUpReplicantsMediabox } from '@shared/graphics/mediabox';
 import { RunDataActiveRun } from 'speedcontrol-util/types';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import '../_misc/fonts/barlow-condensed.css';
 import '../_misc/theme';
 import './common.css';
 import * as List from './list';

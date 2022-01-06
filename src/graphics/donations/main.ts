@@ -1,7 +1,7 @@
 /* eslint no-new: off, @typescript-eslint/explicit-function-return-type: off */
 
-import '@fontsource/montserrat/latin.css';
 import Vue from 'vue';
+import '../_misc/fonts/montserrat.css';
 import App from './main.vue';
 import waitForReplicants from './store';
 

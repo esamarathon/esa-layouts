@@ -119,7 +119,7 @@
         "title": "Game Layout Override",
         "width": 2,
         "file": "game-layout-override.html",
-        "workspace": "ESA",
+        "workspace": "Z1 - ESA",
         "headerColor": "#c49215"
       },
       {
@@ -127,7 +127,7 @@
         "title": "Media Box Control",
         "width": 3,
         "file": "media-box-control.html",
-        "workspace": "Z - ESA Advanced",
+        "workspace": "Z2 - ESA Advanced",
         "headerColor": "#c49215"
       },
       {
@@ -142,7 +142,7 @@
         "title": "Text-To-Speech Control",
         "width": 3,
         "file": "tts-control.html",
-        "workspace": "Z - ESA Advanced",
+        "workspace": "Z8 - N/A",
         "headerColor": "#c49215"
       },
       {
@@ -150,7 +150,7 @@
         "title": "Video Player Control",
         "width": 3,
         "file": "video-player-control.html",
-        "workspace": "Z - ESA Advanced",
+        "workspace": "Z2 - ESA Advanced",
         "headerColor": "#c49215"
       },
       {
@@ -158,7 +158,7 @@
         "title": "Upcoming Run Control",
         "width": 3,
         "file": "upcoming-run-control.html",
-        "workspace": "Z - ESA Advanced",
+        "workspace": "Z1 - ESA",
         "headerColor": "#c49215"
       },
       {
@@ -180,7 +180,7 @@
         "title": "Countdown Control",
         "width": 3,
         "file": "countdown-control.html",
-        "workspace": "Z - ESA Advanced",
+        "workspace": "Z2 - ESA Advanced",
         "headerColor": "#c49215"
       },
       {
@@ -188,7 +188,7 @@
         "title": "Donation Total Milestones",
         "width": 4,
         "file": "donation-total-milestones.html",
-        "workspace": "Z - ESA Advanced",
+        "workspace": "Z1 - ESA",
         "headerColor": "#c49215"
       },
       {
@@ -196,7 +196,7 @@
         "title": "Bids",
         "width": 3,
         "file": "bids.html",
-        "workspace": "Z - ESA Advanced",
+        "workspace": "Z1 - ESA",
         "headerColor": "#c49215"
       },
       {
@@ -204,7 +204,7 @@
         "title": "Restream Viewer Tool",
         "width": 2,
         "file": "restream-viewer-tool.html",
-        "workspace": "ESA",
+        "workspace": "Z8 - N/A",
         "headerColor": "#c49215"
       },
       {
@@ -212,7 +212,7 @@
         "title": "RabbitMQ Test",
         "width": 2,
         "file": "rabbitmq-test.html",
-        "workspace": "ESA Debug",
+        "workspace": "Z9 - Debug",
         "headerColor": "#c49215"
       }
     ],

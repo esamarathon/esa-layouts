@@ -1,4 +1,4 @@
-import type { Bids, DonationTotal, DonationTotalMilestones, OmnibarPin } from '@esa-layouts/types/schemas';
+import type { Bids, DonationsToRead, DonationTotal, DonationTotalMilestones, OmnibarPin, StreamDeckData } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import Vue from 'vue';
@@ -9,23 +9,29 @@ import { getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators'
 // Declaring replicants.
 export const reps: {
   bids: ReplicantBrowser<Bids>;
+  donationsToRead: ReplicantBrowser<DonationsToRead>;
   donationTotal: ReplicantBrowser<DonationTotal>;
   donationTotalMilestones: ReplicantBrowser<DonationTotalMilestones>;
   omnibarPin: ReplicantBrowser<OmnibarPin>;
+  streamDeckData: ReplicantBrowser<StreamDeckData>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
   bids: nodecg.Replicant('bids'),
+  donationsToRead: nodecg.Replicant('donationsToRead'),
   donationTotal: nodecg.Replicant('donationTotal'),
   donationTotalMilestones: nodecg.Replicant('donationTotalMilestones'),
   omnibarPin: nodecg.Replicant('omnibarPin'),
+  streamDeckData: nodecg.Replicant('streamDeckData'),
 };
 
 // All the replicant types.
 export interface ReplicantTypes {
   bids: Bids;
+  donationsToRead: DonationsToRead;
   donationTotal: DonationTotal;
   donationTotalMilestones: DonationTotalMilestones;
   omnibarPin: OmnibarPin;
+  streamDeckData: StreamDeckData;
 }
 
 @Module({ name: 'ReplicantModule', namespaced: true })

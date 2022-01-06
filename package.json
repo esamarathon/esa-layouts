@@ -253,7 +253,7 @@
         "height": 1080
       },
       {
-        "file": "donations.html",
+        "file": "unread-donations.html",
         "width": 1920,
         "height": 1080
       },
@@ -266,11 +266,6 @@
         "file": "player-hud.html",
         "width": 800,
         "height": 480
-      },
-      {
-        "file": "twitch-players.html",
-        "width": 1920,
-        "height": 1080
       }
     ],
     "mount": [

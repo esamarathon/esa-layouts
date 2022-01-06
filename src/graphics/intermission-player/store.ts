@@ -1,50 +1,30 @@
-import type { UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
-import clone from 'clone';
-import type { ReplicantBrowser } from 'nodecg/types/browser';
-import { RunData, RunDataArray } from 'speedcontrol-util/types';
+import { ReplicantModule, ReplicantTypes } from '@esa-layouts/browser_shared/replicant_store';
+import { RunData } from 'speedcontrol-util/types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
+import { getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators';
 
 Vue.use(Vuex);
 
-// Replicants and their types
-const reps: {
-  runDataArray: ReplicantBrowser<RunDataArray>;
-  upcomingRunID: ReplicantBrowser<UpcomingRunID>;
-  videoPlayer: ReplicantBrowser<VideoPlayer>;
-  [k: string]: ReplicantBrowser<unknown>;
-} = {
-  runDataArray: nodecg.Replicant('runDataArray', 'nodecg-speedcontrol'),
-  upcomingRunID: nodecg.Replicant('upcomingRunID'),
-  videoPlayer: nodecg.Replicant('videoPlayer'),
-};
+@Module({ name: 'OurModule' })
+class OurModule extends VuexModule {
+  nextRun: RunData | null = null;
 
-interface StateTypes {
-  upcomingRunID: UpcomingRunID;
+  // Helper getter to return all replicants.
+  get reps(): ReplicantTypes {
+    return this.context.rootState.ReplicantModule.reps;
+  }
+
+  @Mutation
+  setNextRun(run: RunData): void {
+    Vue.set(this, 'nextRun', run);
+  }
 }
 
-const store = new Vuex.Store({
-  state: {
-    upcomingRunID: null,
-    nextRun: null,
-  },
-  mutations: {
-    setState(state, { name, val }): void {
-      Vue.set(state, name, val);
-    },
-    setNextRun(state, run: RunData): void {
-      Vue.set(state, 'nextRun', run);
-    },
-  },
+const store = new Store({
+  strict: process.env.NODE_ENV !== 'production',
+  state: {},
+  modules: { ReplicantModule, OurModule },
 });
-
-Object.keys(reps).forEach((key) => {
-  reps[key].on('change', (val) => {
-    store.commit('setState', { name: key, val: clone(val) });
-  });
-});
-
-export default async (): Promise<Store<StateTypes>> => {
-  await NodeCG.waitForReplicants(...Object.keys(reps).map((key) => reps[key]));
-  return store;
-};
+export default store;
+export const storeModule = getModule(OurModule, store);

@@ -1,5 +1,6 @@
 /* eslint no-new: off, @typescript-eslint/explicit-function-return-type: off */
 
+import { setUpReplicants } from '@esa-layouts/browser_shared/replicant_store';
 import { UpcomingRunID } from '@esa-layouts/types/schemas';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import { RunData } from 'speedcontrol-util/types';
@@ -8,7 +9,7 @@ import '../_misc/fonts/barlow-condensed.css';
 import '../_misc/theme';
 import './common.css';
 import App from './main.vue';
-import waitForReplicants from './store';
+import store from './store';
 
 const sc = new SpeedcontrolUtilBrowser(nodecg);
 
@@ -21,8 +22,8 @@ function getNextRun(id: UpcomingRunID): RunData | null {
   return null;
 }
 
-waitForReplicants().then((store) => {
-  store.watch(() => store.state.upcomingRunID, (val) => {
+setUpReplicants(store).then(() => {
+  store.watch(() => store.state.ReplicantModule.reps.upcomingRunID, (val) => {
     store.commit('setNextRun', getNextRun(val));
   }, { immediate: true });
 

@@ -1,6 +1,7 @@
-import type { Bids, DonationsToRead, DonationTotal, DonationTotalMilestones, OmnibarPin, StreamDeckData } from '@esa-layouts/types/schemas';
+import type { Bids, DonationsToRead, DonationTotal, DonationTotalMilestones, OmnibarPin, StreamDeckData, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
+import { RunDataArray } from 'speedcontrol-util/types';
 import Vue from 'vue';
 import type { Store } from 'vuex';
 import { namespace } from 'vuex-class';
@@ -13,7 +14,10 @@ export const reps: {
   donationTotal: ReplicantBrowser<DonationTotal>;
   donationTotalMilestones: ReplicantBrowser<DonationTotalMilestones>;
   omnibarPin: ReplicantBrowser<OmnibarPin>;
+  runDataArray: ReplicantBrowser<RunDataArray>;
   streamDeckData: ReplicantBrowser<StreamDeckData>;
+  upcomingRunID: ReplicantBrowser<UpcomingRunID>;
+  videoPlayer: ReplicantBrowser<VideoPlayer>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
   bids: nodecg.Replicant('bids'),
@@ -21,7 +25,10 @@ export const reps: {
   donationTotal: nodecg.Replicant('donationTotal'),
   donationTotalMilestones: nodecg.Replicant('donationTotalMilestones'),
   omnibarPin: nodecg.Replicant('omnibarPin'),
+  runDataArray: nodecg.Replicant('runDataArray', 'nodecg-speedcontrol'),
   streamDeckData: nodecg.Replicant('streamDeckData'),
+  upcomingRunID: nodecg.Replicant('upcomingRunID'),
+  videoPlayer: nodecg.Replicant('videoPlayer'),
 };
 
 // All the replicant types.
@@ -31,7 +38,10 @@ export interface ReplicantTypes {
   donationTotal: DonationTotal;
   donationTotalMilestones: DonationTotalMilestones;
   omnibarPin: OmnibarPin;
+  runDataArray: RunDataArray;
   streamDeckData: StreamDeckData;
+  upcomingRunID: UpcomingRunID;
+  videoPlayer: VideoPlayer;
 }
 
 @Module({ name: 'ReplicantModule', namespaced: true })

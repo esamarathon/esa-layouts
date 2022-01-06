@@ -218,6 +218,16 @@
     ],
     "graphics": [
       {
+        "file": "transition.html",
+        "width": 1920,
+        "height": 1000
+      },
+      {
+        "file": "omnibar.html",
+        "width": 1920,
+        "height": 80
+      },
+      {
         "file": "countdown.html",
         "width": 1920,
         "height": 1080
@@ -233,19 +243,14 @@
         "height": 1080
       },
       {
-        "file": "game-layout.html",
-        "width": 1920,
-        "height": 1080
-      },
-      {
-        "file": "omnibar.html",
-        "width": 1920,
-        "height": 80
-      },
-      {
         "file": "video-player.html",
         "width": 1920,
         "height": 1000
+      },
+      {
+        "file": "game-layout.html",
+        "width": 1920,
+        "height": 1080
       },
       {
         "file": "donations.html",
@@ -266,11 +271,6 @@
         "file": "twitch-players.html",
         "width": 1920,
         "height": 1080
-      },
-      {
-        "file": "transition.html",
-        "width": 1920,
-        "height": 1000
       }
     ],
     "mount": [
@@ -297,9 +297,7 @@
         "title": "Videos",
         "allowedTypes": [
           "mp4",
-          "webm",
-          "MP4",
-          "WEBM"
+          "webm"
         ]
       },
       {

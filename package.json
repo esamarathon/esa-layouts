@@ -33,7 +33,7 @@
   "dependencies": {
     "async": "^3.2.2",
     "clone": "^2.1.2",
-    "get-video-duration": "4.0.0",
+    "get-video-duration": "3.0.2",
     "lodash": "^4.17.21",
     "module-alias": "^2.2.2",
     "moment": "^2.29.1",
@@ -44,7 +44,9 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@esamarathon/mq-events": "git+https://git@github.com/esamarathon/mq-events.git#fa96a895d22367928fcb80fe800049669dfe3135",
+    "@esamarathon/mq-events": "^1.0.1",
+    "@fontsource/barlow-condensed": "^4.5.0",
+    "@fontsource/montserrat": "^4.5.1",
     "@fontsource/roboto": "^4.5.1",
     "@mdi/font": "^6.5.95",
     "@types/async": "^3.2.10",
@@ -59,7 +61,6 @@
     "@typescript-eslint/eslint-plugin": "^5.8.0",
     "@typescript-eslint/parser": "^5.8.0",
     "@vue/component-compiler-utils": "^3.3.0",
-    "copy-webpack-plugin": "^10.2.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.5.1",
     "dayjs": "^1.10.7",
@@ -118,7 +119,7 @@
         "title": "Game Layout Override",
         "width": 2,
         "file": "game-layout-override.html",
-        "workspace": "ESA",
+        "workspace": "Z1 - ESA",
         "headerColor": "#c49215"
       },
       {
@@ -126,7 +127,7 @@
         "title": "Media Box Control",
         "width": 3,
         "file": "media-box-control.html",
-        "workspace": "Z - ESA Advanced",
+        "workspace": "Z2 - ESA Advanced",
         "headerColor": "#c49215"
       },
       {
@@ -141,7 +142,7 @@
         "title": "Text-To-Speech Control",
         "width": 3,
         "file": "tts-control.html",
-        "workspace": "Z - ESA Advanced",
+        "workspace": "Z8 - N/A",
         "headerColor": "#c49215"
       },
       {
@@ -149,7 +150,7 @@
         "title": "Video Player Control",
         "width": 3,
         "file": "video-player-control.html",
-        "workspace": "Z - ESA Advanced",
+        "workspace": "Z2 - ESA Advanced",
         "headerColor": "#c49215"
       },
       {
@@ -157,7 +158,7 @@
         "title": "Upcoming Run Control",
         "width": 3,
         "file": "upcoming-run-control.html",
-        "workspace": "Z - ESA Advanced",
+        "workspace": "Z1 - ESA",
         "headerColor": "#c49215"
       },
       {
@@ -179,7 +180,7 @@
         "title": "Countdown Control",
         "width": 3,
         "file": "countdown-control.html",
-        "workspace": "Z - ESA Advanced",
+        "workspace": "Z2 - ESA Advanced",
         "headerColor": "#c49215"
       },
       {
@@ -187,7 +188,7 @@
         "title": "Donation Total Milestones",
         "width": 4,
         "file": "donation-total-milestones.html",
-        "workspace": "Z - ESA Advanced",
+        "workspace": "Z1 - ESA",
         "headerColor": "#c49215"
       },
       {
@@ -195,7 +196,7 @@
         "title": "Bids",
         "width": 3,
         "file": "bids.html",
-        "workspace": "Z - ESA Advanced",
+        "workspace": "Z1 - ESA",
         "headerColor": "#c49215"
       },
       {
@@ -203,7 +204,7 @@
         "title": "Restream Viewer Tool",
         "width": 2,
         "file": "restream-viewer-tool.html",
-        "workspace": "ESA",
+        "workspace": "Z8 - N/A",
         "headerColor": "#c49215"
       },
       {
@@ -211,11 +212,21 @@
         "title": "RabbitMQ Test",
         "width": 2,
         "file": "rabbitmq-test.html",
-        "workspace": "ESA Debug",
+        "workspace": "Z9 - Debug",
         "headerColor": "#c49215"
       }
     ],
     "graphics": [
+      {
+        "file": "transition.html",
+        "width": 1920,
+        "height": 1000
+      },
+      {
+        "file": "omnibar.html",
+        "width": 1920,
+        "height": 80
+      },
       {
         "file": "countdown.html",
         "width": 1920,
@@ -232,27 +243,17 @@
         "height": 1080
       },
       {
+        "file": "intermission-player.html",
+        "width": 1920,
+        "height": 1080
+      },
+      {
         "file": "game-layout.html",
         "width": 1920,
         "height": 1080
       },
       {
-        "file": "omnibar.html",
-        "width": 1920,
-        "height": 80
-      },
-      {
-        "file": "video-player.html",
-        "width": 1920,
-        "height": 1000
-      },
-      {
-        "file": "donations.html",
-        "width": 1920,
-        "height": 1080
-      },
-      {
-        "file": "host-dashboard.html",
+        "file": "unread-donations.html",
         "width": 1920,
         "height": 1080
       },
@@ -265,16 +266,6 @@
         "file": "player-hud.html",
         "width": 800,
         "height": 480
-      },
-      {
-        "file": "twitch-players.html",
-        "width": 1920,
-        "height": 1080
-      },
-      {
-        "file": "transition.html",
-        "width": 1920,
-        "height": 1000
       }
     ],
     "mount": [
@@ -301,9 +292,7 @@
         "title": "Videos",
         "allowedTypes": [
           "mp4",
-          "webm",
-          "MP4",
-          "WEBM"
+          "webm"
         ]
       },
       {

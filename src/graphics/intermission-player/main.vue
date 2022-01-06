@@ -1,14 +1,5 @@
 <template>
   <div :style="{ width: '1920px', height: '1080px', position: 'fixed' }">
-    <!--<video-elem
-      class="Fixed"
-      :style="{
-        left: '209px',
-        top: '25px',
-        width: '1503px',
-        height: '845px',
-      }"
-    />-->
     <div
       class="Fixed"
       :style="{
@@ -95,13 +86,8 @@ import { Vue, Component } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import { VideoPlayer } from '@esa-layouts/types/schemas';
-import VideoElem from './components/VideoElem.vue';
 
-@Component({
-  components: {
-    VideoElem,
-  },
-})
+@Component
 export default class extends Vue {
   @State nextRun!: RunData | null;
   @State videoPlayer!: VideoPlayer;

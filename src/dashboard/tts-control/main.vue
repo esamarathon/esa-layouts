@@ -42,7 +42,6 @@
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { State2Way } from 'vuex-class-state2way';
-import goTo from 'vuetify/es5/services/goto';
 import { TtsVoices } from '@esa-layouts/types/schemas';
 import { Configschema } from '@esa-layouts/types/schemas/configschema';
 
@@ -55,7 +54,7 @@ export default class extends Vue {
   @Watch('voices')
   scrollToSelectedVoice(): void {
     if (this.config.enable) {
-      goTo(`#${this.voices.selected}`, { container: '#VoiceList', offset: 25 });
+      this.$vuetify.goTo(`#${this.voices.selected}`, { container: '#VoiceList', offset: 25 });
     }
   }
 

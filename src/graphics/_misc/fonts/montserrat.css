@@ -1,13 +1,19 @@
-/* montserrat-600 - vietnamese_latin-ext_latin_cyrillic-ext_cyrillic */
-@font-face {
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 600;
-  src: url('./montserrat-v14-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600.eot'); /* IE9 Compat Modes */
-  src: local('Montserrat SemiBold'), local('Montserrat-SemiBold'),
-       url('./montserrat-v14-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('./montserrat-v14-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600.woff2') format('woff2'), /* Super Modern Browsers */
-       url('./montserrat-v14-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600.woff') format('woff'), /* Modern Browsers */
-       url('./montserrat-v14-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('./montserrat-v14-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600.svg#Montserrat') format('svg'); /* Legacy iOS */
-}
+/* Lazy-load/include every possible version of Montserrat. */
+@import url('@fontsource/montserrat/100-italic.css');
+@import url('@fontsource/montserrat/100.css');
+@import url('@fontsource/montserrat/200-italic.css');
+@import url('@fontsource/montserrat/200.css');
+@import url('@fontsource/montserrat/300-italic.css');
+@import url('@fontsource/montserrat/300.css');
+@import url('@fontsource/montserrat/400-italic.css');
+@import url('@fontsource/montserrat/400.css');
+@import url('@fontsource/montserrat/500-italic.css');
+@import url('@fontsource/montserrat/500.css');
+@import url('@fontsource/montserrat/600-italic.css');
+@import url('@fontsource/montserrat/600.css');
+@import url('@fontsource/montserrat/700-italic.css');
+@import url('@fontsource/montserrat/700.css');
+@import url('@fontsource/montserrat/800-italic.css');
+@import url('@fontsource/montserrat/800.css');
+@import url('@fontsource/montserrat/900-italic.css');
+@import url('@fontsource/montserrat/900.css');

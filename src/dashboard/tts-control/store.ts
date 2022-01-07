@@ -1,45 +1,31 @@
-import type { TtsVoices } from '@esa-layouts/types/schemas';
-import clone from 'clone';
-import type { ReplicantBrowser } from 'nodecg/types/browser';
+import { replicantModule, ReplicantModule, ReplicantTypes } from '@esa-layouts/browser_shared/replicant_store';
+import { TtsVoices } from '@esa-layouts/types/schemas';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
+import { getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators';
 
 Vue.use(Vuex);
 
-// Replicants and their types
-const reps: {
-  voices: ReplicantBrowser<TtsVoices>;
-  [k: string]: ReplicantBrowser<unknown>;
-} = {
-  voices: nodecg.Replicant('ttsVoices'),
-};
+@Module({ name: 'OurModule' })
+class OurModule extends VuexModule {
+  // Helper getter to return all replicants.
+  get reps(): ReplicantTypes {
+    return this.context.rootState.ReplicantModule.reps;
+  }
 
-// Types for mutations below
-export type UpdateSelectedVoice = (code?: string) => void;
+  @Mutation
+  updateSelectedVoice(code?: string): void {
+    replicantModule.setReplicant<TtsVoices>({
+      name: 'ttsVoices',
+      val: { ...replicantModule.repsTyped.ttsVoices, selected: code },
+    });
+  }
+}
 
-const store = new Vuex.Store({
+const store = new Store({
+  strict: process.env.NODE_ENV !== 'production',
   state: {},
-  mutations: {
-    setState(state, { name, val }): void {
-      Vue.set(state, name, val);
-    },
-    /* Mutations to replicants start */
-    updateSelectedVoice(state, code): void {
-      if (typeof reps.voices.value !== 'undefined') {
-        reps.voices.value.selected = code;
-      }
-    },
-    /* Mutations to replicants end */
-  },
+  modules: { ReplicantModule, OurModule },
 });
-
-Object.keys(reps).forEach((key) => {
-  reps[key].on('change', (val) => {
-    store.commit('setState', { name: key, val: clone(val) });
-  });
-});
-
-export default async (): Promise<Store<Record<string, unknown>>> => {
-  await NodeCG.waitForReplicants(...Object.keys(reps).map((key) => reps[key]));
-  return store;
-};
+export default store;
+export const storeModule = getModule(OurModule, store);

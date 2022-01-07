@@ -1,4 +1,4 @@
-import type { Bids, Commentators, Countdown, CurrentRunDelay, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, ObsData, OmnibarPin, RestreamData, ServerTimestamp, StreamDeckData, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import type { Bids, Commentators, Countdown, CurrentRunDelay, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, ObsData, OmnibarPin, RestreamData, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import { RunDataArray } from 'speedcontrol-util/types';
@@ -24,6 +24,7 @@ export const reps: {
   runDataArray: ReplicantBrowser<RunDataArray>;
   serverTimestamp: ReplicantBrowser<ServerTimestamp>;
   streamDeckData: ReplicantBrowser<StreamDeckData>;
+  ttsVoices: ReplicantBrowser<TtsVoices>;
   upcomingRunID: ReplicantBrowser<UpcomingRunID>;
   videoPlayer: ReplicantBrowser<VideoPlayer>;
   [k: string]: ReplicantBrowser<unknown>;
@@ -43,6 +44,7 @@ export const reps: {
   runDataArray: nodecg.Replicant('runDataArray', 'nodecg-speedcontrol'),
   serverTimestamp: nodecg.Replicant('serverTimestamp'),
   streamDeckData: nodecg.Replicant('streamDeckData'),
+  ttsVoices: nodecg.Replicant('ttsVoices'),
   upcomingRunID: nodecg.Replicant('upcomingRunID'),
   videoPlayer: nodecg.Replicant('videoPlayer'),
 };
@@ -64,6 +66,7 @@ export interface ReplicantTypes {
   runDataArray: RunDataArray;
   serverTimestamp: ServerTimestamp;
   streamDeckData: StreamDeckData;
+  ttsVoices: TtsVoices;
   upcomingRunID: UpcomingRunID;
   videoPlayer: VideoPlayer;
 }

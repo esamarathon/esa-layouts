@@ -83,10 +83,6 @@ export interface Configschema {
 		enable: boolean;
 		voiceAPI: string;
 	};
-	twitchExt: {
-		enable: boolean;
-		token: string;
-	};
 }
 export interface RestreamItem {
 	address: string;

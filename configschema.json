@@ -443,24 +443,6 @@
         "enable",
         "voiceAPI"
       ]
-    },
-    "twitchExt": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "enable": {
-          "type": "boolean",
-          "default": false
-        },
-        "token": {
-          "type": "string",
-          "default": "TOKEN"
-        }
-      },
-      "required": [
-        "enable",
-        "token"
-      ]
     }
   },
   "required": [
@@ -473,7 +455,6 @@
     "music",
     "x32",
     "tracker",
-    "tts",
-    "twitchExt"
+    "tts"
   ]
 }

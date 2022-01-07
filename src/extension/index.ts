@@ -37,7 +37,6 @@ export = (nodecg: NodeCG): ExtensionReturn => {
   require('./restream');
   require('./media-box');
   require('./text-to-speech');
-  require('./twitch-ext');
   require('./music');
   require('./video-player');
   // require('./twitch-subs');

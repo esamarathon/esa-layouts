@@ -34,7 +34,6 @@ export = (nodecg: NodeCG): ExtensionReturn => {
   require('./mixer');
   require('./streamdeck-buttons');
   require('./timer');
-  require('./restream');
   require('./media-box');
   require('./text-to-speech');
   require('./music');

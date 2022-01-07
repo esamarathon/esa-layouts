@@ -1,23 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "restreamItem": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "address": {
-          "type": "string"
-        },
-        "key": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "address",
-        "key"
-      ]
-    }
-  },
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -148,40 +130,6 @@
         "vhost"
       ]
     },
-    "restream": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "enable": {
-          "type": "boolean",
-          "default": false
-        },
-        "instances": {
-          "oneOf": [
-            {
-              "$ref": "#/definitions/restreamItem"
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/restreamItem"
-              },
-              "uniqueItems": true,
-              "minItems": 1,
-              "maxItems": 2
-            }
-          ],
-          "default": {
-            "address": "localhost:1234",
-            "key": "DEFAULT_KEY"
-          }
-        }
-      },
-      "required": [
-        "enable",
-        "instances"
-      ]
-    },
     "obs": {
       "type": "object",
       "additionalProperties": false,
@@ -272,23 +220,6 @@
                   "type": "string",
                   "default": "Camera Capture 3"
                 },
-                "restreamSources": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "uniqueItems": true,
-                      "minItems": 1,
-                      "maxItems": 2
-                    }
-                  ],
-                  "default": "Restream Source"
-                },
                 "videoPlayer": {
                   "type": "string",
                   "default": "Video Player Source"
@@ -302,7 +233,6 @@
                 "cameraCapture1",
                 "cameraCapture2",
                 "cameraCapture3",
-                "restreamSources",
                 "videoPlayer"
               ]
             }
@@ -450,7 +380,6 @@
     "event",
     "streamdeck",
     "rabbitmq",
-    "restream",
     "obs",
     "music",
     "x32",

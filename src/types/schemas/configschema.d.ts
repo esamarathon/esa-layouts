@@ -27,10 +27,6 @@ export interface Configschema {
 		password: string;
 		vhost: string;
 	};
-	restream: {
-		enable: boolean;
-		instances: RestreamItem | [RestreamItem] | [RestreamItem, RestreamItem];
-	};
 	obs: {
 		enable: boolean;
 		address: string;
@@ -52,7 +48,6 @@ export interface Configschema {
 				cameraCapture1: string;
 				cameraCapture2: string;
 				cameraCapture3: string;
-				restreamSources: string | [string] | [string, string];
 				videoPlayer: string;
 			};
 		};
@@ -83,8 +78,4 @@ export interface Configschema {
 		enable: boolean;
 		voiceAPI: string;
 	};
-}
-export interface RestreamItem {
-	address: string;
-	key: string;
 }

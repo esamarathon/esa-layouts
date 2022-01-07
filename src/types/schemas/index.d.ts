@@ -18,7 +18,6 @@ export * from './obsData';
 export * from './omnibarPin';
 export * from './otherStreamData';
 export * from './prizes';
-export * from './restreamData';
 export * from './serverTimestamp';
 export * from './streamDeckData';
 export * from './ttsVoices';

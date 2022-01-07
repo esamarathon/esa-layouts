@@ -200,14 +200,6 @@
         "headerColor": "#c49215"
       },
       {
-        "name": "restream-viewer-tool",
-        "title": "Restream Viewer Tool",
-        "width": 2,
-        "file": "restream-viewer-tool.html",
-        "workspace": "Z8 - N/A",
-        "headerColor": "#c49215"
-      },
-      {
         "name": "rabbitmq-test",
         "title": "RabbitMQ Test",
         "width": 2,

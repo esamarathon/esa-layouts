@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import { Bids, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, MediaBox, MusicData, NameCycle, NotableDonations, ObsData, OmnibarPin, OtherStreamData, Prizes, RestreamData, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import { Bids, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, MediaBox, MusicData, NameCycle, NotableDonations, ObsData, OmnibarPin, OtherStreamData, Prizes, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import type { Asset } from '@shared/types';
 import { get as nodecg } from './nodecg';
 
@@ -30,7 +30,6 @@ export const obsData = nodecg().Replicant<ObsData>('obsData', { persistent: fals
 export const omnibarPin = nodecg().Replicant<OmnibarPin>('omnibarPin');
 export const otherStreamData = nodecg().Replicant<OtherStreamData>('otherStreamData');
 export const prizes = nodecg().Replicant<Prizes>('prizes', { persistent: false });
-export const restreamData = nodecg().Replicant<RestreamData>('restreamData');
 export const serverTimestamp = nodecg().Replicant<ServerTimestamp>('serverTimestamp');
 export const streamDeckData = nodecg().Replicant<StreamDeckData>('streamDeckData');
 export const ttsVoices = nodecg().Replicant<TtsVoices>('ttsVoices');

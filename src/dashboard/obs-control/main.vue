@@ -103,16 +103,16 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { CurrentRunDelay, ObsData, ServerTimestamp, VideoPlayer } from '@esa-layouts/types/schemas';
 import { Configschema } from '@esa-layouts/types/schemas/configschema';
+import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
 
 @Component
 export default class extends Vue {
-  @State obsData!: ObsData;
-  @State currentRunDelay!: CurrentRunDelay;
-  @State serverTimestamp!: ServerTimestamp;
-  @State videoPlayer!: VideoPlayer;
+  @replicantNS.State((s) => s.reps.obsData) readonly obsData!: ObsData;
+  @replicantNS.State((s) => s.reps.currentRunDelay) readonly currentRunDelay!: CurrentRunDelay;
+  @replicantNS.State((s) => s.reps.serverTimestamp) readonly serverTimestamp!: ServerTimestamp;
+  @replicantNS.State((s) => s.reps.videoPlayer) readonly videoPlayer!: VideoPlayer;
   obsConfig = (nodecg.bundleConfig as Configschema).obs;
   gameLayoutPreviewToggle = true;
 

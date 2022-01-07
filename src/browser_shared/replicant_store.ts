@@ -1,4 +1,4 @@
-import type { Bids, Commentators, Countdown, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, OmnibarPin, StreamDeckData, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import type { Bids, Commentators, Countdown, CurrentRunDelay, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, ObsData, OmnibarPin, ServerTimestamp, StreamDeckData, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import { RunDataArray } from 'speedcontrol-util/types';
@@ -12,13 +12,16 @@ export const reps: {
   bids: ReplicantBrowser<Bids>;
   commentators: ReplicantBrowser<Commentators>;
   countdown: ReplicantBrowser<Countdown>;
+  currentRunDelay: ReplicantBrowser<CurrentRunDelay>;
   donationReader: ReplicantBrowser<DonationReader>;
   donationsToRead: ReplicantBrowser<DonationsToRead>;
   donationTotal: ReplicantBrowser<DonationTotal>;
   donationTotalMilestones: ReplicantBrowser<DonationTotalMilestones>;
   gameLayouts: ReplicantBrowser<GameLayouts>;
+  obsData: ReplicantBrowser<ObsData>;
   omnibarPin: ReplicantBrowser<OmnibarPin>;
   runDataArray: ReplicantBrowser<RunDataArray>;
+  serverTimestamp: ReplicantBrowser<ServerTimestamp>;
   streamDeckData: ReplicantBrowser<StreamDeckData>;
   upcomingRunID: ReplicantBrowser<UpcomingRunID>;
   videoPlayer: ReplicantBrowser<VideoPlayer>;
@@ -27,13 +30,16 @@ export const reps: {
   bids: nodecg.Replicant('bids'),
   commentators: nodecg.Replicant('commentators'),
   countdown: nodecg.Replicant('countdown'),
+  currentRunDelay: nodecg.Replicant('currentRunDelay'),
   donationReader: nodecg.Replicant('donationReader'),
   donationsToRead: nodecg.Replicant('donationsToRead'),
   donationTotal: nodecg.Replicant('donationTotal'),
   donationTotalMilestones: nodecg.Replicant('donationTotalMilestones'),
   gameLayouts: nodecg.Replicant('gameLayouts'),
+  obsData: nodecg.Replicant('obsData'),
   omnibarPin: nodecg.Replicant('omnibarPin'),
   runDataArray: nodecg.Replicant('runDataArray', 'nodecg-speedcontrol'),
+  serverTimestamp: nodecg.Replicant('serverTimestamp'),
   streamDeckData: nodecg.Replicant('streamDeckData'),
   upcomingRunID: nodecg.Replicant('upcomingRunID'),
   videoPlayer: nodecg.Replicant('videoPlayer'),
@@ -44,13 +50,16 @@ export interface ReplicantTypes {
   bids: Bids;
   commentators: Commentators;
   countdown: Countdown;
+  currentRunDelay: CurrentRunDelay;
   donationReader: DonationReader;
   donationsToRead: DonationsToRead;
   donationTotal: DonationTotal;
   donationTotalMilestones: DonationTotalMilestones;
   gameLayouts: GameLayouts;
+  obsData: ObsData;
   omnibarPin: OmnibarPin;
   runDataArray: RunDataArray;
+  serverTimestamp: ServerTimestamp;
   streamDeckData: StreamDeckData;
   upcomingRunID: UpcomingRunID;
   videoPlayer: VideoPlayer;

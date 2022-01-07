@@ -3,9 +3,10 @@ import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import type { NodeCG as mqTypes } from '@esamarathon/mq-events/types';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';
+import mb from './mediabox';
 import { get as nodecg } from './nodecg';
 import { mq } from './rabbitmq';
-import { assetsMediaBoxImages, assetsVideos, mediaBox } from './replicants';
+import { assetsMediaBoxImages, assetsVideos } from './replicants';
 
 const config = nodecg().bundleConfig as Configschema;
 const sc = new SpeedcontrolUtil(nodecg());
@@ -79,7 +80,7 @@ export function logRunChange(run?: RunData): void {
  * @param logo Sponsor logo object.
  */
 export function logSponsorLogoChange(logo?: MediaBox['current']): void {
-  const logoInfo = mediaBox.value.rotation.find((l) => l.id === logo?.id);
+  const logoInfo = mb.mediaBox.value.rotation.find((l) => l.id === logo?.id);
   const asset = assetsMediaBoxImages.value.find((a) => a.sum === logo?.mediaUUID);
   mq.send(
     'sponsor.logo.changed',

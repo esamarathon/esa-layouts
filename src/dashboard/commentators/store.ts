@@ -1,45 +1,30 @@
-import type { Commentators } from '@esa-layouts/types/schemas';
-import clone from 'clone';
-import type { ReplicantBrowser } from 'nodecg/types/browser';
+import { replicantModule, ReplicantModule, ReplicantTypes } from '@esa-layouts/browser_shared/replicant_store';
+import { Commentators } from '@esa-layouts/types/schemas';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
+import { getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators';
 
 Vue.use(Vuex);
 
-// Replicants and their types
-const reps: {
-  commentators: ReplicantBrowser<Commentators>;
-  [k: string]: ReplicantBrowser<unknown>;
-} = {
-  commentators: nodecg.Replicant('commentators'),
-};
+@Module({ name: 'OurModule' })
+class OurModule extends VuexModule {
+  // Helper getter to return all replicants.
+  get reps(): ReplicantTypes {
+    return this.context.rootState.ReplicantModule.reps;
+  }
 
-// Types for mutations below
-export type ClearCommentators = () => void;
+  @Mutation
+  clearCommentators(): void {
+    replicantModule.setReplicant<Commentators>({
+      name: 'commentators', val: [],
+    });
+  }
+}
 
-const store = new Vuex.Store({
+const store = new Store({
+  strict: process.env.NODE_ENV !== 'production',
   state: {},
-  mutations: {
-    setState(state, { name, val }): void {
-      Vue.set(state, name, val);
-    },
-    /* Mutations to replicants start */
-    clearCommentators(): void {
-      if (typeof reps.commentators.value !== 'undefined') {
-        reps.commentators.value.length = 0;
-      }
-    },
-    /* Mutations to replicants end */
-  },
+  modules: { ReplicantModule, OurModule },
 });
-
-Object.keys(reps).forEach((key) => {
-  reps[key].on('change', (val) => {
-    store.commit('setState', { name: key, val: clone(val) });
-  });
-});
-
-export default async (): Promise<Store<Record<string, unknown>>> => {
-  await NodeCG.waitForReplicants(...Object.keys(reps).map((key) => reps[key]));
-  return store;
-};
+export default store;
+export const storeModule = getModule(OurModule, store);

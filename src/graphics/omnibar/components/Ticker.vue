@@ -23,7 +23,6 @@ import OtherStreamInfo from './Ticker/OtherStreamInfo.vue';
 import Prize from './Ticker/Prize.vue';
 import Bid from './Ticker/Bid.vue';
 import Alert from './Ticker/Alert.vue';
-import HekTakeover from './Ticker/HekTakeover.vue';
 import Milestone from './Ticker/Milestone.vue';
 
 const otherStreamData = nodecg.Replicant('otherStreamData');
@@ -84,7 +83,6 @@ export default {
         // this.merch(),
         // this.ticket(),
         // this.twitchCharity(),
-        // this.hekTakeover(),
       ];
 
       this.showNextMsg();
@@ -171,9 +169,6 @@ export default {
     esaBtRL() {
       // eslint-disable-next-line max-len
       return this.genericMsg('ESA Break the Record: LIVE - Minecraft, 30th April - 2nd May! - breaktherecordlive.com');
-    },
-    hekTakeover() {
-      return { name: HekTakeover };
     },
     crowdControl(exchange) {
       const line1 = 'Crowd Control';

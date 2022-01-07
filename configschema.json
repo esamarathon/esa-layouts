@@ -1,23 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "restreamItem": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "address": {
-          "type": "string"
-        },
-        "key": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "address",
-        "key"
-      ]
-    }
-  },
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -148,40 +130,6 @@
         "vhost"
       ]
     },
-    "restream": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "enable": {
-          "type": "boolean",
-          "default": false
-        },
-        "instances": {
-          "oneOf": [
-            {
-              "$ref": "#/definitions/restreamItem"
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/restreamItem"
-              },
-              "uniqueItems": true,
-              "minItems": 1,
-              "maxItems": 2
-            }
-          ],
-          "default": {
-            "address": "localhost:1234",
-            "key": "DEFAULT_KEY"
-          }
-        }
-      },
-      "required": [
-        "enable",
-        "instances"
-      ]
-    },
     "obs": {
       "type": "object",
       "additionalProperties": false,
@@ -225,10 +173,6 @@
                 "countdown": {
                   "type": "string",
                   "default": "Countdown"
-                },
-                "hekIntermission": {
-                  "type": "string",
-                  "default": "HEK Fullscreen"
                 }
               },
               "required": [
@@ -236,8 +180,7 @@
                 "gameLayout",
                 "intermission",
                 "videoPlayer",
-                "countdown",
-                "hekIntermission"
+                "countdown"
               ]
             },
             "sources": {
@@ -272,23 +215,6 @@
                   "type": "string",
                   "default": "Camera Capture 3"
                 },
-                "restreamSources": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "uniqueItems": true,
-                      "minItems": 1,
-                      "maxItems": 2
-                    }
-                  ],
-                  "default": "Restream Source"
-                },
                 "videoPlayer": {
                   "type": "string",
                   "default": "Video Player Source"
@@ -302,7 +228,6 @@
                 "cameraCapture1",
                 "cameraCapture2",
                 "cameraCapture3",
-                "restreamSources",
                 "videoPlayer"
               ]
             }
@@ -390,40 +315,13 @@
         "password": {
           "type": "string",
           "default": "PASSWORD"
-        },
-        "commentaryBias": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "bidId": {
-              "type": "number",
-              "default": 0,
-              "$comment": "ID of relevant bid in the tracker."
-            },
-            "option1Id": {
-              "type": "number",
-              "default": 0,
-              "$comment": "ID of option of team 1 in the tracker on the above bid."
-            },
-            "option2Id": {
-              "type": "number",
-              "default": 0,
-              "$comment": "ID of option of team 2 in the tracker on the above bid."
-            }
-          },
-          "required": [
-            "bidId",
-            "option1Id",
-            "option2Id"
-          ]
         }
       },
       "required": [
         "enable",
         "address",
         "username",
-        "password",
-        "commentaryBias"
+        "password"
       ]
     },
     "tts": {
@@ -443,24 +341,6 @@
         "enable",
         "voiceAPI"
       ]
-    },
-    "twitchExt": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "enable": {
-          "type": "boolean",
-          "default": false
-        },
-        "token": {
-          "type": "string",
-          "default": "TOKEN"
-        }
-      },
-      "required": [
-        "enable",
-        "token"
-      ]
     }
   },
   "required": [
@@ -468,12 +348,10 @@
     "event",
     "streamdeck",
     "rabbitmq",
-    "restream",
     "obs",
     "music",
     "x32",
     "tracker",
-    "tts",
-    "twitchExt"
+    "tts"
   ]
 }

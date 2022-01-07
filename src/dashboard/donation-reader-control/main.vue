@@ -31,12 +31,12 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { DonationReader } from '@esa-layouts/types/schemas';
+import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
 
 @Component
 export default class extends Vue {
-  @State donationReader!: DonationReader;
+  @replicantNS.State((s) => s.reps.donationReader) readonly donationReader!: DonationReader;
   entry = '';
   disable = false;
 

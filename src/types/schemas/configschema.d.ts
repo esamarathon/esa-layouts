@@ -27,10 +27,6 @@ export interface Configschema {
 		password: string;
 		vhost: string;
 	};
-	restream: {
-		enable: boolean;
-		instances: RestreamItem | [RestreamItem] | [RestreamItem, RestreamItem];
-	};
 	obs: {
 		enable: boolean;
 		address: string;
@@ -42,7 +38,6 @@ export interface Configschema {
 				intermission: string;
 				videoPlayer: string;
 				countdown: string;
-				hekIntermission: string;
 			};
 			sources: {
 				gameCapture1: string;
@@ -52,7 +47,6 @@ export interface Configschema {
 				cameraCapture1: string;
 				cameraCapture2: string;
 				cameraCapture3: string;
-				restreamSources: string | [string] | [string, string];
 				videoPlayer: string;
 			};
 		};
@@ -73,22 +67,9 @@ export interface Configschema {
 		address: string;
 		username: string;
 		password: string;
-		commentaryBias: {
-			bidId: number;
-			option1Id: number;
-			option2Id: number;
-		};
 	};
 	tts: {
 		enable: boolean;
 		voiceAPI: string;
 	};
-	twitchExt: {
-		enable: boolean;
-		token: string;
-	};
-}
-export interface RestreamItem {
-	address: string;
-	key: string;
 }

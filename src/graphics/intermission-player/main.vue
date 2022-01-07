@@ -83,15 +83,17 @@
 <script lang="ts">
 import { RunData } from 'speedcontrol-util/types';
 import { Vue, Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import { VideoPlayer } from '@esa-layouts/types/schemas';
+import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
+import { storeModule } from './store';
 
 @Component
 export default class extends Vue {
-  @State nextRun!: RunData | null;
-  @State videoPlayer!: VideoPlayer;
+  @replicantNS.State((s) => s.reps.videoPlayer) readonly videoPlayer!: VideoPlayer;
   getRunTotalPlayers = SpeedcontrolUtilBrowser.getRunTotalPlayers;
+
+  get nextRun(): RunData | null { return storeModule.nextRun; }
 
   formPlayerNamesStr(runData: RunData): string {
     return runData.teams.map((team) => (

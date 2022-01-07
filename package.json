@@ -31,7 +31,6 @@
     "postinstall": "cd shared && node postinstall.js"
   },
   "dependencies": {
-    "async": "^3.2.2",
     "clone": "^2.1.2",
     "get-video-duration": "3.0.2",
     "lodash": "^4.17.21",
@@ -119,7 +118,7 @@
         "title": "Game Layout Override",
         "width": 2,
         "file": "game-layout-override.html",
-        "workspace": "Z1 - ESA",
+        "workspace": "ESA",
         "headerColor": "#c49215"
       },
       {
@@ -158,7 +157,7 @@
         "title": "Upcoming Run Control",
         "width": 3,
         "file": "upcoming-run-control.html",
-        "workspace": "Z1 - ESA",
+        "workspace": "ESA",
         "headerColor": "#c49215"
       },
       {
@@ -188,7 +187,7 @@
         "title": "Donation Total Milestones",
         "width": 4,
         "file": "donation-total-milestones.html",
-        "workspace": "Z1 - ESA",
+        "workspace": "ESA",
         "headerColor": "#c49215"
       },
       {
@@ -196,15 +195,7 @@
         "title": "Bids",
         "width": 3,
         "file": "bids.html",
-        "workspace": "Z1 - ESA",
-        "headerColor": "#c49215"
-      },
-      {
-        "name": "restream-viewer-tool",
-        "title": "Restream Viewer Tool",
-        "width": 2,
-        "file": "restream-viewer-tool.html",
-        "workspace": "Z8 - N/A",
+        "workspace": "ESA",
         "headerColor": "#c49215"
       },
       {

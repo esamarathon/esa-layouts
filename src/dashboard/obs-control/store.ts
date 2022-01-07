@@ -1,41 +1,22 @@
-import type { CurrentRunDelay, ObsData, ServerTimestamp, VideoPlayer } from '@esa-layouts/types/schemas';
-import clone from 'clone';
-import type { ReplicantBrowser } from 'nodecg/types/browser';
+import { ReplicantModule, ReplicantTypes } from '@esa-layouts/browser_shared/replicant_store';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
+import { getModule, Module, VuexModule } from 'vuex-module-decorators';
 
 Vue.use(Vuex);
 
-// Replicants and their types
-const reps: {
-  currentRunDelay: ReplicantBrowser<CurrentRunDelay>;
-  obsData: ReplicantBrowser<ObsData>;
-  serverTimestamp: ReplicantBrowser<ServerTimestamp>;
-  videoPlayer: ReplicantBrowser<VideoPlayer>;
-  [k: string]: ReplicantBrowser<unknown>;
-} = {
-  currentRunDelay: nodecg.Replicant('currentRunDelay'),
-  obsData: nodecg.Replicant('obsData'),
-  serverTimestamp: nodecg.Replicant('serverTimestamp'),
-  videoPlayer: nodecg.Replicant('videoPlayer'),
-};
+@Module({ name: 'OurModule' })
+class OurModule extends VuexModule {
+  // Helper getter to return all replicants.
+  get reps(): ReplicantTypes {
+    return this.context.rootState.ReplicantModule.reps;
+  }
+}
 
-const store = new Vuex.Store({
+const store = new Store({
+  strict: process.env.NODE_ENV !== 'production',
   state: {},
-  mutations: {
-    setState(state, { name, val }): void {
-      Vue.set(state, name, val);
-    },
-  },
+  modules: { ReplicantModule, OurModule },
 });
-
-Object.keys(reps).forEach((key) => {
-  reps[key].on('change', (val) => {
-    store.commit('setState', { name: key, val: clone(val) });
-  });
-});
-
-export default async (): Promise<Store<Record<string, unknown>>> => {
-  await NodeCG.waitForReplicants(...Object.keys(reps).map((key) => reps[key]));
-  return store;
-};
+export default store;
+export const storeModule = getModule(OurModule, store);

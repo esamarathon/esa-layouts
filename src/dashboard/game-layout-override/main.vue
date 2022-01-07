@@ -36,14 +36,20 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { State2Way } from 'vuex-class-state2way';
 import { GameLayouts } from '@esa-layouts/types/schemas';
+import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
+import { storeModule } from './store';
 
 @Component
 export default class extends Vue {
-  @State gameLayouts!: GameLayouts;
-  @State2Way('updateSelected', 'gameLayouts.selected') selected!: GameLayouts['selected'];
+  @replicantNS.State((s) => s.reps.gameLayouts) readonly gameLayouts!: GameLayouts;
+
+  get selected(): GameLayouts['selected'] {
+    return this.gameLayouts.selected;
+  }
+  set selected(val: string | undefined) {
+    storeModule.updateSelected(val);
+  }
 
   @Watch('selected')
   async scrollToSelectedLayout(): Promise<void> {

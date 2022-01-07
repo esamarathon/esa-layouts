@@ -27,13 +27,13 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { StreamDeckData, DonationsToRead } from '@esa-layouts/types/schemas';
+import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
 
 @Component
 export default class extends Vue {
-  @State donationsToRead!: DonationsToRead;
-  @State streamDeckData!: StreamDeckData;
+  @replicantNS.State((s) => s.reps.donationsToRead) readonly donationsToRead!: DonationsToRead;
+  @replicantNS.State((s) => s.reps.streamDeckData) readonly streamDeckData!: StreamDeckData;
   tagScanned = false;
   scannedName = '';
   buttonID = '';

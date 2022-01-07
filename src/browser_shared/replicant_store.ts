@@ -1,31 +1,78 @@
-import type { Bids, DonationTotal, DonationTotalMilestones, OmnibarPin } from '@esa-layouts/types/schemas';
+import type { Bids, Commentators, Countdown, CurrentRunDelay, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, ObsData, OmnibarPin, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
+import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
+import { RunDataArray } from 'speedcontrol-util/types';
+import { RunDataActiveRunSurrounding } from 'speedcontrol-util/types/speedcontrol/schemas';
 import Vue from 'vue';
 import type { Store } from 'vuex';
 import { namespace } from 'vuex-class';
 import { getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators';
 
+const sc = new SpeedcontrolUtilBrowser(nodecg);
+
 // Declaring replicants.
 export const reps: {
   bids: ReplicantBrowser<Bids>;
+  commentators: ReplicantBrowser<Commentators>;
+  countdown: ReplicantBrowser<Countdown>;
+  currentRunDelay: ReplicantBrowser<CurrentRunDelay>;
+  donationReader: ReplicantBrowser<DonationReader>;
+  donationsToRead: ReplicantBrowser<DonationsToRead>;
   donationTotal: ReplicantBrowser<DonationTotal>;
   donationTotalMilestones: ReplicantBrowser<DonationTotalMilestones>;
+  gameLayouts: ReplicantBrowser<GameLayouts>;
+  obsData: ReplicantBrowser<ObsData>;
   omnibarPin: ReplicantBrowser<OmnibarPin>;
+  runDataActiveRunSurrounding: ReplicantBrowser<RunDataActiveRunSurrounding>;
+  runDataArray: ReplicantBrowser<RunDataArray>;
+  serverTimestamp: ReplicantBrowser<ServerTimestamp>;
+  streamDeckData: ReplicantBrowser<StreamDeckData>;
+  ttsVoices: ReplicantBrowser<TtsVoices>;
+  upcomingRunID: ReplicantBrowser<UpcomingRunID>;
+  videoPlayer: ReplicantBrowser<VideoPlayer>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
   bids: nodecg.Replicant('bids'),
+  commentators: nodecg.Replicant('commentators'),
+  countdown: nodecg.Replicant('countdown'),
+  currentRunDelay: nodecg.Replicant('currentRunDelay'),
+  donationReader: nodecg.Replicant('donationReader'),
+  donationsToRead: nodecg.Replicant('donationsToRead'),
   donationTotal: nodecg.Replicant('donationTotal'),
   donationTotalMilestones: nodecg.Replicant('donationTotalMilestones'),
+  gameLayouts: nodecg.Replicant('gameLayouts'),
+  obsData: nodecg.Replicant('obsData'),
   omnibarPin: nodecg.Replicant('omnibarPin'),
+  runDataActiveRunSurrounding: sc.runDataActiveRunSurrounding,
+  runDataArray: sc.runDataArray,
+  serverTimestamp: nodecg.Replicant('serverTimestamp'),
+  streamDeckData: nodecg.Replicant('streamDeckData'),
+  ttsVoices: nodecg.Replicant('ttsVoices'),
+  upcomingRunID: nodecg.Replicant('upcomingRunID'),
+  videoPlayer: nodecg.Replicant('videoPlayer'),
 };
 
 // All the replicant types.
 export interface ReplicantTypes {
   bids: Bids;
+  commentators: Commentators;
+  countdown: Countdown;
+  currentRunDelay: CurrentRunDelay;
+  donationReader: DonationReader;
+  donationsToRead: DonationsToRead;
   donationTotal: DonationTotal;
   donationTotalMilestones: DonationTotalMilestones;
+  gameLayouts: GameLayouts;
+  obsData: ObsData;
   omnibarPin: OmnibarPin;
+  runDataActiveRunSurrounding: RunDataActiveRunSurrounding;
+  runDataArray: RunDataArray;
+  serverTimestamp: ServerTimestamp;
+  streamDeckData: StreamDeckData;
+  ttsVoices: TtsVoices;
+  upcomingRunID: UpcomingRunID;
+  videoPlayer: VideoPlayer;
 }
 
 @Module({ name: 'ReplicantModule', namespaced: true })

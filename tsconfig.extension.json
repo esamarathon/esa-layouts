@@ -129,7 +129,6 @@
     { "path": "./shared/extension/music" },
     { "path": "./shared/extension/obs" },
     { "path": "./shared/extension/rabbitmq" },
-    { "path": "./shared/extension/restream" },
     { "path": "./shared/extension/x32" },
     { "path": "./shared/extension/xkeys-esa" }
   ],

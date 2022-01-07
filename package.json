@@ -31,7 +31,6 @@
     "postinstall": "cd shared && node postinstall.js"
   },
   "dependencies": {
-    "async": "^3.2.2",
     "clone": "^2.1.2",
     "get-video-duration": "3.0.2",
     "lodash": "^4.17.21",

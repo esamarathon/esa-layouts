@@ -27,10 +27,10 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Configschema } from '@esa-layouts/types/schemas/configschema';
 import { RestreamData } from '@esa-layouts/types/schemas';
 import RestreamComponent from '@shared/dashboard/restream';
+import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
 
 @Component({
   components: {
@@ -38,7 +38,7 @@ import RestreamComponent from '@shared/dashboard/restream';
   },
 })
 export default class extends Vue {
-  @State restreamData!: RestreamData;
+  @replicantNS.State((s) => s.reps.restreamData) readonly restreamData!: RestreamData;
   config = (nodecg.bundleConfig as Configschema).restream;
 }
 </script>

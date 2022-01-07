@@ -1,4 +1,4 @@
-import type { Bids, Commentators, Countdown, CurrentRunDelay, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, ObsData, OmnibarPin, ServerTimestamp, StreamDeckData, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import type { Bids, Commentators, Countdown, CurrentRunDelay, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, ObsData, OmnibarPin, RestreamData, ServerTimestamp, StreamDeckData, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import { RunDataArray } from 'speedcontrol-util/types';
@@ -20,6 +20,7 @@ export const reps: {
   gameLayouts: ReplicantBrowser<GameLayouts>;
   obsData: ReplicantBrowser<ObsData>;
   omnibarPin: ReplicantBrowser<OmnibarPin>;
+  restreamData: ReplicantBrowser<RestreamData>;
   runDataArray: ReplicantBrowser<RunDataArray>;
   serverTimestamp: ReplicantBrowser<ServerTimestamp>;
   streamDeckData: ReplicantBrowser<StreamDeckData>;
@@ -38,6 +39,7 @@ export const reps: {
   gameLayouts: nodecg.Replicant('gameLayouts'),
   obsData: nodecg.Replicant('obsData'),
   omnibarPin: nodecg.Replicant('omnibarPin'),
+  restreamData: nodecg.Replicant('restreamData'),
   runDataArray: nodecg.Replicant('runDataArray', 'nodecg-speedcontrol'),
   serverTimestamp: nodecg.Replicant('serverTimestamp'),
   streamDeckData: nodecg.Replicant('streamDeckData'),
@@ -58,6 +60,7 @@ export interface ReplicantTypes {
   gameLayouts: GameLayouts;
   obsData: ObsData;
   omnibarPin: OmnibarPin;
+  restreamData: RestreamData;
   runDataArray: RunDataArray;
   serverTimestamp: ServerTimestamp;
   streamDeckData: StreamDeckData;

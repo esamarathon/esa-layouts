@@ -1,4 +1,4 @@
-import type { Bids, Commentators, Countdown, DonationsToRead, DonationTotal, DonationTotalMilestones, OmnibarPin, StreamDeckData, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import type { Bids, Commentators, Countdown, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, OmnibarPin, StreamDeckData, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import { RunDataArray } from 'speedcontrol-util/types';
@@ -12,6 +12,7 @@ export const reps: {
   bids: ReplicantBrowser<Bids>;
   commentators: ReplicantBrowser<Commentators>;
   countdown: ReplicantBrowser<Countdown>;
+  donationReader: ReplicantBrowser<DonationReader>;
   donationsToRead: ReplicantBrowser<DonationsToRead>;
   donationTotal: ReplicantBrowser<DonationTotal>;
   donationTotalMilestones: ReplicantBrowser<DonationTotalMilestones>;
@@ -25,6 +26,7 @@ export const reps: {
   bids: nodecg.Replicant('bids'),
   commentators: nodecg.Replicant('commentators'),
   countdown: nodecg.Replicant('countdown'),
+  donationReader: nodecg.Replicant('donationReader'),
   donationsToRead: nodecg.Replicant('donationsToRead'),
   donationTotal: nodecg.Replicant('donationTotal'),
   donationTotalMilestones: nodecg.Replicant('donationTotalMilestones'),
@@ -40,6 +42,7 @@ export interface ReplicantTypes {
   bids: Bids;
   commentators: Commentators;
   countdown: Countdown;
+  donationReader: DonationReader;
   donationsToRead: DonationsToRead;
   donationTotal: DonationTotal;
   donationTotalMilestones: DonationTotalMilestones;

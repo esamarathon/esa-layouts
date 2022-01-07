@@ -1,11 +1,15 @@
 import type { Bids, Commentators, Countdown, CurrentRunDelay, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, ObsData, OmnibarPin, RestreamData, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
+import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import { RunDataArray } from 'speedcontrol-util/types';
+import { RunDataActiveRunSurrounding } from 'speedcontrol-util/types/speedcontrol/schemas';
 import Vue from 'vue';
 import type { Store } from 'vuex';
 import { namespace } from 'vuex-class';
 import { getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators';
+
+const sc = new SpeedcontrolUtilBrowser(nodecg);
 
 // Declaring replicants.
 export const reps: {
@@ -21,6 +25,7 @@ export const reps: {
   obsData: ReplicantBrowser<ObsData>;
   omnibarPin: ReplicantBrowser<OmnibarPin>;
   restreamData: ReplicantBrowser<RestreamData>;
+  runDataActiveRunSurrounding: ReplicantBrowser<RunDataActiveRunSurrounding>;
   runDataArray: ReplicantBrowser<RunDataArray>;
   serverTimestamp: ReplicantBrowser<ServerTimestamp>;
   streamDeckData: ReplicantBrowser<StreamDeckData>;
@@ -41,7 +46,8 @@ export const reps: {
   obsData: nodecg.Replicant('obsData'),
   omnibarPin: nodecg.Replicant('omnibarPin'),
   restreamData: nodecg.Replicant('restreamData'),
-  runDataArray: nodecg.Replicant('runDataArray', 'nodecg-speedcontrol'),
+  runDataActiveRunSurrounding: sc.runDataActiveRunSurrounding,
+  runDataArray: sc.runDataArray,
   serverTimestamp: nodecg.Replicant('serverTimestamp'),
   streamDeckData: nodecg.Replicant('streamDeckData'),
   ttsVoices: nodecg.Replicant('ttsVoices'),
@@ -63,6 +69,7 @@ export interface ReplicantTypes {
   obsData: ObsData;
   omnibarPin: OmnibarPin;
   restreamData: RestreamData;
+  runDataActiveRunSurrounding: RunDataActiveRunSurrounding;
   runDataArray: RunDataArray;
   serverTimestamp: ServerTimestamp;
   streamDeckData: StreamDeckData;

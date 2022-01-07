@@ -59,15 +59,16 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { RunDataActiveRunSurrounding, RunDataArray } from 'speedcontrol-util/types/speedcontrol/schemas';
 import { UpcomingRunID } from '@esa-layouts/types/schemas';
+import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
 
 @Component
 export default class IntermissionControl extends Vue {
-  @State runDataArray!: RunDataArray;
-  @State runDataActiveRunSurrounding!: RunDataActiveRunSurrounding;
-  @State upcomingRunID!: UpcomingRunID;
+  @replicantNS.State((s) => s.reps.runDataArray) readonly runDataArray!: RunDataArray;
+  @replicantNS.State((s) => s.reps.runDataActiveRunSurrounding)
+  readonly runDataActiveRunSurrounding!: RunDataActiveRunSurrounding;
+  @replicantNS.State((s) => s.reps.upcomingRunID) readonly upcomingRunID!: UpcomingRunID;
 
   forceUpcomingRun(id?: string): void {
     nodecg.sendMessage('forceUpcomingRun', id);

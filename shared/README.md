@@ -47,7 +47,6 @@ A repository which houses several elements that are used by mutiple [NodeCG](htt
       { "path": "./shared/extension/music" },
       { "path": "./shared/extension/obs" },
       { "path": "./shared/extension/rabbitmq" },
-      { "path": "./shared/extension/restream" },
       { "path": "./shared/extension/x32" },
       { "path": "./shared/extension/xkeys-esa" }
     ]

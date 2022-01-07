@@ -28,7 +28,6 @@
     "osc": "^2.4.2",
     "string-similarity": "^4.0.4",
     "uuid": "^8.3.2",
-    "ws": "^8.4.0",
     "xkeys": "^1.1.1"
   },
   "devDependencies": {

@@ -210,14 +210,6 @@ Stuff not in this file (yet):
 }
 
 
-#GenericMessage[data-v-765605d4] {
-  height: 100%;
-  font-weight: 500;
-  font-size: var(--font-size);
-  text-align: center;
-}
-
-
 .BarText[data-v-1c8f88e0] {
   background-color: rgba(0, 0, 0, 0.4);
   padding: 7px 10px;
@@ -225,15 +217,15 @@ Stuff not in this file (yet):
 }
 
 
-#Ticker[data-v-046b1590] {
+#Ticker[data-v-f3cd06ba] {
   height: 100%;
   min-width: 0;
   flex: 1;
 }
-.fade-enter-active[data-v-046b1590], .fade-leave-active[data-v-046b1590] {
+.fade-enter-active[data-v-f3cd06ba], .fade-leave-active[data-v-f3cd06ba] {
   transition: opacity .5s;
 }
-.fade-enter[data-v-046b1590], .fade-leave-to[data-v-046b1590] /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter[data-v-f3cd06ba], .fade-leave-to[data-v-f3cd06ba] /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
 

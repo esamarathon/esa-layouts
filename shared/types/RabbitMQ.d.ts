@@ -40,6 +40,5 @@ export namespace RabbitMQ {
     on(event: 'runChanged', listener: (data: types.NodeCG.SCActiveRunChanged) => void): this;
     on(event: 'streamingStatusChanged', listener: (data: types.NodeCG.OBSStreamingStatusChanged) => void): this;
     on(event: 'gameSceneChanged', listener: (data: types.NodeCG.OBSSceneChanged) => void): this;
-    on(event: 'rvtServerStarted', listener: (data: types.RestreamViewerTool.ServerStarted) => void): this;
   }
 }

@@ -85,7 +85,7 @@ body {
 }
 
 
-.RunInfoExtra > span[data-v-33325ee6]:not(:last-child)::after {
+.RunInfoExtra > span[data-v-850a45e2]:not(:last-child)::after {
   content: ' /';
 }
 
@@ -115,13 +115,6 @@ body {
   text-transform: uppercase;
   padding: 0 3px;
   margin-left: 3px;
-}
-
-
-.BiasBarText[data-v-390d97c2] {
-  background-color: rgba(0, 0, 0, 0.4);
-  padding: 3px 7px;
-  border-radius: 10px;
 }
 
 

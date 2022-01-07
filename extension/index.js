@@ -26,13 +26,10 @@ module.exports = (nodecg) => {
     require('./mixer');
     require('./streamdeck-buttons');
     require('./timer');
-    require('./restream');
     require('./media-box');
     require('./text-to-speech');
-    require('./twitch-ext');
     require('./music');
     require('./video-player');
-    // require('./twitch-subs');
     return {
         obs: require('./util/obs').default,
         mixer: require('./mixer'),

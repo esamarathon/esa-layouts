@@ -5,7 +5,7 @@ import type { Store } from 'vuex';
 import { namespace } from 'vuex-class';
 import { getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators';
 import type { Asset } from '../types';
-import type { Countdown, MediaBox, Prizes, RestreamData } from '../types/schemas';
+import type { Countdown, MediaBox, Prizes } from '../types/schemas';
 
 // Declaring replicants.
 export const reps: {
@@ -13,14 +13,12 @@ export const reps: {
   countdown: ReplicantBrowser<Countdown>;
   mediaBox: ReplicantBrowser<MediaBox>;
   prizes: ReplicantBrowser<Prizes>;
-  restreamData: ReplicantBrowser<RestreamData>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
   assetsMediaBoxImages: nodecg.Replicant('assets:media-box-images'),
   countdown: nodecg.Replicant('countdown'),
   mediaBox: nodecg.Replicant('mediaBox'),
   prizes: nodecg.Replicant('prizes'),
-  restreamData: nodecg.Replicant('restreamData'),
 };
 
 // All the replicant types.
@@ -29,7 +27,6 @@ export interface ReplicantTypes {
   countdown: Countdown;
   mediaBox: MediaBox;
   prizes: Prizes;
-  restreamData: RestreamData;
 }
 
 @Module({ name: 'ReplicantModule', namespaced: true })

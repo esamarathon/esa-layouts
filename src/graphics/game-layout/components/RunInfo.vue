@@ -42,7 +42,6 @@
         }"
       >
         <template v-if="runData">
-          <span v-if="hek">Hekathon Takeover</span>
           <span v-if="runData.category">{{ runData.category }}</span>
           <span v-if="runData.system">{{ runData.system }}</span>
           <span v-if="runData.estimate">{{ runData.estimate }}</span>
@@ -65,10 +64,6 @@ export default class extends Vue {
   lineHeight: string | null = null;
   fittyGame: FittyInstance | undefined;
   fittyInfoExtra: FittyInstance | undefined;
-
-  get hek(): boolean {
-    return this.runData?.customData.info === 'HEK';
-  }
 
   fit(): void {
     const elem = this.$refs.RunInfo as HTMLElement;

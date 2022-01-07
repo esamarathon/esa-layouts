@@ -127,7 +127,6 @@ export default class extends Vue {
       this.obsConfig.names.scenes.commercials,
       this.obsConfig.names.scenes.intermission,
       this.obsConfig.names.scenes.videoPlayer,
-      this.obsConfig.names.scenes.hekIntermission,
       this.obsConfig.names.scenes.countdown,
     ];
     return this.obsData.transitioning

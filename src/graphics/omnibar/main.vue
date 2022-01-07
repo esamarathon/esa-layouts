@@ -1,11 +1,6 @@
 <template>
   <div id="Omnibar" class="Flex">
-    <img v-if="!isHek" id="Logo">
-    <img
-      v-else
-      src="./hek.png"
-      :style="{ width: '389px', height: '65px', padding: '0 10px', 'object-fit': 'contain' }"
-    >
+    <img id="Logo">
     <divider/>
     <total/>
     <divider/>
@@ -21,8 +16,6 @@ import Ticker from './components/Ticker.vue';
 import Clock from './components/Clock.vue';
 import Divider from './components/Divider.vue';
 
-const runDataActiveRun = nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol');
-
 export default {
   name: 'Omnibar',
   components: {
@@ -30,17 +23,6 @@ export default {
     Ticker,
     Clock,
     Divider,
-  },
-  data() {
-    return {
-      isHek: false,
-    };
-  },
-  created() {
-    runDataActiveRun.on('change', (val) => {
-      const isHek = runDataActiveRun.value && runDataActiveRun.value.customData.info === 'HEK';
-      this.isHek = isHek;
-    });
   },
 };
 </script>

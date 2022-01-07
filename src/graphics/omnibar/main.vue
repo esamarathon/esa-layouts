@@ -9,8 +9,6 @@
     <divider/>
     <total/>
     <divider/>
-    <!--<sub-goal-met></sub-goal-met>
-    <divider></divider>-->
     <ticker/>
     <divider/>
     <clock/>
@@ -19,7 +17,6 @@
 
 <script>
 import Total from './components/Total.vue';
-// import SubGoalMet from './components/SubGoalMet.vue';
 import Ticker from './components/Ticker.vue';
 import Clock from './components/Clock.vue';
 import Divider from './components/Divider.vue';
@@ -30,7 +27,6 @@ export default {
   name: 'Omnibar',
   components: {
     Total,
-    // SubGoalMet,
     Ticker,
     Clock,
     Divider,

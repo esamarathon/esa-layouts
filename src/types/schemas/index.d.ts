@@ -22,6 +22,5 @@ export * from './restreamData';
 export * from './serverTimestamp';
 export * from './streamDeckData';
 export * from './ttsVoices';
-export * from './twitchSubscribers';
 export * from './upcomingRunID';
 export * from './videoPlayer';

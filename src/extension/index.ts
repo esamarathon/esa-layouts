@@ -39,7 +39,6 @@ export = (nodecg: NodeCG): ExtensionReturn => {
   require('./text-to-speech');
   require('./music');
   require('./video-player');
-  // require('./twitch-subs');
 
   return {
     obs: require('./util/obs').default,

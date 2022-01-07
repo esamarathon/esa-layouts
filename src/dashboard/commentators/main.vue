@@ -57,17 +57,16 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import { State, Mutation } from 'vuex-class';
 import { Commentators } from '@esa-layouts/types/schemas';
-import { ClearCommentators } from './store';
+import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
+import { storeModule } from './store';
 
 @Component
 export default class extends Vue {
   nameEntry = '';
   disable = false;
-
-  @State commentators!: Commentators;
-  @Mutation('clearCommentators') clear!: ClearCommentators;
+  @replicantNS.State((s) => s.reps.commentators) readonly commentators!: Commentators;
+  clear = storeModule.clearCommentators;
 
   async add(): Promise<void> {
     this.disable = true;

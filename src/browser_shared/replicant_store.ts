@@ -1,4 +1,4 @@
-import type { Bids, Countdown, DonationsToRead, DonationTotal, DonationTotalMilestones, OmnibarPin, StreamDeckData, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import type { Bids, Commentators, Countdown, DonationsToRead, DonationTotal, DonationTotalMilestones, OmnibarPin, StreamDeckData, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import { RunDataArray } from 'speedcontrol-util/types';
@@ -10,6 +10,7 @@ import { getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators'
 // Declaring replicants.
 export const reps: {
   bids: ReplicantBrowser<Bids>;
+  commentators: ReplicantBrowser<Commentators>;
   countdown: ReplicantBrowser<Countdown>;
   donationsToRead: ReplicantBrowser<DonationsToRead>;
   donationTotal: ReplicantBrowser<DonationTotal>;
@@ -22,6 +23,7 @@ export const reps: {
   [k: string]: ReplicantBrowser<unknown>;
 } = {
   bids: nodecg.Replicant('bids'),
+  commentators: nodecg.Replicant('commentators'),
   countdown: nodecg.Replicant('countdown'),
   donationsToRead: nodecg.Replicant('donationsToRead'),
   donationTotal: nodecg.Replicant('donationTotal'),
@@ -36,6 +38,7 @@ export const reps: {
 // All the replicant types.
 export interface ReplicantTypes {
   bids: Bids;
+  commentators: Commentators;
   countdown: Countdown;
   donationsToRead: DonationsToRead;
   donationTotal: DonationTotal;

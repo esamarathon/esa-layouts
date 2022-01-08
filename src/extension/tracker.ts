@@ -188,6 +188,6 @@ async function setup(): Promise<void> {
   }
 }
 
-if (config.enable) {
+if (config.enabled) {
   setup();
 }

@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <div
-      v-if="!config.enable"
+      v-if="!config.enabled"
       :style="{ 'font-style': 'italic' }"
     >
       This feature is not enabled.
@@ -59,7 +59,7 @@ export default class extends Vue {
 
   @Watch('voices')
   scrollToSelectedVoice(): void {
-    if (this.config.enable) {
+    if (this.config.enabled) {
       this.$vuetify.goTo(`#${this.voices.selected}`, { container: '#VoiceList', offset: 25 });
     }
   }

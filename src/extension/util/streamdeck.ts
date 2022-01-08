@@ -5,7 +5,7 @@ import { get as nodecg } from './nodecg';
 const config = (nodecg().bundleConfig as Configschema).streamdeck;
 const sd = new StreamdeckUtil();
 
-if (config.enable) {
+if (config.enabled) {
   sd.listen({
     key: config.key,
     port: config.port,

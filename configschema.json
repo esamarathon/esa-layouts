@@ -93,41 +93,10 @@
       ]
     },
     "rabbitmq": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "enable": {
-          "type": "boolean",
-          "default": true
-        },
-        "protocol": {
-          "type": "string",
-          "default": "amqps"
-        },
-        "hostname": {
-          "type": "string",
-          "default": "mq.esamarathon.com"
-        },
-        "username": {
-          "type": "string",
-          "default": "USERNAME"
-        },
-        "password": {
-          "type": "string",
-          "default": "PASSWORD"
-        },
-        "vhost": {
-          "type": "string",
-          "default": "esa_prod"
+      "allOf": [
+        {
+          "$ref": "./shared/schemas/configschema/rabbitmq.json"
         }
-      },
-      "required": [
-        "enable",
-        "protocol",
-        "hostname",
-        "username",
-        "password",
-        "vhost"
       ]
     },
     "obs": {
@@ -238,54 +207,17 @@
       ]
     },
     "music": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "enable": {
-          "type": "boolean",
-          "default": true
-        },
-        "address": {
-          "type": "string",
-          "default": "localhost:8880"
-        },
-        "username": {
-          "type": "string",
-          "default": ""
-        },
-        "password": {
-          "type": "string",
-          "default": ""
+      "allOf": [
+        {
+          "$ref": "./shared/schemas/configschema/music.json"
         }
-      },
-      "required": [
-        "enable",
-        "address",
-        "username",
-        "password"
       ]
     },
     "x32": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "enable": {
-          "type": "boolean",
-          "default": true
-        },
-        "ip": {
-          "type": "string",
-          "default": "10.20.30.42"
-        },
-        "localPort": {
-          "type": "number",
-          "default": 52361
+      "allOf": [
+        {
+          "$ref": "./shared/schemas/configschema/x32.json"
         }
-      },
-      "required": [
-        "enable",
-        "ip",
-        "localPort"
       ]
     },
     "tracker": {

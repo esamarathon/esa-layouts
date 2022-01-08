@@ -31,6 +31,7 @@ export interface Configschema {
 		enable: boolean;
 		address: string;
 		password: string;
+	} & {
 		names: {
 			scenes: {
 				commercials: string;

@@ -131,118 +131,110 @@
       ]
     },
     "obs": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "enable": {
-          "type": "boolean",
-          "default": true
+      "allOf": [
+        {
+          "$ref": "./shared/schemas/configschema/obs.json"
         },
-        "address": {
-          "type": "string",
-          "default": "localhost:4444"
-        },
-        "password": {
-          "type": "string",
-          "default": ""
-        },
-        "names": {
+        {
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "scenes": {
+            "names": {
               "type": "object",
               "additionalProperties": false,
               "properties": {
-                "commercials": {
-                  "type": "string",
-                  "default": "Intermission (commercials)"
+                "scenes": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "commercials": {
+                      "type": "string",
+                      "default": "Intermission (commercials)"
+                    },
+                    "gameLayout": {
+                      "type": "string",
+                      "default": "Game Layout"
+                    },
+                    "intermission": {
+                      "type": "string",
+                      "default": "Intermission"
+                    },
+                    "videoPlayer": {
+                      "type": "string",
+                      "default": "Intermission Player"
+                    },
+                    "countdown": {
+                      "type": "string",
+                      "default": "Countdown"
+                    }
+                  },
+                  "required": [
+                    "commercials",
+                    "gameLayout",
+                    "intermission",
+                    "videoPlayer",
+                    "countdown"
+                  ]
                 },
-                "gameLayout": {
-                  "type": "string",
-                  "default": "Game Layout"
-                },
-                "intermission": {
-                  "type": "string",
-                  "default": "Intermission"
-                },
-                "videoPlayer": {
-                  "type": "string",
-                  "default": "Intermission Player"
-                },
-                "countdown": {
-                  "type": "string",
-                  "default": "Countdown"
+                "sources": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "gameCapture1": {
+                      "type": "string",
+                      "default": "Game Capture 1"
+                    },
+                    "gameCapture2": {
+                      "type": "string",
+                      "default": "Game Capture 2"
+                    },
+                    "gameCapture3": {
+                      "type": "string",
+                      "default": "Game Capture 3"
+                    },
+                    "gameCapture4": {
+                      "type": "string",
+                      "default": "Game Capture 4"
+                    },
+                    "cameraCapture1": {
+                      "type": "string",
+                      "default": "Camera Capture 1"
+                    },
+                    "cameraCapture2": {
+                      "type": "string",
+                      "default": "Camera Capture 2"
+                    },
+                    "cameraCapture3": {
+                      "type": "string",
+                      "default": "Camera Capture 3"
+                    },
+                    "videoPlayer": {
+                      "type": "string",
+                      "default": "Video Player Source"
+                    }
+                  },
+                  "required": [
+                    "gameCapture1",
+                    "gameCapture2",
+                    "gameCapture3",
+                    "gameCapture4",
+                    "cameraCapture1",
+                    "cameraCapture2",
+                    "cameraCapture3",
+                    "videoPlayer"
+                  ]
                 }
               },
               "required": [
-                "commercials",
-                "gameLayout",
-                "intermission",
-                "videoPlayer",
-                "countdown"
-              ]
-            },
-            "sources": {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "gameCapture1": {
-                  "type": "string",
-                  "default": "Game Capture 1"
-                },
-                "gameCapture2": {
-                  "type": "string",
-                  "default": "Game Capture 2"
-                },
-                "gameCapture3": {
-                  "type": "string",
-                  "default": "Game Capture 3"
-                },
-                "gameCapture4": {
-                  "type": "string",
-                  "default": "Game Capture 4"
-                },
-                "cameraCapture1": {
-                  "type": "string",
-                  "default": "Camera Capture 1"
-                },
-                "cameraCapture2": {
-                  "type": "string",
-                  "default": "Camera Capture 2"
-                },
-                "cameraCapture3": {
-                  "type": "string",
-                  "default": "Camera Capture 3"
-                },
-                "videoPlayer": {
-                  "type": "string",
-                  "default": "Video Player Source"
-                }
-              },
-              "required": [
-                "gameCapture1",
-                "gameCapture2",
-                "gameCapture3",
-                "gameCapture4",
-                "cameraCapture1",
-                "cameraCapture2",
-                "cameraCapture3",
-                "videoPlayer"
+                "scenes",
+                "sources"
               ]
             }
           },
           "required": [
-            "scenes",
-            "sources"
+            "names"
           ]
         }
-      },
-      "required": [
-        "enable",
-        "address",
-        "password",
-        "names"
       ]
     },
     "music": {

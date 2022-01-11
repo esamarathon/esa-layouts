@@ -4,6 +4,7 @@ module.exports = {
   pages: {
     backend: 'src/backend/main.ts',
     pi: 'src/pi/main.ts',
+    pi_donations: 'src/pi_donations/main.ts',
     settings: 'src/settings/main.ts',
   },
   publicPath: './',

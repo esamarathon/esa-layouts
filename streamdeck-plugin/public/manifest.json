@@ -1,27 +1,94 @@
 {
   "Actions": [
     {
-      "Name": "Example",
+      "Name": "Toggle Timer",
       "Icon": "img/actionIcon",
       "States": [
         {
-          "Image": "img/actionIcon",
+          "Image": "img/actionDefaultImage",
           "TitleAlignment": "middle",
-          "Title": "Example"
+          "FontSize": "9",
+          "Title": "Start\nTimer",
+          "ShowTitle": true
         }
       ],
       "SupportedInMultiActions": false,
-      "Tooltip": "Example action needed to run the plugin.",
-      "UUID": "com.zoton2.example.action"
+      "Tooltip": "Used to start and stop the timer.",
+      "UUID": "com.esamarathon.streamdeck.timer"
+    },
+    {
+      "Name": "Twitch Ads",
+      "Icon": "img/actionIcon",
+      "States": [
+        {
+          "Image": "img/actionDefaultImage",
+          "TitleAlignment": "middle",
+          "FontSize": "9",
+          "Title": "STEP 1\nTWITCH AD",
+          "ShowTitle": true
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Switches scene, plays ads and displays countdown timer for them.",
+      "UUID": "com.esamarathon.streamdeck.twitchads"
+    },
+    {
+      "Name": "TTS Donation Reading",
+      "Icon": "img/actionIcon",
+      "States": [
+        {
+          "Image": "img/actionDefaultImage",
+          "TitleAlignment": "middle",
+          "FontSize": "9",
+          "ShowTitle": true
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Tells the overlay to read out the selected donation using text-to-speech.",
+      "UUID": "com.esamarathon.streamdeck.ttsdonations",
+      "PropertyInspectorPath": "pi_donations.html"
+    },
+    {
+      "Name": "Donation Read",
+      "Icon": "img/actionIcon",
+      "States": [
+        {
+          "Image": "img/actionDefaultImage",
+          "TitleAlignment": "middle",
+          "FontSize": "9",
+          "ShowTitle": true
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Tells the tracker to mark the selected donation as have being read.",
+      "UUID": "com.esamarathon.streamdeck.donationread",
+      "PropertyInspectorPath": "pi_donations.html"
+    },
+    {
+      "Name": "Player HUD Trigger - Message",
+      "Icon": "img/actionIcon",
+      "States": [
+        {
+          "Image": "img/actionDefaultImage",
+          "TitleAlignment": "middle",
+          "FontSize": "9",
+          "Title": "Message\nTo Read",
+          "ShowTitle": true
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Used to trigger certain messages to be displayed on the player HUD graphic.",
+      "UUID": "com.esamarathon.streamdeck.playerhudtrigger-message"
     }
   ],
   "Author": "zoton2",
-  "Category": "node-streamdeck-util",
+  "Category": "ESA Marathon",
+  "CategoryIcon": "img/categoryIcon",
   "CodePath": "backend.html",
-  "Description": "Barebones plugin to be used with node-streamdeck-util.",
-  "Name": "node-streamdeck-util",
+  "Description": "Plugin with actions programmed for use at ESA Marathons.",
+  "Name": "ESA Marathon",
   "Icon": "img/pluginIcon",
-  "URL": "https://github.com/zoton2/node-streamdeck-util",
+  "URL": "https://github.com/esamarathon/esa-layouts",
   "PropertyInspectorPath": "pi.html",
   "DefaultWindowSize": [
     400,

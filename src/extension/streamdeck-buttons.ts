@@ -98,7 +98,7 @@ function init(): void {
     if (data.action === 'com.esamarathon.streamdeck.ttsdonations') {
       const donationIndex = (
         data.payload.settings && data.payload.settings.slot
-      ) ? data.payload.settings.slot : 0;
+      ) ? data.payload.settings.slot as number : 0;
       const donation = donationsToRead.value[donationIndex];
       if (donation) {
         speak(donation);
@@ -110,7 +110,7 @@ function init(): void {
     if (data.action === 'com.esamarathon.streamdeck.donationread') {
       const donationIndex = (
         data.payload.settings && data.payload.settings.slot
-      ) ? data.payload.settings.slot : 0;
+      ) ? data.payload.settings.slot as number : 0;
       const donation = donationsToRead.value[donationIndex];
       if (donation) {
         markDonationAsRead(donation.id);

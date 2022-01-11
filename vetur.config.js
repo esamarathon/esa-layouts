@@ -30,5 +30,10 @@ module.exports = {
       root: './shared/browser_shared',
       package: '../../package.json',
     },
+
+    // streamdeck-plugin
+    {
+      root: 'streamdeck-plugin',
+    },
   ]
 }

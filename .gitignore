@@ -130,5 +130,6 @@ dist
 /extension/
 /graphics/
 
+streamdeck-plugin/com.esamarathon.streamdeck.sdPlugin
 streamdeck-plugin/DistributionTool.exe
 *.psd

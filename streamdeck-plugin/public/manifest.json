@@ -2,10 +2,10 @@
   "Actions": [
     {
       "Name": "Toggle Timer",
-      "Icon": "icons/actionIcon",
+      "Icon": "img/actionIcon",
       "States": [
         {
-          "Image": "icons/actionDefaultImage",
+          "Image": "img/actionDefaultImage",
           "TitleAlignment": "middle",
           "FontSize": "9",
           "Title": "Start\nTimer",
@@ -18,10 +18,10 @@
     },
     {
       "Name": "Twitch Ads",
-      "Icon": "icons/actionIcon",
+      "Icon": "img/actionIcon",
       "States": [
         {
-          "Image": "icons/actionDefaultImage",
+          "Image": "img/actionDefaultImage",
           "TitleAlignment": "middle",
           "FontSize": "9",
           "Title": "STEP 1\nTWITCH AD",
@@ -34,10 +34,10 @@
     },
     {
       "Name": "TTS Donation Reading",
-      "Icon": "icons/actionIcon",
+      "Icon": "img/actionIcon",
       "States": [
         {
-          "Image": "icons/actionDefaultImage",
+          "Image": "img/actionDefaultImage",
           "TitleAlignment": "middle",
           "FontSize": "9",
           "ShowTitle": true
@@ -50,10 +50,10 @@
     },
     {
       "Name": "Donation Read",
-      "Icon": "icons/actionIcon",
+      "Icon": "img/actionIcon",
       "States": [
         {
-          "Image": "icons/actionDefaultImage",
+          "Image": "img/actionDefaultImage",
           "TitleAlignment": "middle",
           "FontSize": "9",
           "ShowTitle": true
@@ -66,10 +66,10 @@
     },
     {
       "Name": "Player HUD Trigger - Message",
-      "Icon": "icons/actionIcon",
+      "Icon": "img/actionIcon",
       "States": [
         {
-          "Image": "icons/actionDefaultImage",
+          "Image": "img/actionDefaultImage",
           "TitleAlignment": "middle",
           "FontSize": "9",
           "Title": "Message\nTo Read",
@@ -83,14 +83,17 @@
   ],
   "Author": "zoton2",
   "Category": "ESA Marathon",
-  "CategoryIcon": "icons/categoryIcon",
+  "CategoryIcon": "img/categoryIcon",
   "CodePath": "backend.html",
   "Description": "Plugin with actions programmed for use at ESA Marathons.",
   "Name": "ESA Marathon",
-  "Icon": "icons/pluginIcon",
+  "Icon": "img/pluginIcon",
   "URL": "https://github.com/esamarathon/esa-layouts",
   "PropertyInspectorPath": "pi.html",
-  "DefaultWindowSize": [400, 200],
+  "DefaultWindowSize": [
+    400,
+    200
+  ],
   "Version": "1.0",
   "SDKVersion": 2,
   "OS": [
@@ -104,6 +107,6 @@
     }
   ],
   "Software": {
-    "MinimumVersion": "4.1"
+    "MinimumVersion": "5"
   }
 }

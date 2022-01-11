@@ -46,7 +46,6 @@ export default class extends Vue {
         key: this.key,
       });
     }
-
     window.close();
   }
 }

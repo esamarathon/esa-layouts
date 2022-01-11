@@ -1,7 +1,7 @@
 "use strict";
 /* eslint-disable max-len */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.videoPlayer = exports.upcomingRunID = exports.ttsVoices = exports.streamDeckData = exports.serverTimestamp = exports.prizes = exports.otherStreamData = exports.omnibarPin = exports.obsData = exports.notableDonations = exports.nameCycle = exports.musicData = exports.mediaBox = exports.gameLayouts = exports.donationTotalMilestones = exports.donationTotal = exports.donationsToRead = exports.donationReader = exports.delayedTimer = exports.currentRunDelay = exports.countdown = exports.commentators = exports.capturePositions = exports.bids = exports.assetsVideos = exports.assetsMediaBoxImages = exports.assetsIntermissionSlides = void 0;
+exports.videoPlayer = exports.upcomingRunID = exports.ttsVoices = exports.streamDeckData = exports.serverTimestamp = exports.prizes = exports.otherStreamData = exports.omnibarPin = exports.obsData = exports.notableDonations = exports.nameCycle = exports.musicData = exports.gameLayouts = exports.donationTotalMilestones = exports.donationTotal = exports.donationsToRead = exports.donationReader = exports.delayedTimer = exports.currentRunDelay = exports.countdown = exports.commentators = exports.capturePositions = exports.bids = exports.assetsVideos = exports.assetsMediaBoxImages = exports.assetsIntermissionSlides = void 0;
 const nodecg_1 = require("./nodecg");
 /**
  * This is where you can declare all your replicant to import easily into other files,
@@ -21,7 +21,6 @@ exports.donationsToRead = (0, nodecg_1.get)().Replicant('donationsToRead', { per
 exports.donationTotal = (0, nodecg_1.get)().Replicant('donationTotal');
 exports.donationTotalMilestones = (0, nodecg_1.get)().Replicant('donationTotalMilestones');
 exports.gameLayouts = (0, nodecg_1.get)().Replicant('gameLayouts');
-exports.mediaBox = (0, nodecg_1.get)().Replicant('mediaBox'); // try to remove and use esa-layout-shared only
 exports.musicData = (0, nodecg_1.get)().Replicant('musicData');
 exports.nameCycle = (0, nodecg_1.get)().Replicant('nameCycle', { persistent: false });
 exports.notableDonations = (0, nodecg_1.get)().Replicant('notableDonations');

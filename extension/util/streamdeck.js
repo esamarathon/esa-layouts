@@ -7,7 +7,7 @@ const streamdeck_util_1 = __importDefault(require("streamdeck-util"));
 const nodecg_1 = require("./nodecg");
 const config = (0, nodecg_1.get)().bundleConfig.streamdeck;
 const sd = new streamdeck_util_1.default();
-if (config.enable) {
+if (config.enabled) {
     sd.listen({
         key: config.key,
         port: config.port,

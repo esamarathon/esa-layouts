@@ -1,6 +1,6 @@
 export namespace Music {
   interface Config {
-    enable: boolean;
+    enabled: boolean;
     address: string;
     username: string;
     password: string;

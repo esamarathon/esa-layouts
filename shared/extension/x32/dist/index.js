@@ -11,7 +11,7 @@ var X32 = /** @class */ (function () {
         this.fadersInterval = {};
         this.nodecg = nodecg;
         this.config = config;
-        if (config.enable) {
+        if (config.enabled) {
             nodecg.log.info('[X32] Setting up connection');
             this.conn = new osc_1.default.UDPPort({
                 localAddress: '0.0.0.0',
@@ -85,7 +85,7 @@ var X32 = /** @class */ (function () {
      * @param startValue Value to set (0.0 - 1.0).
      */
     X32.prototype.setFader = function (name, value) {
-        if (!this.config.enable || !this.conn) {
+        if (!this.config.enabled || !this.conn) {
             throw new Error('No connection available');
         }
         this.nodecg.log.debug("[X32] Attempting to set fader on ".concat(name, " to ").concat(value));
@@ -104,7 +104,7 @@ var X32 = /** @class */ (function () {
      */
     X32.prototype.fade = function (name, startValue, endValue, length) {
         var _this = this;
-        if (!this.config.enable || !this.conn) {
+        if (!this.config.enabled || !this.conn) {
             throw new Error('No connection available');
         }
         // Will stop doing a fade if we receive another one while the old one is running, for safety.

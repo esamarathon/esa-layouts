@@ -1,6 +1,6 @@
 export namespace X32 {
   interface Config {
-    enable: boolean;
+    enabled: boolean;
     ip: string;
     localPort: number;
   }

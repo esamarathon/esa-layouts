@@ -1,6 +1,6 @@
 export namespace OBS {
   interface Config {
-    enable: boolean;
+    enabled: boolean;
     address: string;
     password: string;
   }

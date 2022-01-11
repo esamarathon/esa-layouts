@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "ip": {
+      "type": "string",
+      "default": "10.20.30.42"
+    },
+    "localPort": {
+      "type": "number",
+      "default": 52361
+    }
+  },
+  "required": [
+    "enabled",
+    "ip",
+    "localPort"
+  ]
+}

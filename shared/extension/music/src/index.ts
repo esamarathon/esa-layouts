@@ -34,7 +34,7 @@ class Music {
     this.musicData = nodecg.Replicant('musicData', { schemaPath: buildSchemaPath('musicData') });
 
     this.musicData.value.connected = false;
-    if (config.enable) {
+    if (config.enabled) {
       this.setup();
     }
   }

@@ -20,7 +20,7 @@ class XKeysClass extends EventEmitter {
     this.nodecg = nodecg;
     this.config = config;
 
-    if (config.enable) {
+    if (config.enabled) {
       this.connect();
     }
   }
@@ -68,7 +68,7 @@ class XKeysClass extends EventEmitter {
   }
 
   setBacklight(keyIndex: number | string, on = true, redLight?: boolean, flashing?: boolean): void {
-    if (!this.config.enable) {
+    if (!this.config.enabled) {
       // XKeys not enabled, don't even try to set.
       return;
     }

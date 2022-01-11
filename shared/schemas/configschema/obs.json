@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "address": {
+      "type": "string",
+      "default": "localhost:4444"
+    },
+    "password": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "required": [
+    "enabled",
+    "address",
+    "password"
+  ]
+}

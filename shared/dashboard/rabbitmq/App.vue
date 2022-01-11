@@ -6,7 +6,7 @@
     Not using test data.
   </v-app>
   <v-app
-    v-else-if="!enable"
+    v-else-if="!enabled"
     :style="{ 'font-style': 'italic' }"
   >
     RabbitMQ not enabled.
@@ -29,7 +29,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator';
 
 @Component
 export default class extends Vue {
-  @Prop(Boolean) enable!: boolean;
+  @Prop(Boolean) enabled!: boolean;
   @Prop(Boolean) useTestData!: boolean;
 
   donation(): void {

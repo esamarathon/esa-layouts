@@ -26,7 +26,7 @@ class OBS extends EventEmitter {
     this.nodecg = nodecg;
     this.config = config;
 
-    if (config.enable) {
+    if (config.enabled) {
       nodecg.log.info('[OBS] Setting up connection');
       this.connect();
 
@@ -147,7 +147,7 @@ class OBS extends EventEmitter {
    * @param name Name of the scene.
    */
   async changeScene(name: string): Promise<void> {
-    if (!this.config.enable || !this.connected) {
+    if (!this.config.enabled || !this.connected) {
       // OBS not enabled, don't even try to set.
       throw new Error('No OBS connection available');
     }
@@ -176,7 +176,7 @@ class OBS extends EventEmitter {
     sourceType: string;
     sourceSettings: Record<string, unknown>;
   }> {
-    if (!this.config.enable || !this.connected) {
+    if (!this.config.enabled || !this.connected) {
       // OBS not enabled, don't even try to set.
       throw new Error('No connection available');
     }
@@ -199,7 +199,7 @@ class OBS extends EventEmitter {
    */
   // eslint-disable-next-line max-len
   async setSourceSettings(sourceName: string, sourceType: string, sourceSettings: Record<string, unknown>): Promise<void> {
-    if (!this.config.enable || !this.connected) {
+    if (!this.config.enabled || !this.connected) {
       // OBS not enabled, don't even try to set.
       throw new Error('No connection available');
     }
@@ -243,7 +243,7 @@ class OBS extends EventEmitter {
     visible?: boolean,
   ): Promise<void> {
     try {
-      if (!this.config.enable || !this.connected) {
+      if (!this.config.enabled || !this.connected) {
         // OBS not enabled, don't even try to set.
         throw new Error('No connection available');
       }

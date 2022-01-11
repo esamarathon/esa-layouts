@@ -67,7 +67,7 @@ var OBS = /** @class */ (function (_super) {
         _this.connected = false;
         _this.nodecg = nodecg;
         _this.config = config;
-        if (config.enable) {
+        if (config.enabled) {
             nodecg.log.info('[OBS] Setting up connection');
             _this.connect();
             _this.conn.on('ConnectionClosed', function () {
@@ -204,7 +204,7 @@ var OBS = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!this.config.enable || !this.connected) {
+                        if (!this.config.enabled || !this.connected) {
                             // OBS not enabled, don't even try to set.
                             throw new Error('No OBS connection available');
                         }
@@ -239,7 +239,7 @@ var OBS = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!this.config.enable || !this.connected) {
+                        if (!this.config.enabled || !this.connected) {
                             // OBS not enabled, don't even try to set.
                             throw new Error('No connection available');
                         }
@@ -274,7 +274,7 @@ var OBS = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!this.config.enable || !this.connected) {
+                        if (!this.config.enabled || !this.connected) {
                             // OBS not enabled, don't even try to set.
                             throw new Error('No connection available');
                         }
@@ -316,7 +316,7 @@ var OBS = /** @class */ (function (_super) {
                 switch (_j.label) {
                     case 0:
                         _j.trys.push([0, 2, , 3]);
-                        if (!this.config.enable || !this.connected) {
+                        if (!this.config.enabled || !this.connected) {
                             // OBS not enabled, don't even try to set.
                             throw new Error('No connection available');
                         }

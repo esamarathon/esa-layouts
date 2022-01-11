@@ -9,7 +9,7 @@ export namespace RabbitMQ {
   }[];
 
   interface Config {
-    enable: boolean;
+    enabled: boolean;
     protocol: string;
     hostname: string;
     username: string;

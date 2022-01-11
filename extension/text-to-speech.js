@@ -67,6 +67,6 @@ async function init() {
         (0, nodecg_1.get)().log.debug('[TTS] Error setting up:', err);
     }
 }
-if (config.enable && config.voiceAPI) {
+if (config.enabled && config.voiceAPI) {
     init();
 }

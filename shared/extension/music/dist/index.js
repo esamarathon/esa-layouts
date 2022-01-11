@@ -60,7 +60,7 @@ var Music = /** @class */ (function () {
         this.headers = this.auth ? { Authorization: this.auth } : undefined;
         this.musicData = nodecg.Replicant('musicData', { schemaPath: buildSchemaPath('musicData') });
         this.musicData.value.connected = false;
-        if (config.enable) {
+        if (config.enabled) {
             this.setup();
         }
     }

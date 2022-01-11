@@ -23,7 +23,7 @@ var XKeysClass = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this.nodecg = nodecg;
         _this.config = config;
-        if (config.enable) {
+        if (config.enabled) {
             _this.connect();
         }
         return _this;
@@ -69,7 +69,7 @@ var XKeysClass = /** @class */ (function (_super) {
     };
     XKeysClass.prototype.setBacklight = function (keyIndex, on, redLight, flashing) {
         if (on === void 0) { on = true; }
-        if (!this.config.enable) {
+        if (!this.config.enabled) {
             // XKeys not enabled, don't even try to set.
             return;
         }

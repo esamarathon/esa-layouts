@@ -16,7 +16,7 @@ class X32 {
     this.nodecg = nodecg;
     this.config = config;
 
-    if (config.enable) {
+    if (config.enabled) {
       nodecg.log.info('[X32] Setting up connection');
 
       this.conn = new osc.UDPPort({
@@ -100,7 +100,7 @@ class X32 {
    * @param startValue Value to set (0.0 - 1.0).
    */
   setFader(name: string, value: number): void {
-    if (!this.config.enable || !this.conn) {
+    if (!this.config.enabled || !this.conn) {
       throw new Error('No connection available');
     }
 
@@ -120,7 +120,7 @@ class X32 {
    * @param length Milliseconds to spend doing fade.
    */
   fade(name: string, startValue: number, endValue: number, length: number): void {
-    if (!this.config.enable || !this.conn) {
+    if (!this.config.enabled || !this.conn) {
       throw new Error('No connection available');
     }
 

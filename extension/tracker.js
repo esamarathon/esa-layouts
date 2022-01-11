@@ -171,6 +171,6 @@ async function setup() {
         (0, nodecg_1.get)().log.debug('[Tracker] Error setting up:', err);
     }
 }
-if (config.enable) {
+if (config.enabled) {
     setup();
 }

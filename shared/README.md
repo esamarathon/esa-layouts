@@ -72,7 +72,7 @@ A repository which houses several elements that are used by mutiple [NodeCG](htt
 - You will want to add this entry in your `.vscode/settings.json` file in the `eslint.workingDirectories` section:
   - ```
     "eslint.workingDirectories": [
-      { "pattern": "shared" }
+      "shared"
     ]
     ```
 - You will want to change the Webpack `resolve.alias.vue` config to make sure it resolves to the one in the bundle:

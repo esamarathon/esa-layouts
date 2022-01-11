@@ -51,7 +51,7 @@ export const store = new Vuex.Store({
       if (typeof reps.settings.value !== 'undefined') {
         reps.settings.value.rotation = clone(state.newRotation);
       }
-      await new Promise((res) => setTimeout(res, 1000)); // Fake 1s wait
+      await new Promise((res) => { setTimeout(res, 1000); }); // Fake 1s wait
       Vue.set(state, 'disableSave', false);
     },
   },

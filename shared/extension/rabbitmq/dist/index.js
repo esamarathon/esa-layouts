@@ -104,7 +104,7 @@ var RabbitMQ = /** @class */ (function () {
         this.event = opts.event;
         this.listenTopics = opts.listenTopics;
         this.useTestData = useTestData;
-        if (opts.config.enable) {
+        if (opts.config.enabled) {
             if (!useTestData) {
                 nodecg.log.info('[RabbitMQ] Setting up connection');
                 var conn = amqp_connection_manager_1.default.connect([this.url()], this.opts())
@@ -189,7 +189,7 @@ var RabbitMQ = /** @class */ (function () {
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     RabbitMQ.prototype.send = function (key, data) {
-        if (!this.config.enable) {
+        if (!this.config.enabled) {
             // RabbitMQ not enabled, don't even try to send.
             return;
         }

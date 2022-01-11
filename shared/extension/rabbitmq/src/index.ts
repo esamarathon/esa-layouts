@@ -82,7 +82,7 @@ class RabbitMQ {
     this.listenTopics = opts.listenTopics;
     this.useTestData = useTestData;
 
-    if (opts.config.enable) {
+    if (opts.config.enabled) {
       if (!useTestData) {
         nodecg.log.info('[RabbitMQ] Setting up connection');
         const conn = amqpConnectionManager.connect([this.url()], this.opts())
@@ -110,8 +110,11 @@ class RabbitMQ {
             if (msgType === 'donationFullyProcessed') {
               testData.donationFullyProcessed = generateDonationMsg();
             }
-            nodecg.log.debug('[RabbitMQ] Sending test message out for topic %s: %s',
-              msgType, JSON.stringify(testData[msgType]));
+            nodecg.log.debug(
+              '[RabbitMQ] Sending test message out for topic %s: %s',
+              msgType,
+              JSON.stringify(testData[msgType]),
+            );
             this.evt.emit(msgType, testData[msgType]);
           },
         );
@@ -152,8 +155,11 @@ class RabbitMQ {
           setTimeout(() => {
             this.evt.emit(topic.name, JSON.parse(msg.content.toString()));
           }, 0);
-          this.nodecg.log.debug('[RabbitMQ] Received message from topic %s: %s',
-            topic.name, msg.content.toString());
+          this.nodecg.log.debug(
+            '[RabbitMQ] Received message from topic %s: %s',
+            topic.name,
+            msg.content.toString(),
+          );
         }
         if (msg) {
           chan.ack(msg);
@@ -171,7 +177,7 @@ class RabbitMQ {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   send(key: string, data: { [k: string]: any }): void {
-    if (!this.config.enable) {
+    if (!this.config.enabled) {
       // RabbitMQ not enabled, don't even try to send.
       return;
     }
@@ -195,8 +201,11 @@ class RabbitMQ {
         { persistent: true },
       );
     }
-    this.nodecg.log.debug('[RabbitMQ] Sending message with routing key: %s: %s',
-      fullKey, JSON.stringify(newData));
+    this.nodecg.log.debug(
+      '[RabbitMQ] Sending message with routing key: %s: %s',
+      fullKey,
+      JSON.stringify(newData),
+    );
   }
 }
 

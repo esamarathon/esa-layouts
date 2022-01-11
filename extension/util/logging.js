@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.logVideoPlay = exports.logSponsorLogoChange = exports.logRunChange = exports.logTimerChange = exports.logSceneSwitch = exports.logStreamingStatusChange = void 0;
 const speedcontrol_util_1 = __importDefault(require("speedcontrol-util"));
+const mediabox_1 = __importDefault(require("./mediabox"));
 const nodecg_1 = require("./nodecg");
 const rabbitmq_1 = require("./rabbitmq");
 const replicants_1 = require("./replicants");
@@ -64,7 +65,7 @@ exports.logRunChange = logRunChange;
  * @param logo Sponsor logo object.
  */
 function logSponsorLogoChange(logo) {
-    const logoInfo = replicants_1.mediaBox.value.rotation.find((l) => l.id === (logo === null || logo === void 0 ? void 0 : logo.id));
+    const logoInfo = mediabox_1.default.mediaBox.value.rotation.find((l) => l.id === (logo === null || logo === void 0 ? void 0 : logo.id));
     const asset = replicants_1.assetsMediaBoxImages.value.find((a) => a.sum === (logo === null || logo === void 0 ? void 0 : logo.mediaUUID));
     rabbitmq_1.mq.send('sponsor.logo.changed', {
         logo: (logo === null || logo === void 0 ? void 0 : logo.type) === 'image' ? asset === null || asset === void 0 ? void 0 : asset.name : undefined,

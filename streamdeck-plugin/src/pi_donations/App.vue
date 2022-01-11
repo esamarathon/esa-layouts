@@ -32,7 +32,7 @@ export default class extends Vue {
   beforeCreate(): void {
     this.pi = new PropertyInspector();
     window.connectElgatoStreamDeckSocket = (
-      inPort: number,
+      inPort: string,
       inPropertyInspectorUUID: string,
       inRegisterEvent: string,
       inInfo: string,

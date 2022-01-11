@@ -10,7 +10,7 @@ interface PropertyInspector {
 class PropertyInspector extends EventEmitter {
   sdWS!: WebSocket;
   connectSocketData: {
-    inPort?: number,
+    inPort?: string,
     inPropertyInspectorUUID?: string,
     inRegisterEvent?: string,
     inInfo?: string,
@@ -22,7 +22,7 @@ class PropertyInspector extends EventEmitter {
    * Intended to be triggered by the Stream Deck software.
    */
   connectElgatoStreamDeckSocket(
-    inPort: number,
+    inPort: string,
     inPropertyInspectorUUID: string,
     inRegisterEvent: string,
     inInfo: string,

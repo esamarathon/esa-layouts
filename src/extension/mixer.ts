@@ -18,7 +18,7 @@ function getNonGameScenes(): string[] {
 }
 
 export function setFaderName(fader: string, name: string): void {
-  if (config.x32.enable) {
+  if (config.x32.enabled) {
     x32.conn?.send({
       address: `${fader}/config/name`,
       args: [{ type: 's', value: name }],
@@ -76,7 +76,7 @@ export function toggleLiveMics(scene: string): void {
 }
 
 obs.conn.on('TransitionBegin', async (data) => {
-  if (config.x32.enable && config.event.online !== 'partial') {
+  if (config.x32.enabled && config.event.online !== 'partial') {
     const nonGameScenes = getNonGameScenes(); // These scenes will *not* have "LIVE" DCAs audible.
     const intermissionScenes = [ // These scenes *will* have "Intrmsn Mics" DCA audible.
       obs.findScene(config.obs.names.scenes.commercials),

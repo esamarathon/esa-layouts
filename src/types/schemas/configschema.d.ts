@@ -14,13 +14,13 @@ export interface Configschema {
 		online: boolean | ('partial' | 'full');
 	};
 	streamdeck: {
-		enable: boolean;
+		enabled: boolean;
 		port: number;
 		key: string;
 		debug: boolean;
 	};
 	rabbitmq: {
-		enable: boolean;
+		enabled: boolean;
 		protocol: string;
 		hostname: string;
 		username: string;
@@ -28,7 +28,7 @@ export interface Configschema {
 		vhost: string;
 	};
 	obs: {
-		enable: boolean;
+		enabled: boolean;
 		address: string;
 		password: string;
 		names: {
@@ -52,24 +52,24 @@ export interface Configschema {
 		};
 	};
 	music: {
-		enable: boolean;
+		enabled: boolean;
 		address: string;
 		username: string;
 		password: string;
 	};
 	x32: {
-		enable: boolean;
+		enabled: boolean;
 		ip: string;
 		localPort: number;
 	};
 	tracker: {
-		enable: boolean;
+		enabled: boolean;
 		address: string;
 		username: string;
 		password: string;
 	};
 	tts: {
-		enable: boolean;
+		enabled: boolean;
 		voiceAPI: string;
 	};
 }

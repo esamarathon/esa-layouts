@@ -68,7 +68,7 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "enable": {
+        "enabled": {
           "type": "boolean",
           "default": true
         },
@@ -86,7 +86,7 @@
         }
       },
       "required": [
-        "enable",
+        "enabled",
         "port",
         "key",
         "debug"
@@ -96,7 +96,7 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "enable": {
+        "enabled": {
           "type": "boolean",
           "default": true
         },
@@ -122,7 +122,7 @@
         }
       },
       "required": [
-        "enable",
+        "enabled",
         "protocol",
         "hostname",
         "username",
@@ -134,7 +134,7 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "enable": {
+        "enabled": {
           "type": "boolean",
           "default": true
         },
@@ -239,7 +239,7 @@
         }
       },
       "required": [
-        "enable",
+        "enabled",
         "address",
         "password",
         "names"
@@ -249,7 +249,7 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "enable": {
+        "enabled": {
           "type": "boolean",
           "default": true
         },
@@ -267,7 +267,7 @@
         }
       },
       "required": [
-        "enable",
+        "enabled",
         "address",
         "username",
         "password"
@@ -277,7 +277,7 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "enable": {
+        "enabled": {
           "type": "boolean",
           "default": true
         },
@@ -291,7 +291,7 @@
         }
       },
       "required": [
-        "enable",
+        "enabled",
         "ip",
         "localPort"
       ]
@@ -300,7 +300,7 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "enable": {
+        "enabled": {
           "type": "boolean",
           "default": true
         },
@@ -318,7 +318,7 @@
         }
       },
       "required": [
-        "enable",
+        "enabled",
         "address",
         "username",
         "password"
@@ -328,7 +328,7 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "enable": {
+        "enabled": {
           "type": "boolean",
           "default": false
         },
@@ -338,7 +338,7 @@
         }
       },
       "required": [
-        "enable",
+        "enabled",
         "voiceAPI"
       ]
     }

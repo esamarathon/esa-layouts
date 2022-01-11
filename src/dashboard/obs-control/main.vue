@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <div v-if="!obsConfig.enable" :style="{ 'font-style': 'italic' }">
+    <div v-if="!obsConfig.enabled" :style="{ 'font-style': 'italic' }">
       This feature is not enabled.
     </div>
     <div v-else-if="!obsData.connected" :style="{ 'font-style': 'italic' }">

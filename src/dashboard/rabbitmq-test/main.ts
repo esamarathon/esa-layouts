@@ -12,7 +12,7 @@ new Vue({
   el: '#App',
   render: (h) => h(App, {
     props: {
-      enable: config.rabbitmq.enable,
+      enabled: config.rabbitmq.enabled,
       useTestData: config.useTestData,
     },
   }),

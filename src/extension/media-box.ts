@@ -1,11 +1,9 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
-import MediaBox from '@shared/extension/mediabox';
 import { logSponsorLogoChange } from './util/logging';
+import mb from './util/mediabox';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { mq } from './util/rabbitmq';
 
-const mb = new MediaBox(nodecg(), mq.evt);
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 
 /**

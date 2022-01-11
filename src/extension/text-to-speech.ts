@@ -69,6 +69,6 @@ async function init(): Promise<void> {
   }
 }
 
-if (config.enable && config.voiceAPI) {
+if (config.enabled && config.voiceAPI) {
   init();
 }

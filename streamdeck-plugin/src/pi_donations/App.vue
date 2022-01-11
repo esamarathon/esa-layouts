@@ -11,10 +11,7 @@
     <!-- Action specific settings. -->
     <div class="sdpi-item">
       <div class="sdpi-item-label">Donation Slot</div>
-      <select
-        class="sdpi-item-value select"
-        onchange="changeSlot(this.options[this.selectedIndex].value)"
-      >
+      <select v-model="slot" class="sdpi-item-value select">
         <option value="0">1</option>
         <option value="1">2</option>
         <option value="2">3</option>
@@ -24,42 +21,60 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-
-// "init" should be called within "sdWS.addEventListener('open', () => {"
-// "didReceiveSettings" should be called witin "sdWS.addEventListener('message', e => {"
-/*
-let settings = {};
-
-function init() {
-  sdWS.send(JSON.stringify({ event: 'getSettings', context: connectSocketData.pluginUUID }));
-}
-
-function didReceiveSettings(data) {
-  settings = data;
-  let slot = 0;
-  if (!data.payload.settings || !data.payload.settings.slot) {
-    changeSlot(slot);
-  } else {
-    slot = data.payload.settings.slot;
-  }
-  document.getElementsByTagName("select")[0].value = slot;
-}
-
-function changeSlot(slot) {
-  slot = Number(slot);
-  sdWS.send(JSON.stringify({
-    event: 'setSettings',
-    context: connectSocketData.pluginUUID,
-    payload: { slot },
-  }));
-}
-*/
+import PropertyInspector from '@/pi/pi';
+import { Vue, Component, Watch } from 'vue-property-decorator';
 
 @Component
 export default class extends Vue {
+  pi!: PropertyInspector;
+  slot = 0;
+
+  beforeCreate(): void {
+    this.pi = new PropertyInspector();
+    window.connectElgatoStreamDeckSocket = (
+      inPort: number,
+      inPropertyInspectorUUID: string,
+      inRegisterEvent: string,
+      inInfo: string,
+      inActionInfo: string,
+    ) => {
+      this.pi.connectElgatoStreamDeckSocket(
+        inPort,
+        inPropertyInspectorUUID,
+        inRegisterEvent,
+        inInfo,
+        inActionInfo,
+      );
+    };
+    window.gotCallbackFromWindow = (data: { url: string, key: string }) => {
+      this.pi.gotCallbackFromWindow(data);
+    };
+    this.pi.on('open', () => {
+      this.pi.sdWS.send(JSON.stringify({
+        event: 'getSettings',
+        context: this.pi.connectSocketData.inPropertyInspectorUUID,
+      }));
+    });
+    this.pi.on('message', (data) => {
+      if (data.event === 'didReceiveSettings') {
+        // Force setting to be created.
+        if (typeof data?.payload?.settings?.slot !== 'number') this.onSlotChanged(this.slot);
+        else this.slot = data.payload.settings.slot;
+      }
+    });
+  }
+
+  @Watch('slot')
+  onSlotChanged(slot: number | string): void {
+    this.pi.sdWS.send(JSON.stringify({
+      event: 'setSettings',
+      context: this.pi.connectSocketData.inPropertyInspectorUUID,
+      payload: { slot: Number(slot) },
+    }));
+  }
+
   openSettings(): void {
-    window.open('settings.html');
+    this.pi.openSettings();
   }
 }
 </script>

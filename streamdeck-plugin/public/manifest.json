@@ -8,7 +8,7 @@
           "Image": "img/actionDefaultImage",
           "TitleAlignment": "middle",
           "FontSize": "9",
-          "Title": "Start\nTimer",
+          "Title": "⌛",
           "ShowTitle": true
         }
       ],
@@ -24,7 +24,7 @@
           "Image": "img/actionDefaultImage",
           "TitleAlignment": "middle",
           "FontSize": "9",
-          "Title": "STEP 1\nTWITCH AD",
+          "Title": "⌛",
           "ShowTitle": true
         }
       ],
@@ -40,6 +40,7 @@
           "Image": "img/actionDefaultImage",
           "TitleAlignment": "middle",
           "FontSize": "9",
+          "Title": "⌛",
           "ShowTitle": true
         }
       ],
@@ -56,6 +57,7 @@
           "Image": "img/actionDefaultImage",
           "TitleAlignment": "middle",
           "FontSize": "9",
+          "Title": "⌛",
           "ShowTitle": true
         }
       ],
@@ -72,7 +74,7 @@
           "Image": "img/actionDefaultImage",
           "TitleAlignment": "middle",
           "FontSize": "9",
-          "Title": "Message\nTo Read",
+          "Title": "⌛",
           "ShowTitle": true
         }
       ],

@@ -12,6 +12,7 @@ const config = nodecg().bundleConfig as Configschema;
 const sc = new SpeedcontrolUtil(nodecg());
 const defaultCommercialText = 'STEP 1\nTWITCH AD';
 const defaultTimerText = 'Start\nTimer';
+const defaultPlayerHudMsgText = 'Message\nTo Read';
 
 function init(): void {
   // com.esamarathon.streamdeck.timer
@@ -133,13 +134,30 @@ function init(): void {
       }
     }
   });
+
+  sd.on('willAppear', (data) => {
+    // Set default text on buttons.
+    // TODO: Make these check *what* text they should actually show!
+    if (data.action === 'com.esamarathon.streamdeck.timer') {
+      sd.updateButtonText(data.context as string, defaultTimerText);
+    } else if (data.action === 'com.esamarathon.streamdeck.twitchads') {
+      sd.updateButtonText(data.context as string, defaultCommercialText);
+    } else if (data.action === 'com.esamarathon.streamdeck.playerhudtrigger-message') {
+      sd.updateButtonText(data.context as string, defaultPlayerHudMsgText);
+    }
+  });
 }
 
 let initTriggered = false;
 sd.on('init', () => {
   // Set default text on buttons.
+  // TODO: Make these check *what* text they should actually show!
   sd.setTextOnAllButtonsWithAction('com.esamarathon.streamdeck.timer', defaultTimerText);
   sd.setTextOnAllButtonsWithAction('com.esamarathon.streamdeck.twitchads', defaultCommercialText);
+  sd.setTextOnAllButtonsWithAction(
+    'com.esamarathon.streamdeck.playerhudtrigger-message',
+    defaultPlayerHudMsgText,
+  );
 
   // Clearing this on initial connection for now for simplicity.
   delete streamDeckData.value.playerHUDTriggerType;

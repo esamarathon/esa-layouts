@@ -1,5 +1,4 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
-import SpeedcontrolUtil from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';
 import { formatPronouns, getCurrentEventShort, getOtherStreamEventShort } from './util/helpers';
 import { logRunChange } from './util/logging';
@@ -7,9 +6,9 @@ import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
 import { commentators, donationReader, otherStreamData } from './util/replicants';
+import { sc } from './util/speedcontrol';
 
 const config = (nodecg().bundleConfig as Configschema);
-const sc = new SpeedcontrolUtil(nodecg());
 
 // Screened data from our moderation tool.
 mq.evt.on('newScreenedSub', (data) => {

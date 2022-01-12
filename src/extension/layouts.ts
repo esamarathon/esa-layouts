@@ -1,16 +1,15 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import Countdown from '@shared/extension/countdown';
 import clone from 'clone';
-import SpeedcontrolUtil from 'speedcontrol-util';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { assetsVideos, capturePositions, currentRunDelay, delayedTimer, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants';
+import { sc } from './util/speedcontrol';
 import { startPlaylist } from './video-player'; // eslint-disable-line import/no-cycle
 
 const evtConfig = (nodecg().bundleConfig as Configschema).event;
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
-const sc = new SpeedcontrolUtil(nodecg());
 const countdown = new Countdown(nodecg()); // eslint-disable-line @typescript-eslint/no-unused-vars
 
 // Increase max listeners on the nodecg-speedcontrol timer a bit to stop errors.

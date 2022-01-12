@@ -1,12 +1,11 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
-import SpeedcontrolUtil from 'speedcontrol-util';
 import { logTimerChange } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
+import { sc } from './util/speedcontrol';
 
 const config = nodecg().bundleConfig as Configschema;
-const sc = new SpeedcontrolUtil(nodecg());
 
 // Controls the nodecg-speedcontrol timer when the big buttons are pressed.
 mq.evt.on('bigbuttonPressed', async (data) => {

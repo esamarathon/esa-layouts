@@ -1,15 +1,14 @@
 import type { MediaBox } from '@esa-layouts/types/schemas';
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import type { NodeCG as mqTypes } from '@esamarathon/mq-events/types';
-import SpeedcontrolUtil from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';
 import mb from './mediabox';
 import { get as nodecg } from './nodecg';
 import { mq } from './rabbitmq';
 import { assetsMediaBoxImages, assetsVideos } from './replicants';
+import { sc } from './speedcontrol';
 
 const config = nodecg().bundleConfig as Configschema;
-const sc = new SpeedcontrolUtil(nodecg());
 
 /**
  * Logs OBS streaming status changes.

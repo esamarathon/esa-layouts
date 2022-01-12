@@ -4,16 +4,15 @@ import { Asset } from '@shared/types';
 import clone from 'clone';
 import { getVideoDurationInSeconds } from 'get-video-duration';
 import { cwd } from 'process';
-import SpeedcontrolUtil from 'speedcontrol-util';
 import { TwitchCommercialTimer } from 'speedcontrol-util/types/speedcontrol/schemas';
 import { obsChangeScene } from './layouts'; // eslint-disable-line import/no-cycle
 import { logVideoPlay } from './util/logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { assetsVideos, obsData, videoPlayer } from './util/replicants';
+import { sc } from './util/speedcontrol';
 
 const config = (nodecg().bundleConfig as Configschema);
-const sc = new SpeedcontrolUtil(nodecg());
 
 let index = 0;
 let playlist: VideoPlayer['playlist'] = [];

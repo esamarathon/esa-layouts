@@ -2,9 +2,9 @@ import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import type { Tracker } from '@shared/types';
 import type { NeedleResponse } from 'needle';
 import needle from 'needle';
-import { get as nodecg } from './util/nodecg';
-import { mq } from './util/rabbitmq';
-import { donationTotal, notableDonations } from './util/replicants';
+import { get as nodecg } from '../util/nodecg';
+import { mq } from '../util/rabbitmq';
+import { donationTotal, notableDonations } from '../util/replicants';
 
 export const eventInfo: Tracker.EventInfo[] = [];
 const eventConfig = (nodecg().bundleConfig as Configschema).event;
@@ -178,9 +178,9 @@ async function setup(): Promise<void> {
     }
 
     /* eslint-disable @typescript-eslint/no-var-requires, global-require */
-    require('./tracker-bids').setup();
-    require('./tracker-prizes').setup();
-    require('./tracker-donations').setup();
+    require('./bids').setup();
+    require('./prizes').setup();
+    require('./donations').setup();
     /* eslint-enable */
   } catch (err) {
     nodecg().log.warn('[Tracker] Error setting up');

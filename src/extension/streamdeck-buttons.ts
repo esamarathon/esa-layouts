@@ -1,7 +1,7 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import SpeedcontrolUtil from 'speedcontrol-util';
 import { speak } from './text-to-speech';
-import { markDonationAsRead } from './tracker-donations';
+import { markDonationAsRead } from './tracker/donations';
 import { padTimeNumber } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';

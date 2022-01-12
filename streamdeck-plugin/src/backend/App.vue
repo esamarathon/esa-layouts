@@ -31,19 +31,20 @@ export default class extends Vue {
       const actionName = (data.action as string)?.split('.').pop() || '';
 
       if (['didReceiveSettings', 'willAppear'].includes(data.event)) {
+        const { settings } = data.payload;
         // Set titles for ttsdonations.
-        if (actionName.startsWith('ttsdonations')) {
+        if (actionName.startsWith('ttsdonations') && typeof settings.slot === 'number') {
           this.backend.sendToSDWS({
             event: 'setTitle',
             context: data.context,
-            payload: { title: `Play\nDonation\n${data.payload.settings.slot + 1}` },
+            payload: { title: `Play\nDonation\n${settings.slot + 1}` },
           });
         // Set titles for donationread.
-        } else if (actionName.startsWith('donationread')) {
+        } else if (actionName.startsWith('donationread') && typeof settings.slot === 'number') {
           this.backend.sendToSDWS({
             event: 'setTitle',
             context: data.context,
-            payload: { title: `Mark\nDonation\n${data.payload.settings.slot + 1}\nas Read` },
+            payload: { title: `Mark\nDonation\n${settings.slot + 1}\nas Read` },
           });
         }
         // Set titles for playerhudtrigger-message.

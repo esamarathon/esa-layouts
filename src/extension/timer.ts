@@ -10,18 +10,14 @@ const config = nodecg().bundleConfig as Configschema;
 // Controls the nodecg-speedcontrol timer when the big buttons are pressed.
 mq.evt.on('bigbuttonPressed', async (data) => {
   // Only listen to this event on stream 1.
-  if (config.event.thisEvent !== 1) {
-    return;
-  }
+  if (config.event.thisEvent !== 1) return;
 
   // If the button was pressed more than 10s ago, ignore it.
-  if (data.time.unix < (Date.now() / 1000) - 10) {
-    return;
-  }
+  if (data.time.unix < (Date.now() / 1000) - 10) return;
 
   // Stop/log warning if timestamp happens to be in the future.
   if (data.time.unix > (Date.now() / 1000) + 10) {
-    nodecg().log.warn('[Timer] Big button unix timestamp in the future, this is bad!');
+    nodecg().log.warn('[Timer] Big button unix timestamp is in the future, this is bad!');
     return;
   }
 
@@ -37,16 +33,16 @@ mq.evt.on('bigbuttonPressed', async (data) => {
         await sc.startTimer();
         break;
       case 'running':
+        // Only allow stop command to work if timer is more than 10s.
         if (sc.timer.value.milliseconds > 10 * 1000) {
           await sc.stopTimer(buttonID);
         }
         break;
       default:
-        // Don't do anything
         break;
     }
   } catch (err) {
-    // Drop for now
+    nodecg().log.debug('[Timer] Error changing timer state on bigbuttonPressed event:', err);
   }
 });
 
@@ -62,6 +58,7 @@ obs.on('currentSceneChanged', (current) => {
 });
 
 // Logs changes to the timer using helper function in logging.ts
+// TODO: This may be changed!
 sc.on('timerStarted', () => logTimerChange('started'));
 sc.on('timerPaused', () => logTimerChange('paused'));
 sc.on('timerResumed', () => logTimerChange('resumed'));

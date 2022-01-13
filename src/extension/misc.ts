@@ -1,7 +1,7 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import type { RunData } from 'speedcontrol-util/types';
 import { formatPronouns, getCurrentEventShort, getOtherStreamEventShort } from './util/helpers';
-import { logRunChange } from './util/logging';
+import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
@@ -72,7 +72,7 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
   }
 
   // This will also be triggered on server start up.
-  logRunChange(newVal);
+  mqLogging.logRunChange(newVal);
 
   init = true;
 });

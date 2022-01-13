@@ -1,5 +1,5 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
-import { logTimerChange } from './util/logging';
+import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
@@ -59,11 +59,11 @@ obs.on('currentSceneChanged', (current) => {
 
 // Logs changes to the timer using helper function in logging.ts
 // TODO: This may be changed!
-sc.on('timerStarted', () => logTimerChange('started'));
-sc.on('timerPaused', () => logTimerChange('paused'));
-sc.on('timerResumed', () => logTimerChange('resumed'));
-sc.on('timerStopped', () => logTimerChange('finished'));
-sc.on('timerReset', () => logTimerChange('reset'));
-sc.on('timerEdited', () => logTimerChange('edited'));
-sc.on('timerTeamStopped', (id) => logTimerChange('team_finished', id));
-sc.on('timerTeamUndone', (id) => logTimerChange('team_undid_finish', id));
+sc.on('timerStarted', () => mqLogging.logTimerChange('started'));
+sc.on('timerPaused', () => mqLogging.logTimerChange('paused'));
+sc.on('timerResumed', () => mqLogging.logTimerChange('resumed'));
+sc.on('timerStopped', () => mqLogging.logTimerChange('finished'));
+sc.on('timerReset', () => mqLogging.logTimerChange('reset'));
+sc.on('timerEdited', () => mqLogging.logTimerChange('edited'));
+sc.on('timerTeamStopped', (id) => mqLogging.logTimerChange('team_finished', id));
+sc.on('timerTeamUndone', (id) => mqLogging.logTimerChange('team_undid_finish', id));

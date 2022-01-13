@@ -1,7 +1,7 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import clone from 'clone';
 import sharp from 'sharp';
-import { logSceneSwitch, logStreamingStatusChange } from './util/logging';
+import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { obsData, serverTimestamp } from './util/replicants';
@@ -42,16 +42,16 @@ obs.on('connectionStatusChanged', (connected) => {
 
 obs.on('streamingStatusChanged', (streaming) => {
   obsData.value.streaming = streaming;
-  logStreamingStatusChange(streaming);
+  mqLogging.logStreamingStatusChange(streaming);
 });
 
 obs.on('currentSceneChanged', (current, last) => {
   obsData.value.scene = current;
   if (last) {
-    logSceneSwitch(last, 'end');
+    mqLogging.logSceneSwitch(last, 'end');
   }
   if (current) {
-    logSceneSwitch(current, 'start');
+    mqLogging.logSceneSwitch(current, 'start');
   }
 });
 

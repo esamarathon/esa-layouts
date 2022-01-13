@@ -6,7 +6,7 @@ import { getVideoDurationInSeconds } from 'get-video-duration';
 import { cwd } from 'process';
 import { TwitchCommercialTimer } from 'speedcontrol-util/types/speedcontrol/schemas';
 import { obsChangeScene } from './layouts'; // eslint-disable-line import/no-cycle
-import { logVideoPlay } from './util/logging';
+import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { assetsVideos, obsData, videoPlayer } from './util/replicants';
@@ -66,7 +66,7 @@ sc.on('timerStopped', () => {
 // Move this into below code?
 videoPlayer.on('change', (newVal, oldVal) => {
   if (newVal.current && newVal.current !== oldVal?.current) {
-    logVideoPlay(newVal.current);
+    mqLogging.logVideoPlay(newVal.current);
   }
   if (!newVal.playing && oldVal?.playing) {
     // obsData.value.disableTransitioning = false;

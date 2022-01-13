@@ -89,11 +89,8 @@ mq.evt.on('donationFullyProcessed', (data) => {
 
 let isFirstLogin = true;
 async function loginToTracker(): Promise<void> {
-  if (isFirstLogin) {
-    nodecg().log.info('[Tracker] Logging in');
-  } else {
-    nodecg().log.info('[Tracker] Refreshing session');
-  }
+  if (isFirstLogin) nodecg().log.info('[Tracker] Logging in');
+  else nodecg().log.info('[Tracker] Refreshing session');
 
   const loginURL = `https://${config.address}/admin/login/`;
   try {
@@ -156,6 +153,9 @@ async function setup(): Promise<void> {
   try {
     nodecg().log.info('[Tracker] Setting up');
 
+    // Log into the tracker first.
+    if (!useTestData) await loginToTracker();
+
     // Go through all events and compile the important info for them.
     const events = (Array.isArray(eventConfig.shorts)) ? eventConfig.shorts : [eventConfig.shorts];
     for (const [index, short] of events.entries()) {
@@ -168,8 +168,6 @@ async function setup(): Promise<void> {
     }
 
     if (!useTestData) {
-      await loginToTracker();
-
       // Get initial total from API and set an interval as a fallback.
       updateDonationTotalFromAPI(true);
       setInterval(updateDonationTotalFromAPI, 60 * 1000);

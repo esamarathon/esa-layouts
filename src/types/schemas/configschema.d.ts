@@ -47,6 +47,7 @@ export interface Configschema {
 				cameraCapture1: string;
 				cameraCapture2: string;
 				cameraCapture3: string;
+				twitchSources: string | [string] | [string, string];
 				videoPlayer: string;
 			};
 		};

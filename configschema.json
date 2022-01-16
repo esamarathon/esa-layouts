@@ -215,6 +215,23 @@
                   "type": "string",
                   "default": "Camera Capture 3"
                 },
+                "twitchSources": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "uniqueItems": true,
+                      "minItems": 1,
+                      "maxItems": 2
+                    }
+                  ],
+                  "default": "Twitch Source"
+                },
                 "videoPlayer": {
                   "type": "string",
                   "default": "Video Player Source"
@@ -228,6 +245,7 @@
                 "cameraCapture1",
                 "cameraCapture2",
                 "cameraCapture3",
+                "twitchSources",
                 "videoPlayer"
               ]
             }

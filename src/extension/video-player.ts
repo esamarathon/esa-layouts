@@ -1,3 +1,4 @@
+import { VideoPlayer } from '@esa-layouts/types/schemas';
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import Player from '@shared/extension/video-player';
 import { Asset } from '@shared/types';

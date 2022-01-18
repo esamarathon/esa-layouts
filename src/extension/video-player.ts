@@ -63,8 +63,10 @@ export async function startPlaylist(): Promise<void> {
       await changeScene({ scene: config.obs.names.scenes.intermission });
     }
     obsData.value.disableTransitioning = true;
-    // TODO: Add estimate of how long playlist will take.
     await player.playNext();
+    // Calculates when this playlist should end.
+    videoPlayer.value.estimatedFinishTimestamp = Date.now()
+      + (await player.calculatePlaylistLength() * 1000);
   } catch (err) {
     logError('[Video Player] Could not be started', err);
   }
@@ -165,6 +167,7 @@ player.on('videoEnded', async (item) => {
 player.on('playlistEnded', async () => {
   videoPlayer.value.playing = false;
   videoPlayer.value.current = null;
+  videoPlayer.value.estimatedFinishTimestamp = 0;
   obsData.value.disableTransitioning = false;
   // Simple server-to-server message we need; currently used for esa-commercials only.
   nodecg().sendMessage('videoPlayerFinished');

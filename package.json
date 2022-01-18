@@ -32,7 +32,6 @@
   },
   "dependencies": {
     "clone": "^2.1.2",
-    "get-video-duration": "3.0.2",
     "lodash": "^4.17.21",
     "module-alias": "^2.2.2",
     "moment": "^2.29.1",

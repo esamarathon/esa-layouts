@@ -36,7 +36,7 @@ export interface Configschema {
 				commercials: string;
 				gameLayout: string;
 				intermission: string;
-				videoPlayer: string;
+				intermissionPlayer: string;
 				countdown: string;
 			};
 			sources: {

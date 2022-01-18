@@ -166,7 +166,7 @@
                   "type": "string",
                   "default": "Intermission"
                 },
-                "videoPlayer": {
+                "intermissionPlayer": {
                   "type": "string",
                   "default": "Intermission Player"
                 },
@@ -179,7 +179,7 @@
                 "commercials",
                 "gameLayout",
                 "intermission",
-                "videoPlayer",
+                "intermissionPlayer",
                 "countdown"
               ]
             },

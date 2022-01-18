@@ -12,7 +12,7 @@ function getNonGameScenes(): string[] {
   return [
     obs.findScene(config.obs.names.scenes.commercials),
     obs.findScene(config.obs.names.scenes.intermission),
-    obs.findScene(config.obs.names.scenes.videoPlayer),
+    obs.findScene(config.obs.names.scenes.intermissionPlayer),
     obs.findScene(config.obs.names.scenes.countdown),
   ].filter(Boolean) as string[];
 }

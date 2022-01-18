@@ -41,7 +41,7 @@ export = (nodecg: NodeCG): ExtensionReturn => {
   require('./media-box');
   require('./text-to-speech');
   require('./music');
-  require('./video-player');
+  require('./intermission-player');
 
   return {
     obs: require('./util/obs').default,

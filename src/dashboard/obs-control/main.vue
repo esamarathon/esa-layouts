@@ -128,7 +128,7 @@ export default class extends Vue {
     const intermissionScenes = [
       this.obsConfig.names.scenes.commercials,
       this.obsConfig.names.scenes.intermission,
-      this.obsConfig.names.scenes.videoPlayer,
+      this.obsConfig.names.scenes.intermissionPlayer,
       this.obsConfig.names.scenes.countdown,
     ];
     return this.obsData.transitioning

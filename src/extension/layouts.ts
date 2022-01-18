@@ -1,11 +1,11 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import Countdown from '@shared/extension/countdown';
 import clone from 'clone';
+import { startPlaylist } from './intermission-player';
 import { get as nodecg } from './util/nodecg';
 import obs, { changeScene } from './util/obs';
 import { capturePositions, currentRunDelay, delayedTimer, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants';
 import { sc } from './util/speedcontrol';
-import { startPlaylist } from './video-player';
 
 const evtConfig = (nodecg().bundleConfig as Configschema).event;
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
@@ -228,7 +228,7 @@ sc.twitchCommercialTimer.on('change', async (newVal) => {
     && videoPlayer.value.playlist.length
     && obs.isCurrentScene(obsConfig.names.scenes.commercials)) {
     try {
-      await obs.changeScene(obsConfig.names.scenes.videoPlayer);
+      await obs.changeScene(obsConfig.names.scenes.intermissionPlayer);
       obsData.value.disableTransitioning = true;
     } catch (err) {
       nodecg().log.warn('[Layouts] Could not switch to video player scene'
@@ -241,10 +241,10 @@ sc.twitchCommercialTimer.on('change', async (newVal) => {
 
 obs.on('currentSceneChanged', () => {
   /* // If switched to video player, disable transitioning.
-  if (obs.isCurrentScene(obsConfig.names.scenes.videoPlayer)) {
+  if (obs.isCurrentScene(obsConfig.names.scenes.intermissionPlayer)) {
     obsData.value.disableTransitioning = true;
   // If we switch from the video player to the intermission while a video is playing.
-  } else if (last === obs.findScene(obsConfig.names.scenes.videoPlayer)
+  } else if (last === obs.findScene(obsConfig.names.scenes.intermissionPlayer)
   && obs.isCurrentScene(obsConfig.names.scenes.intermission)) {
     // Tell the video player to stop. This will only trigger if we didn't trigger
     // the change in the last 2 seconds.
@@ -257,7 +257,8 @@ obs.on('currentSceneChanged', () => {
     }
   // If the video player is playing and we switch from either video player or intermission,
   // tell the video player to stop.
-  } else if (videoPlayer.value.playing && !obs.isCurrentScene(obsConfig.names.scenes.videoPlayer)
+  } else if (videoPlayer.value.playing
+  && !obs.isCurrentScene(obsConfig.names.scenes.intermissionPlayer)
   && !obs.isCurrentScene(obsConfig.names.scenes.intermission)) {
     stopEarly();
     obsData.value.disableTransitioning = false;
@@ -266,9 +267,9 @@ obs.on('currentSceneChanged', () => {
   } */
 });
 
-nodecg().listenFor('endVideoPlayer', () => {
-  // obsData.value.disableTransitioning = false;
-});
+/* nodecg().listenFor('endVideoPlayer', () => {
+  obsData.value.disableTransitioning = false;
+}); */
 
 /* export async function changeScene(scene: string): Promise<void> {
   sceneChangeCodeTriggered = Date.now();

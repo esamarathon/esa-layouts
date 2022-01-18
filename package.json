@@ -144,10 +144,10 @@
         "headerColor": "#c49215"
       },
       {
-        "name": "video-player-control",
-        "title": "Video Player Control",
+        "name": "intermission-player-control",
+        "title": "Intermission Player Control",
         "width": 3,
-        "file": "video-player-control.html",
+        "file": "intermission-player-control.html",
         "workspace": "Z2 - ESA Advanced",
         "headerColor": "#c49215"
       },

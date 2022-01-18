@@ -56,10 +56,10 @@ export async function startPlaylist(): Promise<void> {
     videoPlayer.value.playing = true;
     // Switch to correct scene depending on if first element has a video or not.
     if (playlist[0].video) {
-      await changeScene({ scene: config.obs.names.scenes.videoPlayer });
+      await changeScene({ scene: config.obs.names.scenes.intermissionPlayer });
     } else {
       // Does not work if first element is not a video and we're already on the
-      // video player scene, but waitForCommercialEnd handles that.
+      // intermission player scene, but waitForCommercialEnd handles that.
       await changeScene({ scene: config.obs.names.scenes.intermission });
     }
     obsData.value.disableTransitioning = true;
@@ -68,7 +68,7 @@ export async function startPlaylist(): Promise<void> {
     videoPlayer.value.estimatedFinishTimestamp = Date.now()
       + (await player.calculatePlaylistLength() * 1000);
   } catch (err) {
-    logError('[Video Player] Could not be started', err);
+    logError('[Intermission Player] Could not be started', err);
   }
 }
 
@@ -109,7 +109,7 @@ sc.on('timerStopped', () => {
       },
       [],
     );
-    nodecg().log.info('[Video Player] Automatically set playlist from run data');
+    nodecg().log.info('[Intermission Player] Automatically set playlist from run data');
   }
 });
 
@@ -121,24 +121,24 @@ videoPlayer.on('change', (newVal, oldVal) => {
   }
 });
 
-// Used if a user manually switches to the video player scene in OBS.
+// Used if a user manually switches to the intermission player scene in OBS.
 obs.conn.on('TransitionBegin', (data) => {
-  if (obs.findScene(config.obs.names.scenes.videoPlayer) === data['to-scene']
+  if (obs.findScene(config.obs.names.scenes.intermissionPlayer) === data['to-scene']
   && !videoPlayer.value.playing) {
     startPlaylist();
   }
 });
 
-// Triggered from the video player control to stop early.
-nodecg().listenFor('stopVideoPlayerEarly', () => {
+// Triggered from the intermission player control to stop early.
+nodecg().listenFor('stopIntermissionPlayerEarly', () => {
   player.endPlaylistEarly();
 });
 
 player.on('videoStarted', async (item) => {
   videoPlayer.value.current = item.video?.sum || null;
-  // Change to video player scene if needed and not done already.
+  // Change to intermission player scene if needed and not done already.
   if (item.video) {
-    await changeScene({ scene: config.obs.names.scenes.videoPlayer, force: true });
+    await changeScene({ scene: config.obs.names.scenes.intermissionPlayer, force: true });
   } else {
     await changeScene({ scene: config.obs.names.scenes.intermission, force: true });
   }
@@ -160,7 +160,7 @@ player.on('videoEnded', async (item) => {
     try {
       await player.playNext();
     } catch (err) {
-      logError('[Video Player] Could not play next video', err);
+      logError('[Intermission Player] Could not play next video', err);
       player.endPlaylistEarly();
     }
   } catch (err) { /* do nothing */ }
@@ -173,7 +173,7 @@ player.on('playlistEnded', async (early) => {
   videoPlayer.value.estimatedFinishTimestamp = 0;
   obsData.value.disableTransitioning = false;
   // Simple server-to-server message we need; currently used for esa-commercials only.
-  nodecg().sendMessage('videoPlayerFinished');
+  if (!early) nodecg().sendMessage('intermissionPlayerFinished');
   await changeScene({ scene: config.obs.names.scenes.intermission, force: true });
 });
 

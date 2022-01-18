@@ -14,7 +14,7 @@ export async function changeScene(
   // Don't change scene if identical, we're currently transitioning, transitioning is disabled,
   // or if we triggered a scene change here in the last 2 seconds.
   if (sceneChangeCodeTriggered > (Date.now() - 2000)
-    || obsData.value.scene === scene
+    || obs.isCurrentScene(scene)
     || (!force && (obsData.value.transitioning
     || obsData.value.disableTransitioning))) {
     return;

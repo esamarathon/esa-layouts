@@ -1,12 +1,11 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import Countdown from '@shared/extension/countdown';
 import clone from 'clone';
-import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
-import obs from './util/obs';
+import obs, { changeScene } from './util/obs';
 import { assetsVideos, capturePositions, currentRunDelay, delayedTimer, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants';
 import { sc } from './util/speedcontrol';
-import { startPlaylist } from './video-player'; // eslint-disable-line import/no-cycle
+import { startPlaylist } from './video-player';
 
 const evtConfig = (nodecg().bundleConfig as Configschema).event;
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
@@ -240,7 +239,6 @@ sc.twitchCommercialTimer.on('change', async (newVal) => {
   } */
 });
 
-let sceneChangeCodeTriggered = 0;
 obs.on('currentSceneChanged', () => {
   /* // If switched to video player, disable transitioning.
   if (obs.isCurrentScene(obsConfig.names.scenes.videoPlayer)) {
@@ -277,59 +275,21 @@ nodecg().listenFor('endVideoPlayer', () => {
   await obs.changeScene(scene);
 } */
 
-// eslint-disable-next-line import/prefer-default-export
-export async function obsChangeScene(
-  { scene, force = false }: { scene: string, force?: boolean },
-): Promise<void> {
-  // Don't change scene if identical, we're currently transitioning, transitioning is disabled,
-  // or if we triggered a scene change here in the last 2 seconds.
-  if (sceneChangeCodeTriggered > (Date.now() - 2000)
-    || obsData.value.scene === scene
-    || (!force && (obsData.value.transitioning
-    || obsData.value.disableTransitioning))) {
-    return;
-  }
-  try {
-    if (currentRunDelay.value.audio === 0
-      || (!obs.isCurrentScene(obsConfig.names.scenes.gameLayout)
-      && obs.findScene(scene) !== obsConfig.names.scenes.gameLayout)) {
-      await obs.changeScene(scene);
-      sceneChangeCodeTriggered = Date.now();
-    } else {
-      const delay = currentRunDelay.value.audio;
-      obsData.value.disableTransitioning = true;
-      obsData.value.transitionTimestamp = Date.now() + delay;
-      // Simple server-to-server message we need.
-      nodecg().sendMessage('obsTransitionQueued', scene);
-      try {
-        await new Promise((res) => { setTimeout(res, delay); });
-        obsData.value.disableTransitioning = false;
-        await obs.changeScene(scene);
-        sceneChangeCodeTriggered = Date.now();
-      } catch (err) {
-        logError('[Layouts] Could not change scene (on delay) [name: %s]', err, scene);
-      }
-    }
-  } catch (err) {
-    logError('[Layouts] Could not change scene [name: %s]', err, scene);
-  }
-}
-
-nodecg().listenFor('obsChangeScene', obsChangeScene);
+nodecg().listenFor('obsChangeScene', changeScene);
 
 nodecg().listenFor('startIntermission', async () => {
   if (videoPlayer.value.playlist.length) {
     const asset = assetsVideos.value.find((v) => v.sum === videoPlayer.value.playlist[0].sum);
     videoPlayer.value.playing = true; // Make sure the code is aware we are going to play.
     if (asset) {
-      await obsChangeScene({ scene: obsConfig.names.scenes.videoPlayer });
+      await changeScene({ scene: obsConfig.names.scenes.videoPlayer });
     } else {
-      await obsChangeScene({ scene: obsConfig.names.scenes.intermission });
+      await changeScene({ scene: obsConfig.names.scenes.intermission });
     }
     startPlaylist();
   } else if (obs.findScene(obsConfig.names.scenes.commercials)) {
-    await obsChangeScene({ scene: obsConfig.names.scenes.commercials });
+    await changeScene({ scene: obsConfig.names.scenes.commercials });
   } else {
-    await obsChangeScene({ scene: obsConfig.names.scenes.intermission });
+    await changeScene({ scene: obsConfig.names.scenes.intermission });
   }
 });

@@ -58,6 +58,8 @@ export async function startPlaylist(): Promise<void> {
     if (playlist[0].video) {
       await changeScene({ scene: config.obs.names.scenes.videoPlayer });
     } else {
+      // Does not work if first element is not a video and we're already on the
+      // video player scene, but waitForCommercialEnd handles that.
       await changeScene({ scene: config.obs.names.scenes.intermission });
     }
     obsData.value.disableTransitioning = true;

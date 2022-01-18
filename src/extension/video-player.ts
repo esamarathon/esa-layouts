@@ -147,19 +147,22 @@ player.on('videoEnded', async (item) => {
       videoPlayer.value.plays[item.video.sum] += 1;
     }
   }
-  if (item.commercial) await waitForCommercialEnd();
+  // Double wrapped try/catch here so if player is stopped
+  // during commercials, code stops and does not continue.
   try {
-    await player.playNext();
-  } catch (err) {
-    logError('[Video Player] Could not play next video', err);
-    player.endPlaylistEarly();
-  }
+    if (item.commercial) await waitForCommercialEnd();
+    try {
+      await player.playNext();
+    } catch (err) {
+      logError('[Video Player] Could not play next video', err);
+      player.endPlaylistEarly();
+    }
+  } catch (err) { /* do nothing */ }
 });
 
 player.on('playlistEnded', async () => {
   videoPlayer.value.playing = false;
   videoPlayer.value.current = null;
-  videoPlayer.value.playlist.length = 0;
   obsData.value.disableTransitioning = false;
   // Simple server-to-server message we need; currently used for esa-commercials only.
   nodecg().sendMessage('videoPlayerFinished');

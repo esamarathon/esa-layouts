@@ -84,13 +84,14 @@
           ({{ (currentRunDelay.audio / 1000).toFixed(1) }}s delay)
         </template>
       </v-btn>
-      <template v-if="obsData.gameLayoutScreenshot && gameLayoutPreviewToggle">
+      <template v-if="evtConfig.online && obsData.gameLayoutScreenshot && gameLayoutPreviewToggle">
         <div class="mt-3 mb-1">
           "Game Layout" Preview (refreshes every second):
         </div>
         <img :src="obsData.gameLayoutScreenshot" :style="{ width: '100%' }">
       </template>
       <v-switch
+        v-if="evtConfig.online"
         v-model="gameLayoutPreviewToggle"
         class="ma-2 mb-0"
         hide-details
@@ -113,6 +114,7 @@ export default class extends Vue {
   @replicantNS.State((s) => s.reps.currentRunDelay) readonly currentRunDelay!: CurrentRunDelay;
   @replicantNS.State((s) => s.reps.serverTimestamp) readonly serverTimestamp!: ServerTimestamp;
   @replicantNS.State((s) => s.reps.videoPlayer) readonly videoPlayer!: VideoPlayer;
+  evtConfig = (nodecg.bundleConfig as Configschema).event;
   obsConfig = (nodecg.bundleConfig as Configschema).obs;
   gameLayoutPreviewToggle = true;
 

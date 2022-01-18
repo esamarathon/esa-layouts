@@ -123,6 +123,11 @@ nodecg().listenFor('startVideoPlayer', async () => {
   startPlaylist();
 });
 
+// Triggered from the video player control to stop early.
+nodecg().listenFor('stopVideoPlayerEarly', () => {
+  player.endPlaylistEarly();
+});
+
 player.on('videoStarted', async (item) => {
   videoPlayer.value.current = item.video?.sum || null;
   // Change to video player scene if needed and not done already.
@@ -147,7 +152,7 @@ player.on('videoEnded', async (item) => {
     await player.playNext();
   } catch (err) {
     logError('[Video Player] Could not play next video', err);
-    // TODO: Force video player to end early.
+    player.endPlaylistEarly();
   }
 });
 

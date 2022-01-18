@@ -3,7 +3,7 @@ import Countdown from '@shared/extension/countdown';
 import clone from 'clone';
 import { get as nodecg } from './util/nodecg';
 import obs, { changeScene } from './util/obs';
-import { assetsVideos, capturePositions, currentRunDelay, delayedTimer, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants';
+import { capturePositions, currentRunDelay, delayedTimer, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants';
 import { sc } from './util/speedcontrol';
 import { startPlaylist } from './video-player';
 
@@ -278,18 +278,14 @@ nodecg().listenFor('endVideoPlayer', () => {
 nodecg().listenFor('obsChangeScene', changeScene);
 
 nodecg().listenFor('startIntermission', async () => {
-  if (videoPlayer.value.playlist.length) {
-    const asset = assetsVideos.value.find((v) => v.sum === videoPlayer.value.playlist[0].sum);
-    videoPlayer.value.playing = true; // Make sure the code is aware we are going to play.
-    if (asset) {
-      await changeScene({ scene: obsConfig.names.scenes.videoPlayer });
+  // Tries to start video playlist, if cannot be done then acts as if there isn't one.
+  try {
+    await startPlaylist();
+  } catch (err) {
+    if (obs.findScene(obsConfig.names.scenes.commercials)) {
+      await changeScene({ scene: obsConfig.names.scenes.commercials });
     } else {
       await changeScene({ scene: obsConfig.names.scenes.intermission });
     }
-    startPlaylist();
-  } else if (obs.findScene(obsConfig.names.scenes.commercials)) {
-    await changeScene({ scene: obsConfig.names.scenes.commercials });
-  } else {
-    await changeScene({ scene: obsConfig.names.scenes.intermission });
   }
 });

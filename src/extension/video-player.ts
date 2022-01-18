@@ -12,7 +12,7 @@ import { assetsVideos, obsData, videoPlayer } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const config = (nodecg().bundleConfig as Configschema);
-const player = new Player(nodecg(), config.obs, obs);
+const player = new Player(config.obs, obs);
 
 // Reset replicant values on startup.
 videoPlayer.value.playing = false;
@@ -21,8 +21,7 @@ videoPlayer.value.current = null;
 // Helper function that returns a promise once commercials have ended.
 async function waitForCommercialEnd(): Promise<void> {
   // If we're not on the normal intermission scene when we should be, switch to it!
-  if (sc.twitchCommercialTimer.value.secondsRemaining > 2
-  && !obs.isCurrentScene(config.obs.names.scenes.intermission)) {
+  if (sc.twitchCommercialTimer.value.secondsRemaining > 2) {
     await changeScene({ scene: config.obs.names.scenes.intermission, force: true });
   }
   return new Promise((res, rej) => {
@@ -51,11 +50,17 @@ function generatePlaylist(): { id: string, video?: Asset, commercial: number }[]
 
 // eslint-disable-next-line import/prefer-default-export
 export async function startPlaylist(): Promise<void> {
-  const playist = generatePlaylist();
+  const playlist = generatePlaylist();
   try {
-    player.loadPlaylist(playist);
-    obsData.value.disableTransitioning = true;
+    player.loadPlaylist(playlist);
     videoPlayer.value.playing = true;
+    // Switch to correct scene depending on if first element has a video or not.
+    if (playlist[0].video) {
+      await changeScene({ scene: config.obs.names.scenes.videoPlayer });
+    } else {
+      await changeScene({ scene: config.obs.names.scenes.intermission });
+    }
+    obsData.value.disableTransitioning = true;
     // TODO: Add estimate of how long playlist will take.
     await player.playNext();
   } catch (err) {
@@ -121,8 +126,10 @@ nodecg().listenFor('startVideoPlayer', async () => {
 player.on('videoStarted', async (item) => {
   videoPlayer.value.current = item.video?.sum || null;
   // Change to video player scene if needed and not done already.
-  if (item.video && !obs.isCurrentScene(config.obs.names.scenes.videoPlayer)) {
+  if (item.video) {
     await changeScene({ scene: config.obs.names.scenes.videoPlayer, force: true });
+  } else {
+    await changeScene({ scene: config.obs.names.scenes.intermission, force: true });
   }
 });
 
@@ -151,9 +158,7 @@ player.on('playlistEnded', async () => {
   obsData.value.disableTransitioning = false;
   // Simple server-to-server message we need; currently used for esa-commercials only.
   nodecg().sendMessage('videoPlayerFinished');
-  if (!obs.isCurrentScene(config.obs.names.scenes.intermission)) {
-    await changeScene({ scene: config.obs.names.scenes.intermission, force: true });
-  }
+  await changeScene({ scene: config.obs.names.scenes.intermission, force: true });
 });
 
 player.on('playCommercial', async (item) => {

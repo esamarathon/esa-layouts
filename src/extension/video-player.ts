@@ -122,9 +122,11 @@ videoPlayer.on('change', (newVal, oldVal) => {
 });
 
 // Used if a user manually switches to the video player scene in OBS.
-// TODO: Detatch this from browser message, do all server side!
-nodecg().listenFor('startVideoPlayer', async () => {
-  startPlaylist();
+obs.conn.on('TransitionBegin', (data) => {
+  if (obs.findScene(config.obs.names.scenes.videoPlayer) === data['to-scene']
+  && !videoPlayer.value.playing) {
+    startPlaylist();
+  }
 });
 
 // Triggered from the video player control to stop early.

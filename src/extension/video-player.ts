@@ -164,9 +164,10 @@ player.on('videoEnded', async (item) => {
   } catch (err) { /* do nothing */ }
 });
 
-player.on('playlistEnded', async () => {
+player.on('playlistEnded', async (early) => {
   videoPlayer.value.playing = false;
   videoPlayer.value.current = null;
+  if (!early) videoPlayer.value.playlist.length = 0;
   videoPlayer.value.estimatedFinishTimestamp = 0;
   obsData.value.disableTransitioning = false;
   // Simple server-to-server message we need; currently used for esa-commercials only.

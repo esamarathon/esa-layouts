@@ -1,6 +1,6 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import type { RunData } from 'speedcontrol-util/types';
-import { formatPronouns, getCurrentEventShort, getOtherStreamEventShort } from './util/helpers';
+import { formatPronouns, getOtherStreamEventShort } from './util/helpers';
 import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
@@ -51,7 +51,7 @@ mq.evt.on('gameSceneChanged', (data) => {
 // When someone scans in on one of the big timer buttons.
 // Currently only used for commentators.
 mq.evt.on('bigbuttonTagScanned', (data) => {
-  if (getCurrentEventShort() === data.flagcarrier.group) {
+  if (data.flagcarrier.group === 'stream1') {
     const name = data.user.displayName;
     nodecg().sendMessage('bigbuttonTagScanned', data);
     if (!commentators.value.includes(name)) {

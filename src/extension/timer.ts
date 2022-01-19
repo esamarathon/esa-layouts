@@ -22,7 +22,11 @@ mq.evt.on('bigbuttonPressed', async (data) => {
   }
 
   const run = sc.getCurrentRun();
-  const buttonID = (run && run.teams.length > 1) ? data.button_id - 1 : 0;
+  let buttonID = (run && run.teams.length > 1) ? data.button_id - 1 : 0;
+
+  // Makes buttons 1/2 act as the same, as puts 3/4(+) at 2/3(+).
+  if (buttonID === 0 || buttonID === 1) buttonID = 0;
+  else if (buttonID >= 2) buttonID -= 1;
 
   try {
     // Note: the nodecg-speedcontrol bundle will check if it *can* do these actions,

@@ -124,6 +124,7 @@
     "node_modules"
   ],
   "references": [
+    { "path": "./shared/extension/audio-normaliser" },
     { "path": "./shared/extension/countdown" },
     { "path": "./shared/extension/mediabox" },
     { "path": "./shared/extension/music" },

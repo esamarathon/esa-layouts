@@ -1,4 +1,5 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
+import AudioNormaliser from '@shared/extension/audio-normaliser';
 import type { RunData } from 'speedcontrol-util/types';
 import { formatPronouns, getOtherStreamEventShort } from './util/helpers';
 import * as mqLogging from './util/mq-logging';
@@ -9,6 +10,7 @@ import { commentators, donationReader, otherStreamData } from './util/replicants
 import { sc } from './util/speedcontrol';
 
 const config = (nodecg().bundleConfig as Configschema);
+new AudioNormaliser(nodecg()); // eslint-disable-line no-new
 
 // Screened data from our moderation tool.
 mq.evt.on('newScreenedSub', (data) => {

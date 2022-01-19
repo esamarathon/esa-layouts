@@ -56,7 +56,7 @@ mq.evt.on('gameSceneChanged', (data) => {
 // When someone scans in on one of the big timer buttons.
 // Currently only used for commentators.
 mq.evt.on('bigbuttonTagScanned', (data) => {
-  if (data.flagcarrier.group === 'stream1') {
+  if (config.event.thisEvent === 1 && data.flagcarrier.group === 'stream1') {
     const name = data.user.displayName;
     nodecg().sendMessage('bigbuttonTagScanned', data);
     if (!commentators.value.includes(name)) {

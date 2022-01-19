@@ -5,15 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var path_1 = __importDefault(require("path"));
 /**
  * Calculates the absolute file path to one of our local replicant schemas.
- * @param schemaName the replicant/schema filename.
+ * @param schemaName The replicant/schema filename.
  */
 function buildSchemaPath(schemaName) {
     return path_1.default.resolve(__dirname, '../../../schemas', "".concat(encodeURIComponent(schemaName), ".json"));
 }
-var MediaBox = /** @class */ (function () {
-    function MediaBox(nodecg) {
+var CountdownClass = /** @class */ (function () {
+    function CountdownClass(nodecg) {
         var _this = this;
-        // this.nodecg = nodecg;
         this.countdown = nodecg.Replicant('countdown', { schemaPath: buildSchemaPath('countdown') });
         nodecg.listenFor('startCountdown', function (time) {
             if (!/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(time)) {
@@ -21,13 +20,11 @@ var MediaBox = /** @class */ (function () {
             }
             var now = new Date();
             var then = new Date(now.getFullYear(), now.getMonth(), now.getDate(), Number(time.split(':')[0]), Number(time.split(':')[1]));
-            if (_this.countdownTimeout) {
+            if (_this.countdownTimeout)
                 clearTimeout(_this.countdownTimeout);
-            }
             var diff = then.getTime() - now.getTime();
-            if (diff <= 0) {
+            if (diff <= 0)
                 return;
-            }
             _this.countdown.value = {
                 originalDuration: diff,
                 remaining: diff,
@@ -37,7 +34,7 @@ var MediaBox = /** @class */ (function () {
         });
         this.updateCountdownTimer();
     }
-    MediaBox.prototype.updateCountdownTimer = function () {
+    CountdownClass.prototype.updateCountdownTimer = function () {
         var _this = this;
         var cdTimer = this.countdown.value;
         var remaining = cdTimer.originalDuration - (Date.now() - cdTimer.timestamp);
@@ -49,6 +46,6 @@ var MediaBox = /** @class */ (function () {
             this.countdown.value.remaining = 0;
         }
     };
-    return MediaBox;
+    return CountdownClass;
 }());
-module.exports = MediaBox;
+module.exports = CountdownClass;

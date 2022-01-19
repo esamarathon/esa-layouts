@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setup = void 0;
 const needle_1 = __importDefault(require("needle"));
-const tracker_1 = require("./tracker");
-const nodecg_1 = require("./util/nodecg");
-const replicants_1 = require("./util/replicants");
+const _1 = require(".");
+const nodecg_1 = require("../util/nodecg");
+const replicants_1 = require("../util/replicants");
 const config = (0, nodecg_1.get)().bundleConfig.tracker;
 const { useTestData } = (0, nodecg_1.get)().bundleConfig;
 const refreshTime = 60 * 1000; // Get prizes every 60s.
@@ -31,8 +31,8 @@ function processRawPrizes(rawPrizes) {
 // We always get these from the first listed event, in the case of multiple tracker events.
 async function updatePrizes() {
     try {
-        const resp = await (0, needle_1.default)('get', `https://${config.address}/search/?event=${tracker_1.eventInfo[0].id}&type=prize`, {
-            cookies: (0, tracker_1.getCookies)(),
+        const resp = await (0, needle_1.default)('get', `https://${config.address}/search/?event=${_1.eventInfo[0].id}&type=prize`, {
+            cookies: (0, _1.getCookies)(),
         });
         const currentPrizes = processRawPrizes(resp.body);
         replicants_1.prizes.value = currentPrizes;

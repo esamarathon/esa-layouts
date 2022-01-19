@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setup = exports.markDonationAsRead = void 0;
 const needle_1 = __importDefault(require("needle"));
-const tracker_1 = require("./tracker");
-const nodecg_1 = require("./util/nodecg");
-const replicants_1 = require("./util/replicants");
+const nodecg_1 = require("../util/nodecg");
+const replicants_1 = require("../util/replicants");
+const index_1 = require("./index");
 const eventConfig = (0, nodecg_1.get)().bundleConfig.event;
 const config = (0, nodecg_1.get)().bundleConfig.tracker;
 const { useTestData } = (0, nodecg_1.get)().bundleConfig;
@@ -34,9 +34,9 @@ function processToReadDonations(donations) {
 async function updateToReadDonations() {
     clearTimeout(updateTimeout); // Clear timeout in case this is triggered from a message.
     try {
-        const resp = await (0, needle_1.default)('get', `https://${config.address}/search/?event=${tracker_1.eventInfo[eventConfig.thisEvent - 1].id}`
+        const resp = await (0, needle_1.default)('get', `https://${config.address}/search/?event=${index_1.eventInfo[eventConfig.thisEvent - 1].id}`
             + '&type=donation&feed=toread', {
-            cookies: (0, tracker_1.getCookies)(),
+            cookies: (0, index_1.getCookies)(),
         });
         const currentDonations = processToReadDonations(resp.body);
         replicants_1.donationsToRead.value = currentDonations;
@@ -56,7 +56,7 @@ async function markDonationAsRead(donationID) {
     try {
         const resp = await (0, needle_1.default)('get', `https://${config.address}/edit/?type=donation&id=${donationID}`
             + '&readstate=READ&commentstate=APPROVED', {
-            cookies: (0, tracker_1.getCookies)(),
+            cookies: (0, index_1.getCookies)(),
         });
         if (resp.statusCode === 200) {
             (0, nodecg_1.get)().log.info(`[Tracker] Successfully marked donation ${donationID} as read`);

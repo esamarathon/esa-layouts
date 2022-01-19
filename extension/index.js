@@ -1,7 +1,7 @@
 "use strict";
-/* eslint-disable global-require */
+/* eslint-disable global-require, @typescript-eslint/no-var-requires */
 // This must go first so we can use module aliases!
-/* eslint-disable import/first, @typescript-eslint/no-var-requires */
+/* eslint-disable import/first */
 require('module-alias').addAlias('@esa-layouts', require('path').join(__dirname, '.'));
 require('module-alias').addAlias('@shared', require('path').join(__dirname, '../shared'));
 const nodecg_1 = require("./util/nodecg");
@@ -19,6 +19,10 @@ module.exports = (nodecg) => {
     if (useTestData) {
         nodecg.log.warn('USING TEST DATA, MAKE SURE TO DISABLE THIS IN PRODUCTION!');
     }
+    /**
+     * Because of how `import`s work, it helps to use `require`s to force
+     * things to be loaded *after* the NodeCG context is set.
+     */
     require('./obs-data');
     require('./layouts');
     require('./tracker');
@@ -29,7 +33,7 @@ module.exports = (nodecg) => {
     require('./media-box');
     require('./text-to-speech');
     require('./music');
-    require('./video-player');
+    require('./intermission-player');
     return {
         obs: require('./util/obs').default,
         mixer: require('./mixer'),

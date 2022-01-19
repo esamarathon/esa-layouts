@@ -3,5 +3,10 @@ export namespace OBS {
     enabled: boolean;
     address: string;
     password: string;
+    names: {
+      sources: {
+        videoPlayer: string;
+      };
+    };
   }
 }

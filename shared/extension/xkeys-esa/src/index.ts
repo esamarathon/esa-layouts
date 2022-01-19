@@ -68,10 +68,8 @@ class XKeysClass extends EventEmitter {
   }
 
   setBacklight(keyIndex: number | string, on = true, redLight?: boolean, flashing?: boolean): void {
-    if (!this.config.enabled) {
-      // XKeys not enabled, don't even try to set.
-      return;
-    }
+    // XKeys not enabled, don't even try to set.
+    if (!this.config.enabled) return;
     if (!this.panel) {
       this.nodecg.log.warn(`[XKeys] Cannot set backlight on ${keyIndex}, panel not connected`);
       return;

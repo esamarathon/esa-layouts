@@ -14,11 +14,26 @@
     "password": {
       "type": "string",
       "default": ""
+    },
+    "names": {
+      "type": "object",
+      "properties": {
+        "sources": {
+          "type": "object",
+          "properties": {
+            "videoPlayer": {
+              "type": "string",
+              "default": "Video Player Source"
+            }
+          }
+        }
+      }
     }
   },
   "required": [
     "enabled",
     "address",
-    "password"
+    "password",
+    "names"
   ]
 }

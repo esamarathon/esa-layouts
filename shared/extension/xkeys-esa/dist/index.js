@@ -69,10 +69,9 @@ var XKeysClass = /** @class */ (function (_super) {
     };
     XKeysClass.prototype.setBacklight = function (keyIndex, on, redLight, flashing) {
         if (on === void 0) { on = true; }
-        if (!this.config.enabled) {
-            // XKeys not enabled, don't even try to set.
+        // XKeys not enabled, don't even try to set.
+        if (!this.config.enabled)
             return;
-        }
         if (!this.panel) {
             this.nodecg.log.warn("[XKeys] Cannot set backlight on ".concat(keyIndex, ", panel not connected"));
             return;

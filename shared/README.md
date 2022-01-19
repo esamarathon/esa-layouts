@@ -20,6 +20,10 @@ A repository which houses several elements that are used by mutiple [NodeCG](htt
       ],
     }
     ```
+- To make sure the above part works, you will also want to add this line in your `extension/index.ts` file:
+  - ```
+    require('module-alias').addAlias('@shared', require('path').join(__dirname, '../shared'));
+    ```
 - You will want to add these paths to your `tsconfig.browser.json` in the `include` array:
   - ```
     "include": [
@@ -42,11 +46,13 @@ A repository which houses several elements that are used by mutiple [NodeCG](htt
 - You will want to add these to your `tsconfig.extension.json` as `references`:
   - ```
     "references": [
+      { "path": "./shared/extension/audio-normaliser" },
       { "path": "./shared/extension/countdown" },
       { "path": "./shared/extension/mediabox" },
       { "path": "./shared/extension/music" },
       { "path": "./shared/extension/obs" },
       { "path": "./shared/extension/rabbitmq" },
+      { "path": "./shared/extension/video-player" },
       { "path": "./shared/extension/x32" },
       { "path": "./shared/extension/xkeys-esa" }
     ]

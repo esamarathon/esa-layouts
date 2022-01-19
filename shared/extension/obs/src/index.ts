@@ -75,7 +75,6 @@ class OBS extends EventEmitter {
         password: this.config.password,
       });
       this.connected = true;
-      await this.conn.send('SetHeartbeat', { enable: true });
       const scenes = await this.conn.send('GetSceneList');
 
       // Get current scene on connection.

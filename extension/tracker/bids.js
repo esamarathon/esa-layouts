@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setup = void 0;
 const needle_1 = __importDefault(require("needle"));
-const tracker_1 = require("./tracker");
-const nodecg_1 = require("./util/nodecg");
-const replicants_1 = require("./util/replicants");
+const _1 = require(".");
+const nodecg_1 = require("../util/nodecg");
+const replicants_1 = require("../util/replicants");
 const eventConfig = (0, nodecg_1.get)().bundleConfig.event;
 const config = (0, nodecg_1.get)().bundleConfig.tracker;
 const { useTestData } = (0, nodecg_1.get)().bundleConfig;
@@ -87,9 +87,9 @@ function processRawBids(rawBids) {
 // Get the open bids from the API.
 async function updateBids() {
     try {
-        const resp = await (0, needle_1.default)('get', `https://${config.address}/search/?event=${tracker_1.eventInfo[eventConfig.thisEvent - 1].id}`
+        const resp = await (0, needle_1.default)('get', `https://${config.address}/search/?event=${_1.eventInfo[eventConfig.thisEvent - 1].id}`
             + '&type=allbids&state=OPENED', {
-            cookies: (0, tracker_1.getCookies)(),
+            cookies: (0, _1.getCookies)(),
         });
         const currentBids = processRawBids(resp.body);
         replicants_1.bids.value = currentBids;

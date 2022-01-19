@@ -4,19 +4,17 @@ import type { Countdown } from '../../../types/schemas';
 
 /**
  * Calculates the absolute file path to one of our local replicant schemas.
- * @param schemaName the replicant/schema filename.
+ * @param schemaName The replicant/schema filename.
  */
 function buildSchemaPath(schemaName: string) {
   return path.resolve(__dirname, '../../../schemas', `${encodeURIComponent(schemaName)}.json`);
 }
 
-class MediaBox {
-  // private nodecg: NodeCG;
+class CountdownClass {
   private countdownTimeout: NodeJS.Timeout | undefined;
   countdown: Replicant<Countdown>;
 
   constructor(nodecg: NodeCG) {
-    // this.nodecg = nodecg;
     this.countdown = nodecg.Replicant('countdown', { schemaPath: buildSchemaPath('countdown') });
 
     nodecg.listenFor('startCountdown', (time: string) => {
@@ -31,13 +29,9 @@ class MediaBox {
         Number(time.split(':')[0]),
         Number(time.split(':')[1]),
       );
-      if (this.countdownTimeout) {
-        clearTimeout(this.countdownTimeout);
-      }
+      if (this.countdownTimeout) clearTimeout(this.countdownTimeout);
       const diff = then.getTime() - now.getTime();
-      if (diff <= 0) {
-        return;
-      }
+      if (diff <= 0) return;
       this.countdown.value = {
         originalDuration: diff,
         remaining: diff,
@@ -60,4 +54,4 @@ class MediaBox {
   }
 }
 
-export = MediaBox;
+export = CountdownClass;

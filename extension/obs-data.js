@@ -1,18 +1,37 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const clone_1 = __importDefault(require("clone"));
 const sharp_1 = __importDefault(require("sharp"));
-const logging_1 = require("./util/logging");
+const intermission_player_1 = require("./intermission-player");
+const mqLogging = __importStar(require("./util/mq-logging"));
 const nodecg_1 = require("./util/nodecg");
-const obs_1 = __importDefault(require("./util/obs"));
+const obs_1 = __importStar(require("./util/obs"));
 const replicants_1 = require("./util/replicants");
+const speedcontrol_1 = require("./util/speedcontrol");
 const evtConfig = (0, nodecg_1.get)().bundleConfig.event;
 const config = (0, nodecg_1.get)().bundleConfig.obs;
-replicants_1.serverTimestamp.value = Date.now();
-setInterval(() => { replicants_1.serverTimestamp.value = Date.now(); }, 100);
 let gameLayoutScreenshotInterval;
 async function takeGameLayoutScreenshot() {
     try {
@@ -43,15 +62,15 @@ obs_1.default.on('connectionStatusChanged', (connected) => {
 });
 obs_1.default.on('streamingStatusChanged', (streaming) => {
     replicants_1.obsData.value.streaming = streaming;
-    (0, logging_1.logStreamingStatusChange)(streaming);
+    mqLogging.logStreamingStatusChange(streaming);
 });
 obs_1.default.on('currentSceneChanged', (current, last) => {
     replicants_1.obsData.value.scene = current;
     if (last) {
-        (0, logging_1.logSceneSwitch)(last, 'end');
+        mqLogging.logSceneSwitch(last, 'end');
     }
     if (current) {
-        (0, logging_1.logSceneSwitch)(current, 'start');
+        mqLogging.logSceneSwitch(current, 'start');
     }
 });
 obs_1.default.on('sceneListChanged', (list) => {
@@ -60,11 +79,32 @@ obs_1.default.on('sceneListChanged', (list) => {
     replicants_1.obsData.value.sceneList = (0, clone_1.default)(list).slice(0, stopIndex >= 0 ? stopIndex : undefined);
 });
 obs_1.default.conn.on('TransitionBegin', (data) => {
-    // obsData.value.disableTransitioning = true; // Always disable transitioning when one begins.
     replicants_1.obsData.value.transitioning = true;
     if (data.name === 'Stinger')
         (0, nodecg_1.get)().sendMessage('showTransition');
 });
 obs_1.default.conn.on('TransitionEnd', () => {
     replicants_1.obsData.value.transitioning = false;
+});
+// Disable transitioning when commercials are running and no videos are playing.
+// (Intermission player controls this itself, so don't want to touch it during that).
+speedcontrol_1.sc.twitchCommercialTimer.on('change', async (newVal) => {
+    if (!replicants_1.videoPlayer.value.playing) {
+        replicants_1.obsData.value.disableTransitioning = newVal.secondsRemaining > 0;
+    }
+});
+// Triggered via button in "OBS Control" dashboard panel.
+(0, nodecg_1.get)().listenFor('startIntermission', async () => {
+    // Tries to start video playlist, if cannot be done then acts as if there isn't one.
+    try {
+        await (0, intermission_player_1.startPlaylist)();
+    }
+    catch (err) {
+        if (obs_1.default.findScene(config.names.scenes.commercials)) {
+            await (0, obs_1.changeScene)({ scene: config.names.scenes.commercials });
+        }
+        else {
+            await (0, obs_1.changeScene)({ scene: config.names.scenes.intermission });
+        }
+    }
 });

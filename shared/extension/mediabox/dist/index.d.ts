@@ -1,14 +1,12 @@
-/// <reference types="node" />
-import { EventEmitter } from 'events';
 import type { NodeCG, Replicant } from 'nodecg/types/server';
-import type { Asset } from '../../../types';
+import type { Asset, RabbitMQ } from '../../../types';
 import type { MediaBox as MediaBoxRep, Prizes } from '../../../types/schemas';
 declare class MediaBox {
     private nodecg;
     mediaBox: Replicant<MediaBoxRep>;
     prizes: Replicant<Prizes>;
     assetsMediaBoxImages: Replicant<Asset[]>;
-    constructor(nodecg: NodeCG, evt: EventEmitter);
+    constructor(nodecg: NodeCG, evt: RabbitMQ.Events);
     /**
      * Checks if the supplied type is that of an alert.
      * @param type Type of alert

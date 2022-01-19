@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "autofix": "node ../../../node_modules/eslint/bin/eslint.js --ignore-path ../../.eslintignore --fix --ext .ts src"
+  }
+}

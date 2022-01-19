@@ -117,7 +117,7 @@ var OBS = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        _a.trys.push([0, 4, , 5]);
                         return [4 /*yield*/, this.conn.connect({
                                 address: this.config.address,
                                 password: this.config.password,
@@ -125,11 +125,8 @@ var OBS = /** @class */ (function (_super) {
                     case 1:
                         _a.sent();
                         this.connected = true;
-                        return [4 /*yield*/, this.conn.send('SetHeartbeat', { enable: true })];
-                    case 2:
-                        _a.sent();
                         return [4 /*yield*/, this.conn.send('GetSceneList')];
-                    case 3:
+                    case 2:
                         scenes = _a.sent();
                         lastScene = this.currentScene;
                         if (lastScene !== scenes['current-scene']) {
@@ -141,7 +138,7 @@ var OBS = /** @class */ (function (_super) {
                             this.sceneList = newList;
                         }
                         return [4 /*yield*/, this.conn.send('GetStreamingStatus')];
-                    case 4:
+                    case 3:
                         streamingStatus = _a.sent();
                         lastStatus = this.streaming;
                         if (streamingStatus.streaming !== lastStatus) {
@@ -159,14 +156,14 @@ var OBS = /** @class */ (function (_super) {
                             this.emit('streamingStatusChanged', this.streaming, lastStatus);
                         }
                         this.nodecg.log.info('[OBS] Connection successful');
-                        return [3 /*break*/, 6];
-                    case 5:
+                        return [3 /*break*/, 5];
+                    case 4:
                         err_1 = _a.sent();
                         this.conn.disconnect();
                         this.nodecg.log.warn('[OBS] Connection error');
                         this.nodecg.log.debug('[OBS] Connection error:', err_1);
-                        return [3 /*break*/, 6];
-                    case 6: return [2 /*return*/];
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
                 }
             });
         });

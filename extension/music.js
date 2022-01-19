@@ -7,15 +7,4 @@ const music_1 = __importDefault(require("@shared/extension/music"));
 const nodecg_1 = require("./util/nodecg");
 const obs_1 = __importDefault(require("./util/obs"));
 const config = (0, nodecg_1.get)().bundleConfig.music;
-const music = new music_1.default((0, nodecg_1.get)(), config);
-// Listen to OBS transitions to play/pause correctly.
-obs_1.default.conn.on('TransitionBegin', (data) => {
-    if (data['to-scene']) {
-        if (data['to-scene'].endsWith('[M]')) {
-            music.play();
-        }
-        else {
-            music.pause();
-        }
-    }
-});
+const music = new music_1.default((0, nodecg_1.get)(), config, obs_1.default); // eslint-disable-line @typescript-eslint/no-unused-vars, max-len

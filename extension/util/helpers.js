@@ -19,9 +19,8 @@ exports.padTimeNumber = padTimeNumber;
  * Returns the current event short according to the configuration file.
  */
 function getCurrentEventShort() {
-    if (!Array.isArray(config.event.shorts)) {
+    if (!Array.isArray(config.event.shorts))
         return config.event.shorts;
-    }
     return config.event.shorts[config.event.thisEvent - 1];
 }
 exports.getCurrentEventShort = getCurrentEventShort;

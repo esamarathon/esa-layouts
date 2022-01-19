@@ -5,10 +5,11 @@ import path from 'path';
 import { Readable } from 'stream';
 import { Foobar2000, Music as MusicTypes } from '../../../types';
 import { MusicData } from '../../../types/schemas';
+import OBS from '../../obs';
 
 /**
  * Calculates the absolute file path to one of our local replicant schemas.
- * @param schemaName the replicant/schema filename.
+ * @param schemaName The replicant/schema filename.
  */
 function buildSchemaPath(schemaName: string) {
   return path.resolve(__dirname, '../../../schemas', `${encodeURIComponent(schemaName)}.json`);
@@ -17,6 +18,7 @@ function buildSchemaPath(schemaName: string) {
 class Music {
   private nodecg: NodeCG;
   private config: MusicTypes.Config;
+  private obs: OBS;
   private auth: string | undefined;
   private headers: HeadersInit | undefined;
   private positionTimestamp = 0;
@@ -24,9 +26,10 @@ class Music {
   private positionInterval: NodeJS.Timeout | undefined;
   musicData: Replicant<MusicData>;
 
-  constructor(nodecg: NodeCG, config: MusicTypes.Config) {
+  constructor(nodecg: NodeCG, config: MusicTypes.Config, obs: OBS) {
     this.nodecg = nodecg;
     this.config = config;
+    this.obs = obs;
     this.auth = (config.username && config.password)
       ? `Basic ${Buffer.from(`${config.username}:${config.password}`).toString('base64')}`
       : undefined;
@@ -76,6 +79,7 @@ class Music {
    * Sends a "play" command to foobar2000.
    */
   async play(): Promise<void> {
+    if (!this.config.enabled) return;
     try {
       await this.request('post', '/player/play');
       this.nodecg.log.info('[Music] Successfully playing');
@@ -89,6 +93,7 @@ class Music {
    * Sends a "pause" command to foobar2000.
    */
   async pause(): Promise<void> {
+    if (!this.config.enabled) return;
     try {
       await this.request('post', '/player/pause');
       this.nodecg.log.info('[Music] Successfully paused');
@@ -125,9 +130,7 @@ class Music {
           return;
         }
         if (msg.player) {
-          if (this.positionInterval) {
-            clearInterval(this.positionInterval);
-          }
+          if (this.positionInterval) clearInterval(this.positionInterval);
           this.musicData.value.playing = msg.player.playbackState === 'playing';
           if (msg.player.playbackState !== 'stopped') {
             if (msg.player.activeItem.duration > 0) {
@@ -159,6 +162,17 @@ class Music {
         this.musicData.value.connected = false;
         this.nodecg.log.warn('[Music] Connection ended, retrying in 5 seconds');
         setTimeout(() => this.setup(), 5 * 1000);
+      });
+
+      // Listen to OBS transitions to play/pause correctly.
+      this.obs.conn.on('TransitionBegin', (data) => {
+        if (data['to-scene']) {
+          if (data['to-scene'].includes('[M]')) {
+            this.play();
+          } else {
+            this.pause();
+          }
+        }
       });
     } catch (err) {
       this.musicData.value.connected = false;

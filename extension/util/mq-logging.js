@@ -4,13 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.logVideoPlay = exports.logSponsorLogoChange = exports.logRunChange = exports.logTimerChange = exports.logSceneSwitch = exports.logStreamingStatusChange = void 0;
-const speedcontrol_util_1 = __importDefault(require("speedcontrol-util"));
 const mediabox_1 = __importDefault(require("./mediabox"));
 const nodecg_1 = require("./nodecg");
 const rabbitmq_1 = require("./rabbitmq");
 const replicants_1 = require("./replicants");
+const speedcontrol_1 = require("./speedcontrol");
 const config = (0, nodecg_1.get)().bundleConfig;
-const sc = new speedcontrol_util_1.default((0, nodecg_1.get)());
 /**
  * Logs OBS streaming status changes.
  * @param streaming If the streaming was started or stopped.
@@ -44,7 +43,7 @@ function logTimerChange(desc, teamID) {
     rabbitmq_1.mq.send(`timer.${teamID ? `team.${teamID}.` : ''}${desc}`, {
         desc,
         teamID: teamID || undefined,
-        timer: sc.timer.value,
+        timer: speedcontrol_1.sc.timer.value,
     });
 }
 exports.logTimerChange = logTimerChange;

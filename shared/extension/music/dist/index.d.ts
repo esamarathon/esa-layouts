@@ -1,16 +1,18 @@
 import type { NodeCG, Replicant } from 'nodecg/types/server';
 import { Music as MusicTypes } from '../../../types';
 import { MusicData } from '../../../types/schemas';
+import OBS from '../../obs';
 declare class Music {
     private nodecg;
     private config;
+    private obs;
     private auth;
     private headers;
     private positionTimestamp;
     private positionInitial;
     private positionInterval;
     musicData: Replicant<MusicData>;
-    constructor(nodecg: NodeCG, config: MusicTypes.Config);
+    constructor(nodecg: NodeCG, config: MusicTypes.Config, obs: OBS);
     /**
      * Make a request to the Beefweb foobar2000 plugin.
      * @param method Required HTTP method.

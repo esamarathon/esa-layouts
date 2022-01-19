@@ -9,13 +9,16 @@ const nodecg_1 = require("./util/nodecg");
 const obs_1 = __importDefault(require("./util/obs"));
 const replicants_1 = require("./util/replicants");
 const x32_1 = __importDefault(require("./util/x32"));
+/**
+ * TODO: Check all of this against new mixer setup/config!
+ */
 const config = (0, nodecg_1.get)().bundleConfig;
 function getNonGameScenes() {
     // These scenes will *not* have "LIVE Game/Mics" DCAs audible.
     return [
         obs_1.default.findScene(config.obs.names.scenes.commercials),
         obs_1.default.findScene(config.obs.names.scenes.intermission),
-        obs_1.default.findScene(config.obs.names.scenes.videoPlayer),
+        obs_1.default.findScene(config.obs.names.scenes.intermissionPlayer),
         obs_1.default.findScene(config.obs.names.scenes.countdown),
     ].filter(Boolean);
 }

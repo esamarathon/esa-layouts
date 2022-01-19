@@ -43,17 +43,18 @@ var path_1 = __importDefault(require("path"));
 var stream_1 = require("stream");
 /**
  * Calculates the absolute file path to one of our local replicant schemas.
- * @param schemaName the replicant/schema filename.
+ * @param schemaName The replicant/schema filename.
  */
 function buildSchemaPath(schemaName) {
     return path_1.default.resolve(__dirname, '../../../schemas', "".concat(encodeURIComponent(schemaName), ".json"));
 }
 var Music = /** @class */ (function () {
-    function Music(nodecg, config) {
+    function Music(nodecg, config, obs) {
         this.positionTimestamp = 0;
         this.positionInitial = 0;
         this.nodecg = nodecg;
         this.config = config;
+        this.obs = obs;
         this.auth = (config.username && config.password)
             ? "Basic ".concat(Buffer.from("".concat(config.username, ":").concat(config.password)).toString('base64'))
             : undefined;
@@ -117,18 +118,22 @@ var Music = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.request('post', '/player/play')];
+                        if (!this.config.enabled)
+                            return [2 /*return*/];
+                        _a.label = 1;
                     case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.request('post', '/player/play')];
+                    case 2:
                         _a.sent();
                         this.nodecg.log.info('[Music] Successfully playing');
-                        return [3 /*break*/, 3];
-                    case 2:
+                        return [3 /*break*/, 4];
+                    case 3:
                         err_1 = _a.sent();
                         this.nodecg.log.warn('[Music] Error playing');
                         this.nodecg.log.debug('[Music] Error playing:', err_1);
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -142,18 +147,22 @@ var Music = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.request('post', '/player/pause')];
+                        if (!this.config.enabled)
+                            return [2 /*return*/];
+                        _a.label = 1;
                     case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.request('post', '/player/pause')];
+                    case 2:
                         _a.sent();
                         this.nodecg.log.info('[Music] Successfully paused');
-                        return [3 /*break*/, 3];
-                    case 2:
+                        return [3 /*break*/, 4];
+                    case 3:
                         err_2 = _a.sent();
                         this.nodecg.log.warn('[Music] Error pausing');
                         this.nodecg.log.debug('[Music] Error pausing:', err_2);
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -192,9 +201,8 @@ var Music = /** @class */ (function () {
                                 return;
                             }
                             if (msg.player) {
-                                if (_this.positionInterval) {
+                                if (_this.positionInterval)
                                     clearInterval(_this.positionInterval);
-                                }
                                 _this.musicData.value.playing = msg.player.playbackState === 'playing';
                                 if (msg.player.playbackState !== 'stopped') {
                                     if (msg.player.activeItem.duration > 0) {
@@ -227,6 +235,17 @@ var Music = /** @class */ (function () {
                             _this.musicData.value.connected = false;
                             _this.nodecg.log.warn('[Music] Connection ended, retrying in 5 seconds');
                             setTimeout(function () { return _this.setup(); }, 5 * 1000);
+                        });
+                        // Listen to OBS transitions to play/pause correctly.
+                        this.obs.conn.on('TransitionBegin', function (data) {
+                            if (data['to-scene']) {
+                                if (data['to-scene'].includes('[M]')) {
+                                    _this.play();
+                                }
+                                else {
+                                    _this.pause();
+                                }
+                            }
                         });
                         return [3 /*break*/, 3];
                     case 2:

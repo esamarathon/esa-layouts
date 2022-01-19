@@ -1,10 +1,9 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import Countdown from '@shared/extension/countdown';
-import clone from 'clone';
 import { startPlaylist } from './intermission-player';
 import { get as nodecg } from './util/nodecg';
 import obs, { changeScene } from './util/obs';
-import { capturePositions, currentRunDelay, delayedTimer, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants';
+import { capturePositions, gameLayouts, nameCycle, obsData, upcomingRunID, videoPlayer } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const evtConfig = (nodecg().bundleConfig as Configschema).event;
@@ -45,44 +44,6 @@ function cycleNames(reset = false): void {
   nameCycle.value = cycle;
 }
 cycleNames(true);
-
-// This code keeps a delayed copy of the timer synced to a delay value from external sources.
-// If no delay is present (if not an online marathon), we just make a straight copy.
-const timerDelayTO: { delay: number, timeout: NodeJS.Timeout }[] = [];
-delayedTimer.value = clone(sc.timer.value);
-currentRunDelay.on('change', (newVal, oldVal) => {
-  if (newVal.video !== oldVal?.video && timerDelayTO.length) {
-    // Reset delayed timer to the same as normal timer.
-    delayedTimer.value = clone(sc.timer.value);
-
-    // Clear all the irrelevant timeouts currently active.
-    const timeouts: NodeJS.Timeout[] = [];
-    for (let i = 0; i < timerDelayTO.length;) {
-      if (timerDelayTO[i] && timerDelayTO[i].delay !== newVal.video) {
-        timeouts.push(timerDelayTO.shift()?.timeout as NodeJS.Timeout);
-      } else {
-        i += 1;
-      }
-    }
-    timeouts.forEach((timeout) => clearTimeout(timeout));
-  }
-});
-sc.timer.on('change', (val) => {
-  const timerFreeze = clone(val);
-  if (currentRunDelay.value.video === 0) {
-    delayedTimer.value = timerFreeze;
-  } else {
-    timerDelayTO.push({
-      delay: currentRunDelay.value.video,
-      timeout: setTimeout(() => {
-        delayedTimer.value = {
-          ...timerFreeze,
-          timestamp: Date.now(),
-        };
-      }, currentRunDelay.value.video),
-    });
-  }
-});
 
 // Update replicant that stores the ID of the upcoming run,
 // both on timer stopping, if you somehow have no current run

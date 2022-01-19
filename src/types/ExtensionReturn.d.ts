@@ -1,4 +1,4 @@
-import type OBS from '@shared/extension/obs';
+import type OBS from '../../shared/extension/obs'; // eslint-disable-line import/no-relative-packages
 import { Configschema } from './schemas';
 
 export interface ExtensionReturn {

@@ -27,7 +27,7 @@ export default class extends Vue {
   }
 
   emergencyStop(): void {
-    nodecg.sendMessage('stopVideoPlayerEarly');
+    nodecg.sendMessage('stopIntermissionPlayerEarly');
   }
 }
 </script>

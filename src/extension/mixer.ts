@@ -5,6 +5,10 @@ import obs from './util/obs';
 import { currentRunDelay, obsData } from './util/replicants';
 import x32 from './util/x32';
 
+/**
+ * TODO: Check all of this against new mixer setup/config!
+ */
+
 const config = (nodecg().bundleConfig as Configschema);
 
 function getNonGameScenes(): string[] {
@@ -12,7 +16,7 @@ function getNonGameScenes(): string[] {
   return [
     obs.findScene(config.obs.names.scenes.commercials),
     obs.findScene(config.obs.names.scenes.intermission),
-    obs.findScene(config.obs.names.scenes.videoPlayer),
+    obs.findScene(config.obs.names.scenes.intermissionPlayer),
     obs.findScene(config.obs.names.scenes.countdown),
   ].filter(Boolean) as string[];
 }

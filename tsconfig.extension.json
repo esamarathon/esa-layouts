@@ -124,11 +124,13 @@
     "node_modules"
   ],
   "references": [
+    { "path": "./shared/extension/audio-normaliser" },
     { "path": "./shared/extension/countdown" },
     { "path": "./shared/extension/mediabox" },
     { "path": "./shared/extension/music" },
     { "path": "./shared/extension/obs" },
     { "path": "./shared/extension/rabbitmq" },
+    { "path": "./shared/extension/video-player" },
     { "path": "./shared/extension/x32" },
     { "path": "./shared/extension/xkeys-esa" }
   ],

@@ -31,15 +31,15 @@
 import { Vue, Component, Watch, Prop } from 'vue-property-decorator'; // eslint-disable-line object-curly-newline, max-len
 import { State } from 'vuex-class';
 import { Timer } from 'speedcontrol-util/types';
-import { CurrentRunDelay, DelayedTimer } from '@esa-layouts/types/schemas';
+import { DelayedTimer } from '@esa-layouts/types/schemas';
 import { msToTimeStr } from '../../_misc/helpers';
 
 @Component
 export default class extends Vue {
   @Prop({ type: String, default: '-0.07em' }) topMargin!: string;
   @Prop({ type: String, default: '100px' }) fontSize!: string;
+  @State('timer') originalTimer!: Timer;
   @State('delayedTimer') timer!: DelayedTimer;
-  @State currentRunDelay!: CurrentRunDelay;
   timeStr = '00:00:00';
   backupTimerTO: number | undefined;
 
@@ -50,9 +50,6 @@ export default class extends Vue {
    */
   backupTimer(): void {
     this.backupTimerTO = window.setTimeout(() => this.backupTimer(), 200);
-    if (!this.timer) {
-      return;
-    }
     if (this.timer.state === 'running') {
       const missedTime = Date.now() - this.timer.timestamp;
       const timeOffset = this.timer.milliseconds + missedTime;
@@ -60,13 +57,17 @@ export default class extends Vue {
     }
   }
 
-  @Watch('timer', { immediate: true })
-  onTimerChange(val: Timer): void {
-    this.timeStr = val.time;
-
+  // Use original non-delayed timer to keep track of if we need to run the backup.
+  @Watch('originalTimer', { immediate: true })
+  onOriginalTimerChange(): void {
     // Backup timer (see above).
     clearTimeout(this.backupTimerTO);
     this.backupTimerTO = window.setTimeout(() => this.backupTimer(), 1000);
+  }
+
+  @Watch('timer', { immediate: true })
+  onTimerChange(val: Timer): void {
+    this.timeStr = val.time;
   }
 
   get timerState(): string {

@@ -1,9 +1,9 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import type { Tracker } from '@shared/types';
 import needle from 'needle';
-import { eventInfo, getCookies } from './tracker';
-import { get as nodecg } from './util/nodecg';
-import { bids } from './util/replicants';
+import { eventInfo, getCookies } from '.';
+import { get as nodecg } from '../util/nodecg';
+import { bids } from '../util/replicants';
 
 const eventConfig = (nodecg().bundleConfig as Configschema).event;
 const config = (nodecg().bundleConfig as Configschema).tracker;

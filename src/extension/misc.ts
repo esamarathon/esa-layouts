@@ -1,15 +1,23 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
-import SpeedcontrolUtil from 'speedcontrol-util';
+import AudioNormaliser from '@shared/extension/audio-normaliser';
 import type { RunData } from 'speedcontrol-util/types';
-import { formatPronouns, getCurrentEventShort, getOtherStreamEventShort } from './util/helpers';
-import { logRunChange } from './util/logging';
+import { formatPronouns, getOtherStreamEventShort } from './util/helpers';
+import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
-import { commentators, donationReader, otherStreamData } from './util/replicants';
+import { commentators, donationReader, otherStreamData, serverTimestamp, upcomingRunID } from './util/replicants';
+import { sc } from './util/speedcontrol';
 
 const config = (nodecg().bundleConfig as Configschema);
-const sc = new SpeedcontrolUtil(nodecg());
+new AudioNormaliser(nodecg()); // eslint-disable-line no-new
+
+// Increase max listeners on the nodecg-speedcontrol timer a bit to stop errors.
+// This may want to be moved to that bundle directly in the future? It impacts all bundles!
+sc.timer.setMaxListeners(20);
+
+serverTimestamp.value = Date.now();
+setInterval(() => { serverTimestamp.value = Date.now(); }, 100);
 
 // Screened data from our moderation tool.
 mq.evt.on('newScreenedSub', (data) => {
@@ -52,7 +60,7 @@ mq.evt.on('gameSceneChanged', (data) => {
 // When someone scans in on one of the big timer buttons.
 // Currently only used for commentators.
 mq.evt.on('bigbuttonTagScanned', (data) => {
-  if (getCurrentEventShort() === data.flagcarrier.group) {
+  if (config.event.thisEvent === 1 && data.flagcarrier.group === 'stream1') {
     const name = data.user.displayName;
     nodecg().sendMessage('bigbuttonTagScanned', data);
     if (!commentators.value.includes(name)) {
@@ -66,18 +74,38 @@ let init = false;
 sc.runDataActiveRun.on('change', (newVal, oldVal) => {
   // Reset the commentators when the run changes and
   // not on the game layout scene (if OBS is connected).
-  if (oldVal?.id !== newVal?.id && ((!obs.connected && init) || (obs.connected
-    && !obs.isCurrentScene(config.obs.names.scenes.gameLayout)))) {
+  if (oldVal?.id !== newVal?.id
+  && ((!obs.connected && init)
+  || (obs.connected && !obs.isCurrentScene(config.obs.names.scenes.gameLayout)))) {
     commentators.value.length = 0;
     nodecg().log.debug('[Misc] Cleared commentators');
   }
 
   // This will also be triggered on server start up.
-  logRunChange(newVal);
+  mqLogging.logRunChange(newVal);
 
   init = true;
 });
 
+// Update replicant that stores the ID of the upcoming run,
+// both on timer stopping, if you somehow have no current run
+// (usually if you're at the start of the run list),
+// and also via a "force" button on the dashboard.
+sc.on('timerStopped', () => {
+  upcomingRunID.value = sc.runDataActiveRunSurrounding.value.next || null;
+});
+sc.runDataActiveRunSurrounding.on('change', (newVal) => {
+  if (!newVal.current) {
+    upcomingRunID.value = newVal.next || null;
+  }
+});
+nodecg().listenFor('forceUpcomingRun', (id?: string) => {
+  // Check supplied run ID exists in our array.
+  const run = sc.runDataArray.value.find((r) => r.id === id);
+  upcomingRunID.value = run?.id || null;
+});
+
+// Helper function to get pronouns of a specified user name from speedrun.com
 async function searchSrcomPronouns(val: string): Promise<string> {
   const name = val.replace(/\((.*?)\)/g, '').trim();
   let pronouns = (val.match(/\((.*?)\)/g) || [])[0]?.replace(/[()]/g, '');
@@ -91,6 +119,7 @@ async function searchSrcomPronouns(val: string): Promise<string> {
   return pronouns ? `${name} (${pronouns})` : name;
 }
 
+// Processes adding commentators from the dashboard panel.
 nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack) => {
   if (val && !commentators.value.includes(val)) {
     commentators.value.push(await searchSrcomPronouns(val));
@@ -100,6 +129,7 @@ nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack)
   }
 });
 
+// Processes modifying the reader from the dasboard panel.
 nodecg().listenFor('readerModify', async (val: string | null | undefined, ack) => {
   if (!val) {
     donationReader.value = null;

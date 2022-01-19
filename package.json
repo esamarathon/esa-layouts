@@ -32,14 +32,13 @@
   },
   "dependencies": {
     "clone": "^2.1.2",
-    "get-video-duration": "3.0.2",
     "lodash": "^4.17.21",
     "module-alias": "^2.2.2",
     "moment": "^2.29.1",
     "needle": "^3.0.0",
     "sharp": "^0.29.3",
     "speedcontrol-util": "^0.6.0-RC6",
-    "streamdeck-util": "^0.3.3",
+    "streamdeck-util": "^0.4.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -145,10 +144,10 @@
         "headerColor": "#c49215"
       },
       {
-        "name": "video-player-control",
-        "title": "Video Player Control",
+        "name": "intermission-player-control",
+        "title": "Intermission Player Control",
         "width": 3,
-        "file": "video-player-control.html",
+        "file": "intermission-player-control.html",
         "workspace": "Z2 - ESA Advanced",
         "headerColor": "#c49215"
       },
@@ -283,7 +282,9 @@
         "title": "Videos",
         "allowedTypes": [
           "mp4",
-          "webm"
+          "webm",
+          "MP4",
+          "WEBM"
         ]
       },
       {

@@ -1,8 +1,13 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
-import { logSponsorLogoChange } from './util/logging';
 import mb from './util/mediabox';
+import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
+
+/**
+ * Everything in this file right now is related to RabbitMQ.
+ * TODO: Should this be moved somewhere else?
+ */
 
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 
@@ -29,9 +34,9 @@ obs.on('streamingStatusChanged', (streaming, old) => {
   if (doesSceneHaveSponsorLogos(obs.currentScene)
     && mb.mediaBox.value.current && typeof old === 'boolean') {
     if (streaming) {
-      logSponsorLogoChange(mb.mediaBox.value.current);
+      mqLogging.logSponsorLogoChange(mb.mediaBox.value.current);
     } else {
-      logSponsorLogoChange();
+      mqLogging.logSponsorLogoChange();
     }
   }
 });
@@ -42,9 +47,9 @@ obs.on('currentSceneChanged', (current, last) => {
     const currentHas = doesSceneHaveSponsorLogos(current);
     const lastHas = doesSceneHaveSponsorLogos(last);
     if (currentHas && !lastHas) {
-      logSponsorLogoChange(mb.mediaBox.value.current);
+      mqLogging.logSponsorLogoChange(mb.mediaBox.value.current);
     } else if (!currentHas && lastHas) {
-      logSponsorLogoChange();
+      mqLogging.logSponsorLogoChange();
     }
   }
 });
@@ -52,6 +57,6 @@ obs.on('currentSceneChanged', (current, last) => {
 mb.mediaBox.on('change', (newVal, oldVal) => {
   if (newVal.current?.id !== oldVal?.current?.id
     && obs.streaming && doesSceneHaveSponsorLogos(obs.currentScene)) {
-    logSponsorLogoChange(newVal.current);
+    mqLogging.logSponsorLogoChange(newVal.current);
   }
 });

@@ -31,22 +31,27 @@ export interface Configschema {
 		enabled: boolean;
 		address: string;
 		password: string;
+		canvasResolution: {
+			width: number;
+			height: number;
+		};
 		names: {
 			scenes: {
 				commercials: string;
 				gameLayout: string;
 				intermission: string;
-				videoPlayer: string;
+				intermissionPlayer: string;
 				countdown: string;
 			};
 			sources: {
-				gameCapture1: string;
-				gameCapture2: string;
-				gameCapture3: string;
-				gameCapture4: string;
-				cameraCapture1: string;
-				cameraCapture2: string;
-				cameraCapture3: string;
+				gameCaptures:
+					| string
+					| [string]
+					| [string, string]
+					| [string, string, string]
+					| [string, string, string, string];
+				cameraCaptures: string | [string] | [string, string] | [string, string, string];
+				twitchSources: string | [string] | [string, string];
 				videoPlayer: string;
 			};
 		};

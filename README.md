@@ -31,6 +31,8 @@ Then, to get the most recent changes for [nodecg-speedcontrol](https://github.co
 > npm install --production
 > ```
 
+In addition, to have the `videos` assets automatically audio normalised, you must have `python` (v3), `ffmpeg`, and [`ffmpeg-normalize`](https://github.com/slhck/ffmpeg-normalize) available in your system's `PATH`. If you don't have all of these, the check will fail and videos will just not be touched. For Windows, `python` (v3) should be automatically installed when you install Node.js built tools, if you chose to do that.
+
 ## Usage
 
 *Not everything you can set is documented here; if you're an advanced user we advise you take a look at the included [configschema.json](configschema.json) file.*

@@ -12,8 +12,8 @@
       "additionalProperties": false,
       "properties": {
         "theme": {
-          "type": "string",
-          "$comment": "Theme to be used in the graphical overlays; will use default if none supplied."
+          "$comment": "Theme to be used in the graphical overlays; will use default if none supplied.",
+          "type": "string"
         },
         "shorts": {
           "$comment": "This/these must match the tracker, if that feature is enabled.",
@@ -34,8 +34,8 @@
           "default": "EVENT_SHORT"
         },
         "thisEvent": {
-          "type": "number",
           "$comment": "If the 'event' has multiple tracker events, this a 1-indexed value of which one is applicable to this stream from the shorts array.",
+          "type": "number",
           "minimum": 1,
           "maximum": 2,
           "default": 1
@@ -146,6 +146,24 @@
           "type": "string",
           "default": ""
         },
+        "canvasResolution": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "width": {
+              "type": "number",
+              "default": 1920
+            },
+            "height": {
+              "type": "number",
+              "default": 1080
+            }
+          },
+          "required": [
+            "width",
+            "height"
+          ]
+        },
         "names": {
           "type": "object",
           "additionalProperties": false,
@@ -166,7 +184,7 @@
                   "type": "string",
                   "default": "Intermission"
                 },
-                "videoPlayer": {
+                "intermissionPlayer": {
                   "type": "string",
                   "default": "Intermission Player"
                 },
@@ -179,7 +197,7 @@
                 "commercials",
                 "gameLayout",
                 "intermission",
-                "videoPlayer",
+                "intermissionPlayer",
                 "countdown"
               ]
             },
@@ -187,33 +205,65 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {
-                "gameCapture1": {
-                  "type": "string",
-                  "default": "Game Capture 1"
+                "gameCaptures": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "uniqueItems": true,
+                      "minItems": 1,
+                      "maxItems": 4
+                    }
+                  ],
+                  "default": [
+                    "Game Capture 1",
+                    "Game Capture 2",
+                    "Game Capture 3",
+                    "Game Capture 4"
+                  ]
                 },
-                "gameCapture2": {
-                  "type": "string",
-                  "default": "Game Capture 2"
+                "cameraCaptures": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "uniqueItems": true,
+                      "minItems": 1,
+                      "maxItems": 3
+                    }
+                  ],
+                  "default": [
+                    "Camera Capture 1",
+                    "Camera Capture 2",
+                    "Camera Capture 3"
+                  ]
                 },
-                "gameCapture3": {
-                  "type": "string",
-                  "default": "Game Capture 3"
-                },
-                "gameCapture4": {
-                  "type": "string",
-                  "default": "Game Capture 4"
-                },
-                "cameraCapture1": {
-                  "type": "string",
-                  "default": "Camera Capture 1"
-                },
-                "cameraCapture2": {
-                  "type": "string",
-                  "default": "Camera Capture 2"
-                },
-                "cameraCapture3": {
-                  "type": "string",
-                  "default": "Camera Capture 3"
+                "twitchSources": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "uniqueItems": true,
+                      "minItems": 1,
+                      "maxItems": 2
+                    }
+                  ],
+                  "default": "Twitch Source"
                 },
                 "videoPlayer": {
                   "type": "string",
@@ -221,13 +271,9 @@
                 }
               },
               "required": [
-                "gameCapture1",
-                "gameCapture2",
-                "gameCapture3",
-                "gameCapture4",
-                "cameraCapture1",
-                "cameraCapture2",
-                "cameraCapture3",
+                "gameCaptures",
+                "cameraCaptures",
+                "twitchSources",
                 "videoPlayer"
               ]
             }
@@ -242,6 +288,7 @@
         "enabled",
         "address",
         "password",
+        "canvasResolution",
         "names"
       ]
     },

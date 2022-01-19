@@ -16,14 +16,20 @@ const countdown = new Countdown(nodecg()); // eslint-disable-line @typescript-es
 sc.timer.setMaxListeners(20);
 
 // CSS ID -> OBS source name mapping
+const gameCaptures = Array.isArray(obsConfig.names.sources.gameCaptures)
+  ? obsConfig.names.sources.gameCaptures
+  : [obsConfig.names.sources.gameCaptures];
+const cameraCaptures = Array.isArray(obsConfig.names.sources.cameraCaptures)
+  ? obsConfig.names.sources.cameraCaptures
+  : [obsConfig.names.sources.cameraCaptures];
 const obsSourceKeys: { [key: string]: string } = {
-  GameCapture1: obsConfig.names.sources.gameCapture1,
-  GameCapture2: obsConfig.names.sources.gameCapture2,
-  GameCapture3: obsConfig.names.sources.gameCapture3,
-  GameCapture4: obsConfig.names.sources.gameCapture4,
-  CameraCapture1: obsConfig.names.sources.cameraCapture1,
-  CameraCapture2: obsConfig.names.sources.cameraCapture2,
-  CameraCapture3: obsConfig.names.sources.cameraCapture3,
+  GameCapture1: gameCaptures[0],
+  GameCapture2: gameCaptures[1],
+  GameCapture3: gameCaptures[2],
+  GameCapture4: gameCaptures[3],
+  CameraCapture1: cameraCaptures[0],
+  CameraCapture2: cameraCaptures[1],
+  CameraCapture3: cameraCaptures[2],
 };
 
 // Controls the name cycling ticks for players/hosts

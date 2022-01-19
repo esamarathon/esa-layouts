@@ -31,6 +31,10 @@ export interface Configschema {
 		enabled: boolean;
 		address: string;
 		password: string;
+		canvasResolution: {
+			width: number;
+			height: number;
+		};
 		names: {
 			scenes: {
 				commercials: string;

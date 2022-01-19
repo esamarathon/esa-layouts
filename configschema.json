@@ -146,6 +146,24 @@
           "type": "string",
           "default": ""
         },
+        "canvasResolution": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "width": {
+              "type": "number",
+              "default": 1920
+            },
+            "height": {
+              "type": "number",
+              "default": 1080
+            }
+          },
+          "required": [
+            "width",
+            "height"
+          ]
+        },
         "names": {
           "type": "object",
           "additionalProperties": false,
@@ -270,6 +288,7 @@
         "enabled",
         "address",
         "password",
+        "canvasResolution",
         "names"
       ]
     },

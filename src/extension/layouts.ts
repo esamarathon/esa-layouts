@@ -46,7 +46,8 @@ function cycleNames(reset = false): void {
 }
 cycleNames(true);
 
-// This code keeps a delayed copy of the timer synced to a delay value from OBS.Ninja.
+// This code keeps a delayed copy of the timer synced to a delay value from external sources.
+// If no delay is present (if not an online marathon), we just make a straight copy.
 const timerDelayTO: { delay: number, timeout: NodeJS.Timeout }[] = [];
 delayedTimer.value = clone(sc.timer.value);
 currentRunDelay.on('change', (newVal, oldVal) => {
@@ -73,7 +74,12 @@ sc.timer.on('change', (val) => {
   } else {
     timerDelayTO.push({
       delay: currentRunDelay.value.video,
-      timeout: setTimeout(() => { delayedTimer.value = timerFreeze; }, currentRunDelay.value.video),
+      timeout: setTimeout(() => {
+        delayedTimer.value = {
+          ...timerFreeze,
+          timestamp: Date.now(),
+        };
+      }, currentRunDelay.value.video),
     });
   }
 });

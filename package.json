@@ -38,7 +38,7 @@
     "needle": "^3.0.0",
     "sharp": "^0.29.3",
     "speedcontrol-util": "^0.6.0-RC6",
-    "streamdeck-util": "^0.3.3",
+    "streamdeck-util": "^0.4.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

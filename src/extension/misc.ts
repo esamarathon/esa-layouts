@@ -12,6 +12,10 @@ import { sc } from './util/speedcontrol';
 const config = (nodecg().bundleConfig as Configschema);
 new AudioNormaliser(nodecg()); // eslint-disable-line no-new
 
+// Increase max listeners on the nodecg-speedcontrol timer a bit to stop errors.
+// This may want to be moved to that bundle directly in the future? It impacts all bundles!
+sc.timer.setMaxListeners(20);
+
 serverTimestamp.value = Date.now();
 setInterval(() => { serverTimestamp.value = Date.now(); }, 100);
 

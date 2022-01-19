@@ -11,10 +11,6 @@ const evtConfig = (nodecg().bundleConfig as Configschema).event;
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 const countdown = new Countdown(nodecg()); // eslint-disable-line @typescript-eslint/no-unused-vars
 
-// Increase max listeners on the nodecg-speedcontrol timer a bit to stop errors.
-// This may want to be moved to that bundle directly in the future? It impacts all bundles!
-sc.timer.setMaxListeners(20);
-
 // CSS ID -> OBS source name mapping
 const gameCaptures = Array.isArray(obsConfig.names.sources.gameCaptures)
   ? obsConfig.names.sources.gameCaptures

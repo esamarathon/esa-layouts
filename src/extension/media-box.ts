@@ -4,6 +4,11 @@ import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 
+/**
+ * Everything in this file right now is related to RabbitMQ.
+ * TODO: Should this be moved somewhere else?
+ */
+
 const obsConfig = (nodecg().bundleConfig as Configschema).obs;
 
 /**

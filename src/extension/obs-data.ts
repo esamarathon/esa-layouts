@@ -4,13 +4,10 @@ import sharp from 'sharp';
 import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
-import { obsData, serverTimestamp } from './util/replicants';
+import { obsData } from './util/replicants';
 
 const evtConfig = (nodecg().bundleConfig as Configschema).event;
 const config = (nodecg().bundleConfig as Configschema).obs;
-
-serverTimestamp.value = Date.now();
-setInterval(() => { serverTimestamp.value = Date.now(); }, 100);
 
 let gameLayoutScreenshotInterval: NodeJS.Timeout;
 async function takeGameLayoutScreenshot(): Promise<void> {
@@ -62,7 +59,6 @@ obs.on('sceneListChanged', (list) => {
 });
 
 obs.conn.on('TransitionBegin', (data) => {
-  // obsData.value.disableTransitioning = true; // Always disable transitioning when one begins.
   obsData.value.transitioning = true;
   if (data.name === 'Stinger') nodecg().sendMessage('showTransition');
 });

@@ -5,6 +5,10 @@ import obs from './util/obs';
 import { currentRunDelay, obsData } from './util/replicants';
 import x32 from './util/x32';
 
+/**
+ * TODO: Check all of this against new mixer setup/config!
+ */
+
 const config = (nodecg().bundleConfig as Configschema);
 
 function getNonGameScenes(): string[] {

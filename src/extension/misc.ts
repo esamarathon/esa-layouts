@@ -6,7 +6,7 @@ import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
-import { commentators, donationReader, otherStreamData, serverTimestamp } from './util/replicants';
+import { commentators, donationReader, otherStreamData, serverTimestamp, upcomingRunID } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const config = (nodecg().bundleConfig as Configschema);
@@ -85,6 +85,24 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
   mqLogging.logRunChange(newVal);
 
   init = true;
+});
+
+// Update replicant that stores the ID of the upcoming run,
+// both on timer stopping, if you somehow have no current run
+// (usually if you're at the start of the run list),
+// and also via a "force" button on the dashboard.
+sc.on('timerStopped', () => {
+  upcomingRunID.value = sc.runDataActiveRunSurrounding.value.next || null;
+});
+sc.runDataActiveRunSurrounding.on('change', (newVal) => {
+  if (!newVal.current) {
+    upcomingRunID.value = newVal.next || null;
+  }
+});
+nodecg().listenFor('forceUpcomingRun', (id?: string) => {
+  // Check supplied run ID exists in our array.
+  const run = sc.runDataArray.value.find((r) => r.id === id);
+  upcomingRunID.value = run?.id || null;
 });
 
 // Helper function to get pronouns of a specified user name from speedrun.com

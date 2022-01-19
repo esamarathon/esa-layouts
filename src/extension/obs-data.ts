@@ -1,10 +1,12 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import clone from 'clone';
 import sharp from 'sharp';
+import { startPlaylist } from './intermission-player';
 import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
-import obs from './util/obs';
-import { obsData } from './util/replicants';
+import obs, { changeScene } from './util/obs';
+import { obsData, videoPlayer } from './util/replicants';
+import { sc } from './util/speedcontrol';
 
 const evtConfig = (nodecg().bundleConfig as Configschema).event;
 const config = (nodecg().bundleConfig as Configschema).obs;
@@ -64,4 +66,26 @@ obs.conn.on('TransitionBegin', (data) => {
 });
 obs.conn.on('TransitionEnd', () => {
   obsData.value.transitioning = false;
+});
+
+// Disable transitioning when commercials are running and no videos are playing.
+// (Intermission player controls this itself, so don't want to touch it during that).
+sc.twitchCommercialTimer.on('change', async (newVal) => {
+  if (!videoPlayer.value.playing) {
+    obsData.value.disableTransitioning = newVal.secondsRemaining > 0;
+  }
+});
+
+// Triggered via button in "OBS Control" dashboard panel.
+nodecg().listenFor('startIntermission', async () => {
+  // Tries to start video playlist, if cannot be done then acts as if there isn't one.
+  try {
+    await startPlaylist();
+  } catch (err) {
+    if (obs.findScene(config.names.scenes.commercials)) {
+      await changeScene({ scene: config.names.scenes.commercials });
+    } else {
+      await changeScene({ scene: config.names.scenes.intermission });
+    }
+  }
 });

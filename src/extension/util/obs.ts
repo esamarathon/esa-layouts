@@ -45,4 +45,6 @@ export async function changeScene(
   }
 }
 
+nodecg().listenFor('obsChangeScene', changeScene);
+
 export default obs;

@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     setTime() {
-      const zone = nodecg.bundleConfig.event.theme.startsWith('uksg')
+      const zone = nodecg.bundleConfig.event.theme?.startsWith('uksg')
         ? 'Europe/London'
         : 'Europe/Stockholm';
       this.time = dayjs().tz(zone).format('HH:mm');

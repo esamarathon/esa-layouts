@@ -219,8 +219,7 @@
                         "type": "string"
                       },
                       "uniqueItems": true,
-                      "minItems": 1,
-                      "maxItems": 4
+                      "minItems": 1
                     }
                   ],
                   "default": "Game Capture"
@@ -236,8 +235,7 @@
                         "type": "string"
                       },
                       "uniqueItems": true,
-                      "minItems": 1,
-                      "maxItems": 3
+                      "minItems": 1
                     }
                   ],
                   "default": "Camera Capture"

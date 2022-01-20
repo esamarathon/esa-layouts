@@ -26,6 +26,7 @@ export interface Configschema {
 		username: string;
 		password: string;
 		vhost: string;
+		queuePrepend?: string;
 	};
 	obs: {
 		enabled: boolean;

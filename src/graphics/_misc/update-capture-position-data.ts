@@ -4,9 +4,8 @@ import type { CapturePositions } from '@esa-layouts/types/schemas';
 export function updateCapturePositionData(layout: string): void {
   const capturePositions = nodecg.Replicant<CapturePositions>('capturePositions');
   NodeCG.waitForReplicants(capturePositions).then(() => {
-    if (!capturePositions.value) {
-      return;
-    }
+    if (!capturePositions.value) return;
+
     const captureElems = document.getElementsByClassName('Capture');
     const pos: { [k: string]: { x: number; y: number; width: number; height: number } } = {};
 

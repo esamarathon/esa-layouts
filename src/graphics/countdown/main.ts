@@ -2,9 +2,8 @@
 
 import { setUpReplicants } from '@esa-layouts/browser_shared/replicant_store';
 import Vue from 'vue';
-import '../_misc/fonts/barlow-condensed.css';
+import '../_misc/common.css';
 import '../_misc/theme';
-import './common.css';
 import App from './main.vue';
 import store from './store';
 

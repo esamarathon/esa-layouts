@@ -28,7 +28,12 @@ export default {
 </script>
 
 <style>
+  #Background {
+    background-color: #19171c;
+  }
+
   #Omnibar {
+    color: white;
     position: fixed;
     width: 1920px;
     height: 80px;

@@ -26,6 +26,9 @@
     "vhost": {
       "type": "string",
       "default": "esa_prod"
+    },
+    "queuePrepend": {
+      "type": "string"
     }
   },
   "required": [

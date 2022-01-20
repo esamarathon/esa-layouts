@@ -146,7 +146,8 @@ class RabbitMQ {
   private async setupChan(chan: ConfirmChannel): Promise<void> {
     chan.assertExchange(this.exchange, 'topic', { durable: true, autoDelete: true });
     this.listenTopics.forEach((topic) => {
-      const queueName = `${this.exchange}-${this.event}-${topic.name}`;
+      let queueName = `${this.exchange}-${this.event}-${topic.name}`;
+      if (this.config.queuePrepend) queueName = `${this.config.queuePrepend}_${queueName}`;
       chan.assertExchange(topic.exchange, 'topic', { durable: true, autoDelete: true });
       chan.assertQueue(queueName, { durable: true, expires: 4 * 60 * 60 * 1000 });
       chan.bindQueue(queueName, topic.exchange, topic.key);

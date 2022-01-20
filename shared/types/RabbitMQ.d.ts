@@ -15,6 +15,7 @@ export namespace RabbitMQ {
     username: string;
     password: string;
     vhost: string;
+    queuePrepend?: string;
   }
 
   interface Options {

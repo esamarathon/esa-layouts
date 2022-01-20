@@ -161,6 +161,8 @@ var RabbitMQ = /** @class */ (function () {
                 chan.assertExchange(this.exchange, 'topic', { durable: true, autoDelete: true });
                 this.listenTopics.forEach(function (topic) {
                     var queueName = "".concat(_this.exchange, "-").concat(_this.event, "-").concat(topic.name);
+                    if (_this.config.queuePrepend)
+                        queueName = "".concat(_this.config.queuePrepend, "_").concat(queueName);
                     chan.assertExchange(topic.exchange, 'topic', { durable: true, autoDelete: true });
                     chan.assertQueue(queueName, { durable: true, expires: 4 * 60 * 60 * 1000 });
                     chan.bindQueue(queueName, topic.exchange, topic.key);

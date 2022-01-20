@@ -5,9 +5,8 @@ import { UpcomingRunID } from '@esa-layouts/types/schemas';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import { RunData } from 'speedcontrol-util/types';
 import Vue from 'vue';
-import '../_misc/fonts/barlow-condensed.css';
+import '../_misc/common.css';
 import '../_misc/theme';
-import './common.css';
 import App from './main.vue';
 import store from './store';
 

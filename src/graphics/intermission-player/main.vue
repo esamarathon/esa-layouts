@@ -100,14 +100,6 @@ export default class extends Vue {
 }
 </script>
 
-<style>
-  body {
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-  }
-</style>
-
 <style scoped>
   .RunInfoExtra > span:not(:last-child)::after {
     content: ' /';

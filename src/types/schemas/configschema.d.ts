@@ -45,13 +45,8 @@ export interface Configschema {
 				countdown: string;
 			};
 			sources: {
-				gameCaptures:
-					| string
-					| [string]
-					| [string, string]
-					| [string, string, string]
-					| [string, string, string, string];
-				cameraCaptures: string | [string] | [string, string] | [string, string, string];
+				gameCaptures: string | [string, ...string[]];
+				cameraCaptures: string | [string, ...string[]];
 				twitchSources: string | [string] | [string, string];
 				videoPlayer: string;
 			};

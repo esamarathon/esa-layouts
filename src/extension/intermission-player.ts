@@ -69,6 +69,9 @@ export async function startPlaylist(): Promise<void> {
       + (await player.calculatePlaylistLength() * 1000);
   } catch (err) {
     logError('[Intermission Player] Could not be started', err);
+    // Return to the intermission scene if there was an issue starting the playlist.
+    await new Promise((res) => { setTimeout(res, 2000); });
+    await changeScene({ scene: config.obs.names.scenes.intermission });
   }
 }
 

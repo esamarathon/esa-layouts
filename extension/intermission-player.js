@@ -89,6 +89,9 @@ async function startPlaylist() {
     }
     catch (err) {
         (0, helpers_1.logError)('[Intermission Player] Could not be started', err);
+        // Return to the intermission scene if there was an issue starting the playlist.
+        await new Promise((res) => { setTimeout(res, 2000); });
+        await (0, obs_1.changeScene)({ scene: config.obs.names.scenes.intermission });
     }
 }
 exports.startPlaylist = startPlaylist;

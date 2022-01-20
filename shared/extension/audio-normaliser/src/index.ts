@@ -6,8 +6,8 @@ import { differenceBy } from 'lodash';
 import type { NodeCG, Replicant } from 'nodecg/types/server';
 import { join } from 'path';
 import { cwd } from 'process';
-import { Asset } from 'types';
 import { promisify } from 'util';
+import { Asset } from '../../../types';
 import findExecutable from './find-exe';
 
 const exec = promisify(execCb);

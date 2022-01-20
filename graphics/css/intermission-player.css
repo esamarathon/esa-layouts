@@ -1,41 +1,72 @@
-/* Integrate this into the main "common.css" when rewrite done. */
-
 body {
   font-family: 'Barlow Condensed', sans-serif;
+  /* text-shadow: 2px 2px 2px black; */
+  /* color: #fff073; */
   overflow: hidden;
   margin: 0;
   padding: 0;
 }
 
-#Background, #Layout {
+#Background, #Layout { /* #Layout added from countdown, intermission-player */
   width: 1920px;
   height: 1080px;
-  position: fixed;
+  position: fixed; /* added from countdown, intermission-player */
 }
 
-*[class*="Flex"] {
+/* .BorderTop {
+  border-top: 3px solid var(--border-colour);
+}
+.BorderRight {
+  border-right: 3px solid var(--border-colour);
+}
+.BorderBottom {
+  border-bottom: 3px solid var(--border-colour);
+}
+.BorderLeft {
+  border-left: 3px solid var(--border-colour);
+} */
+
+/* added from game-layout */
+*[class*='Border'] {
+  box-sizing: border-box;
+  border-style: solid;
+  border-width: 0;
+}
+.BorderTop {
+  border-top-width: 3px;
+}
+.BorderRight {
+  border-right-width: 3px;
+}
+.BorderBottom {
+  border-bottom-width: 3px;
+}
+.BorderLeft {
+  border-left-width: 3px;
+}
+
+*[class*="Flex"] { /* changed from countdown, intermission-player */
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.FlexColumn {
+.FlexColumn { /* added from countdown, intermission-player */
   flex-direction: column;
 }
 
 .Fixed {
   position: fixed;
-  overflow: hidden;
+  overflow: hidden; /* added from countdown, intermission-player */
+}
+
+.Capture {
+  box-sizing: border-box; /* may break game-layout? probably not */
+  position: fixed;
+  overflow: hidden; /* may break game-layout? probably not */
 }
 
 
-body {
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-}
-
-
-.RunInfoExtra > span[data-v-502c6484]:not(:last-child)::after {
+.RunInfoExtra > span[data-v-3c16b091]:not(:last-child)::after {
   content: ' /';
 }
 

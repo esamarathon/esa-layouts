@@ -1,5 +1,5 @@
 import type { NodeCG, Replicant } from 'nodecg/types/server';
-import { Asset } from 'types';
+import { Asset } from '../../../types';
 declare class AudioNormaliser {
     nodecg: NodeCG;
     assets: Replicant<Asset[]>;

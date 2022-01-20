@@ -1,18 +1,19 @@
 body {
   font-family: 'Barlow Condensed', sans-serif;
   /* text-shadow: 2px 2px 2px black; */
-  color: var(--font-colour);
+  /* color: #fff073; */
   overflow: hidden;
   margin: 0;
   padding: 0;
 }
 
-#Background {
+#Background, #Layout { /* #Layout added from countdown, intermission-player */
   width: 1920px;
   height: 1080px;
+  position: fixed; /* added from countdown, intermission-player */
 }
 
-.BorderTop {
+/* .BorderTop {
   border-top: 3px solid var(--border-colour);
 }
 .BorderRight {
@@ -23,47 +24,45 @@ body {
 }
 .BorderLeft {
   border-left: 3px solid var(--border-colour);
+} */
+
+/* added from game-layout */
+*[class*='Border'] {
+  box-sizing: border-box;
+  border-style: solid;
+  border-width: 0;
+}
+.BorderTop {
+  border-top-width: 3px;
+}
+.BorderRight {
+  border-right-width: 3px;
+}
+.BorderBottom {
+  border-bottom-width: 3px;
+}
+.BorderLeft {
+  border-left-width: 3px;
 }
 
-.Flex {
+*[class*="Flex"] { /* changed from countdown, intermission-player */
   display: flex;
   align-items: center;
   justify-content: center;
 }
+.FlexColumn { /* added from countdown, intermission-player */
+  flex-direction: column;
+}
 
 .Fixed {
   position: fixed;
+  overflow: hidden; /* added from countdown, intermission-player */
 }
 
 .Capture {
-  box-sizing: border-box;
+  box-sizing: border-box; /* may break game-layout? probably not */
   position: fixed;
-}
-
-/**
-Stuff not in this file (yet):
-- Donation Box random colours (JS array currently).
-**/
-
-:root {
-  --border-colour: #41245b;
-  --border-colour-raw: 65, 36, 91;
-  --font-colour: #fff073;
-  --font-colour-secondary: #b7b7b7;
-  --font-colour-inverted: white; /* Inverted is a bad name. */
-  --icon-colour-inversion: invert(1); /* Default is black, invert for white. */
-  --commentators-bg-colour: rgba(65, 36, 91, 0.5);
-  --timer-colour: var(--font-colour);
-  --timer-paused-colour: var(--font-colour-secondary);
-  --timer-finish-colour: var(--font-colour-inverted);
-}
-
-#Background {
-  background-color: #19171c;
-}
-
-#Omnibar {
-  color: white;
+  overflow: hidden; /* may break game-layout? probably not */
 }
 
 
@@ -230,7 +229,7 @@ Stuff not in this file (yet):
 }
 
 
-#Clock[data-v-722aca4a] {
+#Clock[data-v-a8109ee4] {
   font-size: 35px;
   width: 90px;
 }
@@ -243,7 +242,11 @@ Stuff not in this file (yet):
 }
 
 
+#Background {
+  background-color: #19171c;
+}
 #Omnibar {
+  color: white;
   position: fixed;
   width: 1920px;
   height: 80px;

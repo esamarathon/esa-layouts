@@ -223,12 +223,7 @@
                       "maxItems": 4
                     }
                   ],
-                  "default": [
-                    "Game Capture 1",
-                    "Game Capture 2",
-                    "Game Capture 3",
-                    "Game Capture 4"
-                  ]
+                  "default": "Game Capture"
                 },
                 "cameraCaptures": {
                   "oneOf": [
@@ -245,11 +240,7 @@
                       "maxItems": 3
                     }
                   ],
-                  "default": [
-                    "Camera Capture 1",
-                    "Camera Capture 2",
-                    "Camera Capture 3"
-                  ]
+                  "default": "Camera Capture"
                 },
                 "twitchSources": {
                   "oneOf": [

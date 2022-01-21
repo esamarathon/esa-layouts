@@ -44,6 +44,24 @@ export function formatUSD(amount: number): string {
   return `$${amount.toFixed(2)}`;
 }
 
+/**
+ * Returns the "zoom amount" that should be applied to meet the
+ * canvas resolution in the config.
+ * @returns Zoom amount as a decimal.
+ */
+export function getZoomAmount(): number {
+  return config.obs.canvasResolution.height / 1080;
+}
+
+/**
+ * Returns the CSS for the `zoom` propety that should be applied to meet the
+ * canvas resolution in the config.
+ * @returns CSS string used for the `zoom` property.
+ */
+export function getZoomAmountCSS(): string {
+  return `calc(${config.obs.canvasResolution.height}/1080)`;
+}
+
 // ALSO IN extension/util/helpers.ts, CHANGE THERE TOO!
 export function formatPronouns(pronouns?: string): string | undefined {
   if (!pronouns) {

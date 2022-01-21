@@ -29,7 +29,7 @@
 
     <!-- Extra Middle Space -->
     <div
-      class="Capture Fixed"
+      class="Capture"
       :style="{
         left: '720px',
         top: '0px',

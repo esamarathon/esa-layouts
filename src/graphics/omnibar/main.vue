@@ -1,5 +1,5 @@
 <template>
-  <div id="Omnibar" class="Flex">
+  <div id="Omnibar" class="Flex" :style="{ zoom }">
     <img id="Logo">
     <divider/>
     <total/>
@@ -15,6 +15,7 @@ import Total from './components/Total.vue';
 import Ticker from './components/Ticker.vue';
 import Clock from './components/Clock.vue';
 import Divider from './components/Divider.vue';
+import { getZoomAmountCSS } from '../_misc/helpers';
 
 export default {
   name: 'Omnibar',
@@ -23,6 +24,11 @@ export default {
     Ticker,
     Clock,
     Divider,
+  },
+  data() {
+    return {
+      zoom: getZoomAmountCSS(),
+    };
   },
 };
 </script>

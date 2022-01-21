@@ -56,11 +56,11 @@ function setup(): void {
     // Donation Reader: login, login_clear
     if (req.body.position === 'reader' && action.startsWith('login')) {
       const data = req.body.tag_data;
-      if (data.pronouns) donationReader.value = `${data.display_name} (${data.pronouns})`;
-      else donationReader.value = await searchSrcomPronouns(data.display_name);
+      const str = data.pronouns ? `${data.display_name} (${data.pronouns})` : data.display_name;
+      donationReader.value = await searchSrcomPronouns(str);
       nodecg().log.info(
         '[FlagCarrier] Donation reader was updated (Name: %s, DeviceID: %s)',
-        req.body.tag_data.display_name,
+        str,
         device,
       );
       return res.send('You\'ve been logged in.');

@@ -115,6 +115,11 @@ jobs:
     - name: Update NPM installation
       run: npm install -g npm@latest
 
+    # Install NodeCG NPM dependencies
+    - name: Install NodeCG NPM dependencies
+      working-directory: ./nodecg
+      run: npm install --production
+
     # Install NPM dependencies
     - name: Install NPM dependencies
       working-directory: ./nodecg/bundles/esa-layouts

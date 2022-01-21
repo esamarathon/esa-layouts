@@ -2,16 +2,30 @@ import { Configschema } from '@esa-layouts/types/schemas';
 import { searchSrcomPronouns } from './misc';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
-import { donationReader } from './util/replicants';
+import { mq } from './util/rabbitmq';
+import { commentators, donationReader } from './util/replicants';
 
 const router = nodecg().Router();
-const config = (nodecg().bundleConfig as Configschema).flagcarrier;
-const allowedDevices = !Array.isArray(config.allowedDevices)
-  && typeof config.allowedDevices === 'string'
-  ? [config.allowedDevices]
-  : config.allowedDevices || [];
+const config = nodecg().bundleConfig as Configschema;
+const allowedDevices = !Array.isArray(config.flagcarrier.allowedDevices)
+  && typeof config.flagcarrier.allowedDevices === 'string'
+  ? [config.flagcarrier.allowedDevices]
+  : config.flagcarrier.allowedDevices || [];
 
 function setup(): void {
+  // RabbitMQ events from the "big red buttons", used for players/commentators.
+  mq.evt.on('bigbuttonTagScanned', (data) => {
+    if (config.event.thisEvent === 1 && data.flagcarrier.group === 'stream1') {
+      const name = data.user.displayName;
+      nodecg().sendMessage('bigbuttonTagScanned', data);
+      if (!commentators.value.includes(name)) {
+        commentators.value.push(name);
+        nodecg().log.debug('[FlagCarrier] Added new commentator:', name);
+      }
+    }
+  });
+
+  // HTTP endpoint, used for donation readers.
   router.post('/flagcarrier', async (req, res) => {
     const device = req.body.device_id as string;
     const action = req.body.action as string;
@@ -23,7 +37,7 @@ function setup(): void {
       );
       return res.status(403).send('Device ID is not allowed to make changes.');
     }
-    if (req.body.group_id !== config.group) {
+    if (req.body.group_id !== config.flagcarrier.group) {
       return res.status(400).send('Group ID supplied not used on this endpoint.');
     }
 
@@ -63,7 +77,7 @@ function setup(): void {
   nodecg().mount(`/${nodecg().bundleName}`, router);
 }
 
-if (config.enabled) {
+if (config.flagcarrier.enabled) {
   setup();
   nodecg().log.info(
     '[FlagCarrier] Integration enabled (target URL: %s://%s/%s/flagcarrier)',

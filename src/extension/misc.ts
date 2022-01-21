@@ -109,8 +109,11 @@ export async function searchSrcomPronouns(val: string): Promise<string> {
 
 // Processes adding commentators from the dashboard panel.
 nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack) => {
-  if (val && !commentators.value.includes(val)) {
-    commentators.value.push(await searchSrcomPronouns(val));
+  if (val) {
+    const str = await searchSrcomPronouns(val);
+    if (!commentators.value.includes(str)) {
+      commentators.value.push(str);
+    }
   }
   if (ack && !ack.handled) {
     ack(null);

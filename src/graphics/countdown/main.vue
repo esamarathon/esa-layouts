@@ -1,5 +1,5 @@
 <template>
-  <div id="Countdown">
+  <div id="Countdown" :style="{ zoom }">
     <div id="Background" />
     <div
       id="Layout"
@@ -18,11 +18,14 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import Countdown from '@shared/graphics/countdown';
+import { getZoomAmountCSS } from '../_misc/helpers';
 
 @Component({
   components: {
     Countdown,
   },
 })
-export default class extends Vue {}
+export default class extends Vue {
+  zoom = getZoomAmountCSS();
+}
 </script>

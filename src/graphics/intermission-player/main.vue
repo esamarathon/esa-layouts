@@ -1,5 +1,5 @@
 <template>
-  <div :style="{ width: '1920px', height: '1080px', position: 'fixed' }">
+  <div :style="{ width: '1920px', height: '1080px', position: 'fixed', zoom }">
     <div
       class="Fixed"
       :style="{
@@ -85,10 +85,12 @@ import { RunData } from 'speedcontrol-util/types';
 import { Vue, Component } from 'vue-property-decorator';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import { storeModule } from './store';
+import { getZoomAmountCSS } from '../_misc/helpers';
 
 @Component
 export default class extends Vue {
   getRunTotalPlayers = SpeedcontrolUtilBrowser.getRunTotalPlayers;
+  zoom = getZoomAmountCSS();
 
   get nextRun(): RunData | null { return storeModule.nextRun; }
 

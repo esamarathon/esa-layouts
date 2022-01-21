@@ -1,5 +1,5 @@
 <template>
-  <div id="Intermission">
+  <div id="Intermission" :style="{ zoom }">
     <div
       id="Background"
       :style="{ 'clip-path': clipPath }"
@@ -98,6 +98,7 @@ import UpcomingRun from './components/UpcomingRun.vue';
 import Rotation from './components/Rotation.vue';
 import DonationReader from './components/DonationReader.vue';
 import MusicTrack from './components/MusicTrack.vue';
+import { getZoomAmountCSS } from '../_misc/helpers';
 
 @Component({
   components: {
@@ -112,6 +113,7 @@ import MusicTrack from './components/MusicTrack.vue';
 export default class extends Vue {
   @State nextRuns!: RunData[];
   clipPath = 'unset';
+  zoom = getZoomAmountCSS();
 
   mounted(): void {
     // Bring this back if we actually gain some cameras on this layout.

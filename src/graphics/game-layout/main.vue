@@ -1,5 +1,5 @@
 <template>
-  <div id="GameLayout">
+  <div id="GameLayout" :style="{ zoom }">
     <div
       id="Background"
       :style="{ 'clip-path': clipPath }"
@@ -17,6 +17,7 @@ import { generateClipPath } from '../_misc/cut-background';
 import { ClearList, UpdateList, UpdateSelected } from './store';
 import { defaultCode } from './list';
 import { updateCapturePositionData } from '../_misc/update-capture-position-data';
+import { getZoomAmountCSS } from '../_misc/helpers';
 
 @Component
 export default class extends Vue {
@@ -25,6 +26,7 @@ export default class extends Vue {
   @Mutation updateSelected!: UpdateSelected;
   @Mutation clearList!: ClearList;
   clipPath = 'unset';
+  zoom = getZoomAmountCSS();
 
   @Watch('gameLayouts', { immediate: true })
   async onGameLayoutsChange(newVal: GameLayouts, oldVal?: GameLayouts): Promise<void> {

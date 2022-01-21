@@ -8,6 +8,7 @@
       'justify-content': 'space-evenly',
       'align-items': 'flex-end',
       padding: '50px',
+      zoom,
     }"
   >
     <host
@@ -20,6 +21,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
+import { getZoomAmountCSS } from '../_misc/helpers';
 import Host from './components/Host.vue';
 
 @Component({
@@ -27,5 +29,7 @@ import Host from './components/Host.vue';
     Host,
   },
 })
-export default class extends Vue {}
+export default class extends Vue {
+  zoom = getZoomAmountCSS();
+}
 </script>

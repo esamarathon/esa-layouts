@@ -1,5 +1,8 @@
+import { Configschema } from '@esa-layouts/types/schemas';
 import type { BoxCoor } from './clip';
 import { makeCoors, outputCss, sortBoxCoor } from './clip';
+
+const config = nodecg.bundleConfig as Configschema;
 
 // eslint-disable-next-line import/prefer-default-export
 export function generateClipPath(): string {
@@ -16,5 +19,9 @@ export function generateClipPath(): string {
     return sortBoxCoor(coords);
   });
 
-  return outputCss(makeCoors(1920, 1080, coordsArr));
+  return outputCss(makeCoors(
+    config.obs.canvasResolution.width,
+    config.obs.canvasResolution.height,
+    coordsArr,
+  ));
 }

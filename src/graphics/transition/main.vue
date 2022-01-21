@@ -12,9 +12,9 @@
       'background-color': '#734e9e'
     }"
   >
-    <div ref="LeftBox" :style="{ background: '#fdbb1c', width: '150px' }" />
+    <div ref="LeftBox" :style="{ background: '#fdbb1c', width: `${150 * zoom}px` }" />
     <img src="./esa-big-logo-2-summer.svg" :style="{ width: '75vw' }">
-    <div ref="RightBox" :style="{ background: '#fdbb1c', width: '75px' }" />
+    <div ref="RightBox" :style="{ background: '#fdbb1c', width: `${75 * zoom}px` }" />
   </div>
 </template>
 
@@ -22,6 +22,7 @@
 import { Vue, Component, Ref } from 'vue-property-decorator';
 import gsap from 'gsap';
 import { SlowMo } from 'gsap/EasePack';
+import { getZoomAmount } from '../_misc/helpers';
 
 gsap.registerPlugin(SlowMo);
 
@@ -31,6 +32,7 @@ export default class extends Vue {
   @Ref('LeftBox') leftBox!: HTMLElement;
   @Ref('RightBox') rightBox!: HTMLElement;
   timeline = gsap.timeline({ paused: true });
+  zoom = getZoomAmount();
 
   mounted(): void {
     const slowdown = 1.2;
@@ -40,8 +42,11 @@ export default class extends Vue {
       ease:
       'slow(0.1, 0.8, false)',
     }, 0);
-    this.timeline.to(this.leftBox, { width: '75px', duration: slowdown * 0.5 }, 0);
-    this.timeline.to(this.rightBox, { width: '150px', duration: slowdown * 0.5 }, slowdown * 0.5);
+    this.timeline.to(this.leftBox, { width: `${75 * this.zoom}px`, duration: slowdown * 0.5 }, 0);
+    this.timeline.to(this.rightBox, {
+      width: `${150 * this.zoom}px`,
+      duration: slowdown * 0.5,
+    }, slowdown * 0.5);
 
     nodecg.listenFor('showTransition', () => {
       this.timeline.restart();

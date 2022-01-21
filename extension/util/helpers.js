@@ -41,6 +41,7 @@ exports.getOtherStreamEventShort = getOtherStreamEventShort;
  * @param err Error to be logged.
  * @param args List of argments to be supplied/substitued in the msg string.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function logError(msg, err, ...args) {
     const msgWithArgs = util_1.default.format(msg, ...args);
     (0, nodecg_1.get)().log.warn(msgWithArgs);

@@ -34,6 +34,7 @@ module.exports = (nodecg) => {
     require('./text-to-speech');
     require('./music');
     require('./intermission-player');
+    require('./flagcarrier');
     return {
         obs: require('./util/obs').default,
         mixer: require('./mixer'),

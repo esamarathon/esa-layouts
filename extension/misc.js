@@ -22,6 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.searchSrcomPronouns = void 0;
 const audio_normaliser_1 = __importDefault(require("@shared/extension/audio-normaliser"));
 const helpers_1 = require("./util/helpers");
 const mqLogging = __importStar(require("./util/mq-logging"));
@@ -74,18 +75,6 @@ rabbitmq_1.mq.evt.on('gameSceneChanged', (data) => {
         }
     }
 });
-// When someone scans in on one of the big timer buttons.
-// Currently only used for commentators.
-rabbitmq_1.mq.evt.on('bigbuttonTagScanned', (data) => {
-    if (config.event.thisEvent === 1 && data.flagcarrier.group === 'stream1') {
-        const name = data.user.displayName;
-        (0, nodecg_1.get)().sendMessage('bigbuttonTagScanned', data);
-        if (!replicants_1.commentators.value.includes(name)) {
-            replicants_1.commentators.value.push(name);
-            (0, nodecg_1.get)().log.debug('[Misc] Added new commentator:', name);
-        }
-    }
-});
 let init = false;
 speedcontrol_1.sc.runDataActiveRun.on('change', (newVal, oldVal) => {
     // Reset the commentators when the run changes and
@@ -118,6 +107,7 @@ speedcontrol_1.sc.runDataActiveRunSurrounding.on('change', (newVal) => {
     replicants_1.upcomingRunID.value = (run === null || run === void 0 ? void 0 : run.id) || null;
 });
 // Helper function to get pronouns of a specified user name from speedrun.com
+// eslint-disable-next-line import/prefer-default-export
 async function searchSrcomPronouns(val) {
     var _a;
     const name = val.replace(/\((.*?)\)/g, '').trim();
@@ -131,6 +121,7 @@ async function searchSrcomPronouns(val) {
     }
     return pronouns ? `${name} (${pronouns})` : name;
 }
+exports.searchSrcomPronouns = searchSrcomPronouns;
 // Processes adding commentators from the dashboard panel.
 (0, nodecg_1.get)().listenFor('commentatorAdd', async (val, ack) => {
     if (val && !replicants_1.commentators.value.includes(val)) {

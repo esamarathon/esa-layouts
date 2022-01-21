@@ -57,19 +57,6 @@ mq.evt.on('gameSceneChanged', (data) => {
   }
 });
 
-// When someone scans in on one of the big timer buttons.
-// Currently only used for commentators.
-mq.evt.on('bigbuttonTagScanned', (data) => {
-  if (config.event.thisEvent === 1 && data.flagcarrier.group === 'stream1') {
-    const name = data.user.displayName;
-    nodecg().sendMessage('bigbuttonTagScanned', data);
-    if (!commentators.value.includes(name)) {
-      commentators.value.push(name);
-      nodecg().log.debug('[Misc] Added new commentator:', name);
-    }
-  }
-});
-
 let init = false;
 sc.runDataActiveRun.on('change', (newVal, oldVal) => {
   // Reset the commentators when the run changes and
@@ -106,7 +93,8 @@ nodecg().listenFor('forceUpcomingRun', (id?: string) => {
 });
 
 // Helper function to get pronouns of a specified user name from speedrun.com
-async function searchSrcomPronouns(val: string): Promise<string> {
+// eslint-disable-next-line import/prefer-default-export
+export async function searchSrcomPronouns(val: string): Promise<string> {
   const name = val.replace(/\((.*?)\)/g, '').trim();
   let pronouns = (val.match(/\((.*?)\)/g) || [])[0]?.replace(/[()]/g, '');
   if (!pronouns) {

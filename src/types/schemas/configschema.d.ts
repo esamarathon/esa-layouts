@@ -73,4 +73,9 @@ export interface Configschema {
 		enabled: boolean;
 		voiceAPI: string;
 	};
+	flagcarrier: {
+		enabled: boolean;
+		allowedDevices?: string | [string, ...string[]] | null;
+		group: string;
+	};
 }

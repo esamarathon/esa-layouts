@@ -89,94 +89,94 @@ replicants_1.capturePositions.on('change', async (val) => {
         return;
     // Loops through all possible sources to move and does the work.
     for (const [key, value] of Object.entries(obsSourceKeys)) {
-        if (!value)
-            return; // Ignore if key -> value pair isn't set
-        const crop = { top: 0, right: 0, bottom: 0, left: 0 }; // Default crop values
-        // If this is a camera, it may need cropping.
-        if (key.includes('Camera') && val['game-layout'][key]) {
+        if (value) { // Only continue if key -> value pair is set
+            const crop = { top: 0, right: 0, bottom: 0, left: 0 }; // Default crop values
+            // If this is a camera, it may need cropping.
+            if (key.includes('Camera') && val['game-layout'][key]) {
+                try {
+                    // Cameras need cropping if not exactly 16:9.
+                    // Widerneed top/bottom cropping.
+                    // Thinner need left/right cropping.
+                    const sceneItemProperties = await obs_1.default.conn.send('GetSceneItemProperties', {
+                        'scene-name': config.obs.names.scenes.gameLayout,
+                        item: { name: value },
+                    });
+                    const cameraAR = sceneItemProperties.sourceWidth / sceneItemProperties.sourceHeight;
+                    const areaAR = val['game-layout'][key].width / val['game-layout'][key].height;
+                    if (areaAR > cameraAR) {
+                        const newHeight = sceneItemProperties.sourceWidth / areaAR;
+                        const cropAmount = Math.floor((sceneItemProperties.sourceHeight - newHeight) / 2);
+                        crop.top = cropAmount;
+                        crop.bottom = cropAmount;
+                    }
+                    else if (areaAR < cameraAR) {
+                        const newWidth = sceneItemProperties.sourceHeight * areaAR;
+                        const cropAmount = Math.floor((sceneItemProperties.sourceWidth - newWidth) / 2);
+                        crop.left = cropAmount;
+                        crop.right = cropAmount;
+                    }
+                }
+                catch (err) {
+                    (0, helpers_1.logError)('[Layouts] Cannot find camera source to crop [%s]', err, key);
+                }
+            }
             try {
-                // Cameras need cropping if not exactly 16:9.
-                // Widerneed top/bottom cropping.
-                // Thinner need left/right cropping.
-                const sceneItemProperties = await obs_1.default.conn.send('GetSceneItemProperties', {
-                    'scene-name': config.obs.names.scenes.gameLayout,
-                    item: { name: value },
-                });
-                const cameraAR = sceneItemProperties.sourceWidth / sceneItemProperties.sourceHeight;
-                const areaAR = val['game-layout'][key].width / val['game-layout'][key].height;
-                if (areaAR > cameraAR) {
-                    const newHeight = sceneItemProperties.sourceWidth / areaAR;
-                    const cropAmount = Math.floor((sceneItemProperties.sourceHeight - newHeight) / 2);
-                    crop.top = cropAmount;
-                    crop.bottom = cropAmount;
+                // Special game capture source cropping for sm64-psp-2p game layout.
+                if (['GameCapture1', 'GameCapture2'].includes(key)
+                    && replicants_1.gameLayouts.value.selected === 'sm64-psp-2p') {
+                    const sceneItemProperties = await obs_1.default.conn.send('GetSceneItemProperties', {
+                        'scene-name': config.obs.names.scenes.gameLayout,
+                        item: { name: value },
+                    });
+                    crop.right = key === 'GameCapture1' ? sceneItemProperties.sourceWidth / 2 : 0;
+                    crop.left = key === 'GameCapture2' ? sceneItemProperties.sourceWidth / 2 : 0;
                 }
-                else if (areaAR < cameraAR) {
-                    const newWidth = sceneItemProperties.sourceHeight * areaAR;
-                    const cropAmount = Math.floor((sceneItemProperties.sourceWidth - newWidth) / 2);
-                    crop.left = cropAmount;
-                    crop.right = cropAmount;
-                }
+                await obs_1.default.configureSceneItem(config.obs.names.scenes.gameLayout, // Scene
+                value, // Item
+                (() => {
+                    // Special game capture settings for DS-1p, 3DS-1p and sm64-psp-2p when online.
+                    if (config.event.online && key.startsWith('GameCapture')
+                        && ['DS-1p', '3DS-1p', 'sm64-psp-2p'].includes(replicants_1.gameLayouts.value.selected || '')) {
+                        // sm64-psp-2p.
+                        if (replicants_1.gameLayouts.value.selected === 'sm64-psp-2p'
+                            && ['GameCapture1', 'GameCapture2'].includes(key)) {
+                            return {
+                                x: key === 'GameCapture2' ? config.obs.canvasResolution.width / 2 : 0,
+                                y: 0,
+                                width: config.obs.canvasResolution.width / 2,
+                                height: config.obs.canvasResolution.height,
+                            };
+                        }
+                        // All others.
+                        if (key === 'GameCapture1') {
+                            return {
+                                x: 0,
+                                y: 0,
+                                width: config.obs.canvasResolution.width,
+                                height: config.obs.canvasResolution.height,
+                            };
+                        }
+                        return undefined;
+                    }
+                    return val['game-layout'][key];
+                })(), crop, // Crop
+                (() => {
+                    // Special game capture settings for DS-1p, 3DS-1p and sm64-psp-2p when online.
+                    if (config.event.online && key.startsWith('GameCapture')
+                        && ['DS-1p', '3DS-1p', 'sm64-psp-2p'].includes(replicants_1.gameLayouts.value.selected || '')) {
+                        if (key === 'GameCapture1')
+                            return true;
+                        if (key === 'GameCapture2' && replicants_1.gameLayouts.value.selected === 'sm64-psp-2p') {
+                            return true;
+                        }
+                        return false;
+                    }
+                    return !!val['game-layout'][key];
+                })());
             }
             catch (err) {
-                (0, helpers_1.logError)('[Layouts] Cannot find camera source to crop [%s]', err, key);
+                (0, helpers_1.logError)('[Layouts] Cannot successfully configure capture position [%s]', err, key);
             }
-        }
-        try {
-            // Special game capture source cropping for sm64-psp-2p game layout.
-            if (['GameCapture1', 'GameCapture2'].includes(key)
-                && replicants_1.gameLayouts.value.selected === 'sm64-psp-2p') {
-                const sceneItemProperties = await obs_1.default.conn.send('GetSceneItemProperties', {
-                    'scene-name': config.obs.names.scenes.gameLayout,
-                    item: { name: value },
-                });
-                crop.right = key === 'GameCapture1' ? sceneItemProperties.sourceWidth / 2 : 0;
-                crop.left = key === 'GameCapture2' ? sceneItemProperties.sourceWidth / 2 : 0;
-            }
-            await obs_1.default.configureSceneItem(config.obs.names.scenes.gameLayout, // Scene
-            value, // Item
-            (() => {
-                // Special game capture settings for DS-1p, 3DS-1p and sm64-psp-2p when online.
-                if (config.event.online && key.startsWith('GameCapture')
-                    && ['DS-1p', '3DS-1p', 'sm64-psp-2p'].includes(replicants_1.gameLayouts.value.selected || '')) {
-                    // sm64-psp-2p.
-                    if (replicants_1.gameLayouts.value.selected === 'sm64-psp-2p'
-                        && ['GameCapture1', 'GameCapture2'].includes(key)) {
-                        return {
-                            x: key === 'GameCapture2' ? config.obs.canvasResolution.width / 2 : 0,
-                            y: 0,
-                            width: config.obs.canvasResolution.width / 2,
-                            height: config.obs.canvasResolution.height,
-                        };
-                    }
-                    // All others.
-                    if (key === 'GameCapture1') {
-                        return {
-                            x: 0,
-                            y: 0,
-                            width: config.obs.canvasResolution.width,
-                            height: config.obs.canvasResolution.height,
-                        };
-                    }
-                    return undefined;
-                }
-                return val['game-layout'][key];
-            })(), crop, // Crop
-            (() => {
-                // Special game capture settings for DS-1p, 3DS-1p and sm64-psp-2p when online.
-                if (config.event.online && key.startsWith('GameCapture')
-                    && ['DS-1p', '3DS-1p', 'sm64-psp-2p'].includes(replicants_1.gameLayouts.value.selected || '')) {
-                    if (key === 'GameCapture1')
-                        return true;
-                    if (key === 'GameCapture2' && replicants_1.gameLayouts.value.selected === 'sm64-psp-2p') {
-                        return true;
-                    }
-                    return false;
-                }
-                return !!val['game-layout'][key];
-            })());
-        }
-        catch (err) {
-            (0, helpers_1.logError)('[Layouts] Cannot successfully configure capture position [%s]', err, key);
         }
     }
 });

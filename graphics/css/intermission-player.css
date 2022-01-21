@@ -66,7 +66,7 @@ body {
 }
 
 
-.RunInfoExtra > span[data-v-3c16b091]:not(:last-child)::after {
+.RunInfoExtra > span[data-v-6aa5b728]:not(:last-child)::after {
   content: ' /';
 }
 

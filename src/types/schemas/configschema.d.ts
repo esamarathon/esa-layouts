@@ -47,6 +47,7 @@ export interface Configschema {
 			sources: {
 				gameCaptures: string | [string, ...string[]];
 				cameraCaptures: string | [string, ...string[]];
+				cameraCaptureCrowd?: string | null;
 				twitchSources: string | [string] | [string, string];
 				videoPlayer: string;
 			};

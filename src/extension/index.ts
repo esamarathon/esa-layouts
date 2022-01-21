@@ -42,6 +42,7 @@ export = (nodecg: NodeCG): ExtensionReturn => {
   require('./text-to-speech');
   require('./music');
   require('./intermission-player');
+  require('./flagcarrier');
 
   return {
     obs: require('./util/obs').default,

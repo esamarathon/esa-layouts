@@ -380,6 +380,42 @@
         "enabled",
         "voiceAPI"
       ]
+    },
+    "flagcarrier": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "allowedDevices": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true,
+              "minItems": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "group": {
+          "type": "string",
+          "default": "stream1"
+        }
+      },
+      "required": [
+        "enabled",
+        "group"
+      ]
     }
   },
   "required": [
@@ -391,6 +427,7 @@
     "music",
     "x32",
     "tracker",
-    "tts"
+    "tts",
+    "flagcarrier"
   ]
 }

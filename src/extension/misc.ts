@@ -106,7 +106,8 @@ nodecg().listenFor('forceUpcomingRun', (id?: string) => {
 });
 
 // Helper function to get pronouns of a specified user name from speedrun.com
-async function searchSrcomPronouns(val: string): Promise<string> {
+// eslint-disable-next-line import/prefer-default-export
+export async function searchSrcomPronouns(val: string): Promise<string> {
   const name = val.replace(/\((.*?)\)/g, '').trim();
   let pronouns = (val.match(/\((.*?)\)/g) || [])[0]?.replace(/[()]/g, '');
   if (!pronouns) {

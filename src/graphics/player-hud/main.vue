@@ -59,11 +59,11 @@ export default class extends Vue {
   }
 
   mounted(): void {
-    nodecg.listenFor('bigbuttonTagScanned', (data) => {
+    nodecg.listenFor('bigbuttonTagScanned', ({ id, str }: { id: string, str: string }) => {
       window.clearTimeout(this.tagScanTimeout);
       this.tagScanned = true;
-      this.buttonID = data.flagcarrier.id;
-      this.scannedName = data.user.displayName;
+      this.buttonID = id;
+      this.scannedName = str;
       this.tagScanTimeout = window.setTimeout(() => {
         this.tagScanned = false;
         this.buttonID = '';

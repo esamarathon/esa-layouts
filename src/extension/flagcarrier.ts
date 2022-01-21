@@ -14,13 +14,16 @@ const allowedDevices = !Array.isArray(config.flagcarrier.allowedDevices)
 
 function setup(): void {
   // RabbitMQ events from the "big red buttons", used for players/commentators.
-  mq.evt.on('bigbuttonTagScanned', (data) => {
+  mq.evt.on('bigbuttonTagScanned', async (data) => {
     if (config.event.thisEvent === 1 && data.flagcarrier.group === 'stream1') {
       const name = data.user.displayName;
-      nodecg().sendMessage('bigbuttonTagScanned', data);
-      if (!commentators.value.includes(name)) {
-        commentators.value.push(name);
-        nodecg().log.debug('[FlagCarrier] Added new commentator:', name);
+      const pronouns = data.raw.pronouns as string | undefined;
+      let str = pronouns ? `${name} (${pronouns})` : name;
+      str = await searchSrcomPronouns(str);
+      nodecg().sendMessage('bigbuttonTagScanned', { id: data.flagcarrier.id, str });
+      if (!commentators.value.includes(str)) {
+        commentators.value.push(str);
+        nodecg().log.debug('[FlagCarrier] Added new commentator:', str);
       }
     }
   });

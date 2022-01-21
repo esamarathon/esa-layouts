@@ -37,7 +37,8 @@ export function getOtherStreamEventShort(): string | undefined {
  * @param err Error to be logged.
  * @param args List of argments to be supplied/substitued in the msg string.
  */
-export function logError(msg: string, err: Error, ...args: unknown[]): void {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function logError(msg: string, err: any, ...args: unknown[]): void {
   const msgWithArgs = util.format(msg, ...args);
   nodecg().log.warn(msgWithArgs);
   nodecg().log.debug(`${msgWithArgs}: %s`, err);

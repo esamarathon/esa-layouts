@@ -7,7 +7,7 @@
   height: 400px;
 }
 
-#Omnibar #Logo {
+#Omnibar > #Logo {
   content: url('./uksgsp/OmnibarLogo.png');
   padding: 0 10px;
 }

@@ -130,9 +130,13 @@ body {
   background: linear-gradient(0deg, rgba(56,31,78,1) 0%, rgba(92,50,130,1) 100%);
 }
 
-#Omnibar #Logo {
+#Omnibar > #Logo {
   content: url('./default/OmnibarLogo.png');
   padding: 0 10px;
+}
+
+#Omnibar #CharityLogo {
+  content: url('./default/OmnibarCharityLogo.png');
 }
 
 #Omnibar .Divider {

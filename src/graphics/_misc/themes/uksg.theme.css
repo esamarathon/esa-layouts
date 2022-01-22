@@ -66,6 +66,12 @@ body {
   background: #011961;
 }
 
+#Omnibar #CharityLogo {
+  content: url('./uksg/OmnibarCharityLogo.png');
+  margin: 0 15px;
+}
+
+
 #Omnibar .Divider {
   background-color: #4d83aa;
 }

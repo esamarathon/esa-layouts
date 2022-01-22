@@ -1,13 +1,17 @@
 <template>
   <div
-    id="Clock"
     class="Flex"
+    :style="{
+      width: '90px',
+      'font-size': '35px',
+    }"
   >
     {{ time }}
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -15,34 +19,20 @@ import timezone from 'dayjs/plugin/timezone';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export default {
-  name: 'Clock',
-  data() {
-    return {
-      time: '00:00',
-    };
-  },
-  created() {
+@Component
+export default class extends Vue {
+  time = '00:00';
+
+  setTime(): void {
+    const zone = nodecg.bundleConfig.event.theme?.startsWith('uksg')
+      ? 'Europe/London'
+      : 'Europe/Stockholm';
+    this.time = dayjs().tz(zone).format('HH:mm');
+  }
+
+  created(): void {
     this.setTime();
     setInterval(() => { this.setTime(); }, 1000);
-  },
-  methods: {
-    setTime() {
-      const zone = nodecg.bundleConfig.event.theme?.startsWith('uksg')
-        ? 'Europe/London'
-        : 'Europe/Stockholm';
-      this.time = dayjs().tz(zone).format('HH:mm');
-    },
-    pad(num) {
-      return num.toString().padStart(2, '0');
-    },
-  },
-};
-</script>
-
-<style scoped>
-  #Clock {
-    font-size: 35px;
-    width: 90px;
   }
-</style>
+}
+</script>

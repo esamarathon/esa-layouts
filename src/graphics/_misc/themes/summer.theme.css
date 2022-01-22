@@ -7,7 +7,11 @@
   height: 500px;
 }
 
-#Omnibar #Logo {
+#Omnibar > #Logo {
   content: url('./summer/OmnibarLogo.png');
   padding: 0 10px;
+}
+
+#Omnibar #CharityLogo {
+  content: url('./summer/OmnibarCharityLogo.png');
 }

@@ -31,6 +31,12 @@ import { wait } from '@esa-layouts/graphics/_misc/helpers';
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { RunData } from 'speedcontrol-util/types';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
 
 @Component({
   name: 'UpcomingRun',
@@ -43,7 +49,7 @@ export default class extends Vue {
 
   get when(): string {
     return this.run.scheduledS
-      ? this.run.scheduledS.toString() // TODO: Implement day.js!
+      ? `in about ${dayjs.utc().to(dayjs.unix(this.run.scheduledS), true)}`
       : 'soon';
   }
 

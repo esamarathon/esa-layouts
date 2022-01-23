@@ -23,6 +23,28 @@
 import { wait } from '@esa-layouts/graphics/_misc/helpers';
 import { Prizes } from '@esa-layouts/types/schemas';
 import { Vue, Component, Prop } from 'vue-property-decorator';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import utc from 'dayjs/plugin/utc';
+import en from 'dayjs/locale/en-gb';
+
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
+
+// Sets up custom locale (used later) to tweak some relativeTime strings.
+dayjs.locale({
+  ...en,
+  name: 'en-prizes',
+  relativeTime: {
+    ...en.relativeTime,
+    s: 'few seconds',
+    m: 'minute',
+    h: 'hour',
+    d: 'day',
+    M: 'month',
+    y: 'year',
+  },
+}, {}, true);
 
 @Component({
   name: 'Prize',
@@ -33,11 +55,9 @@ export default class extends Vue {
 
   // TODO: Implement day.js!
   get timeUntilString(): string {
-    return this.prize.endTime?.toString() || '';
-    /* let timeUntil = moment.unix(prize.endTime / 1000).fromNow(true);
-    timeUntil = timeUntil.replace('an ', ''); // Dirty fix for "Donate in the next an hour".
-    timeUntil = timeUntil.replace('a ', ''); // Dirty fix for "Donate in the next a day".
-    return timeUntil; */
+    return this.prize.endTime
+      ? dayjs.unix(this.prize.endTime / 1000).utc().locale('en-prizes').fromNow(true)
+      : '';
   }
 
   async created(): Promise<void> {

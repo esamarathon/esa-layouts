@@ -24,19 +24,9 @@ mq.evt.on('newScreenedSub', (data) => {
   nodecg().log.debug('[Misc] Received new subscription');
   nodecg().sendMessage('newSub', data);
 });
-mq.evt.on('newScreenedTweet', (data) => {
-  nodecg().log.debug('[Misc] Received new tweet');
-  nodecg().sendMessage('newTweet', data);
-});
 mq.evt.on('newScreenedCheer', (data) => {
   nodecg().log.debug('[Misc] Received new cheer');
   nodecg().sendMessage('newCheer', data);
-});
-mq.evt.on('newScreenedCrowdControl', (data) => {
-  if (config.event.thisEvent === 1) {
-    nodecg().log.debug('[Misc] Received new crowd control message');
-    nodecg().sendMessage('newCrowdControl', data);
-  }
 });
 
 // Information that should come from our 2nd stream.

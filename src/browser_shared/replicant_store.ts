@@ -1,8 +1,8 @@
-import type { Bids, Commentators, Countdown, CurrentRunDelay, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, ObsData, Omnibar, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import type { Bids, Commentators, Countdown, CurrentRunDelay, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, ObsData, Omnibar, OtherStreamData, Prizes, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
-import { RunDataArray } from 'speedcontrol-util/types';
+import { RunDataActiveRun, RunDataArray } from 'speedcontrol-util/types';
 import { RunDataActiveRunSurrounding } from 'speedcontrol-util/types/speedcontrol/schemas';
 import Vue from 'vue';
 import type { Store } from 'vuex';
@@ -24,6 +24,9 @@ export const reps: {
   gameLayouts: ReplicantBrowser<GameLayouts>;
   obsData: ReplicantBrowser<ObsData>;
   omnibar: ReplicantBrowser<Omnibar>;
+  otherStreamData: ReplicantBrowser<OtherStreamData>;
+  prizes: ReplicantBrowser<Prizes>;
+  runDataActiveRun: ReplicantBrowser<RunDataActiveRun>;
   runDataActiveRunSurrounding: ReplicantBrowser<RunDataActiveRunSurrounding>;
   runDataArray: ReplicantBrowser<RunDataArray>;
   serverTimestamp: ReplicantBrowser<ServerTimestamp>;
@@ -44,6 +47,9 @@ export const reps: {
   gameLayouts: nodecg.Replicant('gameLayouts'),
   obsData: nodecg.Replicant('obsData'),
   omnibar: nodecg.Replicant('omnibar'),
+  otherStreamData: nodecg.Replicant('otherStreamData'),
+  prizes: nodecg.Replicant('prizes'),
+  runDataActiveRun: sc.runDataActiveRun,
   runDataActiveRunSurrounding: sc.runDataActiveRunSurrounding,
   runDataArray: sc.runDataArray,
   serverTimestamp: nodecg.Replicant('serverTimestamp'),
@@ -66,6 +72,9 @@ export interface ReplicantTypes {
   gameLayouts: GameLayouts;
   obsData: ObsData;
   omnibar: Omnibar;
+  otherStreamData: OtherStreamData;
+  prizes: Prizes;
+  runDataActiveRun: RunDataActiveRun;
   runDataActiveRunSurrounding: RunDataActiveRunSurrounding;
   runDataArray: RunDataArray;
   serverTimestamp: ServerTimestamp;

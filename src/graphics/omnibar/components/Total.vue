@@ -10,7 +10,7 @@
     <audio ref="SFX">
       <source src="./sfx/mario_coin.mp3" type="audio/mpeg">
     </audio>
-    <div class="Grid Flex" :style="{ 'min-width': '110px' }">
+    <div class="Grid" :style="{ 'min-width': '110px' }">
       <!-- Charity logo. -->
       <div class="Flex" :style="{ 'z-index': 0 }">
         <img

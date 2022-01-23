@@ -6,8 +6,30 @@
  */
 
 export interface Omnibar {
+	rotation: {
+		type: 'GenericMsg' | 'UpcomingRun' | 'Prize' | 'Bid' | 'Milestone';
+		id: string;
+		props?: Props;
+	}[];
+	alertQueue: {
+		type: 'Tweet' | 'CrowdControl';
+		id: string;
+		data?: {
+			[k: string]: unknown;
+		};
+	}[];
+	current: {
+		type: ('GenericMsg' | 'UpcomingRun' | 'Prize' | 'Bid' | 'Milestone') | ('Tweet' | 'CrowdControl');
+		id: string;
+		props?: Props;
+	} | null;
+	lastIndex: number;
 	pin: {
 		type: 'milestone' | 'bid';
 		id: string | number;
 	} | null;
+}
+export interface Props {
+	seconds?: number;
+	[k: string]: unknown;
 }

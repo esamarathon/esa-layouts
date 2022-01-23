@@ -1,255 +1,70 @@
 <template>
   <div
     id="Ticker"
+    class="Grid"
+    :style="{
+      flex: 1,
+      overflow: 'hidden',
+      height: '100%',
+      // 'min-width': 0, // was probably used for overlapping things?
+    }"
   >
-    <transition
-      name="fade"
-      mode="out-in"
-    >
+    <transition name="ticker" mode="out-in">
       <component
-        :is="currentComponent.name"
-        :key="timestamp"
-        :data="currentComponent.data"
-        @end="showNextMsg"
+        v-if="omnibar.current"
+        :is="omnibar.current.type"
+        :key="`${omnibar.current.type}${JSON.stringify(omnibar.current.props)}`"
+        v-bind="omnibar.current.props"
+        @end="showNext"
       />
     </transition>
   </div>
 </template>
 
-<script>
-import GenericMessage from './Ticker/GenericMessage.vue';
+<script lang="ts">
+import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
+import { awaitTimeout } from '@esa-layouts/graphics/_misc/helpers';
+import { Omnibar } from '@esa-layouts/types/schemas';
+import { Vue, Component } from 'vue-property-decorator';
+import GenericMsg from './Ticker/GenericMsg.vue';
+import Tweet from './Ticker/Tweet.vue';
+import CrowdControl from './Ticker/CrowdControl.vue';
 import UpcomingRun from './Ticker/UpcomingRun.vue';
-import OtherStreamInfo from './Ticker/OtherStreamInfo.vue';
 import Prize from './Ticker/Prize.vue';
 import Bid from './Ticker/Bid.vue';
-import Alert from './Ticker/Alert.vue';
 import Milestone from './Ticker/Milestone.vue';
 
-const otherStreamData = nodecg.Replicant('otherStreamData');
-const runDataActiveRun = nodecg.Replicant('runDataActiveRun', 'nodecg-speedcontrol');
-const runDataArray = nodecg.Replicant('runDataArray', 'nodecg-speedcontrol');
-const bids = nodecg.Replicant('bids');
-const prizes = nodecg.Replicant('prizes');
-const pin = nodecg.Replicant('omnibarPin');
-
-const newDonations = [];
-const newSubs = [];
-const newTweets = [];
-const newCheers = [];
-const newCrowdControlExchanges = [];
-
-export default {
-  name: 'Ticker',
-  data() {
-    return {
-      currentComponent: {
-        name: '',
-        data: {},
-      },
-      timestamp: Date.now(),
-      otherChannel: nodecg.bundleConfig.event.thisEvent > 1 ? 'esa' : 'esamarathon2',
-      messageTypes: [],
-    };
+@Component({
+  components: {
+    GenericMsg,
+    Tweet,
+    CrowdControl,
+    UpcomingRun,
+    Prize,
+    Milestone,
+    Bid,
   },
-  mounted() {
-    NodeCG.waitForReplicants(
-      otherStreamData,
-      runDataActiveRun,
-      runDataArray,
-      bids,
-      prizes,
-    ).then(() => {
-      // nodecg.listenFor('newSub', data => newSubs.push(data));
-      nodecg.listenFor('newTweet', (data) => newTweets.push(data));
-      // nodecg.listenFor('newDonation', data => newDonations.push(data));
-      // nodecg.listenFor('newCheer', data => newCheers.push(data));
-      nodecg.listenFor('newCrowdControl', (data) => newCrowdControlExchanges.push(data));
+})
+export default class extends Vue {
+  @replicantNS.State((s) => s.reps.omnibar) readonly omnibar!: Omnibar;
 
-      // Puts copies of the objects the functions return
-      // into an array for easy random-ness access.
-      this.messageTypes = [
-        this.esaPromo(),
-        this.charityPromo(),
-        // this.otherStreamPromo(),
-        // this.otherStreamInfo(),
-        this.upcomingRun(),
-        this.prize(),
-        this.bid(),
-        this.milestone(),
-        this.teamPromo(),
-        this.donationURL(),
-        // this.esaUpcomingEvt(),
-        // this.esaBtRL(),
-        // this.merch(),
-        // this.ticket(),
-        // this.twitchCharity(),
-      ];
-
-      this.showNextMsg();
-    });
-  },
-  methods: {
-    showNextMsg() {
-      console.log('GOING TO SHOW NEXT MESSAGE');
-      let currentComponent;
-      if (pin.value && pin.value.type === 'milestone') {
-        currentComponent = this.milestone();
-      } else if (pin.value && pin.value.type === 'bid') {
-        currentComponent = this.bid();
-      } else if (newCrowdControlExchanges.length) {
-        currentComponent = this.crowdControl(newCrowdControlExchanges[0]);
-        newCrowdControlExchanges.shift();
-      } else if (newDonations.length) {
-        currentComponent = this.donation(newDonations[0]);
-        newDonations.shift();
-      } else if (newSubs.length) {
-        currentComponent = this.sub(newSubs[0]);
-        newSubs.shift();
-      } else if (newCheers.length) {
-        currentComponent = this.cheer(newCheers[0]);
-        newCheers.shift();
-      } else if (newTweets.length) {
-        currentComponent = this.tweet(newTweets[0]);
-        newTweets.shift();
-      } else {
-        currentComponent = this.messageTypes[Math.floor(Math.random() * this.messageTypes.length)];
-      }
-      console.log('currentComponent DECIDED: %s', JSON.stringify(currentComponent.name.name));
-      this.currentComponent = currentComponent;
-      this.timestamp = Date.now();
-    },
-    esaPromo() {
-      return this.genericMsg('This is United Kingdom Speedrunner Gathering Autumn 2021');
-    },
-    charityPromo() {
-      return this.genericMsg('#UKSGAutumn21 benefits Crisis');
-    },
-    otherStreamPromo() {
-      return this.genericMsg(`Watch more great runs over @ twitch.tv/${this.otherChannel}`);
-    },
-    otherStreamInfo() {
-      return {
-        name: OtherStreamInfo,
-        data: {
-          otherChannel: this.otherChannel,
-        },
-      };
-    },
-    upcomingRun() {
-      return { name: UpcomingRun };
-    },
-    prize() {
-      return { name: Prize };
-    },
-    bid() {
-      return { name: Bid };
-    },
-    milestone() {
-      return { name: Milestone };
-    },
-    teamPromo() {
-      return this.genericMsg('Check out our Twitch team @ twitch.tv/team/esa');
-    },
-    donationURL() {
-      return this.genericMsg(`Donate @ ${nodecg.bundleConfig.tracker.address}`);
-    },
-    merch() {
-      return this.genericMsg('Check out our merch @ speedrunstore.com');
-    },
-    ticket() {
-      return this.genericMsg('Buy your supporter ticket @ esamarathon.com');
-    },
-    twitchCharity() {
-      return this.genericMsg('Subscribe or cheer to support the charity');
-    },
-    esaUpcomingEvt() {
-      // eslint-disable-next-line max-len
-      return this.genericMsg('Can\'t get enough of speedrunning? Then look forward to ESA Summer 2021: 24th - 31st July');
-    },
-    esaBtRL() {
-      // eslint-disable-next-line max-len
-      return this.genericMsg('ESA Break the Record: LIVE - Minecraft, 30th April - 2nd May! - breaktherecordlive.com');
-    },
-    crowdControl(exchange) {
-      const line1 = 'Crowd Control';
-      const line2 = exchange.message.trailing;
-      return this.alert(line1, line2, false, true);
-    },
-    donation(donation) {
-      // eslint-disable-next-line max-len
-      const line1 = `New Donation: ${donation.donor_visiblename} (${this.formatUSD(parseFloat(donation.amount))})`;
-      const line2 = donation.comment;
-      return this.alert(line1, line2);
-    },
-    sub(subData) {
-      const systemMsg = subData.message.tags['system-msg'].replace(/\\s/g, ' ');
-      const line1 = systemMsg;
-      const line2 = subData.message.trailing;
-      return this.alert(line1, line2);
-    },
-    cheer(cheerData) {
-      // eslint-disable-next-line max-len
-      const line1 = `${cheerData.message.tags['display-name']} just cheered ${cheerData.message.tags.bits} bits!`;
-      const line2 = cheerData.message.trailing;
-      return this.alert(line1, line2);
-    },
-    tweet(tweetData) {
-      // Regex removes multiple spaces/newlines from tweets.
-      let message = tweetData.message.full_text;
-      message = (message) ? message.replace(/\s\s+|\n/g, ' ') : undefined;
-
-      // Regex removes Twitter URL shortener links.
-      message = message.replace(/https:\/\/t\.co\/\w+/g, (match) => {
-        // eslint-disable-next-line max-len
-        if (tweetData.message.entities && tweetData.message.entities.urls && tweetData.message.entities.urls.length > 0) {
-          const replacementUrl = tweetData.message.entities.urls
-            .find((urlInfo) => urlInfo.url === match);
-          if (replacementUrl) return replacementUrl.display_url;
-        }
-        return '';
-      });
-
-      const line1 = tweetData.user.name;
-      const line2 = message;
-      return this.alert(line1, line2, true);
-    },
-    alert(line1Text, line2Text, isTweet, isCrowdControl) {
-      return {
-        name: Alert,
-        data: {
-          line1Text,
-          line2Text,
-          isTweet,
-          isCrowdControl,
-        },
-      };
-    },
-    genericMsg(string) {
-      return {
-        name: GenericMessage,
-        data: {
-          msg: string,
-        },
-      };
-    },
-    formatUSD(amount) {
-      return `$${amount.toFixed(2)}`;
-    },
-  },
-};
+  // Sends "omnibarShowNext" to extension; retries if not successful after 5s.
+  async showNext(): Promise<void> {
+    try {
+      await awaitTimeout(nodecg.sendMessage('omnibarShowNext'), 5000);
+    } catch (err) {
+      this.showNext();
+    }
+  }
+}
 </script>
 
 <style scoped>
-  #Ticker {
-    height: 100%;
-    min-width: 0;
-    flex: 1;
+  .ticker-enter-active, .ticker-leave-active {
+    transition: all .3s;
   }
-
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
-  }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  .ticker-enter, .ticker-leave-to {
+    transform: translateX(20px);
     opacity: 0;
   }
 </style>

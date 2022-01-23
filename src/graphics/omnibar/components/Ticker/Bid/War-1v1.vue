@@ -38,15 +38,15 @@
         <div
           :style="{
             width: `${tweened.progress1}%`,
-            // 'background-color': '#e8d53a', // ESA
-            'background-color': '#4d83aa', // UKSG
+            // 'background-color': '#e8d53a', // TODO: ESA theme!
+            'background-color': '#4d83aa', // TODO: UKSG theme!
           }"
         />
         <div
           :style="{
             width: `${tweened.progress2}%`,
-            // 'background-color': '#af60f7', // ESA
-            'background-color': '#003fff', // UKSG
+            // 'background-color': '#af60f7', // TODO: ESA theme!
+            'background-color': '#003fff', // TODO: UKSG theme!
           }" />
       </div>
       <!-- Both Options -->
@@ -107,14 +107,14 @@
 </template>
 
 <script lang="ts">
-import { formatUSD } from '@esa-layouts/graphics/_misc/helpers';
+import { formatUSD, wait } from '@esa-layouts/graphics/_misc/helpers';
 import { Bids } from '@esa-layouts/types/schemas';
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
 import gsap from 'gsap';
-import { isPinned, waitForPinFinish } from '../Bid.vue';
 
 @Component
 export default class extends Vue {
+  @Prop({ type: Number, required: true }) readonly seconds!: number;
   @Prop({ type: Object, required: true }) readonly bid!: Bids[0];
   formatUSD = formatUSD;
   tweened = { progress1: 0, progress2: 0, total1: 0, total2: 0 };
@@ -136,11 +136,11 @@ export default class extends Vue {
 
   async created(): Promise<void> {
     this.tweenValues();
-    if (isPinned(this.bid)) {
+    /* if (isPinned(this.bid)) {
       await waitForPinFinish(this.bid);
-    } else {
-      await new Promise((res) => { window.setTimeout(res, 25 * 1000); });
-    }
+    } else { */
+    await wait(this.seconds * 1000);
+    // }
     this.$emit('end');
   }
 }

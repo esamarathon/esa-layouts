@@ -43,7 +43,7 @@ export default class extends Vue {
   async created(): Promise<void> {
     await wait(this.seconds * 1000); // Wait the specified length.
     // TODO: Scroll if needed!
-    // this.$emit('end');
+    this.$emit('end');
   }
 }
 </script>

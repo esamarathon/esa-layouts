@@ -38,31 +38,27 @@ import { Tracker } from '@shared/types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import utc from 'dayjs/plugin/utc';
-import updateLocale from 'dayjs/plugin/updateLocale';
+import en from 'dayjs/locale/en-gb';
 import Container from '../Container.vue';
 import { formatUSD } from '../../../_misc/helpers';
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
-dayjs.extend(updateLocale);
-// These locales may be updated for the whole page and that annoys me.
-dayjs.updateLocale('en', {
+
+// Sets up custom locale (used later) to tweak some relativeTime strings.
+dayjs.locale({
+  ...en,
+  name: 'en-prizes',
   relativeTime: {
-    future: 'in %s',
-    past: '%s ago',
-    s: 'a few seconds',
-    m: 'a minute',
-    mm: '%d minutes',
-    h: 'an hour',
-    hh: '%d hours',
-    d: 'a day',
-    dd: '%d days',
-    M: 'a month',
-    MM: '%d months',
-    y: 'a year',
-    yy: '%d years',
+    ...en.relativeTime,
+    s: 'few seconds',
+    m: 'minute',
+    h: 'hour',
+    d: 'day',
+    M: 'month',
+    y: 'year',
   },
-});
+}, {}, true);
 
 @Component({
   components: {
@@ -74,7 +70,9 @@ export default class extends Vue {
   formatUSD = formatUSD;
 
   get etaUntil(): string | undefined {
-    return this.prize?.endTime ? dayjs.unix(this.prize.endTime / 1000).fromNow(true) : undefined;
+    return this.prize?.endTime
+      ? dayjs.unix(this.prize.endTime / 1000).utc().locale('en-prizes').fromNow(true)
+      : undefined;
   }
 
   mounted(): void {

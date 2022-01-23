@@ -1,5 +1,5 @@
 import { replicantModule, ReplicantModule, ReplicantTypes } from '@esa-layouts/browser_shared/replicant_store';
-import { OmnibarPin } from '@esa-layouts/types/schemas';
+import { Omnibar } from '@esa-layouts/types/schemas';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 import { getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators';
@@ -15,8 +15,9 @@ class OurModule extends VuexModule {
 
   @Mutation
   pinItem({ id, pinned }: { id: number, pinned: boolean }): void {
-    replicantModule.setReplicant<OmnibarPin>({
-      name: 'omnibarPin', val: pinned ? { type: 'bid', id } : null,
+    replicantModule.setReplicant<Omnibar>({
+      name: 'omnibar',
+      val: { ...replicantModule.repsTyped.omnibar, pin: pinned ? { type: 'bid', id } : null },
     });
   }
 }

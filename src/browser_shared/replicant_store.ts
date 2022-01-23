@@ -1,4 +1,4 @@
-import type { Bids, Commentators, Countdown, CurrentRunDelay, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, ObsData, OmnibarPin, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import type { Bids, Commentators, Countdown, CurrentRunDelay, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, ObsData, Omnibar, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
@@ -23,7 +23,7 @@ export const reps: {
   donationTotalMilestones: ReplicantBrowser<DonationTotalMilestones>;
   gameLayouts: ReplicantBrowser<GameLayouts>;
   obsData: ReplicantBrowser<ObsData>;
-  omnibarPin: ReplicantBrowser<OmnibarPin>;
+  omnibar: ReplicantBrowser<Omnibar>;
   runDataActiveRunSurrounding: ReplicantBrowser<RunDataActiveRunSurrounding>;
   runDataArray: ReplicantBrowser<RunDataArray>;
   serverTimestamp: ReplicantBrowser<ServerTimestamp>;
@@ -43,7 +43,7 @@ export const reps: {
   donationTotalMilestones: nodecg.Replicant('donationTotalMilestones'),
   gameLayouts: nodecg.Replicant('gameLayouts'),
   obsData: nodecg.Replicant('obsData'),
-  omnibarPin: nodecg.Replicant('omnibarPin'),
+  omnibar: nodecg.Replicant('omnibar'),
   runDataActiveRunSurrounding: sc.runDataActiveRunSurrounding,
   runDataArray: sc.runDataArray,
   serverTimestamp: nodecg.Replicant('serverTimestamp'),
@@ -65,7 +65,7 @@ export interface ReplicantTypes {
   donationTotalMilestones: DonationTotalMilestones;
   gameLayouts: GameLayouts;
   obsData: ObsData;
-  omnibarPin: OmnibarPin;
+  omnibar: Omnibar;
   runDataActiveRunSurrounding: RunDataActiveRunSurrounding;
   runDataArray: RunDataArray;
   serverTimestamp: ServerTimestamp;

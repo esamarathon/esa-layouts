@@ -15,7 +15,7 @@ export * from './musicData';
 export * from './nameCycle';
 export * from './notableDonations';
 export * from './obsData';
-export * from './omnibarPin';
+export * from './omnibar';
 export * from './otherStreamData';
 export * from './prizes';
 export * from './serverTimestamp';

@@ -5,7 +5,9 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type OmnibarPin = {
-	type: 'milestone' | 'bid';
-	id: string | number;
-} | null;
+export interface Omnibar {
+	pin: {
+		type: 'milestone' | 'bid';
+		id: string | number;
+	} | null;
+}

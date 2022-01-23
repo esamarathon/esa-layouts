@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
-import { Bids, OmnibarPin } from '@esa-layouts/types/schemas';
+import { Bids, Omnibar } from '@esa-layouts/types/schemas';
 import { sortBy } from 'lodash';
 import { Vue, Component } from 'vue-property-decorator';
 import Bid from './components/Bid.vue';
@@ -46,7 +46,7 @@ import Bid from './components/Bid.vue';
 })
 export default class extends Vue {
   @replicantNS.State((s) => s.reps.bids) readonly bids!: Bids;
-  @replicantNS.State((s) => s.reps.omnibarPin) readonly currentPin!: OmnibarPin;
+  @replicantNS.State((s) => s.reps.omnibar.pin) readonly currentPin!: Omnibar['pin'];
   sortOpt = 1;
   searchTerm: string | null = null;
 

@@ -87,7 +87,7 @@ export default class extends Vue {
   playingAlerts = false;
   showAlert = false;
   alertText = '$0';
-  alertList: { total: number, amount: string }[] = [];
+  alertList: { total: number, amount: number }[] = [];
 
   get rawTotal(): number {
     return replicantModule.repsTyped.donationTotal;
@@ -100,10 +100,12 @@ export default class extends Vue {
   async playNextAlert(start = false): Promise<void> {
     this.playingAlerts = true;
     if (!start) await new Promise((res) => { setTimeout(res, 500); });
-    await this.sfx.play();
-    await new Promise((res) => { setTimeout(res, 500); });
-    this.showAlert = true;
-    this.alertText = this.alertList[0].amount;
+    if (this.alertList[0].amount > 0) { // Only show alerts for positive values
+      await this.sfx.play();
+      await new Promise((res) => { setTimeout(res, 500); });
+      this.showAlert = true;
+      this.alertText = formatUSD(this.alertList[0].amount);
+    }
     gsap.to(this, {
       total: this.alertList[0].total,
       duration: 5,
@@ -119,7 +121,7 @@ export default class extends Vue {
   onRawTotalChanged(newVal: number, oldVal: number): void {
     this.alertList.push({
       total: newVal,
-      amount: formatUSD(newVal - oldVal),
+      amount: newVal - oldVal,
     });
     if (!this.playingAlerts) this.playNextAlert(true);
   }

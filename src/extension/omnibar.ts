@@ -7,12 +7,6 @@ import { mq } from './util/rabbitmq';
 import { bids, donationTotalMilestones, omnibar, prizes } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
-/**
- * TODO: Add logging!
- */
-// Things left to put in *right now*:
-// > pins (can be either a bid or a milestone)
-
 const config = nodecg().bundleConfig as Configschema;
 
 // Stored caches but not persistent through NodeCG restarts.
@@ -140,6 +134,7 @@ omnibar.value.rotation = [
 // TODO: Work out what to do if we get stuck on an infinite loop.
 function showNext(start = false): void {
   if (omnibar.value.alertQueue.length) {
+    nodecg().log.debug('[Omnibar] Alert available, will show');
     const alert = omnibar.value.alertQueue.shift();
     if (alert) {
       const { type, id, data } = alert;
@@ -159,23 +154,24 @@ function showNext(start = false): void {
     const next = omnibar.value.rotation[nextIndex];
     if (next.type === 'UpcomingRun') {
       const run = getUpcomingRun();
-      if (!run) showNext();
-      else omnibar.value.current = { ...next, props: { ...next.props, run } };
+      if (!run) { showNext(); return; }
+      omnibar.value.current = { ...next, props: { ...next.props, run } };
     } else if (next.type === 'Prize') {
       const prize = getPrize();
-      if (!prize) showNext();
-      else omnibar.value.current = { ...next, props: { ...next.props, prize } };
+      if (!prize) { showNext(); return; }
+      omnibar.value.current = { ...next, props: { ...next.props, prize } };
     } else if (next.type === 'Milestone') {
       const milestone = getMilestone();
-      if (!milestone) showNext();
-      else omnibar.value.current = { ...next, props: { ...next.props, milestone } };
+      if (!milestone) { showNext(); return; }
+      omnibar.value.current = { ...next, props: { ...next.props, milestone } };
     } else if (next.type === 'Bid') {
       const bid = getBid();
-      if (!bid) showNext();
-      else omnibar.value.current = { ...next, props: { ...next.props, bid } };
+      if (!bid) { showNext(); return; }
+      omnibar.value.current = { ...next, props: { ...next.props, bid } };
     } else {
       omnibar.value.current = clone(next);
     }
+    nodecg().log.debug('[Omnibar] Will now show message of type:', next.type);
   }
 }
 
@@ -187,7 +183,6 @@ nodecg().listenFor('omnibarShowNext', (data, ack) => {
 
 // Screened data from our moderation tool, used for the omnibar.
 mq.evt.on('newScreenedTweet', (data) => {
-  // nodecg().log.debug('[Omnibar] Received new tweet');
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const msgData: { [k: string]: any } = data.message; // TODO: Update MQ event!
   let message = msgData.full_text as string;
@@ -203,6 +198,7 @@ mq.evt.on('newScreenedTweet', (data) => {
     }
     return '';
   });
+  nodecg().log.debug('[Omnibar] Received new tweet from %s:', data.user.name, message);
 
   // Add Tweet to queue.
   omnibar.value.alertQueue.push({
@@ -216,7 +212,7 @@ mq.evt.on('newScreenedTweet', (data) => {
 });
 mq.evt.on('newScreenedCrowdControl', (data) => {
   if (config.event.thisEvent === 1) {
-    // nodecg().log.debug('[Omnibar] Received new crowd control message');
+    nodecg().log.debug('[Omnibar] Received new crowd control message:', data.message);
     // Add crowd control message to queue.
     omnibar.value.alertQueue.push({
       type: 'CrowdControl',
@@ -228,4 +224,5 @@ mq.evt.on('newScreenedCrowdControl', (data) => {
   }
 });
 
+// TODO: Might need removing when user control is implemented!
 showNext(true);

@@ -20,18 +20,7 @@
         left: '0px',
         top: '0px',
         width: '668px',
-        height: '313px',
-      }"
-    />
-    <!-- Crowd Camera -->
-    <div
-      id="CameraCaptureCrowd"
-      class="Capture BorderTop"
-      :style="{
-        left: '0px',
-        top: '313px',
-        width: '668px',
-        height: '114px',
+        height: '380px',
       }"
     />
 
@@ -40,9 +29,9 @@
       class="Fixed FlexColumn BorderBottom"
       :style="{
         left: '0px',
-        top: '427px',
+        top: '380px',
         width: '668px',
-        height: '343px',
+        height: '350px',
       }"
     >
       <player />
@@ -67,9 +56,9 @@
       :font-size="45"
       :style="{
         left: '0px',
-        top: '770px',
+        top: '730px',
         width: '668px',
-        height: '230px',
+        height: '270px',
       }"
     />
 

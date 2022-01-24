@@ -73,62 +73,49 @@ function genericMsg(str: string): Omnibar['rotation'][0] {
 // For now, clearing and adding rotation stuff on startup.
 // TODO: Remove when we have a dashboard panel to do this!
 omnibar.value = clone(omnibar.opts.defaultValue) as Omnibar;
-omnibar.value.rotation = [
-  // ESA promo.
-  genericMsg('This is United Kingdom Speedrunner Gathering Autumn 2021'),
-  // Charity promo.
-  genericMsg('#UKSGAutumn21 benefits Crisis'),
-  // TODO: Other stream promo.
-  // TODO: Other stream info.
-  // Upcoming run.
+const shared: Omnibar['rotation'] = [
   {
     type: 'UpcomingRun',
     id: uuid(),
-    props: {
-      seconds: 25,
-    },
   },
-  // Prize.
   {
     type: 'Prize',
     id: uuid(),
-    props: {
-      seconds: 25,
-    },
   },
-  // Bid.
   {
     type: 'Bid',
     id: uuid(),
-    props: {
-      seconds: 25,
-    },
   },
-  // Milestone.
   {
     type: 'Milestone',
     id: uuid(),
-    props: {
-      seconds: 25,
-    },
   },
-  // Team promo.
-  genericMsg('Check out our Twitch team @ twitch.tv/team/esa'),
-  // Donation URL.
-  genericMsg(`Donate @ ${(nodecg().bundleConfig as Configschema).tracker.address}`),
-  // Merch.
-  // genericMsg('Check out our merch @ speedrunstore.com'),
-  // Ticket.
-  // genericMsg('Buy your supporter ticket @ esamarathon.com'),
-  // Twitch charity.
-  // genericMsg('Subscribe or cheer to support the charity'),
-  // ESA upcoming event.
-  /* genericMsg('Can\'t get enough of speedrunning? '
-    + 'Then look forward to ESA Summer 2021: 24th - 31st July'), */
-  // ESA BtRL
-  /* genericMsg('ESA Break the Record: LIVE - Minecraft, '
-    + '30th April - 2nd May! - breaktherecordlive.com'), */
 ];
+if (config.event.theme?.startsWith('winter')) {
+  omnibar.value.rotation = [
+    genericMsg('This is European Speedrunner Assembly Winter 2022'),
+    genericMsg('#ESAWinter22 benefits the Swedish Alzheimer\'s Foundation'),
+    genericMsg(`Donate @ ${(nodecg().bundleConfig as Configschema).tracker.address}`),
+    ...shared,
+    genericMsg('Check out our Twitch team @ twitch.tv/team/esa'),
+    genericMsg('Check out our merch @ speedrunstore.com'),
+    genericMsg('Subscribe or cheer to support the charity'),
+  ];
+} else if (config.event.theme?.startsWith('uksgw')) {
+  omnibar.value.rotation = [
+    genericMsg('This is United Kingdom Speedrunner Gathering Winter 2022'),
+    genericMsg('#UKSGWinter22 benefits Crisis'),
+    genericMsg(`Donate @ ${(nodecg().bundleConfig as Configschema).tracker.address}`),
+    ...shared,
+    genericMsg('Check out our Twitch team @ twitch.tv/team/esa'),
+    genericMsg('Can\'t get enough of speedrunning? '
+      + 'Then look forward to ESA Winter 2022: 12th - 19th February'),
+  ];
+} else {
+  omnibar.value.rotation = [
+    genericMsg('Omnibar messages will appear here!'),
+  ];
+}
 
 // TODO: Not always rely on numbered index for keeping track of position?
 // TODO: Work out what to do if we get stuck on an infinite loop.

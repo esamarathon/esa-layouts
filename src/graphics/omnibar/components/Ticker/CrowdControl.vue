@@ -1,13 +1,12 @@
 <template>
   <div
-    class="Flex"
+    class="Flex Alert"
     :style="{
       padding: '0 17px',
       height: '100%',
       'font-weight': 500,
       'flex-direction': 'column',
       'align-items': 'flex-start',
-      'background-color': '#ffffff38', // TODO: Merge into theme or improve!
     }"
   >
     <div :style="{ 'font-size': '25px' }">

@@ -1,5 +1,5 @@
 <template>
-  <div :style="{ height: '100%' }">
+  <div :style="{ height: '100%', overflow: 'hidden' }">
     <!-- Goal -->
     <goal v-if="bid && !bid.war" :bid="bid" :seconds="seconds" @end="end" />
     <!-- Wars -->

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="Flex"
+    class="Flex Milestone"
     :style="{
       height: '100%',
       'align-items': 'center',
@@ -27,12 +27,11 @@
       }"
     >
       <div
+        class="Bar"
         :style="{
           position: 'absolute',
           width: `${progressTweened}%`,
           height: '100%',
-          // 'background-color': '#e8d53a', // TODO: Add to ESA style!
-          'background-color': '#4d83aa', // TODO: Add to UKSG style!
         }"
       />
       <div

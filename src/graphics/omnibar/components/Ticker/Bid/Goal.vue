@@ -1,5 +1,6 @@
 <template>
   <div
+    class="Goal"
     :style="{
       height: '100%',
       display: 'flex',
@@ -26,12 +27,11 @@
       }"
     >
       <div
+        class="Bar"
         :style="{
           position: 'absolute',
           width: `${tweened.progress}%`,
           height: '100%',
-          // 'background-color': '#e8d53a', // TODO: ESA theme!
-          'background-color': '#4d83aa', // TODO: UKSG theme!
         }"
       />
       <div
@@ -51,7 +51,7 @@
             <span
               v-if="bid.goal <= bid.total"
               :style="{
-                'color': '#42ff38', // TODO: Theme?
+                'color': '#42ff38', // Basic green, no need to use theme
                 'font-weight': 700,
               }"
             >

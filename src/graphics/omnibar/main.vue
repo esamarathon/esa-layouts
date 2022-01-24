@@ -3,7 +3,6 @@
     id="Omnibar"
     class="Flex"
     :style="{
-      color: 'white', // TODO: Move to theme?
       width: '1920px',
       height: '80px',
       position: 'fixed',

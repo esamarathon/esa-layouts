@@ -1,5 +1,6 @@
 <template>
   <div
+    class="WarOther"
     :style="{
       height: '100%',
       display: 'flex',
@@ -62,11 +63,12 @@
       >
         <div
           v-for="(option, i) in options" :key="option.id"
-          class="Option"
-          :style="{
-            // 'background-color': option.winning ? '#877520' : '#502f59', // TODO: ESA theme!
-            'background-color': option.winning ? '#68b4ea' : '#4d83aa', // TODO: UKSG theme!
+          :class="{
+            'Option': true,
+            'OptionWinning': option.winning,
+            'OptionOther': !option.winning,
           }"
+          :style="{ 'margin-left': i > 0 ? '5px' : '0' }"
           :ref="`Option${i + 1}`"
         >
           <span :style="{ 'font-weight': 600 }">
@@ -112,6 +114,8 @@ export default class extends Vue {
   }
 
   created(): void {
+    // Copied in case the prop changes and ruins the animations.
+    // In the current setup, this doesn't happen though (or shouldn't!).
     this.bid = clone(this.bidOriginal);
   }
 
@@ -147,7 +151,7 @@ export default class extends Vue {
         timeline.to(this.optionsBar, {
           scrollLeft: Math.min(rep.offsetLeft, endPos),
           duration: 2,
-        }, i > 1 ? `+=${Math.max(17 / scrollCount, 2)}` : undefined);
+        }, i > 1 ? `+=${Math.max((this.seconds - 8) / (scrollCount + 1), 2)}` : undefined);
         if (endPos <= rep.offsetLeft) break;
       }
       timeline.resume();

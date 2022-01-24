@@ -1,5 +1,6 @@
 <template>
   <div
+    class="War1v1"
     :style="{
       height: '100%',
       display: 'flex',
@@ -35,19 +36,8 @@
           height: '100%',
         }"
       >
-        <div
-          :style="{
-            width: `${tweened.progress1}%`,
-            // 'background-color': '#e8d53a', // TODO: ESA theme!
-            'background-color': '#4d83aa', // TODO: UKSG theme!
-          }"
-        />
-        <div
-          :style="{
-            width: `${tweened.progress2}%`,
-            // 'background-color': '#af60f7', // TODO: ESA theme!
-            'background-color': '#003fff', // TODO: UKSG theme!
-          }" />
+        <div class="Bar1" :style="{ width: `${tweened.progress1}%` }" />
+        <div class="Bar2" :style="{ width: `${tweened.progress2}%` }" />
       </div>
       <!-- Both Options -->
       <div

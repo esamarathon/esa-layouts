@@ -53,7 +53,6 @@ export default class extends Vue {
   @Prop({ type: Number, default: 25 }) readonly seconds!: number;
   @Prop({ type: Object, required: true }) readonly prize!: Prizes[0];
 
-  // TODO: Implement day.js!
   get timeUntilString(): string {
     return this.prize.endTime
       ? dayjs.unix(this.prize.endTime / 1000).utc().locale('en-prizes').fromNow(true)

@@ -215,7 +215,8 @@
       {
         "file": "omnibar.html",
         "width": 1920,
-        "height": 80
+        "height": 80,
+        "singleInstance": true
       },
       {
         "file": "countdown.html",

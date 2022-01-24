@@ -2,7 +2,7 @@
   content: url('./together/IntermissionLogo.png');
 }
 
-#Omnibar #Logo {
+#Omnibar > #Logo {
   content: url('./together/OmnibarLogo.png');
   padding: 0 10px;
 }

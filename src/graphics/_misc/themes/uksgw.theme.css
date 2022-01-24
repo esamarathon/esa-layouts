@@ -2,7 +2,7 @@
   content: url('./uksgw/IntermissionLogo.png');
 }
 
-#Omnibar #Logo {
+#Omnibar > #Logo {
   content: url('./uksgw/OmnibarLogo.png');
   padding: 0 10px;
 }

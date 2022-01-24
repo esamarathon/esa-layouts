@@ -1,9 +1,8 @@
 <template>
   <div
-    v-if="milestone"
+    class="Flex Milestone"
     :style="{
       height: '100%',
-      display: 'flex',
       'align-items': 'center',
       'white-space': 'nowrap',
     }"
@@ -28,12 +27,11 @@
       }"
     >
       <div
+        class="Bar"
         :style="{
           position: 'absolute',
           width: `${progressTweened}%`,
           height: '100%',
-          // 'background-color': '#e8d53a', // ESA
-          'background-color': '#4d83aa', // UKSG
         }"
       />
       <div
@@ -50,7 +48,15 @@
       >
         <div :style="{ width: '20%' }">
           <span class="BarText" :style="{ 'font-size': '25px' }">
-            <span v-if="isMet" :style="{ 'color': '#42ff38', 'font-weight': 700 }">MET!</span>
+            <span
+              v-if="isMet"
+              :style="{
+                'color': '#42ff38',
+                'font-weight': 700,
+              }"
+            >
+                MET!
+              </span>
             <span v-else>
               <span :style="{ 'font-weight': 600 }">Remaining:</span>
               {{ amountLeft }}
@@ -60,8 +66,14 @@
         <div class="BarText" :style="{ 'font-size': '30px' }">
           <span>{{ name }}</span>
         </div>
-        <div :style="{ width: '20%', 'text-align': 'right' }">
-          <span class="BarText" :style="{ 'font-size': '25px' }">
+        <div
+          :style="{
+            width: '20%',
+            'text-align': 'right',
+          }"
+        >
+          <span
+            class="BarText" :style="{ 'font-size': '25px' }">
             <span :style="{ 'font-weight': 600 }">Goal:</span>
             {{ amount }}
           </span>
@@ -72,95 +84,73 @@
 </template>
 
 <script lang="ts">
-import { DonationTotal, DonationTotalMilestones, OmnibarPin } from '@esa-layouts/types/schemas';
-import { Vue, Component } from 'vue-property-decorator';
-import { formatUSD } from '@esa-layouts/graphics/_misc/helpers';
-import clone from 'clone';
+import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
+import { formatUSD, wait } from '@esa-layouts/graphics/_misc/helpers';
+import { DonationTotal, DonationTotalMilestones } from '@esa-layouts/types/schemas';
+import { Vue, Component, Prop } from 'vue-property-decorator';
 import gsap from 'gsap';
 
-const total = nodecg.Replicant<DonationTotal>('donationTotal');
-const milestones = nodecg.Replicant<DonationTotalMilestones>('donationTotalMilestones');
-const pin = nodecg.Replicant<OmnibarPin>('omnibarPin');
-
-@Component
+@Component({
+  name: 'Milestone',
+})
 export default class extends Vue {
-  milestone: DonationTotalMilestones[0] | null = null;
+  @Prop({ type: Number, default: 25 }) readonly seconds!: number;
+  @Prop({ type: Object, required: true }) readonly milestone!: DonationTotalMilestones[0];
+  @replicantNS.State((s) => s.reps.donationTotal) readonly donationTotal!: DonationTotal;
   progressTweened = 0;
   totalTweened = 0;
 
   get name(): string {
-    return this.milestone?.name || '?';
+    return this.milestone.name;
   }
 
   get amount(): string {
-    return formatUSD(this.milestone?.amount || 0);
+    return formatUSD(this.milestone.amount || 0);
   }
 
   get amountLeft(): string {
-    return formatUSD(Math.max((this.milestone?.amount ?? 0) - this.totalTweened, 0));
+    return formatUSD(Math.max((this.milestone.amount || 0) - this.totalTweened, 0));
   }
 
   getProgress(): number {
-    if (!this.milestone?.amount || !total.value) return 0;
+    if (!this.milestone.amount || !this.donationTotal) return 0;
     const lower = this.milestone.addition ? this.milestone.amount - this.milestone.addition : 0;
-    return Math.min((total.value - lower) / (this.milestone.amount - lower), 1) * 100;
+    return Math.min((this.donationTotal - lower) / (this.milestone.amount - lower), 1) * 100;
   }
 
   get isMet(): boolean {
-    return !!(this.milestone?.amount
+    return !!(this.milestone.amount
       && this.totalTweened && this.milestone.amount <= this.totalTweened);
   }
 
   tweenValues(): void {
     gsap.to(this, {
       progressTweened: this.getProgress(),
-      totalTweened: total.value || 0,
+      totalTweened: this.donationTotal,
       duration: 2.5,
     });
   }
 
   end(): void {
-    total.removeListener('change', this.tweenValues);
+    // total.removeListener('change', this.tweenValues); // TODO: This would update in real time
     this.$emit('end');
   }
 
   async created(): Promise<void> {
-    console.log('Milestone: created');
-    await NodeCG.waitForReplicants(total, milestones);
-    if (milestones.value) {
-      let chosenMilestone: DonationTotalMilestones[0] | undefined;
-      if (pin.value?.type === 'milestone') {
-        chosenMilestone = milestones.value.find(({ id }) => pin.value?.id === id);
-      } else {
-        const availableMilestones = milestones.value.filter((m) => m.enabled && m.amount);
-        const rand = Math.floor(Math.random() * availableMilestones.length);
-        chosenMilestone = availableMilestones[rand];
-      }
-      if (chosenMilestone) {
-        this.milestone = clone(chosenMilestone);
-        total.on('change', this.tweenValues);
-        this.tweenValues();
-        if (pin.value?.type === 'milestone' && pin.value.id === this.milestone.id) {
-          console.log('Milestone: is pinned, will not auto-remove');
-          const func = (val: OmnibarPin) => {
-            if (val?.type !== 'milestone' || val.id !== this.milestone?.id) {
-              pin.removeListener('change', func);
-              this.end();
-              console.log('Milestone: ended due to unpinning');
-            }
-          };
-          pin.on('change', func);
-        } else {
-          window.setTimeout(() => {
-            this.end();
-            console.log('Milestone: ended');
-          }, 25 * 1000);
+    // total.on('change', this.tweenValues); // TODO: This would update in real time
+    this.tweenValues();
+    // TODO: This handled removing pinned milestones!
+    /* if (pin.value?.type === 'milestone' && pin.value.id === this.milestone.id) {
+      const func = (val: OmnibarPin) => {
+        if (val?.type !== 'milestone' || val.id !== this.milestone?.id) {
+          pin.removeListener('change', func);
+          this.end();
         }
-      } else {
-        console.log('Milestone: skipping');
-        this.end();
-      }
-    }
+      };
+      pin.on('change', func);
+    } */
+    await wait(this.seconds * 1000); // Wait the specified length.
+    this.end();
   }
 }
 </script>

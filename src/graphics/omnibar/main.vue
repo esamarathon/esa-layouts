@@ -1,48 +1,41 @@
 <template>
-  <div id="Omnibar" class="Flex" :style="{ zoom }">
-    <img id="Logo">
-    <divider/>
-    <total/>
-    <divider/>
-    <ticker/>
-    <divider/>
-    <clock/>
+  <div
+    id="Omnibar"
+    class="Flex"
+    :style="{
+      width: '1920px',
+      height: '80px',
+      position: 'fixed',
+      zoom,
+    }"
+  >
+    <img id="Logo"><!-- Logo -->
+    <divider />
+    <total /><!-- Donation Total -->
+    <divider />
+    <ticker /><!-- Ticker -->
+    <divider />
+    <clock /><!-- Clock -->
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import Divider from './components/Divider.vue';
 import Total from './components/Total.vue';
 import Ticker from './components/Ticker.vue';
 import Clock from './components/Clock.vue';
-import Divider from './components/Divider.vue';
 import { getZoomAmountCSS } from '../_misc/helpers';
 
-export default {
-  name: 'Omnibar',
+@Component({
   components: {
+    Divider,
     Total,
     Ticker,
     Clock,
-    Divider,
   },
-  data() {
-    return {
-      zoom: getZoomAmountCSS(),
-    };
-  },
-};
+})
+export default class extends Vue {
+  zoom = getZoomAmountCSS();
+}
 </script>
-
-<style>
-  #Background {
-    background-color: #19171c;
-  }
-
-  #Omnibar {
-    color: white;
-    position: fixed;
-    width: 1920px;
-    height: 80px;
-    justify-content: flex-start;
-  }
-</style>

@@ -127,14 +127,43 @@ body {
 }
 
 #Omnibar {
+  color: white;
   background: linear-gradient(0deg, rgba(56,31,78,1) 0%, rgba(92,50,130,1) 100%);
 }
 
-#Omnibar #Logo {
+#Omnibar > #Logo {
   content: url('./default/OmnibarLogo.png');
   padding: 0 10px;
 }
 
+#Omnibar #CharityLogo {
+  content: url('./default/OmnibarCharityLogo.png');
+}
+
 #Omnibar .Divider {
   background-color: #fff073;
+}
+
+#Omnibar .Alert {
+  background-color: rgba(255, 255, 255, 0.22);
+}
+
+#Omnibar .Milestone .Bar, #Omnibar .Goal .Bar {
+  background-color: #e8d53a;
+}
+
+#Omnibar .War1v1 .Bar1 {
+  background-color: #e8d53a;
+}
+
+#Omnibar .War1v1 .Bar2 {
+  background-color: #af60f7;
+}
+
+#Omnibar .WarOther .OptionWinning {
+  background-color: #877520;
+}
+
+#Omnibar .WarOther .OptionOther {
+  background-color: #502f59;
 }

@@ -24,19 +24,9 @@ mq.evt.on('newScreenedSub', (data) => {
   nodecg().log.debug('[Misc] Received new subscription');
   nodecg().sendMessage('newSub', data);
 });
-mq.evt.on('newScreenedTweet', (data) => {
-  nodecg().log.debug('[Misc] Received new tweet');
-  nodecg().sendMessage('newTweet', data);
-});
 mq.evt.on('newScreenedCheer', (data) => {
   nodecg().log.debug('[Misc] Received new cheer');
   nodecg().sendMessage('newCheer', data);
-});
-mq.evt.on('newScreenedCrowdControl', (data) => {
-  if (config.event.thisEvent === 1) {
-    nodecg().log.debug('[Misc] Received new crowd control message');
-    nodecg().sendMessage('newCrowdControl', data);
-  }
 });
 
 // Information that should come from our 2nd stream.
@@ -109,8 +99,11 @@ export async function searchSrcomPronouns(val: string): Promise<string> {
 
 // Processes adding commentators from the dashboard panel.
 nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack) => {
-  if (val && !commentators.value.includes(val)) {
-    commentators.value.push(await searchSrcomPronouns(val));
+  if (val) {
+    const str = await searchSrcomPronouns(val);
+    if (!commentators.value.includes(str)) {
+      commentators.value.push(str);
+    }
   }
   if (ack && !ack.handled) {
     ack(null);

@@ -1,5 +1,6 @@
 <template>
   <div
+    class="WarOther"
     :style="{
       height: '100%',
       display: 'flex',
@@ -62,11 +63,12 @@
       >
         <div
           v-for="(option, i) in options" :key="option.id"
-          class="Option"
-          :style="{
-            // 'background-color': option.winning ? '#877520' : '#502f59', // ESA
-            'background-color': option.winning ? '#68b4ea' : '#4d83aa', // UKSG
+          :class="{
+            'Option': true,
+            'OptionWinning': option.winning,
+            'OptionOther': !option.winning,
           }"
+          :style="{ 'margin-left': i > 0 ? '5px' : '0' }"
           :ref="`Option${i + 1}`"
         >
           <span :style="{ 'font-weight': 600 }">
@@ -83,7 +85,7 @@
 </template>
 
 <script lang="ts">
-import { formatUSD } from '@esa-layouts/graphics/_misc/helpers';
+import { formatUSD, wait } from '@esa-layouts/graphics/_misc/helpers';
 import { Bids } from '@esa-layouts/types/schemas';
 import { Vue, Component, Prop, Ref } from 'vue-property-decorator';
 import gsap from 'gsap';
@@ -94,10 +96,10 @@ import clone from 'clone';
 
 @Component
 export default class extends Vue {
+  @Prop({ type: Number, required: true }) readonly seconds!: number;
   @Prop({ type: Object, required: true }) readonly bidOriginal!: Bids[0];
   @Ref('OptionsBar') optionsBar!: HTMLElement;
   formatUSD = formatUSD;
-  fallback = 0;
   bid!: Bids[0];
 
   get options(): { id: number, name: string, total: number, winning: boolean }[] {
@@ -112,28 +114,26 @@ export default class extends Vue {
   }
 
   created(): void {
+    // Copied in case the prop changes and ruins the animations.
+    // In the current setup, this doesn't happen though (or shouldn't!).
     this.bid = clone(this.bidOriginal);
   }
 
   async mounted(): Promise<void> {
-    console.log('Bid: [War-Other] scrollWidth: %s', this.optionsBar.scrollWidth);
-    console.log('Bid: [War-Other] clientWidth: %s', this.optionsBar.clientWidth);
-    // If no need to scroll, just wait a flat 25 seconds before ending.
+    // If no need to scroll, just wait a flat X seconds before ending.
     if (this.optionsBar.scrollWidth <= this.optionsBar.clientWidth) {
-      await new Promise((res) => { window.setTimeout(res, 25 * 1000); });
+      await wait(this.seconds * 1000);
       this.$emit('end');
     } else {
-      this.fallback = window.setTimeout(() => { this.$emit('end'); }, 30 * 1000);
       const timeline = gsap.timeline({
         paused: true,
         onComplete: () => {
           window.setTimeout(() => {
-            window.clearTimeout(this.fallback);
             this.$emit('end');
           }, 4000);
         },
       });
-      await new Promise((res) => { window.setTimeout(res, 4000); });
+      await wait(4000);
       const loopLength = this.bid.allowUserOptions ? this.options.length + 1 : this.options.length;
 
       // Check how many times we need to scroll along to fit everything in.
@@ -151,7 +151,7 @@ export default class extends Vue {
         timeline.to(this.optionsBar, {
           scrollLeft: Math.min(rep.offsetLeft, endPos),
           duration: 2,
-        }, i > 1 ? `+=${Math.max(17 / scrollCount, 2)}` : undefined);
+        }, i > 1 ? `+=${Math.max((this.seconds - 8) / (scrollCount + 1), 2)}` : undefined);
         if (endPos <= rep.offsetLeft) break;
       }
       timeline.resume();

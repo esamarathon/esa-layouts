@@ -87,7 +87,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import MediaCard from '@esa-layouts/dashboard/_misc/components/MediaCard.vue';
-import { DonationTotal, DonationTotalMilestones, OmnibarPin } from '@esa-layouts/types/schemas';
+import { DonationTotal, DonationTotalMilestones, Omnibar } from '@esa-layouts/types/schemas';
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
 import { storeModule } from '../store';
 
@@ -100,7 +100,7 @@ export default class extends Vue {
   @Prop({ type: Object, required: true }) readonly milestone!: DonationTotalMilestones[0];
   @Prop({ type: Number, required: true }) readonly index!: number;
   @replicantNS.State((s) => s.reps.donationTotal) readonly total!: DonationTotal;
-  @replicantNS.State((s) => s.reps.omnibarPin) readonly currentPin!: OmnibarPin;
+  @replicantNS.State((s) => s.reps.omnibar.pin) readonly currentPin!: Omnibar['pin'];
   dialog = false;
   nameEdit = '';
   additionToggleEdit = false;

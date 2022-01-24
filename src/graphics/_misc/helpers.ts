@@ -62,6 +62,26 @@ export function getZoomAmountCSS(): string {
   return `calc(${config.obs.canvasResolution.height}/1080)`;
 }
 
+/**
+ * Basic wait promise command.
+ * @param length Length in milliseconds.
+ * @param reason If supplied, will reject with this reason after the wait.
+ */
+export function wait(length: number, reason?: string): Promise<void> {
+  return new Promise((res, rej) => {
+    window.setTimeout(() => (!reason ? res() : rej(reason)), length);
+  });
+}
+
+/**
+ * Wrapper that allows an async/await function/Promise to have a max length before it times out.
+ * @param promise Function you want to await on a timeout.
+ * @param delay Millseconds you wish to wait before error.
+ */
+export function awaitTimeout(promise: Promise<void>, delay: number): Promise<void> {
+  return Promise.race([promise, wait(delay, 'timeout')]);
+}
+
 // ALSO IN extension/util/helpers.ts, CHANGE THERE TOO!
 export function formatPronouns(pronouns?: string): string | undefined {
   if (!pronouns) {

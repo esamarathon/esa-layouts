@@ -1,5 +1,5 @@
 import { replicantModule, ReplicantModule, ReplicantTypes } from '@esa-layouts/browser_shared/replicant_store';
-import { DonationTotalMilestones, OmnibarPin } from '@esa-layouts/types/schemas';
+import { DonationTotalMilestones, Omnibar } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import { v4 as uuid } from 'uuid';
 import Vue from 'vue';
@@ -43,8 +43,9 @@ class OurModule extends VuexModule {
 
   @Mutation
   pinItem({ id, pinned }: { id: string, pinned: boolean }): void {
-    replicantModule.setReplicant<OmnibarPin>({
-      name: 'omnibarPin', val: pinned ? { type: 'milestone', id } : null,
+    replicantModule.setReplicant<Omnibar>({
+      name: 'omnibar',
+      val: { ...replicantModule.repsTyped.omnibar, pin: pinned ? { type: 'milestone', id } : null },
     });
   }
 

@@ -66,6 +66,32 @@ body {
   background: #011961;
 }
 
+#Omnibar #CharityLogo {
+  content: url('./uksg/OmnibarCharityLogo.png');
+  margin: 0 15px;
+}
+
+
 #Omnibar .Divider {
+  background-color: #4d83aa;
+}
+
+#Omnibar .Milestone .Bar, #Omnibar .Goal .Bar {
+  background-color: #4d83aa;
+}
+
+#Omnibar .War1v1 .Bar1 {
+  background-color: #4d83aa;
+}
+
+#Omnibar .War1v1 .Bar2 {
+  background-color: #003fff;
+}
+
+#Omnibar .WarOther .OptionWinning {
+  background-color: #68b4ea;
+}
+
+#Omnibar .WarOther .OptionOther {
   background-color: #4d83aa;
 }

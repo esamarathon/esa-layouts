@@ -240,6 +240,16 @@
                   ],
                   "default": "Camera Capture"
                 },
+                "cameraCaptureCrowd": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
                 "twitchSources": {
                   "oneOf": [
                     {

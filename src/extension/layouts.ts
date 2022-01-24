@@ -16,7 +16,7 @@ const gameCaptures = Array.isArray(config.obs.names.sources.gameCaptures)
 const cameraCaptures = Array.isArray(config.obs.names.sources.cameraCaptures)
   ? config.obs.names.sources.cameraCaptures
   : [config.obs.names.sources.cameraCaptures];
-const obsSourceKeys: { [key: string]: string } = {
+const obsSourceKeys: { [key: string]: string | undefined } = {
   GameCapture1: gameCaptures[0],
   GameCapture2: gameCaptures[1],
   GameCapture3: gameCaptures[2],
@@ -24,6 +24,8 @@ const obsSourceKeys: { [key: string]: string } = {
   CameraCapture1: cameraCaptures[0],
   CameraCapture2: cameraCaptures[1],
   CameraCapture3: cameraCaptures[2],
+  CameraCapture4: cameraCaptures[3],
+  CameraCaptureCrowd: config.obs.names.sources.cameraCaptureCrowd || undefined,
 };
 
 // Controls the name cycling ticks for user information.

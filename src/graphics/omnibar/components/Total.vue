@@ -1,67 +1,70 @@
 <template>
-  <div class="Flex">
-    <div
-      class="Flex"
-      :style="{
-        width: '90px',
-        height: '80px',
-        position: 'relative',
-        padding: '0 10px 0 10px',
-        overflow: 'hidden'
-      }"
-    >
-      <img
-        src="../crisis_logo.png"
-        :style="{
-          position: 'absolute',
-          height: '70px',
-          'object-fit': 'contain',
-          opacity: alertList.length ? 0.3 : 1,
-          transition: 'opacity 0.5s',
-        }"
-      >
-      <div :style="{ position: 'absolute' }">
-        <transition
-          name="fade"
-          mode="out-in"
+  <div
+    class="Flex"
+    :style="{
+      'margin-right': '20px',
+       overflow: 'hidden',
+    }"
+  >
+    <!-- Alert sound effect. -->
+    <audio ref="SFX">
+      <source src="./sfx/mario_coin.mp3" type="audio/mpeg">
+    </audio>
+    <div class="Grid" :style="{ 'min-width': '110px' }">
+      <!-- Charity logo. -->
+      <div class="Flex" :style="{ 'z-index': 0 }">
+        <img
+          id="CharityLogo"
+          :style="{
+            opacity: showAlert ? 0.3 : 1,
+            transition: 'opacity 0.5s',
+          }"
         >
-          <div
-            v-if="alertList[0]"
-            :key="alertList[0].timestamp"
-            class="Flex"
-          >
-            <img
-              src="../RetroCoin.png"
-              :style="{ height: '30px', 'image-rendering': 'pixelated', 'margin-right': '2px' }"
-            >
-            <span
-              :style="{
-                'font-size': '20px',
-                color: '#7FFF00',
-                'font-weight': 600,
-                'background-color': 'rgba(0,0,0,0.6)',
-                padding: '4px 8px',
-                'border-radius': '10px',
-              }"
-            >
-              +{{ alertList[0] ? alertList[0].amount : '$0' }}
-            </span>
-          </div>
-        </transition>
+      </div>
+      <!-- Alerts. -->
+      <div
+        class="Flex"
+        :style="{
+            'z-index': 1,
+            opacity: showAlert ? 1 : 0,
+            transition: 'opacity 0.5s',
+        }"
+
+      >
+        <img
+          src="./img/RetroCoin.png"
+          :style="{
+            height: '30px',
+            'image-rendering': 'pixelated',
+            'margin-right': '2px',
+          }"
+        >
+        <span
+          :style="{
+            'font-size': '20px',
+            color: '#7FFF00', // Basic green, no need to use theme
+            'font-weight': 600,
+            'background-color': 'rgba(0,0,0,0.6)',
+            padding: '4px 8px',
+            'border-radius': '10px',
+          }"
+        >
+          +{{ alertText }}
+        </span>
       </div>
     </div>
+    <!-- Actual total. -->
     <div
       id="Total"
       class="Flex"
+      :style="{
+        'font-size': '40px',
+        'font-weight': 500,
+        'min-width': '80px',
+      }"
     >
-      <audio ref="SFX">
-        <source
-          src="./sfx/mario_coin.mp3"
-          type="audio/mpeg"
-        >
-      </audio>
       <span
-        v-for="(char, i) in totalSplitString"
+        v-for="(char, i) in totalStr"
         :key="i"
         :class="(char === ',' ? 'Comma' : undefined)"
       >
@@ -71,97 +74,65 @@
   </div>
 </template>
 
-<script>
-import { TweenLite } from 'gsap';
-import { formatUSD } from '../../_misc/helpers';
+<script lang="ts">
+import { replicantModule } from '@esa-layouts/browser_shared/replicant_store';
+import { formatUSD } from '@esa-layouts/graphics/_misc/helpers';
+import { Vue, Component, Watch, Ref } from 'vue-property-decorator';
+import gsap from 'gsap';
 
-const totalRep = nodecg.Replicant('donationTotal');
+@Component
+export default class extends Vue {
+  @Ref('SFX') sfx!: HTMLAudioElement;
+  total = 0;
+  playingAlerts = false;
+  showAlert = false;
+  alertText = '$0';
+  alertList: { total: number, amount: number }[] = [];
 
-export default {
-  name: 'Total',
-  data() {
-    return {
-      init: false,
-      total: -1,
-      tweenedTotal: -1,
-      totalSplitString: [],
-      alertList: [],
-      playingAlerts: false,
-    };
-  },
-  watch: {
-    total(newVal, oldVal) {
-      if (this.init) {
-        this.alertList.push({
-          total: newVal, amount: formatUSD(newVal - oldVal), timestamp: Date.now(),
-        });
-        if (!this.playingAlerts) {
-          this.playNextAlert(true);
-        }
-      } else {
-        this.tweenedTotal = this.total;
-        this.init = true;
-      }
-    },
-    tweenedTotal(val) {
-      const string = `$${Math.floor(val).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
-      this.totalSplitString = string.split('');
-    },
-  },
-  async mounted() {
-    totalRep.on('change', (newVal) => {
-      this.total = newVal;
-    });
+  get rawTotal(): number {
+    return replicantModule.repsTyped.donationTotal;
+  }
 
-    // Keep the SFX playing constantly but on mute to avoid garbage collection (hopefully).
-    this.$refs.SFX.muted = true;
-    await this.$refs.SFX.play();
-    this.$refs.SFX.addEventListener('ended', async () => {
-      this.$refs.SFX.muted = true;
-      await this.$refs.SFX.play();
-    });
-  },
-  methods: {
-    async playNextAlert(start = false) {
-      this.playingAlerts = true;
-      if (!start) {
-        await new Promise((res) => { setTimeout(res, 500); });
-      }
-      this.playSound();
+  get totalStr(): string {
+    return `$${Math.floor(this.total).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+  }
+
+  async playNextAlert(start = false): Promise<void> {
+    this.playingAlerts = true;
+    if (!start) await new Promise((res) => { setTimeout(res, 500); });
+    if (this.alertList[0].amount > 0) { // Only show alerts for positive values
+      await this.sfx.play();
       await new Promise((res) => { setTimeout(res, 500); });
-      TweenLite.to(this.$data, 5, { tweenedTotal: this.alertList[0].total });
-      window.setTimeout(() => {
-        this.alertList.shift();
-        if (this.alertList.length) {
-          this.playNextAlert();
-        } else {
-          this.playingAlerts = false;
-        }
-      }, 6000);
-    },
-    async playSound() {
-      try {
-        await this.$refs.SFX.pause();
-        this.$refs.SFX.currentTime = 0;
-        await this.$refs.SFX.play();
-        this.$refs.SFX.muted = false;
-      } catch (err) {
-        // catch
-      }
-    },
-  },
-};
+      this.showAlert = true;
+      this.alertText = formatUSD(this.alertList[0].amount);
+    }
+    gsap.to(this, {
+      total: this.alertList[0].total,
+      duration: 5,
+    });
+    await new Promise((res) => { setTimeout(res, 6000); });
+    this.alertList.shift();
+    this.showAlert = false;
+    if (this.alertList.length) this.playNextAlert();
+    else this.playingAlerts = false;
+  }
+
+  @Watch('rawTotal')
+  onRawTotalChanged(newVal: number, oldVal: number): void {
+    this.alertList.push({
+      total: newVal,
+      amount: newVal - oldVal,
+    });
+    if (!this.playingAlerts) this.playNextAlert(true);
+  }
+
+  async created(): Promise<void> {
+    this.total = this.rawTotal;
+  }
+}
 </script>
 
 <style scoped>
-  #Total {
-    padding: 0 20px 0 0;
-    font-size: 40px;
-    font-weight: 500;
-    min-width: 50px;
-    text-align: center;
-  }
-
   /* Each character in the total is in a span; setting width so the numbers appear monospaced. */
   #Total > span {
     display: inline-block;
@@ -169,16 +140,6 @@ export default {
     text-align: center;
   }
   #Total > .Comma {
-    display: inline-block;
     width: 0.22em;
-    text-align: center;
-  }
-
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity 0.5s ease;
-  }
-  .fade-enter, .fade-leave-to
-  /* .component-fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
   }
 </style>

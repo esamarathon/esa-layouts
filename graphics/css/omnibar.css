@@ -54,6 +54,14 @@ body {
   flex-direction: column;
 }
 
+.Grid {
+  display: grid;
+}
+
+.Grid > * {
+  grid-area: 1 / 1 / 2 / 2;
+}
+
 .Fixed {
   position: fixed;
   overflow: hidden; /* added from countdown, intermission-player */
@@ -66,93 +74,157 @@ body {
 }
 
 
-#Total[data-v-7e4fcbdd] {
-  padding: 0 20px 0 0;
-  font-size: 40px;
-  font-weight: 500;
-  min-width: 50px;
-  text-align: center;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Each character in the total is in a span; setting width so the numbers appear monospaced. */
-#Total > span[data-v-7e4fcbdd] {
+#Total > span[data-v-b6d44242] {
   display: inline-block;
   width: 0.45em;
   text-align: center;
 }
-#Total > .Comma[data-v-7e4fcbdd] {
-  display: inline-block;
+#Total > .Comma[data-v-b6d44242] {
   width: 0.22em;
-  text-align: center;
-}
-.fade-enter-active[data-v-7e4fcbdd], .fade-leave-active[data-v-7e4fcbdd] {
-  transition: opacity 0.5s ease;
-}
-.fade-enter[data-v-7e4fcbdd], .fade-leave-to[data-v-7e4fcbdd]
-/* .component-fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
 }
 
 
-#GenericMessage[data-v-65464698] {
-  height: 100%;
-  font-weight: 500;
-  font-size: var(--font-size);
-  text-align: center;
-}
-
-
-#UpcomingRun[data-v-79ef237c] {
-  padding: 0 17px;
-  height: 100%;
-  font-weight: 500;
-  flex-direction: column;
-  align-items: flex-start;
-}
-.Line1[data-v-79ef237c] {
-  font-size: 25px;
-}
-.Line2[data-v-79ef237c] {
-  font-size: 22px;
-}
-
-
-#OtherStreamInfo[data-v-033d4c86] {
-  padding: 0 17px;
-  height: 100%;
-  font-weight: 500;
-  flex-direction: column;
-  align-items: flex-start;
-}
-.Line1[data-v-033d4c86] {
-  font-size: 25px;
-}
-.Line2[data-v-033d4c86] {
-  font-size: 22px;
-}
-
-
-#Prize[data-v-01c3f0fa] {
-  padding: 0 17px;
-  height: 100%;
-  font-weight: 500;
-  flex-direction: column;
-  align-items: flex-start;
-}
-.Line1[data-v-01c3f0fa] {
-  font-size: 26px;
-}
-.Line2[data-v-01c3f0fa] {
-  font-size: 20px;
-}
-
-
-.BarText[data-v-031b41d4] {
+.BarText[data-v-0335fd40] {
   background-color: rgba(0, 0, 0, 0.4);
   padding: 7px 10px;
   border-radius: 15px;
 }
-.BarTextFull[data-v-031b41d4] {
+.BarTextFull[data-v-0335fd40] {
   background-color: rgba(0, 0, 0, 0.4);
   padding: 0 10px;
   display: flex;
@@ -163,14 +235,14 @@ body {
 }
 
 
-.BarText[data-v-69d43bd1] {
+.BarText[data-v-7850ff32] {
   background-color: rgba(0, 0, 0, 0.4);
   padding: 7px 10px;
   border-radius: 15px;
 }
 
 
-.Option[data-v-7787a41a] {
+.Option[data-v-2bcf1c30] {
   display: flex;
   align-items: center;
   height: 100%;
@@ -179,77 +251,18 @@ body {
 }
 
 
-.BarText[data-v-1d054dbe] {
+.BarText[data-v-86fe5912] {
   background-color: rgba(0, 0, 0, 0.4);
   padding: 7px 10px;
   border-radius: 15px;
 }
 
 
-#Alert[data-v-fc9a3f44] {
-  padding: 0 17px;
-  height: 100%;
-  font-weight: 500;
-  flex-direction: column;
-  align-items: flex-start;
-  background-color: #ffffff38;
+.ticker-enter-active[data-v-38b0cdc2], .ticker-leave-active[data-v-38b0cdc2] {
+  transition: all .3s;
 }
-.Line1[data-v-fc9a3f44] {
-  font-size: 25px;
-}
-.Line2[data-v-fc9a3f44] {
-  font-size: 23px;
-  white-space: nowrap;
-  overflow: hidden;
-}
-.Line1 > .TwitterLogo[data-v-fc9a3f44], .Line1 > .CrowdControlLogo[data-v-fc9a3f44] {
-  height: 1.2em;
-  margin: 0 .05em 0 .1em;
-  vertical-align: -0.25em;
-}
-
-
-.BarText[data-v-1c8f88e0] {
-  background-color: rgba(0, 0, 0, 0.4);
-  padding: 7px 10px;
-  border-radius: 15px;
-}
-
-
-#Ticker[data-v-f3cd06ba] {
-  height: 100%;
-  min-width: 0;
-  flex: 1;
-}
-.fade-enter-active[data-v-f3cd06ba], .fade-leave-active[data-v-f3cd06ba] {
-  transition: opacity .5s;
-}
-.fade-enter[data-v-f3cd06ba], .fade-leave-to[data-v-f3cd06ba] /* .fade-leave-active below version 2.1.8 */ {
+.ticker-enter[data-v-38b0cdc2], .ticker-leave-to[data-v-38b0cdc2] {
+  transform: translateX(20px);
   opacity: 0;
-}
-
-
-#Clock[data-v-a8109ee4] {
-  font-size: 35px;
-  width: 90px;
-}
-
-
-.Divider[data-v-7e4ffb0a] {
-  height: 100%;
-  width: 3px;
-  min-width: 3px;
-}
-
-
-#Background {
-  background-color: #19171c;
-}
-#Omnibar {
-  color: white;
-  position: fixed;
-  width: 1920px;
-  height: 80px;
-  justify-content: flex-start;
 }
 

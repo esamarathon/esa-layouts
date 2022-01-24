@@ -43,19 +43,9 @@ rabbitmq_1.mq.evt.on('newScreenedSub', (data) => {
     (0, nodecg_1.get)().log.debug('[Misc] Received new subscription');
     (0, nodecg_1.get)().sendMessage('newSub', data);
 });
-rabbitmq_1.mq.evt.on('newScreenedTweet', (data) => {
-    (0, nodecg_1.get)().log.debug('[Misc] Received new tweet');
-    (0, nodecg_1.get)().sendMessage('newTweet', data);
-});
 rabbitmq_1.mq.evt.on('newScreenedCheer', (data) => {
     (0, nodecg_1.get)().log.debug('[Misc] Received new cheer');
     (0, nodecg_1.get)().sendMessage('newCheer', data);
-});
-rabbitmq_1.mq.evt.on('newScreenedCrowdControl', (data) => {
-    if (config.event.thisEvent === 1) {
-        (0, nodecg_1.get)().log.debug('[Misc] Received new crowd control message');
-        (0, nodecg_1.get)().sendMessage('newCrowdControl', data);
-    }
 });
 // Information that should come from our 2nd stream.
 rabbitmq_1.mq.evt.on('runChanged', (data) => {
@@ -124,8 +114,11 @@ async function searchSrcomPronouns(val) {
 exports.searchSrcomPronouns = searchSrcomPronouns;
 // Processes adding commentators from the dashboard panel.
 (0, nodecg_1.get)().listenFor('commentatorAdd', async (val, ack) => {
-    if (val && !replicants_1.commentators.value.includes(val)) {
-        replicants_1.commentators.value.push(await searchSrcomPronouns(val));
+    if (val) {
+        const str = await searchSrcomPronouns(val);
+        if (!replicants_1.commentators.value.includes(str)) {
+            replicants_1.commentators.value.push(str);
+        }
     }
     if (ack && !ack.handled) {
         ack(null);

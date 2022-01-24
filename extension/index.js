@@ -35,6 +35,7 @@ module.exports = (nodecg) => {
     require('./music');
     require('./intermission-player');
     require('./flagcarrier');
+    require('./omnibar');
     return {
         obs: require('./util/obs').default,
         mixer: require('./mixer'),

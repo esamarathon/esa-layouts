@@ -14,13 +14,16 @@ const allowedDevices = !Array.isArray(config.flagcarrier.allowedDevices)
     : config.flagcarrier.allowedDevices || [];
 function setup() {
     // RabbitMQ events from the "big red buttons", used for players/commentators.
-    rabbitmq_1.mq.evt.on('bigbuttonTagScanned', (data) => {
+    rabbitmq_1.mq.evt.on('bigbuttonTagScanned', async (data) => {
         if (config.event.thisEvent === 1 && data.flagcarrier.group === 'stream1') {
             const name = data.user.displayName;
-            (0, nodecg_1.get)().sendMessage('bigbuttonTagScanned', data);
-            if (!replicants_1.commentators.value.includes(name)) {
-                replicants_1.commentators.value.push(name);
-                (0, nodecg_1.get)().log.debug('[FlagCarrier] Added new commentator:', name);
+            const pronouns = data.raw.pronouns;
+            let str = pronouns ? `${name} (${pronouns})` : name;
+            str = await (0, misc_1.searchSrcomPronouns)(str);
+            (0, nodecg_1.get)().sendMessage('bigbuttonTagScanned', { id: data.flagcarrier.id, str });
+            if (!replicants_1.commentators.value.includes(str)) {
+                replicants_1.commentators.value.push(str);
+                (0, nodecg_1.get)().log.debug('[FlagCarrier] Added new commentator:', str);
             }
         }
     });
@@ -49,11 +52,9 @@ function setup() {
         // Donation Reader: login, login_clear
         if (req.body.position === 'reader' && action.startsWith('login')) {
             const data = req.body.tag_data;
-            if (data.pronouns)
-                replicants_1.donationReader.value = `${data.display_name} (${data.pronouns})`;
-            else
-                replicants_1.donationReader.value = await (0, misc_1.searchSrcomPronouns)(data.display_name);
-            (0, nodecg_1.get)().log.info('[FlagCarrier] Donation reader was updated (Name: %s, DeviceID: %s)', req.body.tag_data.display_name, device);
+            const str = data.pronouns ? `${data.display_name} (${data.pronouns})` : data.display_name;
+            replicants_1.donationReader.value = await (0, misc_1.searchSrcomPronouns)(str);
+            (0, nodecg_1.get)().log.info('[FlagCarrier] Donation reader was updated (Name: %s, DeviceID: %s)', str, device);
             return res.send('You\'ve been logged in.');
         }
         // Reject other positions.

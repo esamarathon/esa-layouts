@@ -54,6 +54,14 @@ body {
   flex-direction: column;
 }
 
+.Grid {
+  display: grid;
+}
+
+.Grid > * {
+  grid-area: 1 / 1 / 2 / 2;
+}
+
 .Fixed {
   position: fixed;
   overflow: hidden; /* added from countdown, intermission-player */

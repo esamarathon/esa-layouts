@@ -1,5 +1,4 @@
 import { Configschema } from '@esa-layouts/types/schemas';
-import { searchSrcomPronouns } from './misc';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import { mq } from './util/rabbitmq';
@@ -18,8 +17,8 @@ function setup(): void {
     if (config.event.thisEvent === 1 && data.flagcarrier.group === 'stream1') {
       const name = data.user.displayName;
       const pronouns = data.raw.pronouns as string | undefined;
-      let str = pronouns ? `${name} (${pronouns})` : name;
-      str = await searchSrcomPronouns(str);
+      const str = pronouns ? `${name} (${pronouns})` : name;
+      // str = await searchSrcomPronouns(str);
       nodecg().sendMessage('bigbuttonTagScanned', { id: data.flagcarrier.id, str });
       if (!commentators.value.includes(str)) {
         commentators.value.push(str);
@@ -60,7 +59,8 @@ function setup(): void {
     if (req.body.position === 'reader' && action.startsWith('login')) {
       const data = req.body.tag_data;
       const str = data.pronouns ? `${data.display_name} (${data.pronouns})` : data.display_name;
-      donationReader.value = await searchSrcomPronouns(str);
+      // donationReader.value = await searchSrcomPronouns(str);
+      donationReader.value = str;
       nodecg().log.info(
         '[FlagCarrier] Donation reader was updated (Name: %s, DeviceID: %s)',
         str,

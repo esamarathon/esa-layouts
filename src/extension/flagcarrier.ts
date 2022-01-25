@@ -2,7 +2,8 @@ import { Configschema } from '@esa-layouts/types/schemas';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import { mq } from './util/rabbitmq';
-import { commentators, donationReader } from './util/replicants';
+import { bigbuttunPlayerMap, commentators, donationReader } from './util/replicants';
+import { sc } from './util/speedcontrol';
 
 const router = nodecg().Router();
 const config = nodecg().bundleConfig as Configschema;
@@ -20,7 +21,26 @@ function setup(): void {
       const str = pronouns ? `${name} (${pronouns})` : name;
       // str = await searchSrcomPronouns(str);
       nodecg().sendMessage('bigbuttonTagScanned', { id: data.flagcarrier.id, str });
-      if (!commentators.value.includes(str)) {
+
+      // Delete scanned user from big button player map if already in a slot.
+      Object.entries(bigbuttunPlayerMap.value).forEach(([key, value]) => {
+        const index = value.findIndex((p) => p.user.displayName === data.user.displayName);
+        if (index >= 0) {
+          bigbuttunPlayerMap.value[key].splice(index, 1);
+        }
+      });
+      // Check if scanned in user is a player in the active run.
+      const player = sc.getCurrentRun()?.teams.find((t) => t.players
+        .find((p) => p.name.toLowerCase() === data.user.displayName.toLowerCase()));
+      // If a player in the active run, add the scanned user into
+      // the big button player map in the correct slot.
+      if (player) {
+        if (!bigbuttunPlayerMap.value[data.flagcarrier.id]) {
+          bigbuttunPlayerMap.value[data.flagcarrier.id] = [];
+        }
+        bigbuttunPlayerMap.value[data.flagcarrier.id].push(data);
+      // If not a player in the run and not already a commentator, adds them as one.
+      } else if (!commentators.value.includes(str)) {
         commentators.value.push(str);
         nodecg().log.debug('[FlagCarrier] Added new commentator:', str);
       }

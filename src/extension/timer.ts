@@ -1,10 +1,11 @@
+import { BigbuttonPlayerMap } from '@esa-layouts/types/schemas';
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import clone from 'clone';
 import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
-import { currentRunDelay, delayedTimer } from './util/replicants';
+import { bigbuttunPlayerMap, currentRunDelay, delayedTimer } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const config = nodecg().bundleConfig as Configschema;
@@ -62,11 +63,16 @@ mq.evt.on('bigbuttonPressed', async (data) => {
   }
 
   const run = sc.getCurrentRun();
-  let buttonID = (run && run.teams.length > 1) ? data.button_id - 1 : 0;
+  let id = 0;
 
-  // Makes buttons 1/2 act as the same, as puts 3/4(+) at 2/3(+).
-  if (buttonID === 0 || buttonID === 1) buttonID = 0;
-  else if (buttonID >= 2) buttonID -= 1;
+  // If more than 1 team, uses the big button player mapping to find out what team to stop.
+  if (run && run.teams.length > 1) {
+    const userTag = bigbuttunPlayerMap.value[data.button_id] as BigbuttonPlayerMap[0] | undefined;
+    const teamIndex = run.teams.findIndex((t) => t.players.find((p) => userTag
+      ?.find((u) => u.user.displayName.toLowerCase() === p.name.toLowerCase())));
+    if (teamIndex >= 0) id = teamIndex;
+    else id = -1;
+  }
 
   try {
     // Note: the nodecg-speedcontrol bundle will check if it *can* do these actions,
@@ -79,7 +85,7 @@ mq.evt.on('bigbuttonPressed', async (data) => {
       case 'running':
         // Only allow stop command to work if timer is more than 10s.
         if (sc.timer.value.milliseconds > 10 * 1000) {
-          await sc.stopTimer(buttonID);
+          await sc.stopTimer(id);
         }
         break;
       default:

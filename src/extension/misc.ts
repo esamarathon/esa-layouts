@@ -6,7 +6,7 @@ import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
-import { commentators, donationReader, otherStreamData, serverTimestamp, upcomingRunID } from './util/replicants';
+import { bigbuttunPlayerMap, commentators, donationReader, otherStreamData, serverTimestamp, upcomingRunID } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const config = (nodecg().bundleConfig as Configschema);
@@ -55,6 +55,7 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
   && ((!obs.connected && init)
   || (obs.connected && !obs.isCurrentScene(config.obs.names.scenes.gameLayout)))) {
     commentators.value.length = 0;
+    bigbuttunPlayerMap.value = {};
     nodecg().log.debug('[Misc] Cleared commentators');
   }
 

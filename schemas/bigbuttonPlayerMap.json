@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "additionalProperties": {
+    "type": "array",
+    "items": {
+      "$comment": "Copied from @esamarathon/mq-events/definitions/FlagCarrier/TagScanned.json due to NodeCG issues.",
+      "additionalProperties": false,
+      "properties": {
+        "flagcarrier": {
+          "type": "object",
+          "required": [
+            "id",
+            "group",
+            "time",
+            "uid"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "ID of the terminal that scanned the tag (BRB1, ...)",
+              "default": "unset"
+            },
+            "group": {
+              "type": "string",
+              "description": "Group of the terminal that scanned the tag",
+              "default": "unset"
+            },
+            "time": {
+              "type": "object",
+              "required": [
+                "iso",
+                "unix"
+              ],
+              "properties": {
+                "iso": {
+                  "type": "string",
+                  "description": "Timestamp representation in the ISO 8601 format",
+                  "format": "date-time",
+                  "examples": [
+                    "2019-09-03T19:55:18.430Z"
+                  ]
+                },
+                "unix": {
+                  "type": "number",
+                  "description": "Timestamp representation in seconds since the Unix epoch, including a fractional millisecond part",
+                  "examples": [
+                    1567540518.430
+                  ]
+                }
+              },
+              "additionalProperties": false,
+              "description": "Timestamp of when the tag was scanned"
+            },
+            "uid": {
+              "type": "string",
+              "description": "NFC tag UID as hex string"
+            },
+            "validSignature": {
+              "type": "boolean",
+              "description": "Indicates if tag had a valid signature"
+            },
+            "pubKey": {
+              "type": "string",
+              "description": "Base64 encoded ed25519 public key used to verify the tag"
+            }
+          },
+          "additionalProperties": false
+        },
+        "user": {
+          "type": "object",
+          "required": [
+            "displayName"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "UserTool ID of the user who scanned the tag (if known)"
+            },
+            "displayName": {
+              "type": "string",
+              "description": "UserTool display name of the user who scanned the tag",
+              "default": "*unset*"
+            }
+          },
+          "additionalProperties": false
+        },
+        "raw": {
+          "type": "object",
+          "description": "Raw dump of scanned tags Key->Value data",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "flagcarrier",
+        "user",
+        "raw"
+      ]
+    }
+  }
+}

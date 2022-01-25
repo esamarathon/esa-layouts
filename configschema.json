@@ -270,13 +270,18 @@
                 "videoPlayer": {
                   "type": "string",
                   "default": "Video Player Source"
+                },
+                "donationSound": {
+                  "type": "string",
+                  "default": "Donation Sound"
                 }
               },
               "required": [
                 "gameCaptures",
                 "cameraCaptures",
                 "twitchSources",
-                "videoPlayer"
+                "videoPlayer",
+                "donationSound"
               ]
             }
           },

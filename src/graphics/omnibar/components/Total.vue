@@ -7,9 +7,9 @@
     }"
   >
     <!-- Alert sound effect. -->
-    <audio ref="SFX">
+    <!--<audio ref="SFX">
       <source src="./sfx/mario_coin.mp3" type="audio/mpeg">
-    </audio>
+    </audio>-->
     <div class="Grid" :style="{ 'min-width': '110px' }">
       <!-- Charity logo. -->
       <div class="Flex" :style="{ 'z-index': 0 }">
@@ -77,12 +77,12 @@
 <script lang="ts">
 import { replicantModule } from '@esa-layouts/browser_shared/replicant_store';
 import { formatUSD } from '@esa-layouts/graphics/_misc/helpers';
-import { Vue, Component, Watch, Ref } from 'vue-property-decorator';
+import { Vue, Component, Watch } from 'vue-property-decorator';
 import gsap from 'gsap';
 
 @Component
 export default class extends Vue {
-  @Ref('SFX') sfx!: HTMLAudioElement;
+  // @Ref('SFX') sfx!: HTMLAudioElement;
   total = 0;
   playingAlerts = false;
   showAlert = false;
@@ -101,7 +101,8 @@ export default class extends Vue {
     this.playingAlerts = true;
     if (!start) await new Promise((res) => { setTimeout(res, 500); });
     if (this.alertList[0].amount > 0) { // Only show alerts for positive values
-      await this.sfx.play();
+      nodecg.sendMessage('omnibarPlaySound');
+      // await this.sfx.play();
       await new Promise((res) => { setTimeout(res, 500); });
       this.showAlert = true;
       this.alertText = formatUSD(this.alertList[0].amount);

@@ -50,6 +50,7 @@ export interface Configschema {
 				cameraCaptureCrowd?: string | null;
 				twitchSources: string | [string] | [string, string];
 				videoPlayer: string;
+				donationSound: string;
 			};
 		};
 	};

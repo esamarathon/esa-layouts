@@ -3,6 +3,7 @@ import clone from 'clone';
 import { RunData } from 'speedcontrol-util/types';
 import { v4 as uuid } from 'uuid';
 import { get as nodecg } from './util/nodecg';
+import obs from './util/obs';
 import { mq } from './util/rabbitmq';
 import { bids, donationTotalMilestones, omnibar, prizes } from './util/replicants';
 import { sc } from './util/speedcontrol';
@@ -165,6 +166,16 @@ function showNext(start = false): void {
 // Listens for messages from the graphic to change to the next message.
 nodecg().listenFor('omnibarShowNext', (data, ack) => {
   showNext();
+  if (ack && !ack?.handled) ack();
+});
+
+// Listens for messages from the graphic to play the "donation" SFX via OBS source.
+nodecg().listenFor('omnibarPlaySound', async (data, ack) => {
+  if (config.obs.enabled && obs.connected) {
+    try {
+      await obs.conn.send('RestartMedia', { sourceName: config.obs.names.sources.donationSound });
+    } catch (err) { /* catch */ }
+  }
   if (ack && !ack?.handled) ack();
 });
 

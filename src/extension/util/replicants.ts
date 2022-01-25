@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import { Bids, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, MusicData, NameCycle, NotableDonations, ObsData, Omnibar, OtherStreamData, Prizes, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import { Bids, BigbuttonPlayerMap, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, MusicData, NameCycle, NotableDonations, ObsData, Omnibar, OtherStreamData, Prizes, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import type { Asset } from '@shared/types';
 import { get as nodecg } from './nodecg';
 
@@ -12,6 +12,7 @@ export const assetsIntermissionSlides = nodecg().Replicant<Asset[]>('assets:inte
 export const assetsMediaBoxImages = nodecg().Replicant<Asset[]>('assets:media-box-images');
 export const assetsVideos = nodecg().Replicant<Asset[]>('assets:videos');
 export const bids = nodecg().Replicant<Bids>('bids', { persistent: false });
+export const bigbuttonPlayerMap = nodecg().Replicant<BigbuttonPlayerMap>('bigbuttonPlayerMap');
 export const capturePositions = nodecg().Replicant<CapturePositions>('capturePositions');
 export const commentators = nodecg().Replicant<Commentators>('commentators');
 export const countdown = nodecg().Replicant<Countdown>('countdown');

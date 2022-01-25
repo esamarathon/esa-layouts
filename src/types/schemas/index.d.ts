@@ -1,5 +1,6 @@
 export * from './configschema';
 export * from './bids';
+export * from './bigbuttonPlayerMap';
 export * from './capturePositions';
 export * from './commentators';
 export * from './countdown';

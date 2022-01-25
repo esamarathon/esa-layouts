@@ -6,7 +6,7 @@ import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
-import { commentators, donationReader, otherStreamData, serverTimestamp, upcomingRunID } from './util/replicants';
+import { bigbuttonPlayerMap, commentators, donationReader, otherStreamData, serverTimestamp, upcomingRunID } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const config = (nodecg().bundleConfig as Configschema);
@@ -55,7 +55,14 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
   && ((!obs.connected && init)
   || (obs.connected && !obs.isCurrentScene(config.obs.names.scenes.gameLayout)))) {
     commentators.value.length = 0;
-    nodecg().log.debug('[Misc] Cleared commentators');
+    bigbuttonPlayerMap.value = {};
+    // If not online, we clear the teams on start, which will be re-added by scanning tags.
+    // TODO: Reselecting the current run would overwrite them, but not much I can do right now!
+    if (!config.event.online && sc.runDataActiveRun.value) {
+      sc.runDataActiveRun.value.teams = [];
+      nodecg().log.debug('[Misc] Removed active run teams on run change');
+    }
+    nodecg().log.debug('[Misc] Cleared commentators and big button player mapping');
   }
 
   // This will also be triggered on server start up.

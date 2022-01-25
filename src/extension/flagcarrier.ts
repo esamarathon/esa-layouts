@@ -57,7 +57,7 @@ function setup(): void {
           .toLowerCase() === y.user.displayName.toLowerCase());
         if (!leftToScan.length) {
           const teams = clone(currentRunInRunArray.teams);
-          const newTeams: RunDataTeam[] = [];
+          let newTeams: RunDataTeam[] = [];
           // Go through each button and sort the teams in the correct order.
           // This assumes the button IDs can be sorted alphabetically.
           Object.keys(bigbuttonPlayerMap.value).sort().forEach((id) => {
@@ -73,6 +73,18 @@ function setup(): void {
               }
             }
           });
+          // Replace pronouns if any are found on the tags.
+          newTeams = newTeams.map((team) => ({
+            ...team,
+            players: team.players.map((p) => {
+              const scanned = allScannedPlayers
+                .find((u) => u.user.displayName.toLowerCase() === p.name.toLowerCase());
+              return {
+                ...p,
+                pronouns: scanned ? (scanned.raw.pronouns || '') : p.pronouns,
+              };
+            }),
+          }));
           // Finally, set these teams to the currently active run.
           if (sc.runDataActiveRun.value) sc.runDataActiveRun.value.teams = newTeams;
         }

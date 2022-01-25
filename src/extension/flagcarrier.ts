@@ -1,8 +1,11 @@
-import { Configschema } from '@esa-layouts/types/schemas';
+import { BigbuttonPlayerMap, Configschema } from '@esa-layouts/types/schemas';
+import clone from 'clone';
+import { differenceWith } from 'lodash';
+import { RunDataPlayer, RunDataTeam } from 'speedcontrol-util/types';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import { mq } from './util/rabbitmq';
-import { bigbuttunPlayerMap, commentators, donationReader } from './util/replicants';
+import { bigbuttonPlayerMap, commentators, donationReader } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const router = nodecg().Router();
@@ -22,23 +25,57 @@ function setup(): void {
       // str = await searchSrcomPronouns(str);
       nodecg().sendMessage('bigbuttonTagScanned', { id: data.flagcarrier.id, str });
 
+      // Get the original run from the array (before the teams were removed).
+      const currentRunInRunArray = sc.runDataArray.value
+        .find((r) => r.id === sc.runDataActiveRunSurrounding.value.current);
+
       // Delete scanned user from big button player map if already in a slot.
-      Object.entries(bigbuttunPlayerMap.value).forEach(([key, value]) => {
+      Object.entries(bigbuttonPlayerMap.value).forEach(([key, value]) => {
         const index = value.findIndex((p) => p.user.displayName === data.user.displayName);
         if (index >= 0) {
-          bigbuttunPlayerMap.value[key].splice(index, 1);
+          bigbuttonPlayerMap.value[key].splice(index, 1);
         }
       });
       // Check if scanned in user is a player in the active run.
-      const player = sc.getCurrentRun()?.teams.find((t) => t.players
+      const player = currentRunInRunArray?.teams.find((t) => t.players
         .find((p) => p.name.toLowerCase() === data.user.displayName.toLowerCase()));
-      // If a player in the active run, add the scanned user into
-      // the big button player map in the correct slot.
-      if (player) {
-        if (!bigbuttunPlayerMap.value[data.flagcarrier.id]) {
-          bigbuttunPlayerMap.value[data.flagcarrier.id] = [];
+      // If a player is in the active run and the teams haven't been mapped yet.
+      if (currentRunInRunArray && player && !sc.getCurrentRun()?.teams.length) {
+        // Add the scanned user into the big button player map in the correct slot.
+        if (!bigbuttonPlayerMap.value[data.flagcarrier.id]) {
+          bigbuttonPlayerMap.value[data.flagcarrier.id] = [];
         }
-        bigbuttunPlayerMap.value[data.flagcarrier.id].push(data);
+        bigbuttonPlayerMap.value[data.flagcarrier.id].push(data);
+
+        // See if all players have been scanned in yet.
+        const allPlayersRun = currentRunInRunArray.teams
+          .reduce<RunDataPlayer[]>((prev, team) => prev.concat(...team.players), []);
+        const allScannedPlayers = Object.values(bigbuttonPlayerMap.value)
+          .reduce<BigbuttonPlayerMap[0]>((prev, button) => prev.concat(...button), []);
+        // All players scanned in?
+        const leftToScan = differenceWith(allPlayersRun, allScannedPlayers, (x, y) => x.name
+          .toLowerCase() === y.user.displayName.toLowerCase());
+        if (!leftToScan.length) {
+          const teams = clone(currentRunInRunArray.teams);
+          const newTeams: RunDataTeam[] = [];
+          // Go through each button and sort the teams in the correct order.
+          // This assumes the button IDs can be sorted alphabetically.
+          Object.keys(bigbuttonPlayerMap.value).sort().forEach((id) => {
+            if (teams.length) {
+              // Find which team has a player in it from this button ID, if any.
+              const teamIndex = teams.findIndex((t) => t.players
+                .find((p) => bigbuttonPlayerMap.value[id]
+                  .find((u) => u.user.displayName.toLowerCase() === p.name.toLowerCase())));
+              // If team found, remove from search array and push to new array.
+              if (teamIndex >= 0) {
+                newTeams.push(clone(teams[teamIndex]));
+                teams.splice(teamIndex, 1);
+              }
+            }
+          });
+          // Finally, set these teams to the currently active run.
+          if (sc.runDataActiveRun.value) sc.runDataActiveRun.value.teams = newTeams;
+        }
       // If not a player in the run and not already a commentator, adds them as one.
       } else if (!commentators.value.includes(str)) {
         commentators.value.push(str);

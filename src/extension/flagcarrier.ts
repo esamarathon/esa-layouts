@@ -2,6 +2,7 @@ import { BigbuttonPlayerMap, Configschema } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import { differenceWith } from 'lodash';
 import { RunDataPlayer, RunDataTeam } from 'speedcontrol-util/types';
+import countryCodes from './util/countries';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import { mq } from './util/rabbitmq';
@@ -73,14 +74,21 @@ function setup(): void {
               }
             }
           });
-          // Replace pronouns if any are found on the tags.
+          // Replace Twitch username, country code and pronouns if any are found on the tags.
           newTeams = newTeams.map((team) => ({
             ...team,
             players: team.players.map((p) => {
               const scanned = allScannedPlayers
                 .find((u) => u.user.displayName.toLowerCase() === p.name.toLowerCase());
+              const countryCode = countryCodes
+                .find((c) => c.code === scanned?.raw.country_code.toLowerCase())?.code;
               return {
                 ...p,
+                social: {
+                  ...p.social,
+                  twitch: scanned?.raw.twitch_name || p.social.twitch,
+                },
+                country: countryCode || p.country,
                 pronouns: scanned ? (scanned.raw.pronouns || '') : p.pronouns,
               };
             }),

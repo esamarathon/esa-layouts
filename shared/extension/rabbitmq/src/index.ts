@@ -1,10 +1,11 @@
-import type { OmnibarModeration, Tracker } from '@esamarathon/mq-events/types';
+import type { BigButton, FlagCarrier, OmnibarModeration, Tracker } from '@esamarathon/mq-events/types';
 import type { ChannelWrapper } from 'amqp-connection-manager';
 import amqpConnectionManager from 'amqp-connection-manager';
 import type { ConfirmChannel, Message } from 'amqplib';
 import amqplib from 'amqplib';
 import { EventEmitter } from 'events';
 import type { NodeCG } from 'nodecg/types/server';
+import { v4 as uuid } from 'uuid';
 import { RabbitMQ as RabbitMQTypes } from '../../../types';
 
 function getTimeInfo(): { unix: number; iso: string } {
@@ -29,10 +30,67 @@ function generateDonationMsg(): Tracker.DonationFullyProcessed {
   };
   /* eslint-enable */
 }
+function generateUserTagMsg(tag: number, id: string): FlagCarrier.TagScanned {
+  return {
+    flagcarrier: {
+      id,
+      group: 'stream1',
+      time: {
+        iso: (new Date()).toISOString(),
+        unix: Date.now() / 1000,
+      },
+      uid: uuid(),
+    },
+    user: {
+      displayName: (() => {
+        switch (tag) {
+          case 1:
+            return 'ExampleUser1';
+          case 2:
+            return 'ExampleUser2';
+          case 3:
+            return 'ExampleUser3';
+          default:
+            return 'ExampleUser';
+        }
+      })(),
+    },
+    raw: {
+      pronouns: (() => {
+        switch (tag) {
+          case 1:
+            return 'he/him';
+          case 2:
+            return 'she/her';
+          case 3:
+            return 'they/them';
+          default:
+            return '';
+        }
+      })(),
+    },
+  };
+}
+const buttonMsgCount: { [k: string]: number } = {};
+function generateBigbuttonPressMsg(id: number): BigButton.ButtonPress {
+  if (!buttonMsgCount[id]) buttonMsgCount[id] = 1;
+  else buttonMsgCount[id] += 1;
+  return {
+    button_id: id,
+    button_message_count: buttonMsgCount[id],
+    time: {
+      iso: (new Date()).toISOString(),
+      unix: Date.now() / 1000,
+    },
+  };
+}
 const testData: {
   donationFullyProcessed: Tracker.DonationFullyProcessed;
   newScreenedSub: OmnibarModeration.NewScreenedSub;
   newScreenedCheer: OmnibarModeration.NewScreenedCheer;
+  bigbuttonTagScanned: FlagCarrier.TagScanned;
+  bigbuttonPressed: BigButton.ButtonPress;
+
 } = {
   donationFullyProcessed: generateDonationMsg(),
   newScreenedSub: {
@@ -53,6 +111,8 @@ const testData: {
       },
     },
   },
+  bigbuttonTagScanned: generateUserTagMsg(1, '1'),
+  bigbuttonPressed: generateBigbuttonPressMsg(1),
 };
 
 class RabbitMQ {
@@ -106,9 +166,20 @@ class RabbitMQ {
       } else {
         nodecg.listenFor(
           'testRabbitMQ',
-          (msgType: 'donationFullyProcessed' | 'newScreenedSub' | 'newScreenedCheer') => {
+          ({ msgType, data }: {
+            msgType: 'donationFullyProcessed' | 'newScreenedSub'
+            | 'newScreenedCheer' | 'bigbuttonTagScanned' | 'bigbuttonPressed',
+            data?: { [k: string]: unknown },
+          }) => {
             if (msgType === 'donationFullyProcessed') {
               testData.donationFullyProcessed = generateDonationMsg();
+            } else if (msgType === 'bigbuttonTagScanned') {
+              testData.bigbuttonTagScanned = generateUserTagMsg(
+                (data?.tag || 1) as number,
+                (data?.id || '1') as string,
+              );
+            } else if (msgType === 'bigbuttonPressed') {
+              testData.bigbuttonPressed = generateBigbuttonPressMsg((data?.id || 1) as number);
             }
             nodecg.log.debug(
               '[RabbitMQ] Sending test message out for topic %s: %s',

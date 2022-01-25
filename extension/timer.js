@@ -80,12 +80,18 @@ rabbitmq_1.mq.evt.on('bigbuttonPressed', async (data) => {
         return;
     }
     const run = speedcontrol_1.sc.getCurrentRun();
-    let buttonID = (run && run.teams.length > 1) ? data.button_id - 1 : 0;
-    // Makes buttons 1/2 act as the same, as puts 3/4(+) at 2/3(+).
-    if (buttonID === 0 || buttonID === 1)
-        buttonID = 0;
-    else if (buttonID >= 2)
-        buttonID -= 1;
+    let id = 0;
+    // If more than 1 team, uses the big button player mapping to find out what team to stop.
+    if (run && run.teams.length > 1) {
+        const userTag = replicants_1.bigbuttonPlayerMap.value[data.button_id];
+        const teamIndex = run.teams.findIndex((t) => t.players.find((p) => userTag === null || userTag === void 0 ? void 0 : userTag.find((u) => u.user.displayName.toLowerCase() === p.name.toLowerCase())));
+        if (teamIndex >= 0)
+            id = teamIndex;
+        else
+            id = -1;
+    }
+    if (id < 0)
+        return;
     try {
         // Note: the nodecg-speedcontrol bundle will check if it *can* do these actions,
         // we do not need to check that here.
@@ -97,7 +103,7 @@ rabbitmq_1.mq.evt.on('bigbuttonPressed', async (data) => {
             case 'running':
                 // Only allow stop command to work if timer is more than 10s.
                 if (speedcontrol_1.sc.timer.value.milliseconds > 10 * 1000) {
-                    await speedcontrol_1.sc.stopTimer(buttonID);
+                    await speedcontrol_1.sc.stopTimer(id);
                 }
                 break;
             default:

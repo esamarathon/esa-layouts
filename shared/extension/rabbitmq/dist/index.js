@@ -52,6 +52,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var amqp_connection_manager_1 = __importDefault(require("amqp-connection-manager"));
 var amqplib_1 = __importDefault(require("amqplib"));
 var events_1 = require("events");
+var uuid_1 = require("uuid");
 function getTimeInfo() {
     var nowDate = new Date();
     return {
@@ -73,6 +74,62 @@ function generateDonationMsg() {
     };
     /* eslint-enable */
 }
+function generateUserTagMsg(tag, id) {
+    return {
+        flagcarrier: {
+            id: id,
+            group: 'stream1',
+            time: {
+                iso: (new Date()).toISOString(),
+                unix: Date.now() / 1000,
+            },
+            uid: (0, uuid_1.v4)(),
+        },
+        user: {
+            displayName: (function () {
+                switch (tag) {
+                    case 1:
+                        return 'ExampleUser1';
+                    case 2:
+                        return 'ExampleUser2';
+                    case 3:
+                        return 'ExampleUser3';
+                    default:
+                        return 'ExampleUser';
+                }
+            })(),
+        },
+        raw: {
+            pronouns: (function () {
+                switch (tag) {
+                    case 1:
+                        return 'he/him';
+                    case 2:
+                        return 'she/her';
+                    case 3:
+                        return 'they/them';
+                    default:
+                        return '';
+                }
+            })(),
+        },
+    };
+}
+var buttonMsgCount = {};
+function generateBigbuttonPressMsg(id) {
+    if (!buttonMsgCount[id])
+        buttonMsgCount[id] = 1;
+    else
+        buttonMsgCount[id] += 1;
+    return {
+        button_id: id,
+        button_message_count: buttonMsgCount[id],
+        time: {
+            iso: (new Date()).toISOString(),
+            unix: Date.now() / 1000,
+        },
+    };
+}
 var testData = {
     donationFullyProcessed: generateDonationMsg(),
     newScreenedSub: {
@@ -93,6 +150,8 @@ var testData = {
             },
         },
     },
+    bigbuttonTagScanned: generateUserTagMsg(1, '1'),
+    bigbuttonPressed: generateBigbuttonPressMsg(1),
 };
 var RabbitMQ = /** @class */ (function () {
     function RabbitMQ(nodecg, useTestData, opts) {
@@ -127,9 +186,16 @@ var RabbitMQ = /** @class */ (function () {
                 });
             }
             else {
-                nodecg.listenFor('testRabbitMQ', function (msgType) {
+                nodecg.listenFor('testRabbitMQ', function (_a) {
+                    var msgType = _a.msgType, data = _a.data;
                     if (msgType === 'donationFullyProcessed') {
                         testData.donationFullyProcessed = generateDonationMsg();
+                    }
+                    else if (msgType === 'bigbuttonTagScanned') {
+                        testData.bigbuttonTagScanned = generateUserTagMsg(((data === null || data === void 0 ? void 0 : data.tag) || 1), ((data === null || data === void 0 ? void 0 : data.id) || '1'));
+                    }
+                    else if (msgType === 'bigbuttonPressed') {
+                        testData.bigbuttonPressed = generateBigbuttonPressMsg(((data === null || data === void 0 ? void 0 : data.id) || 1));
                     }
                     nodecg.log.debug('[RabbitMQ] Sending test message out for topic %s: %s', msgType, JSON.stringify(testData[msgType]));
                     _this.evt.emit(msgType, testData[msgType]);

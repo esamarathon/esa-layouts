@@ -1,11 +1,16 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-const misc_1 = require("./misc");
+const clone_1 = __importDefault(require("clone"));
+const lodash_1 = require("lodash");
 const helpers_1 = require("./util/helpers");
 const nodecg_1 = require("./util/nodecg");
 const rabbitmq_1 = require("./util/rabbitmq");
 const replicants_1 = require("./util/replicants");
+const speedcontrol_1 = require("./util/speedcontrol");
 const router = (0, nodecg_1.get)().Router();
 const config = (0, nodecg_1.get)().bundleConfig;
 const allowedDevices = !Array.isArray(config.flagcarrier.allowedDevices)
@@ -15,13 +20,72 @@ const allowedDevices = !Array.isArray(config.flagcarrier.allowedDevices)
 function setup() {
     // RabbitMQ events from the "big red buttons", used for players/commentators.
     rabbitmq_1.mq.evt.on('bigbuttonTagScanned', async (data) => {
+        var _a;
         if (config.event.thisEvent === 1 && data.flagcarrier.group === 'stream1') {
             const name = data.user.displayName;
             const pronouns = data.raw.pronouns;
-            let str = pronouns ? `${name} (${pronouns})` : name;
-            str = await (0, misc_1.searchSrcomPronouns)(str);
+            const str = pronouns ? `${name} (${pronouns})` : name;
+            // str = await searchSrcomPronouns(str);
             (0, nodecg_1.get)().sendMessage('bigbuttonTagScanned', { id: data.flagcarrier.id, str });
-            if (!replicants_1.commentators.value.includes(str)) {
+            // Get the original run from the array (before the teams were removed).
+            const currentRunInRunArray = speedcontrol_1.sc.runDataArray.value
+                .find((r) => r.id === speedcontrol_1.sc.runDataActiveRunSurrounding.value.current);
+            // Delete scanned user from big button player map if already in a slot.
+            Object.entries(replicants_1.bigbuttonPlayerMap.value).forEach(([key, value]) => {
+                const index = value.findIndex((p) => p.user.displayName === data.user.displayName);
+                if (index >= 0) {
+                    replicants_1.bigbuttonPlayerMap.value[key].splice(index, 1);
+                }
+            });
+            // Check if scanned in user is a player in the active run.
+            const player = currentRunInRunArray === null || currentRunInRunArray === void 0 ? void 0 : currentRunInRunArray.teams.find((t) => t.players
+                .find((p) => p.name.toLowerCase() === data.user.displayName.toLowerCase()));
+            // If a player is in the active run and the teams haven't been mapped yet.
+            if (currentRunInRunArray && player && !((_a = speedcontrol_1.sc.getCurrentRun()) === null || _a === void 0 ? void 0 : _a.teams.length)) {
+                // Add the scanned user into the big button player map in the correct slot.
+                if (!replicants_1.bigbuttonPlayerMap.value[data.flagcarrier.id]) {
+                    replicants_1.bigbuttonPlayerMap.value[data.flagcarrier.id] = [];
+                }
+                replicants_1.bigbuttonPlayerMap.value[data.flagcarrier.id].push(data);
+                // See if all players have been scanned in yet.
+                const allPlayersRun = currentRunInRunArray.teams
+                    .reduce((prev, team) => prev.concat(...team.players), []);
+                const allScannedPlayers = Object.values(replicants_1.bigbuttonPlayerMap.value)
+                    .reduce((prev, button) => prev.concat(...button), []);
+                // All players scanned in?
+                const leftToScan = (0, lodash_1.differenceWith)(allPlayersRun, allScannedPlayers, (x, y) => x.name
+                    .toLowerCase() === y.user.displayName.toLowerCase());
+                if (!leftToScan.length) {
+                    const teams = (0, clone_1.default)(currentRunInRunArray.teams);
+                    let newTeams = [];
+                    // Go through each button and sort the teams in the correct order.
+                    // This assumes the button IDs can be sorted alphabetically.
+                    Object.keys(replicants_1.bigbuttonPlayerMap.value).sort().forEach((id) => {
+                        if (teams.length) {
+                            // Find which team has a player in it from this button ID, if any.
+                            const teamIndex = teams.findIndex((t) => t.players
+                                .find((p) => replicants_1.bigbuttonPlayerMap.value[id]
+                                .find((u) => u.user.displayName.toLowerCase() === p.name.toLowerCase())));
+                            // If team found, remove from search array and push to new array.
+                            if (teamIndex >= 0) {
+                                newTeams.push((0, clone_1.default)(teams[teamIndex]));
+                                teams.splice(teamIndex, 1);
+                            }
+                        }
+                    });
+                    // Replace pronouns if any are found on the tags.
+                    newTeams = newTeams.map((team) => (Object.assign(Object.assign({}, team), { players: team.players.map((p) => {
+                            const scanned = allScannedPlayers
+                                .find((u) => u.user.displayName.toLowerCase() === p.name.toLowerCase());
+                            return Object.assign(Object.assign({}, p), { pronouns: scanned ? (scanned.raw.pronouns || '') : p.pronouns });
+                        }) })));
+                    // Finally, set these teams to the currently active run.
+                    if (speedcontrol_1.sc.runDataActiveRun.value)
+                        speedcontrol_1.sc.runDataActiveRun.value.teams = newTeams;
+                }
+                // If not a player in the run and not already a commentator, adds them as one.
+            }
+            else if (!replicants_1.commentators.value.includes(str)) {
                 replicants_1.commentators.value.push(str);
                 (0, nodecg_1.get)().log.debug('[FlagCarrier] Added new commentator:', str);
             }
@@ -53,7 +117,8 @@ function setup() {
         if (req.body.position === 'reader' && action.startsWith('login')) {
             const data = req.body.tag_data;
             const str = data.pronouns ? `${data.display_name} (${data.pronouns})` : data.display_name;
-            replicants_1.donationReader.value = await (0, misc_1.searchSrcomPronouns)(str);
+            // donationReader.value = await searchSrcomPronouns(str);
+            replicants_1.donationReader.value = str;
             (0, nodecg_1.get)().log.info('[FlagCarrier] Donation reader was updated (Name: %s, DeviceID: %s)', str, device);
             return res.send('You\'ve been logged in.');
         }

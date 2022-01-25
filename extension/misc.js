@@ -73,7 +73,14 @@ speedcontrol_1.sc.runDataActiveRun.on('change', (newVal, oldVal) => {
         && ((!obs_1.default.connected && init)
             || (obs_1.default.connected && !obs_1.default.isCurrentScene(config.obs.names.scenes.gameLayout)))) {
         replicants_1.commentators.value.length = 0;
-        (0, nodecg_1.get)().log.debug('[Misc] Cleared commentators');
+        replicants_1.bigbuttonPlayerMap.value = {};
+        // If not online, we clear the teams on start, which will be re-added by scanning tags.
+        // TODO: Reselecting the current run would overwrite them, but not much I can do right now!
+        if (!config.event.online && speedcontrol_1.sc.runDataActiveRun.value) {
+            speedcontrol_1.sc.runDataActiveRun.value.teams = [];
+            (0, nodecg_1.get)().log.debug('[Misc] Removed active run teams on run change');
+        }
+        (0, nodecg_1.get)().log.debug('[Misc] Cleared commentators and big button player mapping');
     }
     // This will also be triggered on server start up.
     mqLogging.logRunChange(newVal);

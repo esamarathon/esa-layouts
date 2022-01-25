@@ -74,6 +74,7 @@ mq.evt.on('bigbuttonPressed', async (data) => {
     else id = -1;
   }
 
+  if (id < 0) return;
   try {
     // Note: the nodecg-speedcontrol bundle will check if it *can* do these actions,
     // we do not need to check that here.

@@ -1,32 +1,17 @@
 body {
   font-family: 'Barlow Condensed', sans-serif;
   /* text-shadow: 2px 2px 2px black; */
-  /* color: #fff073; */
   overflow: hidden;
   margin: 0;
   padding: 0;
 }
 
-#Background, #Layout { /* #Layout added from countdown, intermission-player */
+#Background, #Layout {
   width: 1920px;
   height: 1080px;
-  position: fixed; /* added from countdown, intermission-player */
+  position: fixed;
 }
 
-/* .BorderTop {
-  border-top: 3px solid var(--border-colour);
-}
-.BorderRight {
-  border-right: 3px solid var(--border-colour);
-}
-.BorderBottom {
-  border-bottom: 3px solid var(--border-colour);
-}
-.BorderLeft {
-  border-left: 3px solid var(--border-colour);
-} */
-
-/* added from game-layout */
 *[class*='Border'] {
   box-sizing: border-box;
   border-style: solid;
@@ -45,12 +30,12 @@ body {
   border-left-width: 3px;
 }
 
-*[class*="Flex"] { /* changed from countdown, intermission-player */
+*[class*="Flex"] {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.FlexColumn { /* added from countdown, intermission-player */
+.FlexColumn {
   flex-direction: column;
 }
 
@@ -64,13 +49,13 @@ body {
 
 .Fixed {
   position: fixed;
-  overflow: hidden; /* added from countdown, intermission-player */
+  overflow: hidden;
 }
 
 .Capture {
-  box-sizing: border-box; /* may break game-layout? probably not */
+  box-sizing: border-box;
   position: fixed;
-  overflow: hidden; /* may break game-layout? probably not */
+  overflow: hidden;
 }
 
 

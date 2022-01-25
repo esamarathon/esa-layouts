@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const clone_1 = __importDefault(require("clone"));
 const uuid_1 = require("uuid");
 const nodecg_1 = require("./util/nodecg");
+const obs_1 = __importDefault(require("./util/obs"));
 const rabbitmq_1 = require("./util/rabbitmq");
 const replicants_1 = require("./util/replicants");
 const speedcontrol_1 = require("./util/speedcontrol");
@@ -185,6 +186,17 @@ function showNext(start = false) {
 // Listens for messages from the graphic to change to the next message.
 (0, nodecg_1.get)().listenFor('omnibarShowNext', (data, ack) => {
     showNext();
+    if (ack && !(ack === null || ack === void 0 ? void 0 : ack.handled))
+        ack();
+});
+// Listens for messages from the graphic to play the "donation" SFX via OBS source.
+(0, nodecg_1.get)().listenFor('omnibarPlaySound', async (data, ack) => {
+    if (config.obs.enabled && obs_1.default.connected) {
+        try {
+            await obs_1.default.conn.send('RestartMedia', { sourceName: config.obs.names.sources.donationSound });
+        }
+        catch (err) { /* catch */ }
+    }
     if (ack && !(ack === null || ack === void 0 ? void 0 : ack.handled))
         ack();
 });

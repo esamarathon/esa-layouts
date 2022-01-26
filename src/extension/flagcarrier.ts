@@ -20,14 +20,9 @@ function setup(): void {
   // RabbitMQ events from the "big red buttons", used for players/commentators.
   mq.evt.on('bigbuttonTagScanned', async (data) => {
     if (config.event.thisEvent === 1 && data.flagcarrier.group === 'stream1') {
-      const name = data.user.displayName;
-      const pronouns = data.raw.pronouns as string | undefined;
-      const str = pronouns ? `${name} (${pronouns})` : name;
+      // Stores a state for messages sent out at the bottom.
+      let scanState: 'success_comm' | 'success_player' | 'fail_player' | undefined;
       // str = await searchSrcomPronouns(str);
-
-      // TODO: move this further down and allow to to show reponse to later code
-      // (e.g.: it's not accepted, have to scan in another slot, etc.)
-      nodecg().sendMessage('bigbuttonTagScanned', { id: data.flagcarrier.id, str });
 
       // Get the original run from the array (before the teams were removed).
       const currentRunInRunArray = sc.runDataArray.value
@@ -39,8 +34,10 @@ function setup(): void {
       const player = allPlayersRun
         ?.find((p) => p.name.toLowerCase() === data.user.displayName.toLowerCase());
 
-      // Check if teams haven't been mapped yet and the user is a player in this run.
-      if (player && currentRunInRunArray && !sc.getCurrentRun()?.teams.length) {
+      // Check if teams haven't been mapped yet and the user is a player in this run,
+      // and that the timer is stopped.
+      if (player && currentRunInRunArray && !sc.getCurrentRun()?.teams.length
+        && sc.timer.value.state === 'stopped') {
         const playerTeam = currentRunInRunArray.teams.find((t) => t.id === player?.teamID);
         const otherPlayersOnBtn = bigbuttonPlayerMap.value[data.flagcarrier.id] || [];
         const otherTeamPlayersOnBtn = otherPlayersOnBtn.filter((u) => playerTeam
@@ -54,6 +51,7 @@ function setup(): void {
             data.flagcarrier.id,
             data.user.displayName,
           );
+          scanState = 'fail_player';
         } else {
           const newMap = clone(bigbuttonPlayerMap.value);
 
@@ -76,6 +74,7 @@ function setup(): void {
             data.flagcarrier.id,
             data.user.displayName,
           );
+          scanState = 'success_player';
 
           // All players scanned in?
           const allScannedPlayers = Object.values(bigbuttonPlayerMap.value)
@@ -125,20 +124,32 @@ function setup(): void {
           }
         }
       // If not a player in the run and not already a commentator, adds them as one.
-      } else if (!player && !commentators.value.includes(str)) {
-        commentators.value.push(str);
-        nodecg().log.debug(
-          '[FlagCarrier] Commentator successfully scanned in (ButtonID: %s, Name: %s)',
-          data.flagcarrier.id,
-          data.user.displayName,
-        );
+      } else if (!player) {
+        const name = data.user.displayName;
+        const pronouns = data.raw.pronouns as string | undefined;
+        const str = pronouns ? `${name} (${pronouns})` : name;
+        // We show a "success" message to users even if the tag was already scanned, for simplicity.
+        scanState = 'success_comm';
+        if (!commentators.value.includes(str)) {
+          commentators.value.push(str);
+          nodecg().log.debug(
+            '[FlagCarrier] Commentator successfully scanned in (ButtonID: %s, Name: %s)',
+            data.flagcarrier.id,
+            data.user.displayName,
+          );
+        }
       }
+      nodecg().sendMessage('bigbuttonTagScanned', {
+        state: scanState,
+        data,
+      });
     }
   });
 
   // Clears/resets big button player mapping and removes teams from active run.
   // This mimics what happens when a run is changed, as a backup for tech.
   nodecg().listenFor('bigbuttonResetPlayers', () => {
+    if (sc.timer.value.state !== 'stopped') return; // Cannot make changes if timer is running.
     bigbuttonPlayerMap.value = {};
     if (!config.event.online && sc.runDataActiveRun.value) {
       sc.runDataActiveRun.value.teams = [];

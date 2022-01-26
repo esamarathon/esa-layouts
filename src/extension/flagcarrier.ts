@@ -1,7 +1,8 @@
 import { BigbuttonPlayerMap, Configschema } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import { differenceWith } from 'lodash';
-import { RunDataPlayer, RunDataTeam } from 'speedcontrol-util/types';
+import { RunData, RunDataPlayer, RunDataTeam } from 'speedcontrol-util/types';
+import { v4 as uuid } from 'uuid';
 import countryCodes from './util/countries';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
@@ -15,6 +16,85 @@ const allowedDevices = !Array.isArray(config.flagcarrier.allowedDevices)
   && typeof config.flagcarrier.allowedDevices === 'string'
   ? [config.flagcarrier.allowedDevices]
   : config.flagcarrier.allowedDevices || [];
+const buttonIds = [ // Hardcoded button names for now, used in some cases.
+  '1',
+  '2',
+  '3',
+  '4',
+];
+
+// Function used if all player tags have been scanned, or a tech has forced this to run.
+function mapScannedPlayersToTeams(run: RunData, players: BigbuttonPlayerMap[0]): void {
+  const teams = clone(run.teams);
+  let newTeams: RunDataTeam[] = [];
+  // Go through each button and sort the teams in the correct order.
+  // This assumes the button IDs can be sorted alphabetically.
+  Object.keys(bigbuttonPlayerMap.value).sort().forEach((id) => {
+    if (teams.length) {
+      // Find which team has a player in it from this button ID, if any.
+      const teamIndex = teams.findIndex((t) => t.players
+        .find((p) => bigbuttonPlayerMap.value[id]
+          .find((u) => u.user.displayName.toLowerCase() === p.name.toLowerCase())));
+      // If team found, remove from search array and push to new array.
+      if (teamIndex >= 0) {
+        newTeams.push(clone(teams[teamIndex]));
+        teams.splice(teamIndex, 1);
+      }
+    }
+  });
+  // If any teams left over, fill in button mapping with fake data,
+  // and just push their names in current order back into the run data.
+  if (teams.length) {
+    const newMap = clone(bigbuttonPlayerMap.value);
+    teams.forEach((team) => {
+      newTeams.push(team);
+      buttonIds.some((id) => {
+        if (!newMap[id]?.length) {
+          newMap[id] = team.players.map((p) => ({
+            flagcarrier: {
+              id,
+              group: 'stream1',
+              time: {
+                iso: (new Date()).toISOString(),
+                unix: Date.now() / 1000,
+              },
+              uid: uuid(),
+            },
+            user: {
+              displayName: p.name,
+            },
+            raw: {},
+          }));
+          return true;
+        }
+        return false;
+      });
+    });
+    bigbuttonPlayerMap.value = clone(newMap);
+  }
+  // Replace Twitch username, country code and pronouns if any are found on the tags.
+  newTeams = newTeams.map((team) => ({
+    ...team,
+    players: team.players.map((p) => {
+      const scanned = players
+        .find((u) => u.user.displayName.toLowerCase() === p.name.toLowerCase());
+      const countryCode = countryCodes
+        .find((c) => c.code === scanned?.raw.country_code.toLowerCase())?.code;
+      return {
+        ...p,
+        social: {
+          ...p.social,
+          twitch: scanned?.raw.twitch_name || p.social.twitch,
+        },
+        country: countryCode || p.country,
+        pronouns: scanned ? (scanned.raw.pronouns || '') : p.pronouns,
+      };
+    }),
+  }));
+  // Finally, set these teams to the currently active run.
+  if (sc.runDataActiveRun.value) sc.runDataActiveRun.value.teams = newTeams;
+  nodecg().log.debug('[FlagCarrier] All players from run scanned in and teams mapped');
+}
 
 function setup(): void {
   // RabbitMQ events from the "big red buttons", used for players/commentators.
@@ -82,45 +162,7 @@ function setup(): void {
           const leftToScan = differenceWith(allPlayersRun, allScannedPlayers, (x, y) => x.name
             .toLowerCase() === y.user.displayName.toLowerCase());
           if (!leftToScan.length) {
-            const teams = clone(currentRunInRunArray.teams);
-            let newTeams: RunDataTeam[] = [];
-            // Go through each button and sort the teams in the correct order.
-            // This assumes the button IDs can be sorted alphabetically.
-            Object.keys(bigbuttonPlayerMap.value).sort().forEach((id) => {
-              if (teams.length) {
-                // Find which team has a player in it from this button ID, if any.
-                const teamIndex = teams.findIndex((t) => t.players
-                  .find((p) => bigbuttonPlayerMap.value[id]
-                    .find((u) => u.user.displayName.toLowerCase() === p.name.toLowerCase())));
-                // If team found, remove from search array and push to new array.
-                if (teamIndex >= 0) {
-                  newTeams.push(clone(teams[teamIndex]));
-                  teams.splice(teamIndex, 1);
-                }
-              }
-            });
-            // Replace Twitch username, country code and pronouns if any are found on the tags.
-            newTeams = newTeams.map((team) => ({
-              ...team,
-              players: team.players.map((p) => {
-                const scanned = allScannedPlayers
-                  .find((u) => u.user.displayName.toLowerCase() === p.name.toLowerCase());
-                const countryCode = countryCodes
-                  .find((c) => c.code === scanned?.raw.country_code.toLowerCase())?.code;
-                return {
-                  ...p,
-                  social: {
-                    ...p.social,
-                    twitch: scanned?.raw.twitch_name || p.social.twitch,
-                  },
-                  country: countryCode || p.country,
-                  pronouns: scanned ? (scanned.raw.pronouns || '') : p.pronouns,
-                };
-              }),
-            }));
-            // Finally, set these teams to the currently active run.
-            if (sc.runDataActiveRun.value) sc.runDataActiveRun.value.teams = newTeams;
-            nodecg().log.debug('[FlagCarrier] All players from run scanned in and teams mapped');
+            mapScannedPlayersToTeams(currentRunInRunArray, allScannedPlayers);
           }
         }
       // If not a player in the run and not already a commentator, adds them as one.
@@ -153,6 +195,19 @@ function setup(): void {
     bigbuttonPlayerMap.value = {};
     if (!config.event.online && sc.runDataActiveRun.value) {
       sc.runDataActiveRun.value.teams = [];
+    }
+  });
+
+  // Triggered via the dashboard to manually "finish" the scanning process,
+  // which will fill in missing players/teams if needed.
+  nodecg().listenFor('bigbuttonForceFillPlayers', () => {
+    // Get the original run from the array (before the teams were removed).
+    const currentRunInRunArray = sc.runDataArray.value
+      .find((r) => r.id === sc.runDataActiveRun.value?.id);
+    const allScannedPlayers = Object.values(bigbuttonPlayerMap.value)
+      .reduce<BigbuttonPlayerMap[0]>((prev, b) => prev.concat(...b), []);
+    if (currentRunInRunArray) {
+      mapScannedPlayersToTeams(currentRunInRunArray, allScannedPlayers);
     }
   });
 

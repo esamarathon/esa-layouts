@@ -53,8 +53,17 @@
         </template>
         <div v-else>No button to player mapping to show.</div>
       </div>
+      <v-btn
+        class="mt-2"
+        color="red"
+        @click="force"
+        block
+        :disabled="disableChanges || !leftToScan.length"
+      >
+        <v-icon class="mr-2">mdi-alert</v-icon> Fill open slots
+      </v-btn>
       <v-btn class="mt-2" @click="reset" block :disabled="disableChanges">
-        Reset All Player Tag Scanning
+        Reset all player tag scanning
       </v-btn>
     </div>
   </v-app>
@@ -104,6 +113,10 @@ export default class extends Vue {
 
   get disableChanges(): boolean {
     return this.timer.state !== 'stopped';
+  }
+
+  force(): void {
+    nodecg.sendMessage('bigbuttonForceFillPlayers');
   }
 
   reset(): void {

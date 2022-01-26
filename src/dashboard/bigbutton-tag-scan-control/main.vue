@@ -1,5 +1,27 @@
 <template>
   <v-app>
+    <!-- Big button tag scanning alerts. -->
+    <v-alert v-if="['success_player', 'success_comm'].includes(tagScanned)" type="success">
+      <template v-if="tagScanned === 'success_player'">
+        {{ scannedData.user.displayName }} scanned in as player on button
+        {{ scannedData.flagcarrier.id }}
+      </template>
+      <template v-else-if="tagScanned === 'success_comm'">
+        {{ scannedData.user.displayName }} scanned in as commentator on button
+        {{ scannedData.flagcarrier.id }}
+      </template>
+    </v-alert>
+    <v-alert v-else-if="tagScanned === 'fail_player'" type="error">
+      {{ scannedData.user.displayName }} scanned in on button
+      {{ scannedData.flagcarrier.id }} but already used by another team!
+    </v-alert>
+    <v-alert v-else-if="tagScanned">
+      {{ scannedData.user.displayName }} scanned in on button
+      {{ scannedData.flagcarrier.id }} but no action is needed.
+    </v-alert>
+    <v-alert v-else class="font-italic">
+      Scan notifications will appear here.
+    </v-alert>
     <div v-if="!activeRun || !activeRunInArr">
       There is currently no active run available.
     </div>
@@ -44,6 +66,7 @@ import { BigbuttonPlayerMap } from '@esa-layouts/types/schemas';
 import { Vue, Component } from 'vue-property-decorator';
 import { RunDataActiveRun, RunDataArray, RunData, RunDataPlayer, Timer } from 'speedcontrol-util/types';
 import { differenceWith } from 'lodash';
+import { FlagCarrier } from '@esamarathon/mq-events/types';
 
 @Component
 export default class extends Vue {
@@ -51,6 +74,9 @@ export default class extends Vue {
   @replicantNS.State((s) => s.reps.runDataArray) readonly runArray!: RunDataArray;
   @replicantNS.State((s) => s.reps.runDataActiveRun) readonly activeRun!: RunDataActiveRun;
   @replicantNS.State((s) => s.reps.bigbuttonPlayerMap) readonly bbpMap!: BigbuttonPlayerMap;
+  tagScanned: 'success_comm' | 'success_player' | 'fail_player' | boolean = false;
+  scannedData: FlagCarrier.TagScanned | null = null;
+  tagScanTimeout!: number;
 
   get mapArr(): [string, BigbuttonPlayerMap[0]][] {
     return Object.entries(this.bbpMap);
@@ -82,6 +108,24 @@ export default class extends Vue {
 
   reset(): void {
     nodecg.sendMessage('bigbuttonResetPlayers');
+  }
+
+  created(): void {
+    nodecg.listenFor(
+      'bigbuttonTagScanned',
+      ({ state, data }: {
+        state?: 'success_comm' | 'success_player' | 'fail_player',
+        data: FlagCarrier.TagScanned,
+      }) => {
+        window.clearTimeout(this.tagScanTimeout);
+        this.tagScanned = state || true;
+        this.scannedData = data;
+        this.tagScanTimeout = window.setTimeout(() => {
+          this.tagScanned = false;
+          this.scannedData = null;
+        }, 7000);
+      },
+    );
   }
 }
 </script>

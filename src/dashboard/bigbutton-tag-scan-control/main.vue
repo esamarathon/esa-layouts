@@ -31,7 +31,9 @@
         </template>
         <div v-else>No button to player mapping to show.</div>
       </div>
-      <v-btn class="mt-2" @click="reset" block :disabled="disableChanges">Reset All</v-btn>
+      <v-btn class="mt-2" @click="reset" block :disabled="disableChanges">
+        Reset All Player Tag Scanning
+      </v-btn>
     </div>
   </v-app>
 </template>

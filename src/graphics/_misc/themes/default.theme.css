@@ -44,6 +44,14 @@ body {
   background-color: #4b3163;
 }
 
+/** New commentators and reader component! **/
+#GameLayout .CommentatorsReader .Header {
+  background-color: #2d1d3c;
+}
+#GameLayout .CommentatorsReader .Pronouns {
+  background-color: #2d1d3c;
+}
+
 .Player .Icon {
   filter: invert(1);
 }

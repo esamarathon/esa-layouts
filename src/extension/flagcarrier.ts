@@ -107,6 +107,15 @@ function setup(): void {
     }
   });
 
+  // Clears/resets big button player mapping and removes teams from active run.
+  // This mimics what happens when a run is changed, as a backup for tech.
+  nodecg().listenFor('bigbuttonResetPlayers', () => {
+    bigbuttonPlayerMap.value = {};
+    if (!config.event.online && sc.runDataActiveRun.value) {
+      sc.runDataActiveRun.value.teams = [];
+    }
+  });
+
   // HTTP endpoint, used for donation readers.
   router.post('/flagcarrier', async (req, res) => {
     const device = req.body.device_id as string;

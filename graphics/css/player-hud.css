@@ -1,28 +1,20 @@
 
-body {
-  font-family: 'Barlow Condensed';
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
 .PlayerHUD {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-  color: white;
   background-color: black;
-  transition: background-color 1s;
+  color: white;
   text-shadow: 4px 4px 1px black;
-  text-align: center;
-  font-size: 18vh;
 }
-.TagScanned {
-  background-color: rgb(165, 0, 165);
+*[class*='Tag'] {
+  font-size: 15vh;
+}
+.TagSuccess {
+  background-color: rgb(0, 177, 15);
+}
+.TagFail, .TagNothing {
+  background-color: rgb(148, 0, 0);
 }
 .DonationsToRead {
-  background-color: rgb(0, 177, 15);
+  background-color: green;
 }
 .MessageToRead {
   background-color: rgb(255, 208, 0);

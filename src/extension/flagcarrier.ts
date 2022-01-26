@@ -28,25 +28,28 @@ function setup(): void {
 
       // Get the original run from the array (before the teams were removed).
       const currentRunInRunArray = sc.runDataArray.value
-        .find((r) => r.id === sc.runDataActiveRunSurrounding.value.current);
+        .find((r) => r.id === sc.runDataActiveRun.value?.id);
 
-      // Delete scanned user from big button player map if already in a slot.
-      Object.entries(bigbuttonPlayerMap.value).forEach(([key, value]) => {
-        const index = value.findIndex((p) => p.user.displayName === data.user.displayName);
-        if (index >= 0) {
-          bigbuttonPlayerMap.value[key].splice(index, 1);
-        }
-      });
       // Check if scanned in user is a player in the active run.
       const player = currentRunInRunArray?.teams.find((t) => t.players
         .find((p) => p.name.toLowerCase() === data.user.displayName.toLowerCase()));
       // If a player is in the active run and the teams haven't been mapped yet.
       if (currentRunInRunArray && player && !sc.getCurrentRun()?.teams.length) {
+        const newMap = clone(bigbuttonPlayerMap.value);
+        // Delete scanned user from big button player map if already in a slot.
+        Object.entries(newMap).forEach(([key, value]) => {
+          const index = value.findIndex((p) => p.user.displayName === data.user.displayName);
+          if (index >= 0) {
+            newMap[key].splice(index, 1);
+          }
+        });
+
         // Add the scanned user into the big button player map in the correct slot.
-        if (!bigbuttonPlayerMap.value[data.flagcarrier.id]) {
-          bigbuttonPlayerMap.value[data.flagcarrier.id] = [];
+        if (!newMap[data.flagcarrier.id]) {
+          newMap[data.flagcarrier.id] = [];
         }
-        bigbuttonPlayerMap.value[data.flagcarrier.id].push(data);
+        newMap[data.flagcarrier.id].push(data);
+        bigbuttonPlayerMap.value = clone(newMap);
 
         // See if all players have been scanned in yet.
         const allPlayersRun = currentRunInRunArray.teams

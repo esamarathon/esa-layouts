@@ -12,15 +12,28 @@
       }"
     />
 
+    <!-- Crowd Camera Capture -->
+    <div
+      v-if="!online"
+      id="CameraCaptureCrowd"
+      class="Capture BorderBottom"
+      :style="{
+        left: '0px',
+        top: '0px',
+        width: '668px',
+        height: '114px',
+      }"
+    />
+
     <!-- Camera Captures -->
     <div
       id="CameraCapture1"
       class="Capture"
       :style="{
         left: '0px',
-        top: '0px',
+        top: !online ? '114px' : '0px',
         width: '668px',
-        height: '380px',
+        height: !online ? '313px' : '427px',
       }"
     />
 
@@ -29,9 +42,9 @@
       class="Fixed FlexColumn BorderBottom"
       :style="{
         left: '0px',
-        top: '380px',
+        top: '427px',
         width: '668px',
-        height: '350px',
+        height: '343px',
       }"
     >
       <player />
@@ -56,9 +69,9 @@
       :font-size="45"
       :style="{
         left: '0px',
-        top: '730px',
+        top: '770px',
         width: '668px',
-        height: '270px',
+        height: '230px',
       }"
     />
 
@@ -78,6 +91,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import MediaBox from '@shared/graphics/mediabox';
+import { Configschema } from '@esa-layouts/types/schemas';
 import GameCapture from './components/GameCapture.vue';
 import Player from './components/Player.vue';
 import CommentatorsReader from './components/CommentatorsReader.vue';
@@ -96,5 +110,7 @@ import DonationBar from './components/DonationBar.vue';
     DonationBar,
   },
 })
-export default class extends Vue {}
+export default class extends Vue {
+  online = (nodecg.bundleConfig as Configschema).event.online;
+}
 </script>

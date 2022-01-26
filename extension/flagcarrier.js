@@ -6,6 +6,7 @@ var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const clone_1 = __importDefault(require("clone"));
 const lodash_1 = require("lodash");
+const countries_1 = __importDefault(require("./util/countries"));
 const helpers_1 = require("./util/helpers");
 const nodecg_1 = require("./util/nodecg");
 const rabbitmq_1 = require("./util/rabbitmq");
@@ -29,24 +30,26 @@ function setup() {
             (0, nodecg_1.get)().sendMessage('bigbuttonTagScanned', { id: data.flagcarrier.id, str });
             // Get the original run from the array (before the teams were removed).
             const currentRunInRunArray = speedcontrol_1.sc.runDataArray.value
-                .find((r) => r.id === speedcontrol_1.sc.runDataActiveRunSurrounding.value.current);
-            // Delete scanned user from big button player map if already in a slot.
-            Object.entries(replicants_1.bigbuttonPlayerMap.value).forEach(([key, value]) => {
-                const index = value.findIndex((p) => p.user.displayName === data.user.displayName);
-                if (index >= 0) {
-                    replicants_1.bigbuttonPlayerMap.value[key].splice(index, 1);
-                }
-            });
+                .find((r) => { var _a; return r.id === ((_a = speedcontrol_1.sc.runDataActiveRun.value) === null || _a === void 0 ? void 0 : _a.id); });
             // Check if scanned in user is a player in the active run.
             const player = currentRunInRunArray === null || currentRunInRunArray === void 0 ? void 0 : currentRunInRunArray.teams.find((t) => t.players
                 .find((p) => p.name.toLowerCase() === data.user.displayName.toLowerCase()));
             // If a player is in the active run and the teams haven't been mapped yet.
             if (currentRunInRunArray && player && !((_a = speedcontrol_1.sc.getCurrentRun()) === null || _a === void 0 ? void 0 : _a.teams.length)) {
+                const newMap = (0, clone_1.default)(replicants_1.bigbuttonPlayerMap.value);
+                // Delete scanned user from big button player map if already in a slot.
+                Object.entries(newMap).forEach(([key, value]) => {
+                    const index = value.findIndex((p) => p.user.displayName === data.user.displayName);
+                    if (index >= 0) {
+                        newMap[key].splice(index, 1);
+                    }
+                });
                 // Add the scanned user into the big button player map in the correct slot.
-                if (!replicants_1.bigbuttonPlayerMap.value[data.flagcarrier.id]) {
-                    replicants_1.bigbuttonPlayerMap.value[data.flagcarrier.id] = [];
+                if (!newMap[data.flagcarrier.id]) {
+                    newMap[data.flagcarrier.id] = [];
                 }
-                replicants_1.bigbuttonPlayerMap.value[data.flagcarrier.id].push(data);
+                newMap[data.flagcarrier.id].push(data);
+                replicants_1.bigbuttonPlayerMap.value = (0, clone_1.default)(newMap);
                 // See if all players have been scanned in yet.
                 const allPlayersRun = currentRunInRunArray.teams
                     .reduce((prev, team) => prev.concat(...team.players), []);
@@ -73,11 +76,14 @@ function setup() {
                             }
                         }
                     });
-                    // Replace pronouns if any are found on the tags.
+                    // Replace Twitch username, country code and pronouns if any are found on the tags.
                     newTeams = newTeams.map((team) => (Object.assign(Object.assign({}, team), { players: team.players.map((p) => {
+                            var _a;
                             const scanned = allScannedPlayers
                                 .find((u) => u.user.displayName.toLowerCase() === p.name.toLowerCase());
-                            return Object.assign(Object.assign({}, p), { pronouns: scanned ? (scanned.raw.pronouns || '') : p.pronouns });
+                            const countryCode = (_a = countries_1.default
+                                .find((c) => c.code === (scanned === null || scanned === void 0 ? void 0 : scanned.raw.country_code.toLowerCase()))) === null || _a === void 0 ? void 0 : _a.code;
+                            return Object.assign(Object.assign({}, p), { social: Object.assign(Object.assign({}, p.social), { twitch: (scanned === null || scanned === void 0 ? void 0 : scanned.raw.twitch_name) || p.social.twitch }), country: countryCode || p.country, pronouns: scanned ? (scanned.raw.pronouns || '') : p.pronouns });
                         }) })));
                     // Finally, set these teams to the currently active run.
                     if (speedcontrol_1.sc.runDataActiveRun.value)
@@ -89,6 +95,14 @@ function setup() {
                 replicants_1.commentators.value.push(str);
                 (0, nodecg_1.get)().log.debug('[FlagCarrier] Added new commentator:', str);
             }
+        }
+    });
+    // Clears/resets big button player mapping and removes teams from active run.
+    // This mimics what happens when a run is changed, as a backup for tech.
+    (0, nodecg_1.get)().listenFor('bigbuttonResetPlayers', () => {
+        replicants_1.bigbuttonPlayerMap.value = {};
+        if (!config.event.online && speedcontrol_1.sc.runDataActiveRun.value) {
+            speedcontrol_1.sc.runDataActiveRun.value.teams = [];
         }
     });
     // HTTP endpoint, used for donation readers.

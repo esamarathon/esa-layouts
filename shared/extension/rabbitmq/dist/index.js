@@ -112,6 +112,30 @@ function generateUserTagMsg(tag, id) {
                         return '';
                 }
             })(),
+            twitch_name: (function () {
+                switch (tag) {
+                    case 1:
+                        return 'exampleuser1';
+                    case 2:
+                        return 'exampleuser2';
+                    case 3:
+                        return 'exampleuser3';
+                    default:
+                        return '';
+                }
+            })(),
+            country_code: (function () {
+                switch (tag) {
+                    case 1:
+                        return 'DE';
+                    case 2:
+                        return 'SE';
+                    case 3:
+                        return 'FI';
+                    default:
+                        return '';
+                }
+            })(),
         },
     };
 }

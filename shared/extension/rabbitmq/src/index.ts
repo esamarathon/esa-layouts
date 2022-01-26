@@ -68,6 +68,30 @@ function generateUserTagMsg(tag: number, id: string): FlagCarrier.TagScanned {
             return '';
         }
       })(),
+      twitch_name: (() => {
+        switch (tag) {
+          case 1:
+            return 'exampleuser1';
+          case 2:
+            return 'exampleuser2';
+          case 3:
+            return 'exampleuser3';
+          default:
+            return '';
+        }
+      })(),
+      country_code: (() => {
+        switch (tag) {
+          case 1:
+            return 'DE';
+          case 2:
+            return 'SE';
+          case 3:
+            return 'FI';
+          default:
+            return '';
+        }
+      })(),
     },
   };
 }

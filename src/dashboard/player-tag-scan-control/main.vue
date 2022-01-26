@@ -31,7 +31,7 @@
         </template>
         <div v-else>No button to player mapping to show.</div>
       </div>
-      <v-btn class="mt-2" @click="reset" block>Reset All</v-btn>
+      <v-btn class="mt-2" @click="reset" block :disabled="disableChanges">Reset All</v-btn>
     </div>
   </v-app>
 </template>
@@ -40,11 +40,12 @@
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
 import { BigbuttonPlayerMap } from '@esa-layouts/types/schemas';
 import { Vue, Component } from 'vue-property-decorator';
-import { RunDataActiveRun, RunDataArray, RunData, RunDataPlayer } from 'speedcontrol-util/types';
+import { RunDataActiveRun, RunDataArray, RunData, RunDataPlayer, Timer } from 'speedcontrol-util/types';
 import { differenceWith } from 'lodash';
 
 @Component
 export default class extends Vue {
+  @replicantNS.State((s) => s.reps.timer) readonly timer!: Timer;
   @replicantNS.State((s) => s.reps.runDataArray) readonly runArray!: RunDataArray;
   @replicantNS.State((s) => s.reps.runDataActiveRun) readonly activeRun!: RunDataActiveRun;
   @replicantNS.State((s) => s.reps.bigbuttonPlayerMap) readonly bbpMap!: BigbuttonPlayerMap;
@@ -71,6 +72,10 @@ export default class extends Vue {
   get leftToScan(): RunDataPlayer[] {
     return differenceWith(this.allPlayersRun, this.allScannedPlayers, (x, y) => x.name
       .toLowerCase() === y.user.displayName.toLowerCase());
+  }
+
+  get disableChanges(): boolean {
+    return this.timer.state !== 'stopped';
   }
 
   reset(): void {

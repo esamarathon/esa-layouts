@@ -1,5 +1,12 @@
 <template>
-  <div :style="{ width: '1920px', height: '1080px', position: 'fixed', zoom }">
+  <div
+    id="IntermissionPlayer"
+    :style="{
+      width: '1920px',
+      height: '1080px',
+      position: 'fixed',
+      zoom,
+    }">
     <div
       class="Fixed"
       :style="{
@@ -11,7 +18,7 @@
       }"
     />
     <div
-      class="Fixed Flex"
+      class="Fixed Flex UpcomingBar"
       :style="{
         left: '25px',
         top: '895px',
@@ -20,10 +27,9 @@
       }"
     >
       <div
-        class="Flex"
+        class="Flex Header"
         :style="{
-          'background-color': '#41245b', // HARDCODED, BAD!
-          color: 'white', // HARDCODED, BAD!
+          color: 'white',
           'text-transform': 'uppercase',
           height: '100%',
           padding: '0 25px',
@@ -37,7 +43,7 @@
         class="Flex"
         :style="{
           flex: 1,
-          'background-color': 'rgba(0, 0, 0, 0.3)', // HARDCODED, BAD!
+          'background-color': 'rgba(0, 0, 0, 0.3)',
           height: '100%',
           'font-size': '40px',
           'justify-content': 'space-between',

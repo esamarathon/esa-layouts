@@ -134,6 +134,10 @@ body {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
+#IntermissionPlayer .UpcomingBar .Header {
+  background-color: #41245b;
+}
+
 #Omnibar {
   color: white;
   background: linear-gradient(0deg, rgba(56,31,78,1) 0%, rgba(92,50,130,1) 100%);

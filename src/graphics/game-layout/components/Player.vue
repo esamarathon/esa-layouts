@@ -80,7 +80,7 @@
         >
           <div class="PlayerText">
             <span
-              v-if="team.name"
+              v-if="team && team.name"
               :style="{ 'font-size': '1.15em', 'font-weight': 600 }"
             >
               {{ team.name }}:

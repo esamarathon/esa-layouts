@@ -190,6 +190,13 @@
         "headerColor": "#c49215"
       },
       {
+        "name": "player-tag-scan-control",
+        "title": "Player Tag Scan Control",
+        "width": 3,
+        "file": "player-tag-scan-control.html",
+        "headerColor": "#c49215"
+      },
+      {
         "name": "bids",
         "title": "Bids",
         "width": 3,

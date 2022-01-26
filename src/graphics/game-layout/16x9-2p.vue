@@ -104,12 +104,11 @@
           <span :key="name">{{ name }}</span>
           <span
             v-if="pronouns"
-            :key="name"
+            :key="`${name}_pronouns`"
             class="Pronouns"
             :style="{
               padding: '1px 3px',
               'margin-left': '4px',
-              'background-color': '#4b3163',
             }"
           >
             {{ pronouns }}

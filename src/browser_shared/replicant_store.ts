@@ -1,4 +1,4 @@
-import type { Bids, Commentators, Countdown, CurrentRunDelay, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, ObsData, Omnibar, OtherStreamData, Prizes, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import type { Bids, BigbuttonPlayerMap, Commentators, Countdown, CurrentRunDelay, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, ObsData, Omnibar, OtherStreamData, Prizes, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
@@ -14,6 +14,7 @@ const sc = new SpeedcontrolUtilBrowser(nodecg);
 // Declaring replicants.
 export const reps: {
   bids: ReplicantBrowser<Bids>;
+  bigbuttonPlayerMap: ReplicantBrowser<BigbuttonPlayerMap>;
   commentators: ReplicantBrowser<Commentators>;
   countdown: ReplicantBrowser<Countdown>;
   currentRunDelay: ReplicantBrowser<CurrentRunDelay>;
@@ -37,6 +38,7 @@ export const reps: {
   [k: string]: ReplicantBrowser<unknown>;
 } = {
   bids: nodecg.Replicant('bids'),
+  bigbuttonPlayerMap: nodecg.Replicant('bigbuttonPlayerMap'),
   commentators: nodecg.Replicant('commentators'),
   countdown: nodecg.Replicant('countdown'),
   currentRunDelay: nodecg.Replicant('currentRunDelay'),
@@ -62,6 +64,7 @@ export const reps: {
 // All the replicant types.
 export interface ReplicantTypes {
   bids: Bids;
+  bigbuttonPlayerMap: BigbuttonPlayerMap;
   commentators: Commentators;
   countdown: Countdown;
   currentRunDelay: CurrentRunDelay;

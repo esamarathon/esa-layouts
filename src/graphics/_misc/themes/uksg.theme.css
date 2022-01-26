@@ -26,6 +26,14 @@ body {
   background-color: #2b516b;
 }
 
+/** New commentators and reader component! **/
+#GameLayout .CommentatorsReader .Header {
+  background-color: #2b516b;
+}
+#GameLayout .CommentatorsReader .Pronouns {
+  background-color: #2b516b;
+}
+
 .GameCapture .TeamFinishTime {
   background-color: rgba(77, 131, 170, 0.5);
 }
@@ -59,6 +67,10 @@ body {
 }
 
 #Intermission .Header {
+  background-color: #4d83aa;
+}
+
+#IntermissionPlayer .UpcomingBar .Header {
   background-color: #4d83aa;
 }
 

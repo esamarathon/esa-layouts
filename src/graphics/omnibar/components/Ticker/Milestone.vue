@@ -51,7 +51,7 @@
             <span
               v-if="isMet"
               :style="{
-                'color': '#42ff38',
+                'color': '#42ff38', // Basic green, no need to use theme
                 'font-weight': 700,
               }"
             >

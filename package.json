@@ -190,10 +190,10 @@
         "headerColor": "#c49215"
       },
       {
-        "name": "player-tag-scan-control",
-        "title": "Player Tag Scan Control",
+        "name": "bigbutton-tag-scan-control",
+        "title": "Big Button Tag Scan Control",
         "width": 3,
-        "file": "player-tag-scan-control.html",
+        "file": "bigbutton-tag-scan-control.html",
         "headerColor": "#c49215"
       },
       {

@@ -2,7 +2,7 @@ import type { Bids, BigbuttonPlayerMap, Commentators, Countdown, CurrentRunDelay
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
-import { RunDataActiveRun, RunDataArray } from 'speedcontrol-util/types';
+import { RunDataActiveRun, RunDataArray, Timer } from 'speedcontrol-util/types';
 import { RunDataActiveRunSurrounding } from 'speedcontrol-util/types/speedcontrol/schemas';
 import Vue from 'vue';
 import type { Store } from 'vuex';
@@ -32,6 +32,7 @@ export const reps: {
   runDataArray: ReplicantBrowser<RunDataArray>;
   serverTimestamp: ReplicantBrowser<ServerTimestamp>;
   streamDeckData: ReplicantBrowser<StreamDeckData>;
+  timer: ReplicantBrowser<Timer>;
   ttsVoices: ReplicantBrowser<TtsVoices>;
   upcomingRunID: ReplicantBrowser<UpcomingRunID>;
   videoPlayer: ReplicantBrowser<VideoPlayer>;
@@ -56,6 +57,7 @@ export const reps: {
   runDataArray: sc.runDataArray,
   serverTimestamp: nodecg.Replicant('serverTimestamp'),
   streamDeckData: nodecg.Replicant('streamDeckData'),
+  timer: sc.timer,
   ttsVoices: nodecg.Replicant('ttsVoices'),
   upcomingRunID: nodecg.Replicant('upcomingRunID'),
   videoPlayer: nodecg.Replicant('videoPlayer'),
@@ -82,6 +84,7 @@ export interface ReplicantTypes {
   runDataArray: RunDataArray;
   serverTimestamp: ServerTimestamp;
   streamDeckData: StreamDeckData;
+  timer: Timer;
   ttsVoices: TtsVoices;
   upcomingRunID: UpcomingRunID;
   videoPlayer: VideoPlayer;

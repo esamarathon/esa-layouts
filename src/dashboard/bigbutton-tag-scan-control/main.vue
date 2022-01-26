@@ -1,5 +1,27 @@
 <template>
   <v-app>
+    <!-- Big button tag scanning alerts. -->
+    <v-alert v-if="['success_player', 'success_comm'].includes(tagScanned)" type="success">
+      <template v-if="tagScanned === 'success_player'">
+        {{ scannedData.user.displayName }} scanned in as player on button
+        {{ scannedData.flagcarrier.id }}
+      </template>
+      <template v-else-if="tagScanned === 'success_comm'">
+        {{ scannedData.user.displayName }} scanned in as commentator on button
+        {{ scannedData.flagcarrier.id }}
+      </template>
+    </v-alert>
+    <v-alert v-else-if="tagScanned === 'fail_player'" type="error">
+      {{ scannedData.user.displayName }} scanned in on button
+      {{ scannedData.flagcarrier.id }} but already used by another team!
+    </v-alert>
+    <v-alert v-else-if="tagScanned">
+      {{ scannedData.user.displayName }} scanned in on button
+      {{ scannedData.flagcarrier.id }} but no action is needed.
+    </v-alert>
+    <v-alert v-else class="font-italic">
+      Scan notifications will appear here.
+    </v-alert>
     <div v-if="!activeRun || !activeRunInArr">
       There is currently no active run available.
     </div>
@@ -31,7 +53,18 @@
         </template>
         <div v-else>No button to player mapping to show.</div>
       </div>
-      <v-btn class="mt-2" @click="reset" block>Reset All</v-btn>
+      <v-btn
+        class="mt-2"
+        color="red"
+        @click="force"
+        block
+        :disabled="disableChanges || !leftToScan.length"
+      >
+        <v-icon class="mr-2">mdi-alert</v-icon> Fill open slots
+      </v-btn>
+      <v-btn class="mt-2" @click="reset" block :disabled="disableChanges">
+        Reset all player tag scanning
+      </v-btn>
     </div>
   </v-app>
 </template>
@@ -40,14 +73,19 @@
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
 import { BigbuttonPlayerMap } from '@esa-layouts/types/schemas';
 import { Vue, Component } from 'vue-property-decorator';
-import { RunDataActiveRun, RunDataArray, RunData, RunDataPlayer } from 'speedcontrol-util/types';
+import { RunDataActiveRun, RunDataArray, RunData, RunDataPlayer, Timer } from 'speedcontrol-util/types';
 import { differenceWith } from 'lodash';
+import { FlagCarrier } from '@esamarathon/mq-events/types';
 
 @Component
 export default class extends Vue {
+  @replicantNS.State((s) => s.reps.timer) readonly timer!: Timer;
   @replicantNS.State((s) => s.reps.runDataArray) readonly runArray!: RunDataArray;
   @replicantNS.State((s) => s.reps.runDataActiveRun) readonly activeRun!: RunDataActiveRun;
   @replicantNS.State((s) => s.reps.bigbuttonPlayerMap) readonly bbpMap!: BigbuttonPlayerMap;
+  tagScanned: 'success_comm' | 'success_player' | 'fail_player' | boolean = false;
+  scannedData: FlagCarrier.TagScanned | null = null;
+  tagScanTimeout!: number;
 
   get mapArr(): [string, BigbuttonPlayerMap[0]][] {
     return Object.entries(this.bbpMap);
@@ -73,8 +111,34 @@ export default class extends Vue {
       .toLowerCase() === y.user.displayName.toLowerCase());
   }
 
+  get disableChanges(): boolean {
+    return this.timer.state !== 'stopped';
+  }
+
+  force(): void {
+    nodecg.sendMessage('bigbuttonForceFillPlayers');
+  }
+
   reset(): void {
     nodecg.sendMessage('bigbuttonResetPlayers');
+  }
+
+  created(): void {
+    nodecg.listenFor(
+      'bigbuttonTagScanned',
+      ({ state, data }: {
+        state?: 'success_comm' | 'success_player' | 'fail_player',
+        data: FlagCarrier.TagScanned,
+      }) => {
+        window.clearTimeout(this.tagScanTimeout);
+        this.tagScanned = state || true;
+        this.scannedData = data;
+        this.tagScanTimeout = window.setTimeout(() => {
+          this.tagScanned = false;
+          this.scannedData = null;
+        }, 7000);
+      },
+    );
   }
 }
 </script>

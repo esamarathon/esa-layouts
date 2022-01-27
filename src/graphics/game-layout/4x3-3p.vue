@@ -35,7 +35,8 @@
     />
 
     <!-- Camera Captures -->
-    <div
+    <!-- Old 1 camera only spot. -->
+    <!--<div
       id="CameraCapture1"
       class="Capture BorderRight BorderLeft"
       :style="{
@@ -43,6 +44,49 @@
         top: '530px',
         width: '721px',
         height: '410px',
+      }"
+    />-->
+    <div
+      id="CameraCapture1"
+      class="Capture BorderRight BorderLeft"
+      :style="{
+        left: '600px',
+        top: '530px',
+        width: '240px',
+        height: !online ? '243px' : '410px',
+      }"
+    />
+    <div
+      id="CameraCapture2"
+      class="Capture BorderRight"
+      :style="{
+        left: '840px',
+        top: '530px',
+        width: '240px',
+        height: !online ? '243px' : '410px',
+      }"
+    />
+    <div
+      id="CameraCapture3"
+      class="Capture BorderRight"
+      :style="{
+        left: '1080px',
+        top: '530px',
+        width: '241px',
+        height: !online ? '243px' : '410px',
+      }"
+    />
+
+    <!-- Crowd Camera Capture -->
+    <div
+      v-if="!online"
+      id="CameraCaptureCrowd"
+      class="Capture BorderTop BorderRight BorderLeft"
+      :style="{
+        left: '600px',
+        top: '773px',
+        width: '721px',
+        height: '167px',
       }"
     />
 
@@ -88,7 +132,8 @@
         height: '410px',
       }"
     >
-      <comm-and-reader />
+      <commentators-reader />
+      <commentators-reader show-reader />
 
       <!-- Run Game Info/Timer -->
       <div
@@ -134,9 +179,10 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import MediaBox from '@shared/graphics/mediabox';
+import { Configschema } from '@esa-layouts/types/schemas';
 import GameCapture from './components/GameCapture.vue';
 import Player from './components/Player.vue';
-import CommAndReader from './components/CommAndReader.vue';
+import CommentatorsReader from './components/CommentatorsReader.vue';
 import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
 import DonationBar from './components/DonationBar.vue';
@@ -145,12 +191,14 @@ import DonationBar from './components/DonationBar.vue';
   components: {
     GameCapture,
     Player,
-    CommAndReader,
+    CommentatorsReader,
     RunInfo,
     Timer,
     MediaBox,
     DonationBar,
   },
 })
-export default class extends Vue {}
+export default class extends Vue {
+  online = (nodecg.bundleConfig as Configschema).event.online;
+}
 </script>

@@ -22,15 +22,28 @@
       }"
     />
 
+    <!-- Crowd Camera Capture -->
+    <div
+      v-if="!online"
+      id="CameraCaptureCrowd"
+      class="Capture BorderBottom"
+      :style="{
+        left: '0px',
+        top: '0px',
+        width: '774px',
+        height: '146px',
+      }"
+    />
+
     <!-- Camera Captures -->
     <div
       id="CameraCapture1"
       class="Capture"
       :style="{
         left: '0px',
-        top: '0px',
+        top: !online ? '146px' : '0px',
         width: '774px',
-        height: '437px',
+        height: !online ? '381px' : '527px',
       }"
     />
 
@@ -53,12 +66,13 @@
       class="Fixed"
       :style="{
         left: '0px',
-        top: '437px',
+        top: '527px',
         width: '774px',
       }"
     >
       <player />
-      <comm-and-reader />
+      <commentators-reader />
+      <commentators-reader show-reader />
     </div>
 
     <!-- Media Box -->
@@ -66,9 +80,9 @@
       :font-size="50"
       :style="{
         left: '0px',
-        top: '527px',
+        top: '661px',
         width: '774px',
-        height: '413px',
+        height: '279px',
       }"
     />
 
@@ -87,9 +101,10 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import MediaBox from '@shared/graphics/mediabox';
+import { Configschema } from '@esa-layouts/types/schemas';
 import GameCapture from './components/GameCapture.vue';
 import Player from './components/Player.vue';
-import CommAndReader from './components/CommAndReader.vue';
+import CommentatorsReader from './components/CommentatorsReader.vue';
 import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
 import DonationBar from './components/DonationBar.vue';
@@ -98,12 +113,14 @@ import DonationBar from './components/DonationBar.vue';
   components: {
     GameCapture,
     Player,
-    CommAndReader,
+    CommentatorsReader,
     RunInfo,
     Timer,
     MediaBox,
     DonationBar,
   },
 })
-export default class extends Vue {}
+export default class extends Vue {
+  online = (nodecg.bundleConfig as Configschema).event.online;
+}
 </script>

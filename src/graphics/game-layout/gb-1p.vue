@@ -12,15 +12,28 @@
       }"
     />
 
+    <!-- Crowd Camera Capture -->
+    <div
+      v-if="!online"
+      id="CameraCaptureCrowd"
+      class="Capture BorderBottom"
+      :style="{
+        left: '0px',
+        top: '0px',
+        width: '875px',
+        height: '166px',
+      }"
+    />
+
     <!-- Camera Captures -->
     <div
       id="CameraCapture1"
       class="Capture"
       :style="{
         left: '0px',
-        top: '0px',
+        top: !online ? '166px' : '0px',
         width: '875px',
-        height: '492px',
+        height: !online ? '384px' : '550px',
       }"
     />
 
@@ -29,13 +42,14 @@
       class="Fixed FlexColumn BorderBottom"
       :style="{
         left: '0px',
-        top: '492px',
+        top: '550px',
         width: '875px',
-        height: '210px',
+        height: '260px',
       }"
     >
       <player />
-      <comm-and-reader />
+      <commentators-reader />
+      <commentators-reader show-reader />
 
       <!-- Run Game Info/Timer -->
       <div
@@ -63,9 +77,9 @@
       :font-size="40"
       :style="{
         left: '0px',
-        top: '702px',
+        top: '810px',
         width: '875px',
-        height: '298px',
+        height: '190px',
       }"
     />
 
@@ -85,9 +99,10 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import MediaBox from '@shared/graphics/mediabox';
+import { Configschema } from '@esa-layouts/types/schemas';
 import GameCapture from './components/GameCapture.vue';
 import Player from './components/Player.vue';
-import CommAndReader from './components/CommAndReader.vue';
+import CommentatorsReader from './components/CommentatorsReader.vue';
 import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
 import DonationBar from './components/DonationBar.vue';
@@ -96,12 +111,14 @@ import DonationBar from './components/DonationBar.vue';
   components: {
     GameCapture,
     Player,
-    CommAndReader,
+    CommentatorsReader,
     RunInfo,
     Timer,
     MediaBox,
     DonationBar,
   },
 })
-export default class extends Vue {}
+export default class extends Vue {
+  online = (nodecg.bundleConfig as Configschema).event.online;
+}
 </script>

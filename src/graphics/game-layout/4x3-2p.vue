@@ -25,9 +25,8 @@
     />
 
     <!-- Camera Captures -->
-    <!-- Online has 2 camera spots -->
-    <div
-      v-if="!online"
+    <!-- Old 1 camera only spot. -->
+    <!--<div
       id="CameraCapture1"
       class="Capture BorderTop BorderRight BorderLeft"
       :style="{
@@ -36,29 +35,40 @@
         width: '498px',
         height: '280px',
       }"
+    />-->
+    <div
+      id="CameraCapture1"
+      class="Capture BorderTop BorderRight BorderLeft"
+      :style="{
+        left: '711px',
+        top: '720px',
+        width: '249px',
+        height: !online ? '187px' : '280px',
+      }"
     />
-    <template v-else>
-      <div
-        id="CameraCapture1"
-        class="Capture BorderTop BorderRight BorderLeft"
-        :style="{
-          left: '711px',
-          top: '720px',
-          width: '249px',
-          height: '280px',
-        }"
-      />
-      <div
-        id="CameraCapture2"
-        class="Capture BorderTop BorderRight"
-        :style="{
-          left: '960px',
-          top: '720px',
-          width: '249px',
-          height: '280px',
-        }"
-      />
-    </template>
+    <div
+      id="CameraCapture2"
+      class="Capture BorderTop BorderRight"
+      :style="{
+        left: '960px',
+        top: '720px',
+        width: '249px',
+        height: !online ? '187px' : '280px',
+      }"
+    />
+
+    <!-- Crowd Camera Capture -->
+    <div
+      v-if="!online"
+      id="CameraCaptureCrowd"
+      class="Capture BorderTop BorderRight BorderLeft"
+      :style="{
+        left: '711px',
+        top: '907px',
+        width: '498px',
+        height: '93px',
+      }"
+    />
 
     <!-- Player 1/Commentator -->
     <div
@@ -70,7 +80,8 @@
       }"
     >
       <player :slot-no="0" />
-      <comm-and-reader />
+      <commentators-reader />
+      <commentators-reader show-reader />
     </div>
 
     <!-- Player 2/General Run Info -->
@@ -106,9 +117,9 @@
       :font-size="36"
       :style="{
         left: '0px',
-        top: '810px',
+        top: '854px',
         width: '711px',
-        height: '190px',
+        height: '147px',
       }"
     />
 
@@ -131,7 +142,7 @@ import { Configschema } from '@esa-layouts/types/schemas/configschema';
 import MediaBox from '@shared/graphics/mediabox';
 import GameCapture from './components/GameCapture.vue';
 import Player from './components/Player.vue';
-import CommAndReader from './components/CommAndReader.vue';
+import CommentatorsReader from './components/CommentatorsReader.vue';
 import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
 import DonationBar from './components/DonationBar.vue';
@@ -140,7 +151,7 @@ import DonationBar from './components/DonationBar.vue';
   components: {
     GameCapture,
     Player,
-    CommAndReader,
+    CommentatorsReader,
     RunInfo,
     Timer,
     MediaBox,

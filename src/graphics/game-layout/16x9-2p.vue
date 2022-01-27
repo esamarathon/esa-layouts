@@ -25,9 +25,8 @@
     />
 
     <!-- Camera Captures -->
-    <!-- Online has 2 camera spots -->
-    <div
-      v-if="!online"
+    <!-- Old 1 camera only spot. -->
+    <!--<div
       id="CameraCapture1"
       class="Capture BorderTop BorderRight BorderLeft"
       :style="{
@@ -36,29 +35,40 @@
         width: '600px',
         height: '400px',
       }"
+    />-->
+    <div
+      id="CameraCapture1"
+      class="Capture BorderTop BorderRight BorderLeft"
+      :style="{
+        left: '660px',
+        top: '540px',
+        width: '300px',
+        height: !online ? '260px' : '400px',
+      }"
     />
-    <template v-else>
-      <div
-        id="CameraCapture1"
-        class="Capture BorderTop BorderRight BorderLeft"
-        :style="{
-          left: '660px',
-          top: '540px',
-          width: '300px',
-          height: '400px',
-        }"
-      />
-      <div
-        id="CameraCapture2"
-        class="Capture BorderTop BorderRight"
-        :style="{
-          left: '960px',
-          top: '540px',
-          width: '300px',
-          height: '400px',
-        }"
-      />
-    </template>
+    <div
+      id="CameraCapture2"
+      class="Capture BorderTop BorderRight"
+      :style="{
+        left: '960px',
+        top: '540px',
+        width: '300px',
+        height: !online ? '260px' : '400px',
+      }"
+    />
+
+    <!-- Crowd Camera Capture -->
+    <div
+      v-if="!online"
+      id="CameraCaptureCrowd"
+      class="Capture BorderTop BorderRight BorderLeft"
+      :style="{
+        left: '660px',
+        top: '801px',
+        width: '600px',
+        height: '139px',
+      }"
+    />
 
     <!-- Player 1/Commentator -->
     <div

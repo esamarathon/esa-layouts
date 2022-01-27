@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-2 mt-2">
+  <v-card class="pa-2">
     <speed-dial :id="id" />
     <div>
       <span class="font-weight-bold">Type:</span>

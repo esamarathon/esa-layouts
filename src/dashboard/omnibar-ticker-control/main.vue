@@ -21,6 +21,9 @@
 
     <!-- Rotation -->
     <span class="text-h6 mt-4">Rotation</span>
+    <v-card v-if="!localRotation.length" class="pa-2 mt-2 font-italic">
+      Drag elements from above to here to add.
+    </v-card>
     <draggable
       v-model="localRotation"
       group="ticker"
@@ -39,6 +42,7 @@
     >
       <component
         v-for="item in localRotation"
+        class="mt-2"
         :key="item.id"
         :is="item.type"
         :id="item.id"
@@ -54,9 +58,9 @@
 </template>
 
 <script lang="ts">
+import { Vue, Component, Watch } from 'vue-property-decorator';
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
 import { Omnibar } from '@esa-layouts/types/schemas';
-import { Vue, Component } from 'vue-property-decorator';
 import clone from 'clone';
 import Draggable from 'vuedraggable';
 import { v4 as uuid } from 'uuid';
@@ -108,6 +112,11 @@ export default class IntermissionControl extends Vue {
 
   get isLocalRotationDifferent(): boolean {
     return !isEqual(this.omnibar.rotation, this.localRotation);
+  }
+
+  @Watch('omnibar.rotation')
+  onGlobalRotationChange(val: Omnibar['rotation']): void {
+    this.localRotation = clone(val);
   }
 
   created(): void {

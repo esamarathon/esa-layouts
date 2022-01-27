@@ -182,6 +182,14 @@
         "headerColor": "#c49215"
       },
       {
+        "name": "omnibar-ticker-control",
+        "title": "Omnibar Ticker Control",
+        "width": 3,
+        "file": "omnibar-ticker-control.html",
+        "workspace": "Z2 - ESA Advanced",
+        "headerColor": "#c49215"
+      },
+      {
         "name": "donation-total-milestones",
         "title": "Donation Total Milestones",
         "width": 4,

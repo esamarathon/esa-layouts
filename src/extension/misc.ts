@@ -1,7 +1,7 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import AudioNormaliser from '@shared/extension/audio-normaliser';
 import type { RunData } from 'speedcontrol-util/types';
-import { formatPronouns, getOtherStreamEventShort } from './util/helpers';
+import { formatSrcomPronouns, getOtherStreamEventShort } from './util/helpers';
 import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
@@ -99,7 +99,7 @@ export async function searchSrcomPronouns(val: string): Promise<string> {
       { type: 'twitch', val: name },
       { type: 'name', val: name },
     ]);
-    pronouns = formatPronouns(data?.pronouns || '') || '';
+    pronouns = formatSrcomPronouns(data?.pronouns || '') || '';
   }
   return pronouns ? `${name} (${pronouns})` : name;
 }

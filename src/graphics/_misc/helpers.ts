@@ -81,28 +81,3 @@ export function wait(length: number, reason?: string): Promise<void> {
 export function awaitTimeout(promise: Promise<void>, delay: number): Promise<void> {
   return Promise.race([promise, wait(delay, 'timeout')]);
 }
-
-// ALSO IN extension/util/helpers.ts, CHANGE THERE TOO!
-export function formatPronouns(pronouns?: string): string | undefined {
-  if (!pronouns) {
-    return undefined;
-  }
-  const split = pronouns.split(',').map((p) => p.trim().toLowerCase());
-  if (split.length > 1) {
-    if (split.includes('he/him') && split.includes('she/her') && !split.includes('they/them')) {
-      return 'he or she';
-    }
-    const list: string[] = [];
-    if (split.includes('he/him')) {
-      list.push('he');
-    }
-    if (split.includes('she/her')) {
-      list.push('she');
-    }
-    if (split.includes('they/them')) {
-      list.push('they');
-    }
-    return list.join('/');
-  }
-  return split[0];
-}

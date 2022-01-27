@@ -4,7 +4,7 @@ import { differenceWith } from 'lodash';
 import { RunData, RunDataPlayer, RunDataTeam } from 'speedcontrol-util/types';
 import { v4 as uuid } from 'uuid';
 import countryCodes from './util/countries';
-import { logError } from './util/helpers';
+import { formatSrcomPronouns, logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import { mq } from './util/rabbitmq';
 import { bigbuttonPlayerMap, commentators, donationReader } from './util/replicants';
@@ -63,7 +63,9 @@ function mapScannedPlayersToTeams(run: RunData, players: BigbuttonPlayerMap[0]):
             user: {
               displayName: p.name,
             },
-            raw: {},
+            raw: {
+              pronouns: formatSrcomPronouns(p.pronouns) || '',
+            },
           }));
           return true;
         }

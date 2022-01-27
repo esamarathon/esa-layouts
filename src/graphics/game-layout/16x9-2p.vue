@@ -181,7 +181,6 @@ import CommentatorsReader from './components/CommentatorsReader.vue';
 import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
 import DonationBar from './components/DonationBar.vue';
-import { formatPronouns } from '../_misc/helpers';
 
 @Component({
   components: {
@@ -203,12 +202,8 @@ export default class extends Vue {
     if (this.runData?.relay) return [];
     return (this.runData?.teams[0].players || []).slice(2).map((p) => ({
       name: p.name,
-      pronouns: this.formatPronouns(p.pronouns),
+      pronouns: p.pronouns,
     }));
-  }
-
-  formatPronouns(pronouns?: string): string | undefined {
-    return formatPronouns(pronouns);
   }
 }
 </script>

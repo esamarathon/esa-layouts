@@ -11,4 +11,5 @@ export interface GameLayouts {
 		code: string;
 	}[];
 	selected?: string;
+	crowdCamera: boolean;
 }

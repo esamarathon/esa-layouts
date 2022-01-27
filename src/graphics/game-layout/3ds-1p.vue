@@ -24,7 +24,7 @@
 
     <!-- Crowd Camera Capture -->
     <div
-      v-if="!online"
+      v-if="!online && crowdCam"
       id="CameraCaptureCrowd"
       class="Capture BorderBottom"
       :style="{
@@ -41,9 +41,9 @@
       class="Capture"
       :style="{
         left: '0px',
-        top: !online ? '146px' : '0px',
+        top: !online && crowdCam ? '146px' : '0px',
         width: '774px',
-        height: !online ? '381px' : '527px',
+        height: !online && crowdCam ? '381px' : '527px',
       }"
     />
 
@@ -100,6 +100,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import MediaBox from '@shared/graphics/mediabox';
 import { Configschema } from '@esa-layouts/types/schemas';
 import GameCapture from './components/GameCapture.vue';
@@ -121,6 +122,7 @@ import DonationBar from './components/DonationBar.vue';
   },
 })
 export default class extends Vue {
+  @State((s) => s.gameLayouts.crowdCamera) readonly crowdCam!: boolean;
   online = (nodecg.bundleConfig as Configschema).event.online;
 }
 </script>

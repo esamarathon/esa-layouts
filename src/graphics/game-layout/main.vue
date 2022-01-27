@@ -38,6 +38,10 @@ export default class extends Vue {
         // This can error if the route is already the correct one
       }
     }
+    if (oldVal && oldVal.crowdCamera !== newVal.crowdCamera) {
+      this.clipPath = generateClipPath();
+      updateCapturePositionData(document.title);
+    }
   }
 
   layoutChanged(route: Route): void {

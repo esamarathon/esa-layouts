@@ -51,7 +51,7 @@
     </draggable>
 
     <!-- Save -->
-    <v-btn class="mt-4" :disabled="!isLocalRotationDifferent" @click="save">
+    <v-btn class="mt-4" :disabled="!isEdited" @click="save">
       Save
     </v-btn>
   </v-app>
@@ -64,7 +64,6 @@ import { Omnibar } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import Draggable from 'vuedraggable';
 import { v4 as uuid } from 'uuid';
-import { isEqual } from 'lodash';
 import GenericMsg from './components/GenericMsg.vue';
 import Bid from './components/Bid.vue';
 import Milestone from './components/Milestone.vue';
@@ -108,19 +107,21 @@ export default class IntermissionControl extends Vue {
   ];
 
   get localRotation(): Omnibar['rotation'] { return storeModule.localRotation; }
-  set localRotation(val: Omnibar['rotation']) { storeModule.setLocalRotation(val); }
+  set localRotation(val: Omnibar['rotation']) {
+    storeModule.setLocalRotation({ val, manual: true });
+  }
 
-  get isLocalRotationDifferent(): boolean {
-    return !isEqual(this.omnibar.rotation, this.localRotation);
+  get isEdited(): boolean {
+    return storeModule.localEdits;
   }
 
   @Watch('omnibar.rotation')
   onGlobalRotationChange(val: Omnibar['rotation']): void {
-    this.localRotation = clone(val);
+    if (!storeModule.localEdits) storeModule.setLocalRotation({ val: clone(val) });
   }
 
   created(): void {
-    this.localRotation = clone(this.omnibar.rotation);
+    storeModule.setLocalRotation({ val: clone(this.omnibar.rotation) });
   }
 
   clone(original: { key: Omnibar['rotation'][0]['type'], name: string }): Omnibar['rotation'][0] {

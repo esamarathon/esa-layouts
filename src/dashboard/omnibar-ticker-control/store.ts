@@ -10,6 +10,7 @@ Vue.use(Vuex);
 @Module({ name: 'OurModule' })
 class OurModule extends VuexModule {
   localRotation: Omnibar['rotation'] = [];
+  localEdits = false;
 
   // Helper getter to return all replicants.
   get reps(): ReplicantTypes {
@@ -20,8 +21,9 @@ class OurModule extends VuexModule {
    * Set local rotation array.
    */
   @Mutation
-  setLocalRotation(val: Omnibar['rotation']): void {
+  setLocalRotation({ val, manual = false }: { val: Omnibar['rotation'], manual?: boolean }): void {
     this.localRotation = clone(val);
+    if (manual) this.localEdits = true;
   }
 
   /**
@@ -33,6 +35,7 @@ class OurModule extends VuexModule {
       name: 'omnibar',
       val: { ...replicantModule.repsTyped.omnibar, rotation: clone(val) },
     });
+    this.localEdits = false;
   }
 
   /**
@@ -41,7 +44,10 @@ class OurModule extends VuexModule {
   @Mutation
   deleteItem(id: string): void {
     const index = this.localRotation.findIndex((r) => r.id === id);
-    if (index >= 0) this.localRotation.splice(index, 1);
+    if (index >= 0) {
+      this.localRotation.splice(index, 1);
+      this.localEdits = true;
+    }
   }
 }
 

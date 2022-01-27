@@ -22,15 +22,28 @@
       }"
     />
 
+    <!-- Crowd Camera Capture -->
+    <div
+      v-if="!online"
+      id="CameraCaptureCrowd"
+      class="Capture BorderBottom"
+      :style="{
+        left: '0px',
+        top: '0px',
+        width: '858px',
+        height: '140px',
+      }"
+    />
+
     <!-- Camera Captures -->
     <div
       id="CameraCapture1"
       class="Capture"
       :style="{
         left: '0px',
-        top: '0px',
+        top: !online ? '140px' : '0px',
         width: '858px',
-        height: '483px',
+        height: !online ? '360px' : '500px',
       }"
     />
 
@@ -65,7 +78,7 @@
       class="Fixed"
       :style="{
         left: '0px',
-        top: '483px',
+        top: '500px',
         width: '858px',
       }"
     >
@@ -102,6 +115,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import MediaBox from '@shared/graphics/mediabox';
+import { Configschema } from '@esa-layouts/types/schemas';
 import GameCapture from './components/GameCapture.vue';
 import Player from './components/Player.vue';
 import CommentatorsReader from './components/CommentatorsReader.vue';
@@ -120,5 +134,7 @@ import DonationBar from './components/DonationBar.vue';
     DonationBar,
   },
 })
-export default class extends Vue {}
+export default class extends Vue {
+  online = (nodecg.bundleConfig as Configschema).event.online;
+}
 </script>

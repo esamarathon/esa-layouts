@@ -78,14 +78,12 @@ sc.twitchCommercialTimer.on('change', async (newVal) => {
 
 // Triggered via button in "OBS Control" dashboard panel.
 nodecg().listenFor('startIntermission', async () => {
-  // Tries to start video playlist, if cannot be done then acts as if there isn't one.
-  try {
+  // Tries to start video playlist, if playlist is empty then acts as if there isn't one.
+  if (videoPlayer.value.playlist.length) {
     await startPlaylist();
-  } catch (err) {
-    if (obs.findScene(config.names.scenes.commercials)) {
-      await changeScene({ scene: config.names.scenes.commercials });
-    } else {
-      await changeScene({ scene: config.names.scenes.intermission });
-    }
+  } else if (obs.findScene(config.names.scenes.commercials)) {
+    await changeScene({ scene: config.names.scenes.commercials });
+  } else {
+    await changeScene({ scene: config.names.scenes.intermission });
   }
 });

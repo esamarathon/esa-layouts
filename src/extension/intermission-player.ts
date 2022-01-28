@@ -50,8 +50,8 @@ function generatePlaylist(): { id: string, video?: Asset, commercial: number }[]
 
 // eslint-disable-next-line import/prefer-default-export
 export async function startPlaylist(): Promise<void> {
-  const playlist = generatePlaylist();
   try {
+    const playlist = generatePlaylist();
     player.loadPlaylist(playlist);
     videoPlayer.value.playing = true;
     // Switch to correct scene depending on if first element has a video or not.
@@ -71,6 +71,7 @@ export async function startPlaylist(): Promise<void> {
     logError('[Intermission Player] Could not be started', err);
     // Return to the intermission scene if there was an issue starting the playlist.
     await new Promise((res) => { setTimeout(res, 2000); });
+    // TODO: Should this be commercials scene if available?
     await changeScene({ scene: config.obs.names.scenes.intermission });
   }
 }

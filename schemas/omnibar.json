@@ -114,9 +114,8 @@
       ],
       "default": null
     },
-    "lastIndex": {
-      "type": "number",
-      "default": 0
+    "lastId": {
+      "type": "string"
     },
     "pin": {
       "oneOf": [
@@ -154,7 +153,6 @@
     "rotation",
     "alertQueue",
     "current",
-    "lastIndex",
     "pin"
   ]
 }

@@ -44,26 +44,22 @@ export function logError(msg: string, err: any, ...args: unknown[]): void {
   nodecg().log.debug(`${msgWithArgs}: %s`, err);
 }
 
-// ALSO IN graphics/_misc/helpers.ts, CHANGE THERE TOO!
-export function formatPronouns(pronouns?: string): string | undefined {
-  if (!pronouns) {
-    return undefined;
-  }
+/**
+ * Takes the basic speedrun.com pronouns string and formats it for the layouts.
+ * @param pronouns Pronouns string from speedrun.com, if any
+ * @returns Formatted string, or undefined if the input was also undefined.
+ */
+export function formatSrcomPronouns(pronouns?: string): string | undefined {
+  if (!pronouns) return undefined;
   const split = pronouns.split(',').map((p) => p.trim().toLowerCase());
   if (split.length > 1) {
     if (split.includes('he/him') && split.includes('she/her') && !split.includes('they/them')) {
       return 'he or she';
     }
     const list: string[] = [];
-    if (split.includes('he/him')) {
-      list.push('he');
-    }
-    if (split.includes('she/her')) {
-      list.push('she');
-    }
-    if (split.includes('they/them')) {
-      list.push('they');
-    }
+    if (split.includes('he/him')) list.push('he');
+    if (split.includes('she/her')) list.push('she');
+    if (split.includes('they/them')) list.push('they');
     return list.join('/');
   }
   return split[0];

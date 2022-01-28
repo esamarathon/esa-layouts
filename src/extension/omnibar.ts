@@ -1,4 +1,4 @@
-import { Bids, Configschema, DonationTotalMilestones, Omnibar, Prizes } from '@esa-layouts/types/schemas';
+import { Bids, Configschema, DonationTotalMilestones, Prizes } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import { RunData } from 'speedcontrol-util/types';
 import { v4 as uuid } from 'uuid';
@@ -59,72 +59,12 @@ function getMilestone(): DonationTotalMilestones[0] | undefined {
   return clone(filtered[rand]);
 }
 
-// Wrapper to generate simple generic messages.
-function genericMsg(str: string): Omnibar['rotation'][0] {
-  return {
-    id: uuid(),
-    type: 'GenericMsg',
-    props: {
-      seconds: 25,
-      msg: str,
-    },
-  };
-}
-
-// For now, clearing and adding rotation stuff on startup.
-// TODO: Remove when we have a dashboard panel to do this!
-omnibar.value = clone(omnibar.opts.defaultValue) as Omnibar;
-const shared: Omnibar['rotation'] = [
-  {
-    type: 'UpcomingRun',
-    id: uuid(),
-  },
-  {
-    type: 'Prize',
-    id: uuid(),
-  },
-  {
-    type: 'Bid',
-    id: uuid(),
-  },
-  {
-    type: 'Milestone',
-    id: uuid(),
-  },
-];
-if (config.event.theme?.startsWith('winter')) {
-  omnibar.value.rotation = [
-    genericMsg('This is European Speedrunner Assembly Winter 2022'),
-    genericMsg('#ESAWinter22 benefits the Swedish Alzheimer\'s Foundation'),
-    genericMsg(`Donate @ ${(nodecg().bundleConfig as Configschema).tracker.address}`),
-    ...shared,
-    genericMsg('Check out our Twitch team @ twitch.tv/team/esa'),
-    genericMsg('Check out our merch @ speedrunstore.com'),
-    genericMsg('Subscribe or cheer to support the charity'),
-  ];
-} else if (config.event.theme?.startsWith('uksgw')) {
-  omnibar.value.rotation = [
-    genericMsg('This is United Kingdom Speedrunner Gathering Winter 2022'),
-    genericMsg('#UKSGWinter22 benefits Crisis'),
-    genericMsg(`Donate @ ${(nodecg().bundleConfig as Configschema).tracker.address}`),
-    ...shared,
-    genericMsg('Check out our Twitch team @ twitch.tv/team/esa'),
-    genericMsg('Can\'t get enough of speedrunning? '
-      + 'Then look forward to ESA Winter 2022: 12th - 19th February'),
-  ];
-} else {
-  omnibar.value.rotation = [
-    genericMsg('Omnibar messages will appear here!'),
-  ];
-}
-
-// TODO: Not always rely on numbered index for keeping track of position?
 // TODO: Work out what to do if we get stuck on an infinite loop.
-function showNext(start = false): void {
+function showNext(): void {
   if (omnibar.value.alertQueue.length) {
-    nodecg().log.debug('[Omnibar] Alert available, will show');
     const alert = omnibar.value.alertQueue.shift();
     if (alert) {
+      nodecg().log.debug('[Omnibar] Alert available, will show:', alert?.type);
       const { type, id, data } = alert;
       omnibar.value.current = {
         type,
@@ -134,12 +74,19 @@ function showNext(start = false): void {
           user: data?.user, // Tweet
         },
       };
-    }
+    } else showNext();
   } else {
-    let nextIndex = start ? 0 : omnibar.value.lastIndex + 1;
+    // If nothing in the rotation anymore, just stop for now.
+    if (!omnibar.value.rotation.length) {
+      delete omnibar.value.lastId;
+      omnibar.value.current = null;
+      return;
+    }
+    const lastIndex = omnibar.value.rotation.findIndex((r) => r.id === omnibar.value.lastId);
+    let nextIndex = lastIndex + 1;
     if (omnibar.value.rotation.length - 1 < nextIndex) nextIndex = 0;
-    omnibar.value.lastIndex = nextIndex;
     const next = omnibar.value.rotation[nextIndex];
+    omnibar.value.lastId = next.id;
     if (next.type === 'UpcomingRun') {
       const run = getUpcomingRun();
       if (!run) { showNext(); return; }
@@ -162,6 +109,16 @@ function showNext(start = false): void {
     nodecg().log.debug('[Omnibar] Will now show message of type:', next.type);
   }
 }
+
+omnibar.on('change', (newVal, oldVal) => {
+  // If nothing is currently being shown, and the rotation is filled from being empty,
+  // or we get alerts in the queue, trigger the cycle to start up again.
+  if (!newVal.current && oldVal
+  && ((newVal.rotation.length && !oldVal.rotation.length)
+  || (newVal.alertQueue.length && !oldVal.alertQueue.length))) {
+    showNext();
+  }
+});
 
 // Listens for messages from the graphic to change to the next message.
 nodecg().listenFor('omnibarShowNext', (data, ack) => {
@@ -221,6 +178,3 @@ mq.evt.on('newScreenedCrowdControl', (data) => {
     });
   }
 });
-
-// TODO: Might need removing when user control is implemented!
-showNext(true);

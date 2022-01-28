@@ -43,7 +43,7 @@
         left: '660px',
         top: '540px',
         width: '300px',
-        height: !online ? '260px' : '400px',
+        height: !online && crowdCam ? '260px' : '400px',
       }"
     />
     <div
@@ -53,13 +53,13 @@
         left: '960px',
         top: '540px',
         width: '300px',
-        height: !online ? '260px' : '400px',
+        height: !online && crowdCam ? '260px' : '400px',
       }"
     />
 
     <!-- Crowd Camera Capture -->
     <div
-      v-if="!online"
+      v-if="!online && crowdCam"
       id="CameraCaptureCrowd"
       class="Capture BorderTop BorderRight BorderLeft"
       :style="{
@@ -181,7 +181,6 @@ import CommentatorsReader from './components/CommentatorsReader.vue';
 import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
 import DonationBar from './components/DonationBar.vue';
-import { formatPronouns } from '../_misc/helpers';
 
 @Component({
   components: {
@@ -195,6 +194,7 @@ import { formatPronouns } from '../_misc/helpers';
   },
 })
 export default class extends Vue {
+  @State((s) => s.gameLayouts.crowdCamera) readonly crowdCam!: boolean;
   online = (nodecg.bundleConfig as Configschema).event.online;
   @State('runDataActiveRun') runData!: RunDataActiveRun;
 
@@ -202,12 +202,8 @@ export default class extends Vue {
     if (this.runData?.relay) return [];
     return (this.runData?.teams[0].players || []).slice(2).map((p) => ({
       name: p.name,
-      pronouns: this.formatPronouns(p.pronouns),
+      pronouns: p.pronouns,
     }));
-  }
-
-  formatPronouns(pronouns?: string): string | undefined {
-    return formatPronouns(pronouns);
   }
 }
 </script>

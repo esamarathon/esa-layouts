@@ -88,14 +88,14 @@
             /{{ player.social.twitch }}
             <!-- Custom Title code repeated twice, needs cleaning up! -->
             <span
-              v-if="formattedPronouns"
+              v-if="pronouns"
               class="Pronouns"
               :style="{
                 padding: '3px 5px',
                 'margin-left': '5px',
               }"
             >
-              {{ formattedPronouns }}
+              {{ pronouns }}
             </span>
           </div>
         </div>
@@ -114,14 +114,14 @@
             {{ player.name }}
             <!-- Custom Title code repeated twice, needs cleaning up! -->
             <span
-              v-if="formattedPronouns"
+              v-if="pronouns"
               class="Pronouns"
               :style="{
                 padding: '3px 5px',
                 'margin-left': '5px',
               }"
             >
-              {{ formattedPronouns }}
+              {{ pronouns }}
             </span>
           </div>
         </div>
@@ -161,7 +161,6 @@ import { State } from 'vuex-class';
 import fitty, { FittyInstance } from 'fitty';
 import { NameCycle } from '@esa-layouts/types/schemas';
 import { RunDataActiveRun, RunDataTeam, RunDataPlayer } from 'speedcontrol-util/types';
-import { formatPronouns } from '../../_misc/helpers';
 
 @Component
 export default class extends Vue {
@@ -175,8 +174,8 @@ export default class extends Vue {
   nameCycle = 0; // "Local" name cycle used so we can let flags load.
   fittyPlayer: FittyInstance | undefined;
 
-  get formattedPronouns(): string | undefined {
-    return formatPronouns(this.player?.pronouns);
+  get pronouns(): string | undefined {
+    return this.player?.pronouns;
   }
 
   updateTeam(): void {

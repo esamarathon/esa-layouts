@@ -23,7 +23,7 @@ export interface Omnibar {
 		id: string;
 		props?: Props;
 	} | null;
-	lastIndex: number;
+	lastId?: string;
 	pin: {
 		type: 'milestone' | 'bid';
 		id: string | number;

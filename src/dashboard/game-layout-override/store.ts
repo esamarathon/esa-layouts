@@ -19,6 +19,13 @@ class OurModule extends VuexModule {
       name: 'gameLayouts', val: { ...replicantModule.repsTyped.gameLayouts, selected: code },
     });
   }
+
+  @Mutation
+  toggleCrowdCamera(val: boolean): void {
+    replicantModule.setReplicant<GameLayouts>({
+      name: 'gameLayouts', val: { ...replicantModule.repsTyped.gameLayouts, crowdCamera: val },
+    });
+  }
 }
 
 const store = new Store({

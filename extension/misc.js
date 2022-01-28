@@ -114,7 +114,7 @@ async function searchSrcomPronouns(val) {
             { type: 'twitch', val: name },
             { type: 'name', val: name },
         ]);
-        pronouns = (0, helpers_1.formatPronouns)((data === null || data === void 0 ? void 0 : data.pronouns) || '') || '';
+        pronouns = (0, helpers_1.formatSrcomPronouns)((data === null || data === void 0 ? void 0 : data.pronouns) || '') || '';
     }
     return pronouns ? `${name} (${pronouns})` : name;
 }

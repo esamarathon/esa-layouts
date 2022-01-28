@@ -66,7 +66,9 @@ function mapScannedPlayersToTeams(run, players) {
                         user: {
                             displayName: p.name,
                         },
-                        raw: {},
+                        raw: {
+                            pronouns: (0, helpers_1.formatSrcomPronouns)(p.pronouns) || '',
+                        },
                     }));
                     return true;
                 }

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatPronouns = exports.logError = exports.getOtherStreamEventShort = exports.getCurrentEventShort = exports.padTimeNumber = void 0;
+exports.formatSrcomPronouns = exports.logError = exports.getOtherStreamEventShort = exports.getCurrentEventShort = exports.padTimeNumber = void 0;
 const util_1 = __importDefault(require("util"));
 const nodecg_1 = require("./nodecg");
 const config = (0, nodecg_1.get)().bundleConfig;
@@ -48,28 +48,28 @@ function logError(msg, err, ...args) {
     (0, nodecg_1.get)().log.debug(`${msgWithArgs}: %s`, err);
 }
 exports.logError = logError;
-// ALSO IN graphics/_misc/helpers.ts, CHANGE THERE TOO!
-function formatPronouns(pronouns) {
-    if (!pronouns) {
+/**
+ * Takes the basic speedrun.com pronouns string and formats it for the layouts.
+ * @param pronouns Pronouns string from speedrun.com, if any
+ * @returns Formatted string, or undefined if the input was also undefined.
+ */
+function formatSrcomPronouns(pronouns) {
+    if (!pronouns)
         return undefined;
-    }
     const split = pronouns.split(',').map((p) => p.trim().toLowerCase());
     if (split.length > 1) {
         if (split.includes('he/him') && split.includes('she/her') && !split.includes('they/them')) {
             return 'he or she';
         }
         const list = [];
-        if (split.includes('he/him')) {
+        if (split.includes('he/him'))
             list.push('he');
-        }
-        if (split.includes('she/her')) {
+        if (split.includes('she/her'))
             list.push('she');
-        }
-        if (split.includes('they/them')) {
+        if (split.includes('they/them'))
             list.push('they');
-        }
         return list.join('/');
     }
     return split[0];
 }
-exports.formatPronouns = formatPronouns;
+exports.formatSrcomPronouns = formatSrcomPronouns;

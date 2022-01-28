@@ -2,7 +2,6 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 const clone_1 = __importDefault(require("clone"));
 const uuid_1 = require("uuid");
@@ -62,72 +61,12 @@ function getMilestone() {
     const rand = Math.floor(Math.random() * filtered.length);
     return (0, clone_1.default)(filtered[rand]);
 }
-// Wrapper to generate simple generic messages.
-function genericMsg(str) {
-    return {
-        id: (0, uuid_1.v4)(),
-        type: 'GenericMsg',
-        props: {
-            seconds: 25,
-            msg: str,
-        },
-    };
-}
-// For now, clearing and adding rotation stuff on startup.
-// TODO: Remove when we have a dashboard panel to do this!
-replicants_1.omnibar.value = (0, clone_1.default)(replicants_1.omnibar.opts.defaultValue);
-const shared = [
-    {
-        type: 'UpcomingRun',
-        id: (0, uuid_1.v4)(),
-    },
-    {
-        type: 'Prize',
-        id: (0, uuid_1.v4)(),
-    },
-    {
-        type: 'Bid',
-        id: (0, uuid_1.v4)(),
-    },
-    {
-        type: 'Milestone',
-        id: (0, uuid_1.v4)(),
-    },
-];
-if ((_a = config.event.theme) === null || _a === void 0 ? void 0 : _a.startsWith('winter')) {
-    replicants_1.omnibar.value.rotation = [
-        genericMsg('This is European Speedrunner Assembly Winter 2022'),
-        genericMsg('#ESAWinter22 benefits the Swedish Alzheimer\'s Foundation'),
-        genericMsg(`Donate @ ${(0, nodecg_1.get)().bundleConfig.tracker.address}`),
-        ...shared,
-        genericMsg('Check out our Twitch team @ twitch.tv/team/esa'),
-        genericMsg('Check out our merch @ speedrunstore.com'),
-        genericMsg('Subscribe or cheer to support the charity'),
-    ];
-}
-else if ((_b = config.event.theme) === null || _b === void 0 ? void 0 : _b.startsWith('uksgw')) {
-    replicants_1.omnibar.value.rotation = [
-        genericMsg('This is United Kingdom Speedrunner Gathering Winter 2022'),
-        genericMsg('#UKSGWinter22 benefits Crisis'),
-        genericMsg(`Donate @ ${(0, nodecg_1.get)().bundleConfig.tracker.address}`),
-        ...shared,
-        genericMsg('Check out our Twitch team @ twitch.tv/team/esa'),
-        genericMsg('Can\'t get enough of speedrunning? '
-            + 'Then look forward to ESA Winter 2022: 12th - 19th February'),
-    ];
-}
-else {
-    replicants_1.omnibar.value.rotation = [
-        genericMsg('Omnibar messages will appear here!'),
-    ];
-}
-// TODO: Not always rely on numbered index for keeping track of position?
 // TODO: Work out what to do if we get stuck on an infinite loop.
-function showNext(start = false) {
+function showNext() {
     if (replicants_1.omnibar.value.alertQueue.length) {
-        (0, nodecg_1.get)().log.debug('[Omnibar] Alert available, will show');
         const alert = replicants_1.omnibar.value.alertQueue.shift();
         if (alert) {
+            (0, nodecg_1.get)().log.debug('[Omnibar] Alert available, will show:', alert === null || alert === void 0 ? void 0 : alert.type);
             const { type, id, data } = alert;
             replicants_1.omnibar.value.current = {
                 type,
@@ -138,13 +77,22 @@ function showNext(start = false) {
                 },
             };
         }
+        else
+            showNext();
     }
     else {
-        let nextIndex = start ? 0 : replicants_1.omnibar.value.lastIndex + 1;
+        // If nothing in the rotation anymore, just stop for now.
+        if (!replicants_1.omnibar.value.rotation.length) {
+            delete replicants_1.omnibar.value.lastId;
+            replicants_1.omnibar.value.current = null;
+            return;
+        }
+        const lastIndex = replicants_1.omnibar.value.rotation.findIndex((r) => r.id === replicants_1.omnibar.value.lastId);
+        let nextIndex = lastIndex + 1;
         if (replicants_1.omnibar.value.rotation.length - 1 < nextIndex)
             nextIndex = 0;
-        replicants_1.omnibar.value.lastIndex = nextIndex;
         const next = replicants_1.omnibar.value.rotation[nextIndex];
+        replicants_1.omnibar.value.lastId = next.id;
         if (next.type === 'UpcomingRun') {
             const run = getUpcomingRun();
             if (!run) {
@@ -183,6 +131,15 @@ function showNext(start = false) {
         (0, nodecg_1.get)().log.debug('[Omnibar] Will now show message of type:', next.type);
     }
 }
+replicants_1.omnibar.on('change', (newVal, oldVal) => {
+    // If nothing is currently being shown, and the rotation is filled from being empty,
+    // or we get alerts in the queue, trigger the cycle to start up again.
+    if (!newVal.current && oldVal
+        && ((newVal.rotation.length && !oldVal.rotation.length)
+            || (newVal.alertQueue.length && !oldVal.alertQueue.length))) {
+        showNext();
+    }
+});
 // Listens for messages from the graphic to change to the next message.
 (0, nodecg_1.get)().listenFor('omnibarShowNext', (data, ack) => {
     showNext();
@@ -242,5 +199,3 @@ rabbitmq_1.mq.evt.on('newScreenedCrowdControl', (data) => {
         });
     }
 });
-// TODO: Might need removing when user control is implemented!
-showNext(true);

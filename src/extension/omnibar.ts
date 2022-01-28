@@ -146,7 +146,7 @@ mq.evt.on('newScreenedTweet', (data) => {
   message = message.replace(/\s\s+|\n/g, ' ');
   // Regex removes Twitter URL shortener links.
   message = message.replace(/https:\/\/t\.co\/\w+/g, (match) => {
-    if (msgData.entities?.urls?.length > 0) {
+    if (msgData.entities.urls.length > 0) {
       const replacementUrl = msgData.entities.urls
         .find((urlInfo: { url: string }) => urlInfo.url === match);
       if (replacementUrl) return replacementUrl.display_url;

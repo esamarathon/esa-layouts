@@ -1,5 +1,8 @@
 <template>
   <v-app>
+    <!-- Edit Dialog -->
+    <edit-dialog />
+
     <!-- New Components -->
     <span class="text-h6">New Components</span>
     <draggable
@@ -69,6 +72,7 @@ import { Omnibar } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import Draggable from 'vuedraggable';
 import { v4 as uuid } from 'uuid';
+import EditDialog from './components/EditDialog.vue';
 import GenericMsg from './components/GenericMsg.vue';
 import Bid from './components/Bid.vue';
 import Milestone from './components/Milestone.vue';
@@ -78,6 +82,7 @@ import { storeModule } from './store';
 
 @Component({
   components: {
+    EditDialog,
     Draggable,
     GenericMsg,
     Bid,

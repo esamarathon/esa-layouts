@@ -30,7 +30,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         token: ${{ secrets['GITHUB_TOKEN'] }}
-        ref: master
+        ref: uksgw22
         fetch-depth: 0
         path: ./nodecg/bundles/esa-layouts
 
@@ -48,8 +48,8 @@ jobs:
       continue-on-error: true
       working-directory: ./nodecg/bundles/esa-layouts
       run: |
-        git checkout master
-        git checkout build
+        git checkout uksgw22
+        git checkout uksgw22-build
 
     # Attempt to start to merge the main branch into build.
     # This can "error" but we want to continue regardless.
@@ -59,7 +59,7 @@ jobs:
       continue-on-error: true
       working-directory: ./nodecg/bundles/esa-layouts
       run: |
-        git merge --no-commit master
+        git merge --no-commit uksgw22
 
     # Do the 2nd part of the merge. This will ignore the main's "shared" submodule stuff.
     # This can "error" if the merge commit is empty but we want to continue regardless.
@@ -69,10 +69,10 @@ jobs:
       continue-on-error: true
       working-directory: ./nodecg/bundles/esa-layouts
       run: |
-        rm -rf shared~master
-        git rm --ignore-unmatch --cached -r shared~master
+        rm -rf shared~uksgw22
+        git rm --ignore-unmatch --cached -r shared~uksgw22
         git reset HEAD shared
-        git commit -m "Merge branch 'master' into build"
+        git commit -m "Merge branch 'uksgw22' into build"
 
     # Returns the submodule back so we can get the latest files to build from that.
     # Will only run if the checkout step was successful.
@@ -82,7 +82,7 @@ jobs:
       run: |
         rm -rf shared
         git rm --ignore-unmatch --cached -r shared
-        git checkout master shared
+        git checkout uksgw22 shared
         git commit -m "Re-add submodule" -a --allow-empty
 
     # Converts the esa-layouts-shared submodule into a normal directory of files.
@@ -156,5 +156,5 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets['GITHUB_TOKEN'] }}
-        branch: build
+        branch: uksgw22-build
         directory: ./nodecg/bundles/esa-layouts

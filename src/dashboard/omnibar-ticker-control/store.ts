@@ -23,7 +23,7 @@ class OurModule extends VuexModule {
   @Mutation
   setLocalRotation({ val, manual = false }: { val: Omnibar['rotation'], manual?: boolean }): void {
     this.localRotation = clone(val);
-    if (manual) this.localEdits = true;
+    this.localEdits = manual;
   }
 
   /**

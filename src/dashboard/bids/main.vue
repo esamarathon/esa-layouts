@@ -51,7 +51,7 @@ export default class extends Vue {
   searchTerm: string | null = null;
 
   get pinnedBid(): Bids[0] | undefined {
-    return this.currentPin?.type === 'bid'
+    return this.currentPin?.type === 'Bid'
       ? this.bids.find((b) => b.id === this.currentPin?.id)
       : undefined;
   }
@@ -65,7 +65,7 @@ export default class extends Vue {
 
   get bidsFiltered(): Partial<Bids[0]>[] {
     const filtered: Partial<Bids[0]>[] = [];
-    if (!this.pinnedBid && this.currentPin?.type === 'bid') {
+    if (!this.pinnedBid && this.currentPin?.type === 'Bid') {
       filtered.push({ name: 'Pinned bid no longer available!', id: this.currentPin.id as number });
     }
     filtered.push(...this.bidsSorted.filter((b) => {

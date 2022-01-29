@@ -89,10 +89,11 @@ import { formatUSD, wait } from '@esa-layouts/graphics/_misc/helpers';
 import { Bids } from '@esa-layouts/types/schemas';
 import { Vue, Component, Prop, Ref } from 'vue-property-decorator';
 import gsap from 'gsap';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { orderBy } from 'lodash';
 import clone from 'clone';
 
-/** This component does not implement the "pin" feature correctly yet! */
+gsap.registerPlugin(ScrollToPlugin);
 
 @Component
 export default class extends Vue {
@@ -101,6 +102,7 @@ export default class extends Vue {
   @Ref('OptionsBar') optionsBar!: HTMLElement;
   formatUSD = formatUSD;
   bid!: Bids[0];
+  timeline: gsap.core.Timeline | undefined;
 
   get options(): { id: number, name: string, total: number, winning: boolean }[] {
     const ordered = orderBy(this.bid.options, ['total'], ['desc']);
@@ -113,7 +115,7 @@ export default class extends Vue {
     return Array.isArray(rep) ? rep[0] : rep;
   }
 
-  created(): void {
+  async created(): Promise<void> {
     // Copied in case the prop changes and ruins the animations.
     // In the current setup, this doesn't happen though (or shouldn't!).
     this.bid = clone(this.bidOriginal);
@@ -122,14 +124,21 @@ export default class extends Vue {
   async mounted(): Promise<void> {
     // If no need to scroll, just wait a flat X seconds before ending.
     if (this.optionsBar.scrollWidth <= this.optionsBar.clientWidth) {
-      await wait(this.seconds * 1000);
-      this.$emit('end');
+      if (this.seconds >= 0) {
+        await wait(this.seconds * 1000);
+        this.$emit('end');
+      }
     } else {
-      const timeline = gsap.timeline({
+      this.timeline = gsap.timeline({
         paused: true,
         onComplete: () => {
           window.setTimeout(() => {
-            this.$emit('end');
+            if (this.seconds >= 0) {
+              this.$emit('end');
+            } else {
+              // If pinned, restart the timeline on end.
+              this.timeline?.restart();
+            }
           }, 4000);
         },
       });
@@ -148,14 +157,28 @@ export default class extends Vue {
       for (let i = 1; i < loopLength; i += 1) {
         const rep = this.getRef(`Option${i + 1}`);
         const endPos = this.optionsBar.scrollWidth - this.optionsBar.clientWidth;
-        timeline.to(this.optionsBar, {
+        this.timeline.to(this.optionsBar, {
           scrollLeft: Math.min(rep.offsetLeft, endPos),
           duration: 2,
         }, i > 1 ? `+=${Math.max((this.seconds - 8) / (scrollCount + 1), 2)}` : undefined);
         if (endPos <= rep.offsetLeft) break;
       }
-      timeline.resume();
+
+      // If pinned, scroll back to the start on finish.
+      if (this.seconds < 1) {
+        this.timeline.to(this.optionsBar, {
+          scrollTo: { x: 0 },
+          duration: 2,
+        }, '+=4');
+      }
+
+      this.timeline.resume();
     }
+  }
+
+  beforeDestroy(): void {
+    this.timeline?.kill();
+    delete this.timeline;
   }
 }
 </script>

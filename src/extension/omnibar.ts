@@ -85,7 +85,34 @@ function getMilestone(): DonationTotalMilestones[0] | undefined {
 
 let loopsWithoutResult = 0;
 async function showNext(): Promise<void> {
-  if (omnibar.value.alertQueue.length) {
+  // If there is a pin to start showing.
+  const { pin } = omnibar.value;
+  if (pin) {
+    let item: DonationTotalMilestones[0] | Bids[0] | undefined;
+    if (pin.type === 'Milestone') {
+      item = donationTotalMilestones.value.find((m) => m.id === pin.id);
+    } else if (pin.type === 'Bid') {
+      item = bids.value.find((b) => b.id === pin.id);
+    }
+    if (item) {
+      item = clone(item);
+      nodecg().log.debug('[Omnibar] Pin available, will show:', pin.type);
+      omnibar.value.current = {
+        type: pin.type,
+        id: uuid(),
+        props: {
+          seconds: -1,
+          bid: pin.type === 'Bid' ? item : undefined,
+          milestone: pin.type === 'Milestone' ? item : undefined,
+        },
+      };
+    } else {
+      // If the pin item wasn't found, erase it and continue on.
+      omnibar.value.pin = null;
+      // showNext(); This is done in the "omnibar" replicant change listener
+    }
+  // If there is alerts in the queue to show.
+  } else if (omnibar.value.alertQueue.length) {
     const alert = omnibar.value.alertQueue.shift();
     if (alert) {
       nodecg().log.debug('[Omnibar] Alert available, will show:', alert?.type);
@@ -148,6 +175,12 @@ omnibar.on('change', (newVal, oldVal) => {
   if (!newVal.current && oldVal
   && ((newVal.rotation.length && !oldVal.rotation.length)
   || (newVal.alertQueue.length && !oldVal.alertQueue.length))) {
+    showNext();
+  }
+
+  // If a pin is removed, continue cycle.
+  if (oldVal && oldVal.pin && !newVal.pin) {
+    nodecg().log.debug('[Omnibar] Pin removed, will continue');
     showNext();
   }
 });

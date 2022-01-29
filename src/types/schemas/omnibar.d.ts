@@ -25,7 +25,7 @@ export interface Omnibar {
 	} | null;
 	lastId?: string;
 	pin: {
-		type: 'milestone' | 'bid';
+		type: 'Bid' | 'Milestone';
 		id: string | number;
 	} | null;
 }

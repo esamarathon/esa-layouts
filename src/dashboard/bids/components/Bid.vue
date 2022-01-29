@@ -36,7 +36,7 @@ export default class extends Vue {
   @replicantNS.State((s) => s.reps.omnibar.pin) readonly currentPin!: Omnibar['pin'];
 
   get isPinned(): boolean {
-    return this.currentPin?.type === 'bid' && this.currentPin.id === this.bid.id;
+    return this.currentPin?.type === 'Bid' && this.currentPin.id === this.bid.id;
   }
 
   pin(): void {

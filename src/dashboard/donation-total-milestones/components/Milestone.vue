@@ -143,7 +143,7 @@ export default class extends Vue {
   }
 
   get isPinned(): boolean {
-    return this.currentPin?.type === 'milestone' && this.currentPin.id === this.milestone.id;
+    return this.currentPin?.type === 'Milestone' && this.currentPin.id === this.milestone.id;
   }
 
   pin(): void {

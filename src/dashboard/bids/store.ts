@@ -17,7 +17,7 @@ class OurModule extends VuexModule {
   pinItem({ id, pinned }: { id: number, pinned: boolean }): void {
     replicantModule.setReplicant<Omnibar>({
       name: 'omnibar',
-      val: { ...replicantModule.repsTyped.omnibar, pin: pinned ? { type: 'bid', id } : null },
+      val: { ...replicantModule.repsTyped.omnibar, pin: pinned ? { type: 'Bid', id } : null },
     });
   }
 }

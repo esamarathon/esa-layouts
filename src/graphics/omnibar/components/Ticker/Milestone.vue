@@ -137,8 +137,10 @@ export default class extends Vue {
 
   async created(): Promise<void> {
     this.tweenValues();
-    await wait(this.seconds * 1000); // Wait the specified length.
-    this.end();
+    if (this.seconds >= 0) {
+      await wait(this.seconds * 1000); // Wait the specified length.
+      this.end();
+    }
   }
 }
 </script>

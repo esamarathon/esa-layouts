@@ -5,9 +5,9 @@
       <span class="font-weight-bold">Type:</span>
       Generic Message
     </div>
-    <div>
-      <span class="font-weight-bold">Message:</span>
-      {{ msg }}
+    <div class="d-flex">
+      <div class="font-weight-bold mr-1">Message:</div>
+      <div :style="{ 'white-space': 'pre-wrap' }">{{ msg }}</div>
     </div>
     <div>
       <span class="font-weight-bold">Length:</span>

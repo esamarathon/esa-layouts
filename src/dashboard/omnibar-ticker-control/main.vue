@@ -62,6 +62,20 @@
         <v-icon>mdi-refresh</v-icon>
       </v-btn>
     </div>
+
+    <!-- Cycle Information -->
+    <div v-if="currentItem.type" class="text-center mt-4">
+      <span class="font-weight-bold">Current:</span>
+      {{ currentItem.name }}
+      <br><span class="font-weight-bold">{{ currentItem.secondsStr }}:</span>
+      {{ currentItem.seconds }} -
+      <span class="font-weight-bold">Position:</span>
+      {{ (currentItem.index + 1) || '?' }}/{{ omnibar.rotation.length }}
+      <template v-if="currentItem.type === 'GenericMsg'">
+        <br><span class="font-weight-bold">Message:</span>
+        {{ currentItem.msg }}
+      </template>
+    </div>
   </v-app>
 </template>
 
@@ -123,6 +137,26 @@ export default class IntermissionControl extends Vue {
 
   get isEdited(): boolean {
     return storeModule.localEdits;
+  }
+
+  get currentItem(): {
+    index: number,
+    type?: string,
+    name?: string,
+    seconds: number,
+    secondsStr: string,
+    msg: string,
+  } {
+    return {
+      index: this.omnibar.rotation.findIndex((r) => r.id === this.omnibar.current?.id),
+      type: this.omnibar.current?.type,
+      name: this.availableTypes.find((t) => t.key === this.omnibar.current?.type)?.name,
+      seconds: this.omnibar.current?.props?.seconds || 0,
+      secondsStr: this.omnibar.current?.type === 'Bid'
+        ? 'Minimum Length (seconds)'
+        : 'Length (seconds)',
+      msg: (this.omnibar.current?.props?.msg as string | undefined) || '',
+    };
   }
 
   setLocalRotationFromGlobal(val?: Omnibar['rotation']): void {

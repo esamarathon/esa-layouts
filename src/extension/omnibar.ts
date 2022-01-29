@@ -10,30 +10,36 @@ import { sc } from './util/speedcontrol';
 
 const config = nodecg().bundleConfig as Configschema;
 
-// Stored caches but not persistent through NodeCG restarts.
-let nextRunsCache: RunData[] = [];
-let prizesCache: Prizes = [];
+// Filter helper used below.
+function filterUpcomingRuns(run: RunData): boolean {
+  return !run.scheduledS || run.scheduledS >= (Date.now() / 1000);
+}
 
 // Gets next upcoming run from the cache (after refilling it if needed).
-// TODO: Refill cache *again* after filtering if this isn't a first cycle.
+let upcomingRunsCache: RunData[] = [];
 function getUpcomingRun(): RunData | undefined {
-  // Fill up cache if empty.
-  if (!nextRunsCache.length) nextRunsCache = sc.getNextRuns(4);
   // Filter out any already passed runs (according to schedule) from cache.
-  nextRunsCache = nextRunsCache.filter((r) => !r.scheduledS || r.scheduledS >= (Date.now() / 1000));
+  upcomingRunsCache = upcomingRunsCache.filter(filterUpcomingRuns);
+  // Fill up cache if empty, also run the filter again.
+  if (!upcomingRunsCache.length) upcomingRunsCache = sc.getNextRuns(4).filter(filterUpcomingRuns);
   // Just return nothing if cache now happens to be empty.
-  if (!nextRunsCache.length) return undefined;
-  return nextRunsCache.shift();
+  if (!upcomingRunsCache.length) return undefined;
+  return upcomingRunsCache.shift();
+}
+
+// Filter helper used below.
+function filterPrizes(prize: Prizes[0]): boolean {
+  return !!prize.startTime && !!prize.endTime
+    && Date.now() > prize.startTime && Date.now() < prize.endTime;
 }
 
 // Gets next currently active prize from the cache (after refilling it if needed).
-// TODO: Refill cache *again* after filtering if this isn't a first cycle.
+let prizesCache: Prizes = [];
 function getPrize(): Prizes[0] | undefined {
-  // Fill up cache if empty, only include currently active prizes.
-  if (!prizesCache.length) prizesCache = clone(prizes.value);
   // Filter out any currently inactive prizes from cache.
-  prizesCache = prizesCache.filter((prize) => !!prize.startTime && !!prize.endTime
-    && Date.now() > prize.startTime && Date.now() < prize.endTime);
+  prizesCache = prizesCache.filter(filterPrizes);
+  // Fill up cache if empty, also run the filter again.
+  if (!prizesCache.length) prizesCache = clone(prizes.value).filter(filterPrizes);
   // Just return nothing if cache now happens to be empty.
   if (!prizesCache.length) return undefined;
   return prizesCache.shift();
@@ -44,8 +50,9 @@ let lastBidId = -1;
 function getBid(): Bids[0] | undefined {
   // Just return nothing if there are no bids to show.
   if (!bids.value.length) return undefined;
-  const choices = clone(bids.value)
-    .reduce<{ bid: Bids[0], cumulativeWeight: number }[]>((prev, bid) => {
+  let filtered = clone(bids.value).filter((b) => b.id !== lastBidId);
+  if (!filtered.length) filtered = clone(bids.value);
+  const choices = filtered.reduce<{ bid: Bids[0], cumulativeWeight: number }[]>((prev, bid) => {
     // Weight: (15 minutes / time between now and prize ending), to the power of itself.
     // This is also capped between 0 and 1. Basically, anything in the next
     // 15 minutes is weighted 1, and after that quickly
@@ -63,13 +70,17 @@ function getBid(): Bids[0] | undefined {
 }
 
 // Gets a random active milestone.
-// TODO: Make this sequential?
+let lastMilestoneId = '';
 function getMilestone(): DonationTotalMilestones[0] | undefined {
-  const filtered = donationTotalMilestones.value.filter((m) => m.enabled && m.amount);
-  // Just return nothing if there are no filtered milestones to show.
-  if (!filtered.length) return undefined;
+  const active = clone(donationTotalMilestones.value).filter((m) => m.enabled && m.amount);
+  // Just return nothing if there are no active milestones to show.
+  if (!active.length) return undefined;
+  let filtered = active.filter((m) => m.id !== lastMilestoneId);
+  if (!filtered.length) filtered = active;
   const rand = Math.floor(Math.random() * filtered.length);
-  return clone(filtered[rand]);
+  const chosen = filtered[rand];
+  lastMilestoneId = chosen.id;
+  return chosen;
 }
 
 // TODO: Work out what to do if we get stuck on an infinite loop.

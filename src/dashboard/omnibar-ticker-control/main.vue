@@ -64,7 +64,7 @@
     </div>
 
     <!-- Cycle Information -->
-    <div v-if="currentItem.key" class="text-center mt-4">
+    <div v-if="currentItem.type" class="text-center mt-4">
       <span class="font-weight-bold">Current:</span>
       {{ currentItem.name }}
       <br><span class="font-weight-bold">{{ currentItem.secondsStr }}:</span>

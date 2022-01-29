@@ -39,8 +39,7 @@ export default class extends Vue {
     this.timeline.to(this.transitionBlock, {
       x: '-210vw',
       duration: slowdown * 1,
-      ease:
-      'slow(0.1, 0.8, false)',
+      ease: 'slow(0.1, 0.8, false)',
     }, 0);
     this.timeline.to(this.leftBox, { width: `${75 * this.zoom}px`, duration: slowdown * 0.5 }, 0);
     this.timeline.to(this.rightBox, {

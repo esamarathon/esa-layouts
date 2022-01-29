@@ -132,25 +132,15 @@ export default class extends Vue {
   }
 
   end(): void {
-    // total.removeListener('change', this.tweenValues); // TODO: This would update in real time
     this.$emit('end');
   }
 
   async created(): Promise<void> {
-    // total.on('change', this.tweenValues); // TODO: This would update in real time
     this.tweenValues();
-    // TODO: This handled removing pinned milestones!
-    /* if (pin.value?.type === 'milestone' && pin.value.id === this.milestone.id) {
-      const func = (val: OmnibarPin) => {
-        if (val?.type !== 'milestone' || val.id !== this.milestone?.id) {
-          pin.removeListener('change', func);
-          this.end();
-        }
-      };
-      pin.on('change', func);
-    } */
-    await wait(this.seconds * 1000); // Wait the specified length.
-    this.end();
+    if (this.seconds >= 0) {
+      await wait(this.seconds * 1000); // Wait the specified length.
+      this.end();
+    }
   }
 }
 </script>

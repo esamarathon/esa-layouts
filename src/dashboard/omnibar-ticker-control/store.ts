@@ -11,6 +11,8 @@ Vue.use(Vuex);
 class OurModule extends VuexModule {
   localRotation: Omnibar['rotation'] = [];
   localEdits = false;
+  editItemId = '';
+  editDialog = false;
 
   // Helper getter to return all replicants.
   get reps(): ReplicantTypes {
@@ -23,7 +25,7 @@ class OurModule extends VuexModule {
   @Mutation
   setLocalRotation({ val, manual = false }: { val: Omnibar['rotation'], manual?: boolean }): void {
     this.localRotation = clone(val);
-    if (manual) this.localEdits = true;
+    this.localEdits = manual;
   }
 
   /**
@@ -46,6 +48,34 @@ class OurModule extends VuexModule {
     const index = this.localRotation.findIndex((r) => r.id === id);
     if (index >= 0) {
       this.localRotation.splice(index, 1);
+      this.localEdits = true;
+    }
+  }
+
+  /**
+   * Changes the ID of the item to be edited, or erases it.
+   */
+  @Mutation
+  changeEditItemId(val?: string): void {
+    this.editItemId = val || '';
+  }
+
+  /**
+   * Toggles the "editDialog" boolean.
+   */
+  @Mutation
+  toggleEditDialog(val: boolean): void {
+    this.editDialog = val;
+  }
+
+  /**
+   * Updates an item in the local rotation.
+   */
+  @Mutation
+  updateLocalItem(val: Omnibar['rotation'][0]): void {
+    const index = this.localRotation.findIndex((r) => r.id === val.id);
+    if (index >= 0) {
+      Vue.set(this.localRotation, index, clone(val));
       this.localEdits = true;
     }
   }

@@ -1,5 +1,8 @@
 <template>
   <v-app>
+    <!-- Edit Dialog -->
+    <edit-dialog />
+
     <!-- New Components -->
     <span class="text-h6">New Components</span>
     <draggable
@@ -50,10 +53,15 @@
       />
     </draggable>
 
-    <!-- Save -->
-    <v-btn class="mt-4" :disabled="!isEdited" @click="save">
-      Save
-    </v-btn>
+    <!-- Save/Revert -->
+    <div class="d-flex mt-2">
+      <v-btn class="flex-grow-1 mr-2" :disabled="!isEdited" @click="save">
+        Save
+      </v-btn>
+      <v-btn :disabled="!isEdited" @click="setLocalRotationFromGlobal()">
+        <v-icon>mdi-refresh</v-icon>
+      </v-btn>
+    </div>
   </v-app>
 </template>
 
@@ -64,6 +72,7 @@ import { Omnibar } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import Draggable from 'vuedraggable';
 import { v4 as uuid } from 'uuid';
+import EditDialog from './components/EditDialog.vue';
 import GenericMsg from './components/GenericMsg.vue';
 import Bid from './components/Bid.vue';
 import Milestone from './components/Milestone.vue';
@@ -73,6 +82,7 @@ import { storeModule } from './store';
 
 @Component({
   components: {
+    EditDialog,
     Draggable,
     GenericMsg,
     Bid,
@@ -115,13 +125,17 @@ export default class IntermissionControl extends Vue {
     return storeModule.localEdits;
   }
 
+  setLocalRotationFromGlobal(val?: Omnibar['rotation']): void {
+    storeModule.setLocalRotation({ val: clone(val || this.omnibar.rotation) });
+  }
+
   @Watch('omnibar.rotation')
   onGlobalRotationChange(val: Omnibar['rotation']): void {
-    if (!storeModule.localEdits) storeModule.setLocalRotation({ val: clone(val) });
+    if (!storeModule.localEdits) this.setLocalRotationFromGlobal(val);
   }
 
   created(): void {
-    storeModule.setLocalRotation({ val: clone(this.omnibar.rotation) });
+    this.setLocalRotationFromGlobal();
   }
 
   clone(original: { key: Omnibar['rotation'][0]['type'], name: string }): Omnibar['rotation'][0] {

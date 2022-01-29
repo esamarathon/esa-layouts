@@ -68,8 +68,8 @@ function generatePlaylist() {
 }
 // eslint-disable-next-line import/prefer-default-export
 async function startPlaylist() {
-    const playlist = generatePlaylist();
     try {
+        const playlist = generatePlaylist();
         player.loadPlaylist(playlist);
         replicants_1.videoPlayer.value.playing = true;
         // Switch to correct scene depending on if first element has a video or not.
@@ -91,6 +91,7 @@ async function startPlaylist() {
         (0, helpers_1.logError)('[Intermission Player] Could not be started', err);
         // Return to the intermission scene if there was an issue starting the playlist.
         await new Promise((res) => { setTimeout(res, 2000); });
+        // TODO: Should this be commercials scene if available?
         await (0, obs_1.changeScene)({ scene: config.obs.names.scenes.intermission });
     }
 }

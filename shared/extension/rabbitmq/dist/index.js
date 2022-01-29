@@ -189,25 +189,33 @@ var RabbitMQ = /** @class */ (function () {
         this.useTestData = useTestData;
         if (opts.config.enabled) {
             if (!useTestData) {
-                nodecg.log.info('[RabbitMQ] Setting up connection');
-                var conn = amqp_connection_manager_1.default.connect([this.url()], this.opts())
-                    .on('connect', function () {
-                    nodecg.log.info('[RabbitMQ] Server connection successful');
-                })
-                    .on('disconnect', function (err) {
-                    nodecg.log.warn('[RabbitMQ] Server connection closed');
-                    if (err) {
-                        nodecg.log.warn('[RabbitMQ] Server connection error');
-                        nodecg.log.debug('[RabbitMQ] Server connection error:', err);
-                    }
-                });
-                this.chan = conn.createChannel({
-                    json: false,
-                    setup: function (chan) { return _this.setupChan(chan); },
-                }).on('error', function (err) {
-                    nodecg.log.warn('[RabbitMQ] Server channel error');
-                    nodecg.log.debug('[RabbitMQ] Server channel error:', err);
-                });
+                try {
+                    nodecg.log.info('[RabbitMQ] Setting up connection');
+                    var conn = amqp_connection_manager_1.default.connect([this.url()], this.opts())
+                        .on('connect', function () {
+                        nodecg.log.info('[RabbitMQ] Server connection successful');
+                    })
+                        .on('disconnect', function (err) {
+                        nodecg.log.warn('[RabbitMQ] Server connection closed');
+                        if (err) {
+                            nodecg.log.warn('[RabbitMQ] Server connection error');
+                            nodecg.log.debug('[RabbitMQ] Server connection error:', err);
+                        }
+                    });
+                    this.chan = conn.createChannel({
+                        json: false,
+                        setup: function (chan) { return _this.setupChan(chan); },
+                    }).on('error', function (err) {
+                        nodecg.log.warn('[RabbitMQ] Server channel error');
+                        nodecg.log.debug('[RabbitMQ] Server channel error:', err);
+                    }).on('close', function () {
+                        nodecg.log.warn('[RabbitMQ] Server channel closed');
+                    });
+                }
+                catch (err) {
+                    nodecg.log.warn('[RabbitMQ] Some caught error, YOU PROBABLY NEED TO RESTART NODECG!');
+                    nodecg.log.debug('[RabbitMQ] Some caught error, YOU PROBABLY NEED TO RESTART NODECG!:', err);
+                }
             }
             else {
                 nodecg.listenFor('testRabbitMQ', function (_a) {
@@ -248,27 +256,33 @@ var RabbitMQ = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                chan.assertExchange(this.exchange, 'topic', { durable: true, autoDelete: true });
-                this.listenTopics.forEach(function (topic) {
-                    var queueName = "".concat(_this.exchange, "-").concat(_this.event, "-").concat(topic.name);
-                    if (_this.config.queuePrepend)
-                        queueName = "".concat(_this.config.queuePrepend, "_").concat(queueName);
-                    chan.assertExchange(topic.exchange, 'topic', { durable: true, autoDelete: true });
-                    chan.assertQueue(queueName, { durable: true, expires: 4 * 60 * 60 * 1000 });
-                    chan.bindQueue(queueName, topic.exchange, topic.key);
-                    chan.consume(queueName, function (msg) {
-                        if (msg && msg.content && _this.validateMsg(msg)) {
-                            setTimeout(function () {
-                                _this.evt.emit(topic.name, JSON.parse(msg.content.toString()));
-                            }, 0);
-                            _this.nodecg.log.debug('[RabbitMQ] Received message from topic %s: %s', topic.name, msg.content.toString());
-                        }
-                        if (msg) {
-                            chan.ack(msg);
-                        }
-                    }, { noAck: false });
-                });
-                this.nodecg.log.info('[RabbitMQ] Server connection listening for messages');
+                try {
+                    chan.assertExchange(this.exchange, 'topic', { durable: true, autoDelete: true });
+                    this.listenTopics.forEach(function (topic) {
+                        var queueName = "".concat(_this.exchange, "-").concat(_this.event, "-").concat(topic.name);
+                        if (_this.config.queuePrepend)
+                            queueName = "".concat(_this.config.queuePrepend, "_").concat(queueName);
+                        chan.assertExchange(topic.exchange, 'topic', { durable: true, autoDelete: true });
+                        chan.assertQueue(queueName, { durable: true, expires: 4 * 60 * 60 * 1000 });
+                        chan.bindQueue(queueName, topic.exchange, topic.key);
+                        chan.consume(queueName, function (msg) {
+                            if (msg && msg.content && _this.validateMsg(msg)) {
+                                setTimeout(function () {
+                                    _this.evt.emit(topic.name, JSON.parse(msg.content.toString()));
+                                }, 0);
+                                _this.nodecg.log.debug('[RabbitMQ] Received message from topic %s: %s', topic.name, msg.content.toString());
+                            }
+                            if (msg) {
+                                chan.ack(msg);
+                            }
+                        }, { noAck: false });
+                    });
+                    this.nodecg.log.info('[RabbitMQ] Server connection listening for messages');
+                }
+                catch (err) {
+                    this.nodecg.log.warn('[RabbitMQ] Some caught channel error');
+                    this.nodecg.log.debug('[RabbitMQ] Some caught channel error:', err);
+                }
                 return [2 /*return*/];
             });
         });
@@ -281,23 +295,43 @@ var RabbitMQ = /** @class */ (function () {
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     RabbitMQ.prototype.send = function (key, data) {
-        if (!this.config.enabled) {
-            // RabbitMQ not enabled, don't even try to send.
-            return;
-        }
-        if (!this.chan && !this.useTestData) {
-            this.nodecg.log.debug('[RabbitMQ] Could not send message as channel is not defined');
-            return;
-        }
-        var newData = __assign(__assign({}, data), {
-            event: this.event,
-            time: getTimeInfo(),
+        return __awaiter(this, void 0, void 0, function () {
+            var newData, fullKey, err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.config.enabled) {
+                            // RabbitMQ not enabled, don't even try to send.
+                            return [2 /*return*/];
+                        }
+                        if (!this.chan && !this.useTestData) {
+                            this.nodecg.log.debug('[RabbitMQ] Could not send message as channel is not defined');
+                            return [2 /*return*/];
+                        }
+                        newData = __assign(__assign({}, data), {
+                            event: this.event,
+                            time: getTimeInfo(),
+                        });
+                        fullKey = "".concat(this.event, ".").concat(key);
+                        if (!(this.chan && !this.useTestData)) return [3 /*break*/, 4];
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.chan.publish(this.exchange, fullKey, Buffer.from(JSON.stringify(newData)), { persistent: true })];
+                    case 2:
+                        _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_1 = _a.sent();
+                        this.nodecg.log.warn('[RabbitMQ] Error sending message, YOU MAY NEED TO RESTART NODECG!');
+                        this.nodecg.log.debug('[RabbitMQ] Error sending message, YOU MAY NEED TO RESTART NODECG!:', err_1);
+                        return [3 /*break*/, 4];
+                    case 4:
+                        this.nodecg.log.debug('[RabbitMQ] Sending message with routing key: %s: %s', fullKey, JSON.stringify(newData));
+                        return [2 /*return*/];
+                }
+            });
         });
-        var fullKey = "".concat(this.event, ".").concat(key);
-        if (this.chan && !this.useTestData) {
-            this.chan.publish(this.exchange, fullKey, Buffer.from(JSON.stringify(newData)), { persistent: true });
-        }
-        this.nodecg.log.debug('[RabbitMQ] Sending message with routing key: %s: %s', fullKey, JSON.stringify(newData));
     };
     return RabbitMQ;
 }());

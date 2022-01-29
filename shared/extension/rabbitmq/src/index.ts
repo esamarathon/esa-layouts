@@ -168,25 +168,35 @@ class RabbitMQ {
 
     if (opts.config.enabled) {
       if (!useTestData) {
-        nodecg.log.info('[RabbitMQ] Setting up connection');
-        const conn = amqpConnectionManager.connect([this.url()], this.opts())
-          .on('connect', () => {
-            nodecg.log.info('[RabbitMQ] Server connection successful');
-          })
-          .on('disconnect', (err) => {
-            nodecg.log.warn('[RabbitMQ] Server connection closed');
-            if (err) {
-              nodecg.log.warn('[RabbitMQ] Server connection error');
-              nodecg.log.debug('[RabbitMQ] Server connection error:', err);
-            }
+        try {
+          nodecg.log.info('[RabbitMQ] Setting up connection');
+          const conn = amqpConnectionManager.connect([this.url()], this.opts())
+            .on('connect', () => {
+              nodecg.log.info('[RabbitMQ] Server connection successful');
+            })
+            .on('disconnect', (err) => {
+              nodecg.log.warn('[RabbitMQ] Server connection closed');
+              if (err) {
+                nodecg.log.warn('[RabbitMQ] Server connection error');
+                nodecg.log.debug('[RabbitMQ] Server connection error:', err);
+              }
+            });
+          this.chan = conn.createChannel({
+            json: false,
+            setup: (chan: ConfirmChannel) => this.setupChan(chan),
+          }).on('error', (err) => {
+            nodecg.log.warn('[RabbitMQ] Server channel error');
+            nodecg.log.debug('[RabbitMQ] Server channel error:', err);
+          }).on('close', () => {
+            nodecg.log.warn('[RabbitMQ] Server channel closed');
           });
-        this.chan = conn.createChannel({
-          json: false,
-          setup: (chan: ConfirmChannel) => this.setupChan(chan),
-        }).on('error', (err) => {
-          nodecg.log.warn('[RabbitMQ] Server channel error');
-          nodecg.log.debug('[RabbitMQ] Server channel error:', err);
-        });
+        } catch (err) {
+          nodecg.log.warn('[RabbitMQ] Some caught error, YOU PROBABLY NEED TO RESTART NODECG!');
+          nodecg.log.debug(
+            '[RabbitMQ] Some caught error, YOU PROBABLY NEED TO RESTART NODECG!:',
+            err,
+          );
+        }
       } else {
         nodecg.listenFor(
           'testRabbitMQ',
@@ -239,30 +249,35 @@ class RabbitMQ {
   }
 
   private async setupChan(chan: ConfirmChannel): Promise<void> {
-    chan.assertExchange(this.exchange, 'topic', { durable: true, autoDelete: true });
-    this.listenTopics.forEach((topic) => {
-      let queueName = `${this.exchange}-${this.event}-${topic.name}`;
-      if (this.config.queuePrepend) queueName = `${this.config.queuePrepend}_${queueName}`;
-      chan.assertExchange(topic.exchange, 'topic', { durable: true, autoDelete: true });
-      chan.assertQueue(queueName, { durable: true, expires: 4 * 60 * 60 * 1000 });
-      chan.bindQueue(queueName, topic.exchange, topic.key);
-      chan.consume(queueName, (msg) => {
-        if (msg && msg.content && this.validateMsg(msg)) {
-          setTimeout(() => {
-            this.evt.emit(topic.name, JSON.parse(msg.content.toString()));
-          }, 0);
-          this.nodecg.log.debug(
-            '[RabbitMQ] Received message from topic %s: %s',
-            topic.name,
-            msg.content.toString(),
-          );
-        }
-        if (msg) {
-          chan.ack(msg);
-        }
-      }, { noAck: false });
-    });
-    this.nodecg.log.info('[RabbitMQ] Server connection listening for messages');
+    try {
+      chan.assertExchange(this.exchange, 'topic', { durable: true, autoDelete: true });
+      this.listenTopics.forEach((topic) => {
+        let queueName = `${this.exchange}-${this.event}-${topic.name}`;
+        if (this.config.queuePrepend) queueName = `${this.config.queuePrepend}_${queueName}`;
+        chan.assertExchange(topic.exchange, 'topic', { durable: true, autoDelete: true });
+        chan.assertQueue(queueName, { durable: true, expires: 4 * 60 * 60 * 1000 });
+        chan.bindQueue(queueName, topic.exchange, topic.key);
+        chan.consume(queueName, (msg) => {
+          if (msg && msg.content && this.validateMsg(msg)) {
+            setTimeout(() => {
+              this.evt.emit(topic.name, JSON.parse(msg.content.toString()));
+            }, 0);
+            this.nodecg.log.debug(
+              '[RabbitMQ] Received message from topic %s: %s',
+              topic.name,
+              msg.content.toString(),
+            );
+          }
+          if (msg) {
+            chan.ack(msg);
+          }
+        }, { noAck: false });
+      });
+      this.nodecg.log.info('[RabbitMQ] Server connection listening for messages');
+    } catch (err) {
+      this.nodecg.log.warn('[RabbitMQ] Some caught channel error');
+      this.nodecg.log.debug('[RabbitMQ] Some caught channel error:', err);
+    }
   }
 
   /**
@@ -272,7 +287,7 @@ class RabbitMQ {
    * @param data The data that should be sent in this message.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  send(key: string, data: { [k: string]: any }): void {
+  async send(key: string, data: { [k: string]: any }): Promise<void> {
     if (!this.config.enabled) {
       // RabbitMQ not enabled, don't even try to send.
       return;
@@ -290,12 +305,20 @@ class RabbitMQ {
     };
     const fullKey = `${this.event}.${key}`;
     if (this.chan && !this.useTestData) {
-      this.chan.publish(
-        this.exchange,
-        fullKey,
-        Buffer.from(JSON.stringify(newData)),
-        { persistent: true },
-      );
+      try {
+        await this.chan.publish(
+          this.exchange,
+          fullKey,
+          Buffer.from(JSON.stringify(newData)),
+          { persistent: true },
+        );
+      } catch (err) {
+        this.nodecg.log.warn('[RabbitMQ] Error sending message, YOU MAY NEED TO RESTART NODECG!');
+        this.nodecg.log.debug(
+          '[RabbitMQ] Error sending message, YOU MAY NEED TO RESTART NODECG!:',
+          err,
+        );
+      }
     }
     this.nodecg.log.debug(
       '[RabbitMQ] Sending message with routing key: %s: %s',

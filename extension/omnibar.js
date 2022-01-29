@@ -166,8 +166,7 @@ rabbitmq_1.mq.evt.on('newScreenedTweet', (data) => {
     message = message.replace(/\s\s+|\n/g, ' ');
     // Regex removes Twitter URL shortener links.
     message = message.replace(/https:\/\/t\.co\/\w+/g, (match) => {
-        var _a, _b;
-        if (((_b = (_a = msgData.entities) === null || _a === void 0 ? void 0 : _a.urls) === null || _b === void 0 ? void 0 : _b.length) > 0) {
+        if (msgData.entities.urls.length > 0) {
             const replacementUrl = msgData.entities.urls
                 .find((urlInfo) => urlInfo.url === match);
             if (replacementUrl)

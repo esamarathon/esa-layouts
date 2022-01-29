@@ -27,7 +27,7 @@ declare class RabbitMQ {
      */
     send(key: string, data: {
         [k: string]: any;
-    }): void;
+    }): Promise<void>;
 }
 export = RabbitMQ;
 //# sourceMappingURL=index.d.ts.map

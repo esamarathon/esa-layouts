@@ -161,6 +161,10 @@ const countryCodes = [
         code: 'ca',
     },
     {
+        name: 'Québec',
+        code: 'ca/qc',
+    },
+    {
         name: 'Cape Verde',
         code: 'cv',
     },

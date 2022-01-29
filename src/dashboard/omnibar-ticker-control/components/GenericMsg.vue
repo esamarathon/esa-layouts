@@ -7,7 +7,7 @@
     </div>
     <div>
       <span class="font-weight-bold">Message:</span>
-      {{ msg }}
+      <span :style="{ 'white-space': 'pre-wrap' }">{{ msg }}</span>
     </div>
     <div>
       <span class="font-weight-bold">Length:</span>

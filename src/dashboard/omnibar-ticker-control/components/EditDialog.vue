@@ -17,16 +17,18 @@
             :min="5"
           />
           <!-- Additional Fields -->
-          <v-text-field
-            v-for="{ name, key, icon } in additionalFields"
+          <component
+            v-for="{ elem, name, key, icon, rules, props } in additionalFields"
+            :is="elem"
             v-model="item.props[key]"
             :key="key"
             :label="name"
             :prepend-icon="icon"
             autocomplete="off"
-            :rules="[isRequired]"
+            :rules="rules"
             filled
             dense
+            v-bind="props"
           />
         </v-form>
       </v-card-text>
@@ -41,11 +43,18 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
+import { VTextarea } from 'vuetify/lib';
 import { Omnibar } from '@esa-layouts/types/schemas';
 import clone from 'clone';
+import { InputValidationRule } from 'vuetify/types';
 import { storeModule } from '../store';
 
-@Component
+@Component({
+  components: {
+    // Needed for dynamic components.
+    VTextarea,
+  },
+})
 export default class extends Vue {
   item: Omnibar['rotation'][0] | null = null;
   isFormValid = false;
@@ -58,14 +67,27 @@ export default class extends Vue {
     return 'Length (seconds)';
   }
 
-  get additionalFields(): { name: string, key: string, icon: string }[] {
+  get additionalFields(): {
+    elem: string,
+    name: string,
+    key: string,
+    icon: string,
+    rules: InputValidationRule[],
+    props: { [k: string]: boolean | number | string },
+  }[] {
     switch (this.item?.type) {
       case 'GenericMsg':
         return [
           {
+            elem: 'v-textarea',
             name: 'Message',
             key: 'msg',
             icon: 'mdi-android-messages',
+            rules: [this.isRequired, this.is2LinesOrLess],
+            props: {
+              'no-resize': true,
+              rows: 2,
+            },
           },
         ];
       default:
@@ -93,6 +115,10 @@ export default class extends Vue {
   isBiggerThan(val: string): boolean | string {
     const num = Number(val);
     return (!!num && num >= 5) || 'Must be 5 or higher';
+  }
+  is2LinesOrLess(val: string): boolean | string {
+    const lines = val.split('\n');
+    return lines.length <= 2 || 'Must be 2 lines or less';
   }
 
   secondsChanged(val: string): void {

@@ -83,8 +83,8 @@ function getMilestone(): DonationTotalMilestones[0] | undefined {
   return chosen;
 }
 
-// TODO: Work out what to do if we get stuck on an infinite loop.
-function showNext(): void {
+let loopsWithoutResult = 0;
+async function showNext(): Promise<void> {
   if (omnibar.value.alertQueue.length) {
     const alert = omnibar.value.alertQueue.shift();
     if (alert) {
@@ -106,11 +106,17 @@ function showNext(): void {
       omnibar.value.current = null;
       return;
     }
+    // If we get stuck in a loop, pause for 10s, then try again.
+    if (loopsWithoutResult >= omnibar.value.rotation.length) {
+      await new Promise((res) => { setTimeout(res, 10 * 1000); });
+      loopsWithoutResult = 0;
+    }
     const lastIndex = omnibar.value.rotation.findIndex((r) => r.id === omnibar.value.lastId);
     let nextIndex = lastIndex + 1;
     if (omnibar.value.rotation.length - 1 < nextIndex) nextIndex = 0;
     const next = omnibar.value.rotation[nextIndex];
     omnibar.value.lastId = next.id;
+    loopsWithoutResult += 1;
     if (next.type === 'UpcomingRun') {
       const run = getUpcomingRun();
       if (!run) { showNext(); return; }
@@ -130,6 +136,7 @@ function showNext(): void {
     } else {
       omnibar.value.current = clone(next);
     }
+    loopsWithoutResult = 0;
     nodecg().log.debug('[Omnibar] Will now show message of type:', next.type);
   }
 }

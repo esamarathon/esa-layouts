@@ -7,7 +7,7 @@
           <v-text-field
             :value="item.props.seconds"
             @change="secondsChanged"
-            label="Length (seconds)"
+            :label="secondsStr"
             prepend-icon="mdi-timer"
             autocomplete="off"
             :rules="[isRequired, isNumber, isBiggerThan]"
@@ -15,6 +15,18 @@
             dense
             type="number"
             :min="5"
+          />
+          <!-- Additional Fields -->
+          <v-text-field
+            v-for="{ name, key, icon } in additionalFields"
+            v-model="item.props[key]"
+            :key="key"
+            :label="name"
+            :prepend-icon="icon"
+            autocomplete="off"
+            :rules="[isRequired]"
+            filled
+            dense
           />
         </v-form>
       </v-card-text>
@@ -41,6 +53,26 @@ export default class extends Vue {
   get dialog(): boolean { return storeModule.editDialog; }
   set dialog(val: boolean) { storeModule.toggleEditDialog(val); }
 
+  get secondsStr(): string {
+    if (this.item?.type === 'Bid') return 'Minimum Length (seconds)';
+    return 'Length (seconds)';
+  }
+
+  get additionalFields(): { name: string, key: string, icon: string }[] {
+    switch (this.item?.type) {
+      case 'GenericMsg':
+        return [
+          {
+            name: 'Message',
+            key: 'msg',
+            icon: 'mdi-android-messages',
+          },
+        ];
+      default:
+        return [];
+    }
+  }
+
   @Watch('dialog')
   onDialogChanged(val: boolean): void {
     if (val) { // Open
@@ -60,7 +92,7 @@ export default class extends Vue {
   }
   isBiggerThan(val: string): boolean | string {
     const num = Number(val);
-    return (!!num && num > 5) || 'Must be bigger than 5';
+    return (!!num && num >= 5) || 'Must be 5 or higher';
   }
 
   secondsChanged(val: string): void {

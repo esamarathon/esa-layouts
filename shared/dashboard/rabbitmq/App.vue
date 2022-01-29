@@ -21,6 +21,12 @@
     <v-btn @click="cheer">
       Cheer
     </v-btn>
+    <v-btn @click="tweet">
+      Tweet
+    </v-btn>
+    <v-btn @click="crowdControl">
+      Crowd Control
+    </v-btn>
     <div class="d-flex align-center">
       <span title="ExampleUser1, he/him, exampleuser1, DE">Scan Tag 1:</span>
       <v-btn @click="scanTag(1, '1')">B.1</v-btn>
@@ -70,6 +76,12 @@ export default class extends Vue {
   }
   cheer(): void {
     nodecg.sendMessage('testRabbitMQ', { msgType: 'newScreenedCheer' });
+  }
+  tweet(): void {
+    nodecg.sendMessage('testRabbitMQ', { msgType: 'newScreenedTweet' });
+  }
+  crowdControl(): void {
+    nodecg.sendMessage('testRabbitMQ', { msgType: 'newScreenedCrowdControl' });
   }
   scanTag(tag: number, id: string): void {
     nodecg.sendMessage('testRabbitMQ', { msgType: 'bigbuttonTagScanned', data: { tag, id } });

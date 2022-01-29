@@ -114,7 +114,8 @@ const testData: {
   newScreenedCheer: OmnibarModeration.NewScreenedCheer;
   bigbuttonTagScanned: FlagCarrier.TagScanned;
   bigbuttonPressed: BigButton.ButtonPress;
-
+  newScreenedTweet: OmnibarModeration.NewScreenedTweet;
+  newScreenedCrowdControl: OmnibarModeration.NewScreenedCrowdControl;
 } = {
   donationFullyProcessed: generateDonationMsg(),
   newScreenedSub: {
@@ -137,6 +138,21 @@ const testData: {
   },
   bigbuttonTagScanned: generateUserTagMsg(1, '1'),
   bigbuttonPressed: generateBigbuttonPressMsg(1),
+  newScreenedTweet: {
+    message: {
+      full_text: 'Some lengthy tweet that will need some scrolling. '
+        + 'Some lengthy tweet that will need some scrolling? '
+        + 'Some lengthy tweet that will need some scrolling!',
+    },
+    user: {
+      name: 'Some Cool Twitter User',
+    },
+  },
+  newScreenedCrowdControl: {
+    message: {
+      trailing: 'SomeExampleUser has received 1000 coins!',
+    },
+  },
 };
 
 class RabbitMQ {
@@ -202,7 +218,8 @@ class RabbitMQ {
           'testRabbitMQ',
           ({ msgType, data }: {
             msgType: 'donationFullyProcessed' | 'newScreenedSub'
-            | 'newScreenedCheer' | 'bigbuttonTagScanned' | 'bigbuttonPressed',
+            | 'newScreenedCheer' | 'bigbuttonTagScanned' | 'bigbuttonPressed'
+            | 'newScreenedTweet' | 'newScreenedCrowdControl',
             data?: { [k: string]: unknown },
           }) => {
             if (msgType === 'donationFullyProcessed') {

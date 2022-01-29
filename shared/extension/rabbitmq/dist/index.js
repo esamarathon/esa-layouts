@@ -176,6 +176,21 @@ var testData = {
     },
     bigbuttonTagScanned: generateUserTagMsg(1, '1'),
     bigbuttonPressed: generateBigbuttonPressMsg(1),
+    newScreenedTweet: {
+        message: {
+            full_text: 'Some lengthy tweet that will need some scrolling. '
+                + 'Some lengthy tweet that will need some scrolling? '
+                + 'Some lengthy tweet that will need some scrolling!',
+        },
+        user: {
+            name: 'Some Cool Twitter User',
+        },
+    },
+    newScreenedCrowdControl: {
+        message: {
+            trailing: 'SomeExampleUser has received 1000 coins!',
+        },
+    },
 };
 var RabbitMQ = /** @class */ (function () {
     function RabbitMQ(nodecg, useTestData, opts) {

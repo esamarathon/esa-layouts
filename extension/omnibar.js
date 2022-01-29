@@ -11,59 +11,117 @@ const rabbitmq_1 = require("./util/rabbitmq");
 const replicants_1 = require("./util/replicants");
 const speedcontrol_1 = require("./util/speedcontrol");
 const config = (0, nodecg_1.get)().bundleConfig;
-// Stored caches but not persistent through NodeCG restarts.
-let nextRunsCache = [];
-let prizesCache = [];
+// Filter helper used below.
+function filterUpcomingRuns(run) {
+    return !run.scheduledS || run.scheduledS >= (Date.now() / 1000);
+}
 // Gets next upcoming run from the cache (after refilling it if needed).
-// TODO: Refill cache *again* after filtering if this isn't a first cycle.
+let upcomingRunsCache = [];
 function getUpcomingRun() {
-    // Fill up cache if empty.
-    if (!nextRunsCache.length)
-        nextRunsCache = speedcontrol_1.sc.getNextRuns(4);
     // Filter out any already passed runs (according to schedule) from cache.
-    nextRunsCache = nextRunsCache.filter((r) => !r.scheduledS || r.scheduledS >= (Date.now() / 1000));
+    upcomingRunsCache = upcomingRunsCache.filter(filterUpcomingRuns);
+    // Fill up cache if empty, also run the filter again.
+    if (!upcomingRunsCache.length)
+        upcomingRunsCache = speedcontrol_1.sc.getNextRuns(4).filter(filterUpcomingRuns);
     // Just return nothing if cache now happens to be empty.
-    if (!nextRunsCache.length)
+    if (!upcomingRunsCache.length)
         return undefined;
-    return nextRunsCache.shift();
+    return upcomingRunsCache.shift();
+}
+// Filter helper used below.
+function filterPrizes(prize) {
+    return !!prize.startTime && !!prize.endTime
+        && Date.now() > prize.startTime && Date.now() < prize.endTime;
 }
 // Gets next currently active prize from the cache (after refilling it if needed).
-// TODO: Refill cache *again* after filtering if this isn't a first cycle.
+let prizesCache = [];
 function getPrize() {
-    // Fill up cache if empty, only include currently active prizes.
-    if (!prizesCache.length)
-        prizesCache = (0, clone_1.default)(replicants_1.prizes.value);
     // Filter out any currently inactive prizes from cache.
-    prizesCache = prizesCache.filter((prize) => !!prize.startTime && !!prize.endTime
-        && Date.now() > prize.startTime && Date.now() < prize.endTime);
+    prizesCache = prizesCache.filter(filterPrizes);
+    // Fill up cache if empty, also run the filter again.
+    if (!prizesCache.length)
+        prizesCache = (0, clone_1.default)(replicants_1.prizes.value).filter(filterPrizes);
     // Just return nothing if cache now happens to be empty.
     if (!prizesCache.length)
         return undefined;
     return prizesCache.shift();
 }
-// Gets a random active milestone.
-// TODO: Make this sequential?
-// TODO: Implement original "weighted" code!
+// Gets a random (but weighted) active milestone.
+let lastBidId = -1;
 function getBid() {
+    var _a;
     // Just return nothing if there are no bids to show.
     if (!replicants_1.bids.value.length)
         return undefined;
-    const rand = Math.floor(Math.random() * replicants_1.bids.value.length);
-    return (0, clone_1.default)(replicants_1.bids.value[rand]);
+    let filtered = (0, clone_1.default)(replicants_1.bids.value).filter((b) => b.id !== lastBidId);
+    if (!filtered.length)
+        filtered = (0, clone_1.default)(replicants_1.bids.value);
+    const choices = filtered.reduce((prev, bid) => {
+        var _a, _b, _c;
+        // Weight: (15 minutes / time between now and prize ending), to the power of itself.
+        // This is also capped between 0 and 1. Basically, anything in the next
+        // 15 minutes is weighted 1, and after that quickly
+        // gets lower.
+        let weight = Math.max(Math.min((15 * 60 * 1000)
+            / Math.max(((_a = bid.endTime) !== null && _a !== void 0 ? _a : 0) - Date.now(), 0), 1), 0) ** 2;
+        if (bid.id === lastBidId && replicants_1.bids.value.length > 1)
+            weight = 0;
+        prev.push({ bid, cumulativeWeight: ((_c = (_b = prev.slice(-1)[0]) === null || _b === void 0 ? void 0 : _b.cumulativeWeight) !== null && _c !== void 0 ? _c : 0) + weight });
+        return prev;
+    }, []);
+    const rand = choices.slice(-1)[0].cumulativeWeight * Math.random();
+    const choice = choices.find((opt) => opt.cumulativeWeight >= rand);
+    lastBidId = (_a = choice === null || choice === void 0 ? void 0 : choice.bid.id) !== null && _a !== void 0 ? _a : -1;
+    return choice === null || choice === void 0 ? void 0 : choice.bid;
 }
 // Gets a random active milestone.
-// TODO: Make this sequential?
+let lastMilestoneId = '';
 function getMilestone() {
-    const filtered = replicants_1.donationTotalMilestones.value.filter((m) => m.enabled && m.amount);
-    // Just return nothing if there are no filtered milestones to show.
-    if (!filtered.length)
+    const active = (0, clone_1.default)(replicants_1.donationTotalMilestones.value).filter((m) => m.enabled && m.amount);
+    // Just return nothing if there are no active milestones to show.
+    if (!active.length)
         return undefined;
+    let filtered = active.filter((m) => m.id !== lastMilestoneId);
+    if (!filtered.length)
+        filtered = active;
     const rand = Math.floor(Math.random() * filtered.length);
-    return (0, clone_1.default)(filtered[rand]);
+    const chosen = filtered[rand];
+    lastMilestoneId = chosen.id;
+    return chosen;
 }
-// TODO: Work out what to do if we get stuck on an infinite loop.
-function showNext() {
-    if (replicants_1.omnibar.value.alertQueue.length) {
+let loopsWithoutResult = 0;
+async function showNext() {
+    // If there is a pin to start showing.
+    const { pin } = replicants_1.omnibar.value;
+    if (pin) {
+        let item;
+        if (pin.type === 'Milestone') {
+            item = replicants_1.donationTotalMilestones.value.find((m) => m.id === pin.id);
+        }
+        else if (pin.type === 'Bid') {
+            item = replicants_1.bids.value.find((b) => b.id === pin.id);
+        }
+        if (item) {
+            item = (0, clone_1.default)(item);
+            (0, nodecg_1.get)().log.debug('[Omnibar] Pin available, will show:', pin.type);
+            replicants_1.omnibar.value.current = {
+                type: pin.type,
+                id: (0, uuid_1.v4)(),
+                props: {
+                    seconds: -1,
+                    bid: pin.type === 'Bid' ? item : undefined,
+                    milestone: pin.type === 'Milestone' ? item : undefined,
+                },
+            };
+        }
+        else {
+            // If the pin item wasn't found, erase it and continue on.
+            replicants_1.omnibar.value.pin = null;
+            // showNext(); This is done in the "omnibar" replicant change listener
+        }
+        // If there is alerts in the queue to show.
+    }
+    else if (replicants_1.omnibar.value.alertQueue.length) {
         const alert = replicants_1.omnibar.value.alertQueue.shift();
         if (alert) {
             (0, nodecg_1.get)().log.debug('[Omnibar] Alert available, will show:', alert === null || alert === void 0 ? void 0 : alert.type);
@@ -72,6 +130,7 @@ function showNext() {
                 type,
                 id,
                 props: {
+                    seconds: 15,
                     msg: data === null || data === void 0 ? void 0 : data.msg,
                     user: data === null || data === void 0 ? void 0 : data.user, // Tweet
                 },
@@ -87,12 +146,18 @@ function showNext() {
             replicants_1.omnibar.value.current = null;
             return;
         }
+        // If we get stuck in a loop, pause for 10s, then try again.
+        if (loopsWithoutResult >= replicants_1.omnibar.value.rotation.length) {
+            await new Promise((res) => { setTimeout(res, 10 * 1000); });
+            loopsWithoutResult = 0;
+        }
         const lastIndex = replicants_1.omnibar.value.rotation.findIndex((r) => r.id === replicants_1.omnibar.value.lastId);
         let nextIndex = lastIndex + 1;
         if (replicants_1.omnibar.value.rotation.length - 1 < nextIndex)
             nextIndex = 0;
         const next = replicants_1.omnibar.value.rotation[nextIndex];
         replicants_1.omnibar.value.lastId = next.id;
+        loopsWithoutResult += 1;
         if (next.type === 'UpcomingRun') {
             const run = getUpcomingRun();
             if (!run) {
@@ -128,6 +193,7 @@ function showNext() {
         else {
             replicants_1.omnibar.value.current = (0, clone_1.default)(next);
         }
+        loopsWithoutResult = 0;
         (0, nodecg_1.get)().log.debug('[Omnibar] Will now show message of type:', next.type);
     }
 }
@@ -137,6 +203,11 @@ replicants_1.omnibar.on('change', (newVal, oldVal) => {
     if (!newVal.current && oldVal
         && ((newVal.rotation.length && !oldVal.rotation.length)
             || (newVal.alertQueue.length && !oldVal.alertQueue.length))) {
+        showNext();
+    }
+    // If a pin is removed, continue cycle.
+    if (oldVal && oldVal.pin && !newVal.pin) {
+        (0, nodecg_1.get)().log.debug('[Omnibar] Pin removed, will continue');
         showNext();
     }
 });

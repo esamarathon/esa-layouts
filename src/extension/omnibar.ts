@@ -39,14 +39,27 @@ function getPrize(): Prizes[0] | undefined {
   return prizesCache.shift();
 }
 
-// Gets a random active milestone.
-// TODO: Make this sequential?
-// TODO: Implement original "weighted" code!
+// Gets a random (but weighted) active milestone.
+let lastBidId = -1;
 function getBid(): Bids[0] | undefined {
   // Just return nothing if there are no bids to show.
   if (!bids.value.length) return undefined;
-  const rand = Math.floor(Math.random() * bids.value.length);
-  return clone(bids.value[rand]);
+  const choices = clone(bids.value)
+    .reduce<{ bid: Bids[0], cumulativeWeight: number }[]>((prev, bid) => {
+    // Weight: (15 minutes / time between now and prize ending), to the power of itself.
+    // This is also capped between 0 and 1. Basically, anything in the next
+    // 15 minutes is weighted 1, and after that quickly
+    // gets lower.
+    let weight = Math.max(Math.min((15 * 60 * 1000)
+      / Math.max((bid.endTime ?? 0) - Date.now(), 0), 1), 0) ** 2;
+    if (bid.id === lastBidId && bids.value.length > 1) weight = 0;
+    prev.push({ bid, cumulativeWeight: (prev.slice(-1)[0]?.cumulativeWeight ?? 0) + weight });
+    return prev;
+  }, []);
+  const rand = choices.slice(-1)[0].cumulativeWeight * Math.random();
+  const choice = choices.find((opt) => opt.cumulativeWeight >= rand);
+  lastBidId = choice?.bid.id ?? -1;
+  return choice?.bid;
 }
 
 // Gets a random active milestone.

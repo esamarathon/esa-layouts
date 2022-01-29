@@ -94,6 +94,7 @@ async function showNext(): Promise<void> {
         type,
         id,
         props: {
+          seconds: 15, // Hardcoded 15 seconds!
           msg: data?.msg, // Tweet, CrowdControl
           user: data?.user, // Tweet
         },

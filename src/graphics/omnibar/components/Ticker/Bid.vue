@@ -36,13 +36,7 @@ export default class extends Vue {
   @Prop({ type: Object, required: true }) readonly bid!: Bids[0];
 
   end(): void {
-    // bids.removeListener('change', this.onBidsChange); // TODO: This should update in realtime?
     this.$emit('end');
   }
-
-  /* async created(): Promise<void> {
-    await wait(this.seconds * 1000); // Wait the specified length.
-    this.$emit('end');
-  } */
 }
 </script>

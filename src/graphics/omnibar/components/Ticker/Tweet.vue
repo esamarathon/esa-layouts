@@ -70,6 +70,7 @@ export default class extends Vue {
       });
     } else {
       await wait((this.seconds - 4) * 1000); // Wait the specified length.
+      this.$emit('end');
     }
   }
 }

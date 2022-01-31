@@ -28,6 +28,7 @@ import { Omnibar } from '@esa-layouts/types/schemas';
 import { Vue, Component } from 'vue-property-decorator';
 import GenericMsg from './Ticker/GenericMsg.vue';
 import Tweet from './Ticker/Tweet.vue';
+import MiniCredits from './Ticker/MiniCredits.vue';
 import CrowdControl from './Ticker/CrowdControl.vue';
 import UpcomingRun from './Ticker/UpcomingRun.vue';
 import Prize from './Ticker/Prize.vue';
@@ -38,6 +39,7 @@ import Milestone from './Ticker/Milestone.vue';
   components: {
     GenericMsg,
     Tweet,
+    MiniCredits,
     CrowdControl,
     UpcomingRun,
     Prize,

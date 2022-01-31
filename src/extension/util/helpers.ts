@@ -13,6 +13,17 @@ export function padTimeNumber(num: number): string {
 }
 
 /**
+ * Simple formatter for displaying USD amounts.
+ * @param amount Amount as a integer/float.
+ */
+export function formatUSD(amount: number): string {
+  if (amount >= 100) {
+    return `$${Math.floor(amount).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+  }
+  return `$${amount.toFixed(2)}`;
+}
+
+/**
  * Returns the current event short according to the configuration file.
  */
 export function getCurrentEventShort(): string {

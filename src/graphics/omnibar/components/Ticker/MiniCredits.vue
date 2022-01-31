@@ -11,9 +11,8 @@
       'overflow': 'hidden',
     }"
   >
-    <!-- TODO: Change this string? -->
     <div :style="{ 'font-size': '21px' }">
-      Thanks to all these people!
+      {{ config.omnibar.miniCredits.header }}
     </div>
     <div
       ref="Msg"
@@ -33,6 +32,7 @@
 import { wait } from '@esa-layouts/graphics/_misc/helpers';
 import { Vue, Component, Prop, Ref } from 'vue-property-decorator';
 import gsap from 'gsap';
+import { Configschema } from '@esa-layouts/types/schemas';
 
 @Component({
   name: 'MiniCredits',
@@ -42,6 +42,7 @@ export default class extends Vue {
   @Prop({ type: Number, default: 25 }) readonly seconds!: number;
   @Ref('MiniCredits') elem!: HTMLDivElement;
   @Ref('Msg') msgElem!: HTMLDivElement;
+  config = nodecg.bundleConfig as Configschema;
 
   async created(): Promise<void> {
     // TODO: Allow the animation to be cancelled (not sure if needed but good practice to).

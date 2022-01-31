@@ -1,6 +1,7 @@
 import { Bids, Configschema, DonationTotalMilestones, Prizes } from '@esa-layouts/types/schemas';
 import type { OmnibarModeration, Tracker } from '@esamarathon/mq-events/types';
 import clone from 'clone';
+import { orderBy } from 'lodash';
 import { SpeedcontrolUtil } from 'speedcontrol-util';
 import { RunData } from 'speedcontrol-util/types';
 import { v4 as uuid } from 'uuid';
@@ -277,26 +278,42 @@ sc.on('timerStopped', () => {
   }
 
   // Collect all information needed.
-  // TODO: Remove (or add) pronouns where needed?
   const players = sc.runDataActiveRun.value
     ? SpeedcontrolUtil.formPlayerNamesStr(sc.runDataActiveRun.value)
     : undefined;
-  const comms = commentators.value.length
-    ? commentators.value.join(', ')
+  const comms = commentators.value.length // Regex removes pronouns
+    ? commentators.value.map((c) => c.replace(/\((.*?)\)/g, '').trim()).join(', ')
     : undefined;
-  const reader = donationReader.value;
-  const screeners = 'PRESET_LIST_OF_NAMES'; // TODO: Get from config!
-  const tech = 'PRESET_LIST_OF_NAMES'; // TODO: Get from config!
-  const donators = runDonations.length // TODO: Group donation totals by name!
-    ? runDonations.map((d) => `${d.donor_visiblename} (${formatUSD(d.amount)})`).join(', ')
+  const reader = donationReader.value?.replace(/\((.*?)\)/g, '').trim(); // Regex removes pronouns
+  const screeners = config.omnibar?.miniCredits?.screeners;
+  const tech = config.omnibar?.miniCredits?.tech;
+  const donators = runDonations.length
+    ? orderBy( // Groups donation totals amounts by name and sorts descending.
+      Object.entries(runDonations.reduce<{ [k: string]: number }>((prev, curr) => {
+        const obj = prev;
+        if (!obj[curr.donor_visiblename]) obj[curr.donor_visiblename] = 0;
+        obj[curr.donor_visiblename] += Number(curr.amount);
+        return obj;
+      }, {})).filter(([,v]) => v > 0).map(([k, v]) => `${k} (${formatUSD(v)})`),
+      (k, v) => v,
+      'desc',
+    ).join(', ')
     : undefined;
   const subscribers = runSubs.length // TODO: Update MQ event, change subgifts logic!
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ? runSubs.map((s) => (s as unknown as { [k: string]: any }).user.displayName).join(', ')
     : undefined;
   const cheers = runCheers.length
-    ? runCheers // TODO: Group cheer totals by name!
-      .map((c) => `${c.message.tags['display-name']} (${c.message.tags.bits} bits)`).join(', ')
+    ? orderBy( // Groups cheer amounts by name and sorts descending.
+      Object.entries(runCheers.reduce<{ [k: string]: number }>((prev, curr) => {
+        const obj = prev;
+        if (!obj[curr.message.tags['display-name']]) obj[curr.message.tags['display-name']] = 0;
+        obj[curr.message.tags['display-name']] += Number(curr.message.tags.bits);
+        return obj;
+      }, {})).filter(([,v]) => v > 0).map(([k, v]) => `${k} (${v} bits)`),
+      (k, v) => v,
+      'desc',
+    ).join(', ')
     : undefined;
 
   // Push actual data to the queue.
@@ -306,8 +323,12 @@ sc.on('timerStopped', () => {
     data: {
       seconds: 25,
       msg: [
-        players ? `Runner(s): ${players}` : undefined,
-        comms ? `Commentator(s): ${comms}` : undefined,
+        players
+          ? `Player${(sc.runDataActiveRun.value?.teams.length || 0) > 1 ? 's' : ''}: ${players}`
+          : undefined,
+        comms
+          ? `Commentator${commentators.value.length > 1 ? 's' : ''}: ${comms}`
+          : undefined,
         reader ? `Donation Reader: ${reader}` : undefined,
         screeners ? `Donation Screeners: ${screeners}` : undefined,
         tech ? `Tech Crew: ${tech}` : undefined,

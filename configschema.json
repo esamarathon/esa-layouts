@@ -64,6 +64,34 @@
         "online"
       ]
     },
+    "omnibar": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "miniCredits": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "header": {
+              "type": "string",
+              "default": "Thanks to all these people!"
+            },
+            "screeners": {
+              "type": "string"
+            },
+            "tech": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "header"
+          ]
+        }
+      },
+      "required": [
+        "miniCredits"
+      ]
+    },
     "streamdeck": {
       "type": "object",
       "additionalProperties": false,
@@ -436,6 +464,7 @@
   "required": [
     "useTestData",
     "event",
+    "omnibar",
     "streamdeck",
     "rabbitmq",
     "obs",

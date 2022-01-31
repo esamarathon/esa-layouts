@@ -184,10 +184,10 @@
 }
 
 
-.ticker-enter-active[data-v-38b0cdc2], .ticker-leave-active[data-v-38b0cdc2] {
+.ticker-enter-active[data-v-398b9a6c], .ticker-leave-active[data-v-398b9a6c] {
   transition: all .3s;
 }
-.ticker-enter[data-v-38b0cdc2], .ticker-leave-to[data-v-38b0cdc2] {
+.ticker-enter[data-v-398b9a6c], .ticker-leave-to[data-v-398b9a6c] {
   transform: translateX(20px);
   opacity: 0;
 }

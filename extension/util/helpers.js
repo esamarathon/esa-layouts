@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatSrcomPronouns = exports.logError = exports.getOtherStreamEventShort = exports.getCurrentEventShort = exports.padTimeNumber = void 0;
+exports.formatSrcomPronouns = exports.logError = exports.getOtherStreamEventShort = exports.getCurrentEventShort = exports.formatUSD = exports.padTimeNumber = void 0;
 const util_1 = __importDefault(require("util"));
 const nodecg_1 = require("./nodecg");
 const config = (0, nodecg_1.get)().bundleConfig;
@@ -15,6 +15,17 @@ function padTimeNumber(num) {
     return num.toString().padStart(2, '0');
 }
 exports.padTimeNumber = padTimeNumber;
+/**
+ * Simple formatter for displaying USD amounts.
+ * @param amount Amount as a integer/float.
+ */
+function formatUSD(amount) {
+    if (amount >= 100) {
+        return `$${Math.floor(amount).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+    }
+    return `$${amount.toFixed(2)}`;
+}
+exports.formatUSD = formatUSD;
 /**
  * Returns the current event short according to the configuration file.
  */

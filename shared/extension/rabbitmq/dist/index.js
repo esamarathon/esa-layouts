@@ -164,6 +164,9 @@ var testData = {
                     + '26 months, currently on a 26 month streak!',
             },
         },
+        user: {
+            displayName: 'ExampleUser',
+        },
     },
     newScreenedCheer: {
         message: {

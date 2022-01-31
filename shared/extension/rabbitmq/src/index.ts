@@ -110,7 +110,8 @@ function generateBigbuttonPressMsg(id: number): BigButton.ButtonPress {
 }
 const testData: {
   donationFullyProcessed: Tracker.DonationFullyProcessed;
-  newScreenedSub: OmnibarModeration.NewScreenedSub;
+  // newScreenedSub: OmnibarModeration.NewScreenedSub;
+  newScreenedSub: { [k: string]: unknown }; // TODO: Update MQ event!
   newScreenedCheer: OmnibarModeration.NewScreenedCheer;
   bigbuttonTagScanned: FlagCarrier.TagScanned;
   bigbuttonPressed: BigButton.ButtonPress;
@@ -125,6 +126,9 @@ const testData: {
         'system-msg': 'ExampleUser subscribed at Tier 1. They\'ve subscribed for '
           + '26 months, currently on a 26 month streak!',
       },
+    },
+    user: {
+      displayName: 'ExampleUser',
     },
   },
   newScreenedCheer: {

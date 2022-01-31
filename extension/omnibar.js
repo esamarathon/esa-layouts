@@ -4,13 +4,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const clone_1 = __importDefault(require("clone"));
+const speedcontrol_util_1 = require("speedcontrol-util");
 const uuid_1 = require("uuid");
+const helpers_1 = require("./util/helpers");
 const nodecg_1 = require("./util/nodecg");
 const obs_1 = __importDefault(require("./util/obs"));
 const rabbitmq_1 = require("./util/rabbitmq");
 const replicants_1 = require("./util/replicants");
 const speedcontrol_1 = require("./util/speedcontrol");
 const config = (0, nodecg_1.get)().bundleConfig;
+// Temporary storage for subscriptions/cheers/donations made during a run.
+// TODO: Move this to a replicant so it survives restarts!
+const runSubs = [];
+const runCheers = [];
+const runDonations = [];
 // Filter helper used below.
 function filterUpcomingRuns(run) {
     return !run.scheduledS || run.scheduledS >= (Date.now() / 1000);
@@ -130,7 +137,7 @@ async function showNext() {
                 type,
                 id,
                 props: {
-                    seconds: 15,
+                    seconds: (data === null || data === void 0 ? void 0 : data.seconds) || 15,
                     msg: data === null || data === void 0 ? void 0 : data.msg,
                     user: data === null || data === void 0 ? void 0 : data.user, // Tweet
                 },
@@ -268,4 +275,73 @@ rabbitmq_1.mq.evt.on('newScreenedCrowdControl', (data) => {
             },
         });
     }
+});
+// Pushes subscriptions/cheers/donations made during the run to the respective arrays.
+rabbitmq_1.mq.evt.on('newScreenedSub', (data) => {
+    runSubs.push(data);
+});
+rabbitmq_1.mq.evt.on('newScreenedCheer', (data) => {
+    runCheers.push(data);
+});
+rabbitmq_1.mq.evt.on('donationFullyProcessed', (data) => {
+    runDonations.push(data);
+});
+// Pushes our "mini credits" to the alert queue.
+// TODO: Change what triggers this?
+speedcontrol_1.sc.on('timerStopped', () => {
+    var _a;
+    (0, nodecg_1.get)().log.debug('[Omnibar] Timer stopped, generating mini credits');
+    // If there's any credits in the queue, removes them.
+    const oldCreditsIndex = replicants_1.omnibar.value.alertQueue.findIndex((a) => a.type === 'MiniCredits');
+    if (oldCreditsIndex >= 0)
+        replicants_1.omnibar.value.alertQueue.splice(oldCreditsIndex, 1);
+    // If the current omnibar message is already mini credits, also remove those.
+    if (((_a = replicants_1.omnibar.value.current) === null || _a === void 0 ? void 0 : _a.type) === 'MiniCredits') {
+        showNext();
+    }
+    // Collect all information needed.
+    // TODO: Remove (or add) pronouns where needed?
+    const players = speedcontrol_1.sc.runDataActiveRun.value
+        ? speedcontrol_util_1.SpeedcontrolUtil.formPlayerNamesStr(speedcontrol_1.sc.runDataActiveRun.value)
+        : undefined;
+    const comms = replicants_1.commentators.value.length
+        ? replicants_1.commentators.value.join(', ')
+        : undefined;
+    const reader = replicants_1.donationReader.value;
+    const screeners = 'PRESET_LIST_OF_NAMES'; // TODO: Get from config!
+    const tech = 'PRESET_LIST_OF_NAMES'; // TODO: Get from config!
+    const donators = runDonations.length // TODO: Group donation totals by name!
+        ? runDonations.map((d) => `${d.donor_visiblename} (${(0, helpers_1.formatUSD)(d.amount)})`).join(', ')
+        : undefined;
+    const subscribers = runSubs.length // TODO: Update MQ event, change subgifts logic!
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ? runSubs.map((s) => s.user.displayName).join(', ')
+        : undefined;
+    const cheers = runCheers.length
+        ? runCheers // TODO: Group cheer totals by name!
+            .map((c) => `${c.message.tags['display-name']} (${c.message.tags.bits} bits)`).join(', ')
+        : undefined;
+    // Push actual data to the queue.
+    replicants_1.omnibar.value.alertQueue.push({
+        type: 'MiniCredits',
+        id: (0, uuid_1.v4)(),
+        data: {
+            seconds: 25,
+            msg: [
+                players ? `Runner(s): ${players}` : undefined,
+                comms ? `Commentator(s): ${comms}` : undefined,
+                reader ? `Donation Reader: ${reader}` : undefined,
+                screeners ? `Donation Screeners: ${screeners}` : undefined,
+                tech ? `Tech Crew: ${tech}` : undefined,
+                donators ? `Donators: ${donators}` : undefined,
+                subscribers ? `Subscribers: ${subscribers}` : undefined,
+                cheers ? `Cheers: ${cheers}` : undefined,
+            ].filter(Boolean).join(' --- '),
+        },
+    });
+    // Erase the arrays storing the subscriptions/cheers/donations.
+    // TODO: Figure out how to keep them in case the mini credits are cancelled.
+    runSubs.length = 0;
+    runCheers.length = 0;
+    runDonations.length = 0;
 });

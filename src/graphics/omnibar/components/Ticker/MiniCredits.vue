@@ -1,6 +1,6 @@
 <template>
   <div
-    ref="Tweet"
+    ref="MiniCredits"
     class="Flex Alert"
     :style="{
       padding: '0 17px',
@@ -11,22 +11,15 @@
       'overflow': 'hidden',
     }"
   >
-    <div :style="{ 'font-size': '25px' }">
-      <img
-        src="../img/Twitter.png"
-        :style="{
-          height: '1.2em',
-          margin: '0 .05em 0 .1em',
-          'vertical-align': '-0.25em',
-        }"
-      >
-      {{ user }}
+    <!-- TODO: Change this string? -->
+    <div :style="{ 'font-size': '21px' }">
+      Thanks to all these people!
     </div>
     <div
       ref="Msg"
       :style="{
         position: 'relative',
-        'font-size': '23px',
+        'font-size': '29px',
         'white-space': 'nowrap',
         'overflow': 'hidden',
       }"
@@ -42,16 +35,16 @@ import { Vue, Component, Prop, Ref } from 'vue-property-decorator';
 import gsap from 'gsap';
 
 @Component({
-  name: 'CrowdControl',
+  name: 'MiniCredits',
 })
 export default class extends Vue {
-  @Prop({ type: String, default: 'User?' }) readonly user!: string;
   @Prop({ type: String, default: 'Message?' }) readonly msg!: string;
   @Prop({ type: Number, default: 25 }) readonly seconds!: number;
-  @Ref('Tweet') elem!: HTMLDivElement;
+  @Ref('MiniCredits') elem!: HTMLDivElement;
   @Ref('Msg') msgElem!: HTMLDivElement;
 
-  async mounted(): Promise<void> {
+  async created(): Promise<void> {
+    // TODO: Allow the animation to be cancelled (not sure if needed but good practice to).
     await wait(4000);
     const { paddingLeft, paddingRight } = getComputedStyle(this.elem);
     const maxWidth = this.elem.clientWidth - parseFloat(paddingLeft) - parseFloat(paddingRight);

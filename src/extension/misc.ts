@@ -49,20 +49,24 @@ mq.evt.on('gameSceneChanged', (data) => {
 
 let init = false;
 sc.runDataActiveRun.on('change', (newVal, oldVal) => {
-  // Reset the commentators when the run changes and
-  // not on the game layout scene (if OBS is connected).
+  // Do some stuff when the run changes and not on the game layout scene (if OBS is connected).
   if (oldVal?.id !== newVal?.id
   && ((!obs.connected && init)
   || (obs.connected && !obs.isCurrentScene(config.obs.names.scenes.gameLayout)))) {
-    commentators.value.length = 0;
-    bigbuttonPlayerMap.value = {};
-    // If not online, we clear the teams on start, which will be re-added by scanning tags.
-    // TODO: Reselecting the current run would overwrite them, but not much I can do right now!
-    if (!config.event.online && sc.runDataActiveRun.value) {
-      sc.runDataActiveRun.value.teams = [];
-      nodecg().log.debug('[Misc] Removed active run teams on run change');
+    // Only trigger these changes if the new run has a scheduled time, which means it was
+    // imported from an external schedule. This stops manually added runs (like bonus runs)
+    // Having things erased.
+    if (sc.runDataActiveRun.value && newVal && newVal.scheduled) {
+      commentators.value.length = 0;
+      // If not online, we also clear the teams and big button player map.
+      if (!config.event.online) {
+        bigbuttonPlayerMap.value = {};
+        // TODO: Reselecting the current run would overwrite these, but not much I can do right now!
+        sc.runDataActiveRun.value.teams = [];
+        nodecg().log.debug('[Misc] Removed active run teams on run change');
+      }
+      nodecg().log.debug('[Misc] Cleared commentators and big button player mapping');
     }
-    nodecg().log.debug('[Misc] Cleared commentators and big button player mapping');
   }
 
   // This will also be triggered on server start up.

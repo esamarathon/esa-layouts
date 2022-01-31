@@ -12,14 +12,14 @@ export interface Omnibar {
 		props?: Props;
 	}[];
 	alertQueue: {
-		type: 'Tweet' | 'CrowdControl';
+		type: 'Tweet' | 'CrowdControl' | 'MiniCredits';
 		id: string;
 		data?: {
 			[k: string]: unknown;
 		};
 	}[];
 	current: {
-		type: ('GenericMsg' | 'UpcomingRun' | 'Prize' | 'Bid' | 'Milestone') | ('Tweet' | 'CrowdControl');
+		type: ('GenericMsg' | 'UpcomingRun' | 'Prize' | 'Bid' | 'Milestone') | ('Tweet' | 'CrowdControl' | 'MiniCredits');
 		id: string;
 		props?: Props;
 	} | null;

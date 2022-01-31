@@ -25,7 +25,8 @@
         "type": "string",
         "enum": [
           "Tweet",
-          "CrowdControl"
+          "CrowdControl",
+          "MiniCredits"
         ]
       },
       "pins": {

@@ -150,7 +150,8 @@ export default class IntermissionControl extends Vue {
     return {
       index: this.omnibar.rotation.findIndex((r) => r.id === this.omnibar.current?.id),
       type: this.omnibar.current?.type,
-      name: this.availableTypes.find((t) => t.key === this.omnibar.current?.type)?.name,
+      name: this.availableTypes
+        .find((t) => t.key === this.omnibar.current?.type)?.name || this.omnibar.current?.type,
       seconds: this.omnibar.current?.props?.seconds || 0,
       secondsStr: this.omnibar.current?.type === 'Bid'
         ? 'Minimum Length (seconds)'

@@ -1,5 +1,4 @@
 import { Bids, Configschema, DonationTotalMilestones, Prizes } from '@esa-layouts/types/schemas';
-import type { OmnibarModeration, Tracker } from '@esamarathon/mq-events/types';
 import clone from 'clone';
 import { orderBy } from 'lodash';
 import { SpeedcontrolUtil } from 'speedcontrol-util';
@@ -13,12 +12,6 @@ import { bids, commentators, donationReader, donationTotalMilestones, omnibar, p
 import { sc } from './util/speedcontrol';
 
 const config = nodecg().bundleConfig as Configschema;
-
-// Temporary storage for subscriptions/cheers/donations made during a run.
-// TODO: Move this to a replicant so it survives restarts!
-const runSubs: OmnibarModeration.NewScreenedSub[] = [];
-const runCheers: OmnibarModeration.NewScreenedCheer[] = [];
-const runDonations: Tracker.DonationFullyProcessed[] = [];
 
 // Filter helper used below.
 function filterUpcomingRuns(run: RunData): boolean {
@@ -256,17 +249,17 @@ mq.evt.on('newScreenedCrowdControl', (data) => {
 
 // Pushes subscriptions/cheers/donations made during the run to the respective arrays.
 mq.evt.on('newScreenedSub', (data) => {
-  runSubs.push(data);
+  const overriddenTypes = data as unknown as never; // TODO: Update MQ event!
+  omnibar.value.miniCredits.runSubs.push(clone(overriddenTypes));
 });
 mq.evt.on('newScreenedCheer', (data) => {
-  runCheers.push(data);
+  omnibar.value.miniCredits.runCheers.push(clone(data));
 });
 mq.evt.on('donationFullyProcessed', (data) => {
-  runDonations.push(data);
+  omnibar.value.miniCredits.runDonations.push(clone(data));
 });
 
 // Pushes our "mini credits" to the alert queue.
-// TODO: Change what triggers this?
 sc.on('timerStopped', () => {
   nodecg().log.debug('[Omnibar] Timer stopped, generating mini credits');
   // If there's any credits in the queue, removes them.
@@ -278,6 +271,7 @@ sc.on('timerStopped', () => {
   }
 
   // Collect all information needed.
+  const { runSubs, runCheers, runDonations } = omnibar.value.miniCredits;
   const players = sc.runDataActiveRun.value
     ? SpeedcontrolUtil.formPlayerNamesStr(sc.runDataActiveRun.value)
     : undefined;
@@ -341,7 +335,7 @@ sc.on('timerStopped', () => {
 
   // Erase the arrays storing the subscriptions/cheers/donations.
   // TODO: Figure out how to keep them in case the mini credits are cancelled.
-  runSubs.length = 0;
-  runCheers.length = 0;
-  runDonations.length = 0;
+  omnibar.value.miniCredits.runSubs.length = 0;
+  omnibar.value.miniCredits.runCheers.length = 0;
+  omnibar.value.miniCredits.runDonations.length = 0;
 });

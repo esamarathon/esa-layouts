@@ -151,12 +151,47 @@
         }
       ],
       "default": null
+    },
+    "miniCredits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "runSubs": {
+          "type": "array",
+          "items": {
+            "$comment": "TODO: Update MQ event!",
+            "type": "object",
+            "additionalProperties": true
+          },
+          "default": []
+        },
+        "runCheers": {
+          "type": "array",
+          "items": {
+            "$ref": "../node_modules/@esamarathon/mq-events/definitions/OmnibarModeration/NewScreenedCheer.json"
+          },
+          "default": []
+        },
+        "runDonations": {
+          "type": "array",
+          "items": {
+            "$ref": "../node_modules/@esamarathon/mq-events/definitions/Tracker/DonationFullyProcessed.json"
+          },
+          "default": []
+        }
+      },
+      "required": [
+        "runSubs",
+        "runCheers",
+        "runDonations"
+      ]
     }
   },
   "required": [
     "rotation",
     "alertQueue",
     "current",
-    "pin"
+    "pin",
+    "miniCredits"
   ]
 }

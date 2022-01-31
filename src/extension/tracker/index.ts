@@ -1,5 +1,6 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import type { Tracker } from '@shared/types';
+import clone from 'clone';
 import type { NeedleResponse } from 'needle';
 import needle from 'needle';
 import { get as nodecg } from '../util/nodecg';
@@ -81,7 +82,7 @@ mq.evt.on('donationFullyProcessed', (data) => {
     nodecg().log.debug('[Tracker] Received new donation with ID %s', data._id);
     nodecg().sendMessage('newDonation', data);
     if (data.amount >= 20) { // Notable donations are over $20
-      notableDonations.value.unshift(data);
+      notableDonations.value.unshift(clone(data));
       notableDonations.value.length = Math.min(notableDonations.value.length, 20);
     }
   }

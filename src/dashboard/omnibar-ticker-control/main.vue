@@ -153,7 +153,7 @@ export default class IntermissionControl extends Vue {
       name: this.availableTypes
         .find((t) => t.key === this.omnibar.current?.type)?.name || this.omnibar.current?.type,
       seconds: this.omnibar.current?.props?.seconds || 0,
-      secondsStr: this.omnibar.current?.type === 'Bid'
+      secondsStr: ['Bid', 'MiniCredits'].includes(this.omnibar.current?.type || '')
         ? 'Minimum Length (seconds)'
         : 'Length (seconds)',
       msg: (this.omnibar.current?.props?.msg as string | undefined) || '',

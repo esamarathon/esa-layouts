@@ -1,10 +1,8 @@
 import { Bids, Configschema, DonationTotalMilestones, Omnibar, Prizes } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import { orderBy } from 'lodash';
-import { SpeedcontrolUtil } from 'speedcontrol-util';
 import { RunData } from 'speedcontrol-util/types';
 import { v4 as uuid } from 'uuid';
-import { formatUSD } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
@@ -134,6 +132,16 @@ async function showNext(): Promise<void> {
           seconds: (data?.seconds as number | undefined) || 15, // Fallback 15 seconds!
           msg: data?.msg, // Tweet, CrowdControl
           user: data?.user, // Tweet
+
+          // MiniCredits
+          players: data?.players,
+          comms: data?.comms,
+          reader: data?.reader,
+          screeners: data?.screeners,
+          tech: data?.tech,
+          donators: data?.donators,
+          subscribers: data?.subscribers,
+          cheers: data?.cheers,
         },
       };
     } else showNext();
@@ -293,14 +301,15 @@ sc.on('timerStopped', () => {
   // Collect all information needed.
   const { runSubs, runCheers, runDonations } = tempMiniCreditsStorage;
   const players = sc.runDataActiveRun.value
-    ? SpeedcontrolUtil.formPlayerNamesStr(sc.runDataActiveRun.value)
+    ? sc.runDataActiveRun.value.teams.reduce<string[]>((prev, team) => {
+      prev.push(...team.players.map((p) => p.name));
+      return prev;
+    }, [])
     : undefined;
   const comms = commentators.value.length // Regex removes pronouns
-    ? commentators.value.map((c) => c.replace(/\((.*?)\)/g, '').trim()).join(', ')
+    ? commentators.value.map((c) => c.replace(/\((.*?)\)/g, '').trim())
     : undefined;
   const reader = donationReader.value?.replace(/\((.*?)\)/g, '').trim(); // Regex removes pronouns
-  const screeners = config.omnibar?.miniCredits?.screeners;
-  const tech = config.omnibar?.miniCredits?.tech;
   const donators = runDonations.length
     ? orderBy( // Groups donation totals amounts by name and sorts descending.
       Object.entries(runDonations.reduce<{ [k: string]: number }>((prev, curr) => {
@@ -308,14 +317,14 @@ sc.on('timerStopped', () => {
         if (!obj[curr.donor_visiblename]) obj[curr.donor_visiblename] = 0;
         obj[curr.donor_visiblename] += Number(curr.amount);
         return obj;
-      }, {})).filter(([,v]) => v > 0).map(([k, v]) => `${k} (${formatUSD(v)})`),
-      (k, v) => v,
+      }, {})).filter(([,v]) => v > 0),
+      ([,v]) => v,
       'desc',
-    ).join(', ')
+    )
     : undefined;
   const subscribers = runSubs.length // TODO: Update MQ event, change subgifts logic!
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ? runSubs.map((s) => (s as unknown as { [k: string]: any }).user.displayName).join(', ')
+    ? runSubs.map((s) => (s as unknown as { [k: string]: any }).user.displayName)
     : undefined;
   const cheers = runCheers.length
     ? orderBy( // Groups cheer amounts by name and sorts descending.
@@ -324,10 +333,10 @@ sc.on('timerStopped', () => {
         if (!obj[curr.message.tags['display-name']]) obj[curr.message.tags['display-name']] = 0;
         obj[curr.message.tags['display-name']] += Number(curr.message.tags.bits);
         return obj;
-      }, {})).filter(([,v]) => v > 0).map(([k, v]) => `${k} (${v} bits)`),
-      (k, v) => v,
+      }, {})).filter(([,v]) => v > 0),
+      ([,v]) => v,
       'desc',
-    ).join(', ')
+    )
     : undefined;
 
   // Push actual data to the queue.
@@ -336,20 +345,14 @@ sc.on('timerStopped', () => {
     id: uuid(),
     data: {
       seconds: 25,
-      msg: [
-        players
-          ? `Player${(sc.runDataActiveRun.value?.teams.length || 0) > 1 ? 's' : ''}: ${players}`
-          : undefined,
-        comms
-          ? `Commentator${commentators.value.length > 1 ? 's' : ''}: ${comms}`
-          : undefined,
-        reader ? `Donation Reader: ${reader}` : undefined,
-        screeners ? `Donation Screeners: ${screeners}` : undefined,
-        tech ? `Tech Crew: ${tech}` : undefined,
-        donators ? `Donators: ${donators}` : undefined,
-        subscribers ? `Subscribers: ${subscribers}` : undefined,
-        cheers ? `Cheers: ${cheers}` : undefined,
-      ].filter(Boolean).join(' --- '),
+      players,
+      comms,
+      reader,
+      screeners: config.omnibar?.miniCredits?.screeners,
+      tech: config.omnibar?.miniCredits?.tech,
+      donators,
+      subscribers,
+      cheers,
     },
   });
 });

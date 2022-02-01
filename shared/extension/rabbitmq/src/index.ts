@@ -21,7 +21,7 @@ function generateDonationMsg(): Tracker.DonationFullyProcessed {
   /* eslint-disable @typescript-eslint/naming-convention */
   return {
     event: 'testevt1',
-    _id: Math.random() * 1000000000,
+    _id: Math.floor(Math.random() * 1000000000),
     donor_visiblename: 'Anonymous',
     amount: Math.floor(Math.random() * 100),
     comment_state: 'APPROVED',

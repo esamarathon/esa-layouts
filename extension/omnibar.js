@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const clone_1 = __importDefault(require("clone"));
+const lodash_1 = require("lodash");
 const speedcontrol_util_1 = require("speedcontrol-util");
 const uuid_1 = require("uuid");
 const helpers_1 = require("./util/helpers");
@@ -13,11 +14,6 @@ const rabbitmq_1 = require("./util/rabbitmq");
 const replicants_1 = require("./util/replicants");
 const speedcontrol_1 = require("./util/speedcontrol");
 const config = (0, nodecg_1.get)().bundleConfig;
-// Temporary storage for subscriptions/cheers/donations made during a run.
-// TODO: Move this to a replicant so it survives restarts!
-const runSubs = [];
-const runCheers = [];
-const runDonations = [];
 // Filter helper used below.
 function filterUpcomingRuns(run) {
     return !run.scheduledS || run.scheduledS >= (Date.now() / 1000);
@@ -278,18 +274,18 @@ rabbitmq_1.mq.evt.on('newScreenedCrowdControl', (data) => {
 });
 // Pushes subscriptions/cheers/donations made during the run to the respective arrays.
 rabbitmq_1.mq.evt.on('newScreenedSub', (data) => {
-    runSubs.push(data);
+    const overriddenTypes = data; // TODO: Update MQ event!
+    replicants_1.omnibar.value.miniCredits.runSubs.push((0, clone_1.default)(overriddenTypes));
 });
 rabbitmq_1.mq.evt.on('newScreenedCheer', (data) => {
-    runCheers.push(data);
+    replicants_1.omnibar.value.miniCredits.runCheers.push((0, clone_1.default)(data));
 });
 rabbitmq_1.mq.evt.on('donationFullyProcessed', (data) => {
-    runDonations.push(data);
+    replicants_1.omnibar.value.miniCredits.runDonations.push((0, clone_1.default)(data));
 });
 // Pushes our "mini credits" to the alert queue.
-// TODO: Change what triggers this?
 speedcontrol_1.sc.on('timerStopped', () => {
-    var _a;
+    var _a, _b, _c, _d, _e, _f, _g;
     (0, nodecg_1.get)().log.debug('[Omnibar] Timer stopped, generating mini credits');
     // If there's any credits in the queue, removes them.
     const oldCreditsIndex = replicants_1.omnibar.value.alertQueue.findIndex((a) => a.type === 'MiniCredits');
@@ -300,26 +296,39 @@ speedcontrol_1.sc.on('timerStopped', () => {
         showNext();
     }
     // Collect all information needed.
-    // TODO: Remove (or add) pronouns where needed?
+    const { runSubs, runCheers, runDonations } = replicants_1.omnibar.value.miniCredits;
     const players = speedcontrol_1.sc.runDataActiveRun.value
         ? speedcontrol_util_1.SpeedcontrolUtil.formPlayerNamesStr(speedcontrol_1.sc.runDataActiveRun.value)
         : undefined;
-    const comms = replicants_1.commentators.value.length
-        ? replicants_1.commentators.value.join(', ')
+    const comms = replicants_1.commentators.value.length // Regex removes pronouns
+        ? replicants_1.commentators.value.map((c) => c.replace(/\((.*?)\)/g, '').trim()).join(', ')
         : undefined;
-    const reader = replicants_1.donationReader.value;
-    const screeners = 'PRESET_LIST_OF_NAMES'; // TODO: Get from config!
-    const tech = 'PRESET_LIST_OF_NAMES'; // TODO: Get from config!
-    const donators = runDonations.length // TODO: Group donation totals by name!
-        ? runDonations.map((d) => `${d.donor_visiblename} (${(0, helpers_1.formatUSD)(d.amount)})`).join(', ')
+    const reader = (_b = replicants_1.donationReader.value) === null || _b === void 0 ? void 0 : _b.replace(/\((.*?)\)/g, '').trim(); // Regex removes pronouns
+    const screeners = (_d = (_c = config.omnibar) === null || _c === void 0 ? void 0 : _c.miniCredits) === null || _d === void 0 ? void 0 : _d.screeners;
+    const tech = (_f = (_e = config.omnibar) === null || _e === void 0 ? void 0 : _e.miniCredits) === null || _f === void 0 ? void 0 : _f.tech;
+    const donators = runDonations.length
+        ? (0, lodash_1.orderBy)(// Groups donation totals amounts by name and sorts descending.
+        Object.entries(runDonations.reduce((prev, curr) => {
+            const obj = prev;
+            if (!obj[curr.donor_visiblename])
+                obj[curr.donor_visiblename] = 0;
+            obj[curr.donor_visiblename] += Number(curr.amount);
+            return obj;
+        }, {})).filter(([, v]) => v > 0).map(([k, v]) => `${k} (${(0, helpers_1.formatUSD)(v)})`), (k, v) => v, 'desc').join(', ')
         : undefined;
     const subscribers = runSubs.length // TODO: Update MQ event, change subgifts logic!
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ? runSubs.map((s) => s.user.displayName).join(', ')
         : undefined;
     const cheers = runCheers.length
-        ? runCheers // TODO: Group cheer totals by name!
-            .map((c) => `${c.message.tags['display-name']} (${c.message.tags.bits} bits)`).join(', ')
+        ? (0, lodash_1.orderBy)(// Groups cheer amounts by name and sorts descending.
+        Object.entries(runCheers.reduce((prev, curr) => {
+            const obj = prev;
+            if (!obj[curr.message.tags['display-name']])
+                obj[curr.message.tags['display-name']] = 0;
+            obj[curr.message.tags['display-name']] += Number(curr.message.tags.bits);
+            return obj;
+        }, {})).filter(([, v]) => v > 0).map(([k, v]) => `${k} (${v} bits)`), (k, v) => v, 'desc').join(', ')
         : undefined;
     // Push actual data to the queue.
     replicants_1.omnibar.value.alertQueue.push({
@@ -328,8 +337,12 @@ speedcontrol_1.sc.on('timerStopped', () => {
         data: {
             seconds: 25,
             msg: [
-                players ? `Runner(s): ${players}` : undefined,
-                comms ? `Commentator(s): ${comms}` : undefined,
+                players
+                    ? `Player${(((_g = speedcontrol_1.sc.runDataActiveRun.value) === null || _g === void 0 ? void 0 : _g.teams.length) || 0) > 1 ? 's' : ''}: ${players}`
+                    : undefined,
+                comms
+                    ? `Commentator${replicants_1.commentators.value.length > 1 ? 's' : ''}: ${comms}`
+                    : undefined,
                 reader ? `Donation Reader: ${reader}` : undefined,
                 screeners ? `Donation Screeners: ${screeners}` : undefined,
                 tech ? `Tech Crew: ${tech}` : undefined,
@@ -341,7 +354,7 @@ speedcontrol_1.sc.on('timerStopped', () => {
     });
     // Erase the arrays storing the subscriptions/cheers/donations.
     // TODO: Figure out how to keep them in case the mini credits are cancelled.
-    runSubs.length = 0;
-    runCheers.length = 0;
-    runDonations.length = 0;
+    replicants_1.omnibar.value.miniCredits.runSubs.length = 0;
+    replicants_1.omnibar.value.miniCredits.runCheers.length = 0;
+    replicants_1.omnibar.value.miniCredits.runDonations.length = 0;
 });

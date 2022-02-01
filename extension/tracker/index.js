@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCookies = exports.eventInfo = void 0;
+const clone_1 = __importDefault(require("clone"));
 const needle_1 = __importDefault(require("needle"));
 const nodecg_1 = require("../util/nodecg");
 const rabbitmq_1 = require("../util/rabbitmq");
@@ -76,7 +77,7 @@ rabbitmq_1.mq.evt.on('donationFullyProcessed', (data) => {
         (0, nodecg_1.get)().log.debug('[Tracker] Received new donation with ID %s', data._id);
         (0, nodecg_1.get)().sendMessage('newDonation', data);
         if (data.amount >= 20) { // Notable donations are over $20
-            replicants_1.notableDonations.value.unshift(data);
+            replicants_1.notableDonations.value.unshift((0, clone_1.default)(data));
             replicants_1.notableDonations.value.length = Math.min(replicants_1.notableDonations.value.length, 20);
         }
     }

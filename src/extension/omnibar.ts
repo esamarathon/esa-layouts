@@ -1,4 +1,4 @@
-import { Bids, Configschema, DonationTotalMilestones, Prizes } from '@esa-layouts/types/schemas';
+import { Bids, Configschema, DonationTotalMilestones, Omnibar, Prizes } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import { orderBy } from 'lodash';
 import { SpeedcontrolUtil } from 'speedcontrol-util';
@@ -12,6 +12,13 @@ import { bids, commentators, donationReader, donationTotalMilestones, omnibar, p
 import { sc } from './util/speedcontrol';
 
 const config = nodecg().bundleConfig as Configschema;
+
+// Temporary storage used for mini credits subscriptions/cheers/alerts while they are playing.
+let tempMiniCreditsStorage: Omnibar['miniCredits'] = {
+  runSubs: [],
+  runCheers: [],
+  runDonations: [],
+};
 
 // Filter helper used below.
 function filterUpcomingRuns(run: RunData): boolean {
@@ -190,6 +197,10 @@ omnibar.on('change', (newVal, oldVal) => {
 
 // Listens for messages from the graphic to change to the next message.
 nodecg().listenFor('omnibarShowNext', (data, ack) => {
+  // If omnibar was just showing mini credits and ended successfully, erase temp storage.
+  if (omnibar.value.current?.type === 'MiniCredits') {
+    tempMiniCreditsStorage = { runSubs: [], runCheers: [], runDonations: [] };
+  }
   showNext();
   if (ack && !ack?.handled) ack();
 });
@@ -270,8 +281,17 @@ sc.on('timerStopped', () => {
     showNext();
   }
 
+  // Adds the collected subscriptions/cheers/donations in a local object.
+  // These arrays will be empty if the last mini credits were ran successfully.
+  tempMiniCreditsStorage.runSubs.push(...clone(omnibar.value.miniCredits.runSubs));
+  tempMiniCreditsStorage.runCheers.push(...clone(omnibar.value.miniCredits.runCheers));
+  tempMiniCreditsStorage.runDonations.push(...clone(omnibar.value.miniCredits.runDonations));
+
+  // Erase the ones stored in the replicant.
+  omnibar.value.miniCredits = { runSubs: [], runCheers: [], runDonations: [] };
+
   // Collect all information needed.
-  const { runSubs, runCheers, runDonations } = omnibar.value.miniCredits;
+  const { runSubs, runCheers, runDonations } = tempMiniCreditsStorage;
   const players = sc.runDataActiveRun.value
     ? SpeedcontrolUtil.formPlayerNamesStr(sc.runDataActiveRun.value)
     : undefined;
@@ -332,10 +352,4 @@ sc.on('timerStopped', () => {
       ].filter(Boolean).join(' --- '),
     },
   });
-
-  // Erase the arrays storing the subscriptions/cheers/donations.
-  // TODO: Figure out how to keep them in case the mini credits are cancelled.
-  omnibar.value.miniCredits.runSubs.length = 0;
-  omnibar.value.miniCredits.runCheers.length = 0;
-  omnibar.value.miniCredits.runDonations.length = 0;
 });

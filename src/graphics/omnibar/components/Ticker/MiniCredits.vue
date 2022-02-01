@@ -106,6 +106,9 @@ export default class extends Vue {
       const msgWidth = this.msgElem.clientWidth;
       const scrollAmount = msgWidth - maxWidth;
       if (scrollAmount > 0) {
+        const pps = 110; // Pixels Per Second
+        const minLength = this.seconds - 4;
+        const length = Math.max(Math.round(scrollAmount / pps), minLength);
         this.timeline = gsap.timeline({
           onComplete: () => {
             window.setTimeout(() => {
@@ -115,7 +118,7 @@ export default class extends Vue {
         });
         this.timeline.to(this.msgElem, {
           x: `-${scrollAmount}px`,
-          duration: this.seconds - 4,
+          duration: length,
           ease: 'none',
         });
       } else {
@@ -138,7 +141,7 @@ export default class extends Vue {
 <style scoped>
   .Msg > span + span::before {
     content: '';
-    margin: 0 7px;
+    margin: 0 10px 0 7px;
   }
 
   .Title {

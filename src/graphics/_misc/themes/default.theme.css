@@ -178,3 +178,7 @@ body {
 #Omnibar .WarOther .OptionOther {
   background-color: #502f59;
 }
+
+#Omnibar .MiniCredits > .Msg > span + span::before {
+  border-left: solid white 5px;
+}

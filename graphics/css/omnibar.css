@@ -145,6 +145,15 @@
 }
 
 
+.Msg > span + span[data-v-42171e52]::before {
+  content: '';
+  margin: 0 10px 0 7px;
+}
+.Title[data-v-42171e52] {
+  font-weight: 600;
+}
+
+
 .BarText[data-v-662dbd64] {
   background-color: rgba(0, 0, 0, 0.4);
   padding: 7px 10px;

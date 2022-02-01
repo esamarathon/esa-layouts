@@ -278,6 +278,10 @@
       {
         "directory": "shared/flags",
         "endpoint": "flags"
+      },
+      {
+        "directory": "boxart",
+        "endpoint": "boxart"
       }
     ],
     "assetCategories": [

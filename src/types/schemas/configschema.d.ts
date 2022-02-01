@@ -13,6 +13,13 @@ export interface Configschema {
 		thisEvent: number;
 		online: boolean | ('partial' | 'full');
 	};
+	omnibar: {
+		miniCredits: {
+			header: string;
+			screeners?: string;
+			tech?: string;
+		};
+	};
 	streamdeck: {
 		enabled: boolean;
 		port: number;

@@ -300,8 +300,9 @@ sc.on('timerStopped', () => {
 
   // Collect all information needed.
   const { runSubs, runCheers, runDonations } = tempMiniCreditsStorage;
-  const players = sc.runDataActiveRun.value
-    ? sc.runDataActiveRun.value.teams.reduce<string[]>((prev, team) => {
+  const run = sc.getRunDataArray().find((r) => r.id === sc.runDataActiveRun.value?.id);
+  const players = run
+    ? run.teams.reduce<string[]>((prev, team) => {
       prev.push(...team.players.map((p) => p.name));
       return prev;
     }, [])

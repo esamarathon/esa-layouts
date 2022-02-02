@@ -1,8 +1,22 @@
+import { Asset } from '@shared/types';
+import clone from 'clone';
 import { writeFile } from 'fs/promises';
+import { orderBy } from 'lodash';
 import needle from 'needle';
 import { join } from 'path';
 import { get as nodecg } from './util/nodecg';
+import { assetsReaderIntroductionImages, readerIntroduction } from './util/replicants';
 import { sc } from './util/speedcontrol';
+
+let assetsTemp: Asset[] = [];
+
+/**
+ * Returns images sorted by name ascending.
+ * Name should start with a number to get these in the correct order!
+ */
+function assetsSorted(): Asset[] {
+  return orderBy(clone(assetsReaderIntroductionImages.value), 'name', 'asc');
+}
 
 /**
  * Actually does the Twitch API query for finding boxart URLs.
@@ -61,11 +75,18 @@ async function downloadBoxart(id: string): Promise<void> {
 }
 
 // Listens for current/next run ID changes and executes a boxart lookup/download.
+// Also resets the temporary assets array and current ID that should be shown on the graphic.
 // TODO: Should also do this if the game name in the run data is changed?
 //       Also maybe one day integrate this into nodecg-speedcontrol?
 let init = false;
 sc.runDataActiveRunSurrounding.on('change', async (newVal, oldVal) => {
   if (!init && newVal.current) await downloadBoxart(newVal.current);
-  if (init && newVal.next && newVal.next !== oldVal?.next) await downloadBoxart(newVal.next);
+  if (init) {
+    if (newVal.next && newVal.next !== oldVal?.next) await downloadBoxart(newVal.next);
+    if (newVal.current !== oldVal?.current) {
+      assetsTemp = assetsSorted();
+      readerIntroduction.value.current = assetsTemp[0].sum || 'RunInfo';
+    }
+  }
   init = true;
 });

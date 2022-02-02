@@ -10,6 +10,7 @@ import { get as nodecg } from './nodecg';
  */
 export const assetsIntermissionSlides = nodecg().Replicant<Asset[]>('assets:intermission-slides');
 export const assetsMediaBoxImages = nodecg().Replicant<Asset[]>('assets:media-box-images');
+export const assetsReaderIntroductionImages = nodecg().Replicant<Asset[]>('assets:reader-introduction-images');
 export const assetsVideos = nodecg().Replicant<Asset[]>('assets:videos');
 export const bids = nodecg().Replicant<Bids>('bids', { persistent: false });
 export const bigbuttonPlayerMap = nodecg().Replicant<BigbuttonPlayerMap>('bigbuttonPlayerMap');

@@ -9,7 +9,7 @@
       // 'min-width': 0, // was probably used for overlapping things?
     }"
   >
-    <transition name="ticker" mode="out-in">
+    <transition name="ticker">
       <component
         v-if="omnibar.current"
         :is="omnibar.current.type"
@@ -63,10 +63,9 @@ export default class extends Vue {
 
 <style scoped>
   .ticker-enter-active, .ticker-leave-active {
-    transition: all .3s;
+    transition: opacity 1s;
   }
   .ticker-enter, .ticker-leave-to {
-    transform: translateX(20px);
     opacity: 0;
   }
 </style>

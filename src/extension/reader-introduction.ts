@@ -1,3 +1,4 @@
+import { Configschema } from '@esa-layouts/types/schemas';
 import { Asset } from '@shared/types';
 import clone from 'clone';
 import { writeFile } from 'fs/promises';
@@ -5,10 +6,12 @@ import { orderBy } from 'lodash';
 import needle from 'needle';
 import { join } from 'path';
 import { get as nodecg } from './util/nodecg';
-import { assetsReaderIntroductionImages, readerIntroduction } from './util/replicants';
+import obs from './util/obs';
+import { assetsReaderIntroductionImages, obsData, readerIntroduction } from './util/replicants';
 import { sc } from './util/speedcontrol';
 import sd from './util/streamdeck';
 
+const config = (nodecg().bundleConfig as Configschema);
 let assetsTemp: Asset[] = [];
 const sdButtonUUIDMap = {
   advanceSlide: 'com.esamarathon.streamdeck.readerintroduction-advanceslide',
@@ -90,9 +93,13 @@ function changeAdvanceSlideSDTitle(i?: number): void {
   if (readerIntroduction.value.current === 'RunInfo') {
     index = assetsTemp.length;
   }
-  const prependText = index < assetsTemp.length
-    ? 'Advance\nSlide'
-    : 'Slides\nComplete!';
+  const prependText = (() => {
+    if (!obs.isCurrentScene(config.obs.names.scenes.readerIntroduction)) {
+      return '⚠\nCannot\nAdvance\nSlide';
+    }
+    if (index < assetsTemp.length) return 'Advance\nSlide';
+    return 'Slides\nComplete!';
+  })();
   sd.setTextOnAllButtonsWithAction(
     sdButtonUUIDMap.advanceSlide,
     `${prependText}\n(${index >= 0 ? (index + 1) : '?'}/${assetsTemp.length + 1})`,
@@ -111,7 +118,10 @@ function reset(): void {
 /**
  * Shows the next slide, either one of the images or if all done, the run information.
  */
-function showNext(): void {
+function showNext(): boolean {
+  if (!obs.isCurrentScene(config.obs.names.scenes.readerIntroduction)) {
+    return false;
+  }
   if (readerIntroduction.value.current !== 'RunInfo') {
     const index = assetsTemp.findIndex((a) => a.sum === readerIntroduction.value.current);
     if (index >= 0 && assetsTemp.length > (index + 1)) {
@@ -120,7 +130,9 @@ function showNext(): void {
       readerIntroduction.value.current = 'RunInfo';
     }
     changeAdvanceSlideSDTitle(index + 1);
+    return true;
   }
+  return false;
 }
 
 // Listens for current/next run ID changes and executes a boxart lookup/download.
@@ -140,16 +152,31 @@ assetsReaderIntroductionImages.on('change', (newVal) => {
   if (!assetsTemp.length && newVal.length > 0) reset();
 });
 
+// Triggers a Stream Deck title text update when scene changes.
+obsData.on('change', (newVal, oldVal) => {
+  if (newVal.scene !== oldVal?.scene) {
+    changeAdvanceSlideSDTitle();
+  }
+});
+
 // What to do once Stream Deck connection is initialised.
 sd.on('init', () => {
   changeAdvanceSlideSDTitle();
 });
 
+// What to do when a button "appears" in the Stream Deck software,
+// usually after dragging on a new instance.
+sd.on('willAppear', (data) => {
+  if ((data.action as string) === sdButtonUUIDMap.advanceSlide) {
+    changeAdvanceSlideSDTitle();
+  }
+});
+
 // What to do when any key is lifted on a connected Stream Deck.
 sd.on('keyUp', (data) => {
   if (data.action === sdButtonUUIDMap.advanceSlide) {
-    showNext();
-    sd.send({ event: 'showOk', context: data.context });
+    const success = showNext();
+    if (success) sd.send({ event: 'showOk', context: data.context });
   } else if (data.action === sdButtonUUIDMap.resetSlides) {
     reset();
     sd.send({ event: 'showOk', context: data.context });

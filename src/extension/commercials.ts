@@ -25,7 +25,7 @@ function changeDisableCommercialsSDTitle(): void {
       return `Ads\nPlaying:\n${minutes}:${padTimeNumber(seconds)}`;
     }
     if (['stopped', 'finished'].includes(sc.timer.value.state)) {
-      return 'Cannot\nDisable\nAds\nCurrently';
+      return '⚠\nCannot\nDisable\nAds';
     }
     return 'Disable\nAds for\nRun';
   })();
@@ -59,6 +59,14 @@ async function setup(): Promise<void> {
     // What to do once Stream Deck connection is initialised.
     sd.on('init', () => {
       changeDisableCommercialsSDTitle();
+    });
+
+    // What to do when a button "appears" in the Stream Deck software,
+    // usually after dragging on a new instance.
+    sd.on('willAppear', (data) => {
+      if ((data.action as string).endsWith('twitchads')) {
+        changeDisableCommercialsSDTitle();
+      }
     });
 
     // What to do when any key is lifted on a connected Stream Deck.

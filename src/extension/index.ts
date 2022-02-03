@@ -45,6 +45,7 @@ export = (nodecg: NodeCG): ExtensionReturn => {
   require('./flagcarrier');
   require('./omnibar');
   require('./reader-introduction');
+  require('./commercials');
 
   return {
     obs: require('./util/obs').default,

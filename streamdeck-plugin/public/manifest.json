@@ -113,6 +113,22 @@
       "SupportedInMultiActions": false,
       "Tooltip": "Used to fully reset back to the first slide on the \"Reader Introduction\" graphic.",
       "UUID": "com.esamarathon.streamdeck.readerintroduction-resetslides"
+    },
+    {
+      "Name": "Disable Twitch Commercials",
+      "Icon": "img/actionIcon",
+      "States": [
+        {
+          "Image": "img/actionDefaultImage",
+          "TitleAlignment": "middle",
+          "FontSize": "9",
+          "Title": "⌛",
+          "ShowTitle": true
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Used to disable Twitch commercial logic for the remainder of a run.",
+      "UUID": "com.esamarathon.streamdeck.disableads"
     }
   ],
   "Author": "zoton2",

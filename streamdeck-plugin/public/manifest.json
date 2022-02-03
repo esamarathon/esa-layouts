@@ -113,6 +113,22 @@
       "SupportedInMultiActions": false,
       "Tooltip": "Used to show running Twitch commercials, and disable commercial logic for the remainder of a run.",
       "UUID": "com.esamarathon.streamdeck.twitchads"
+    },
+    {
+      "Name": "Scene Cycler",
+      "Icon": "img/actionIcon",
+      "States": [
+        {
+          "Image": "img/actionDefaultImage",
+          "TitleAlignment": "middle",
+          "FontSize": "9",
+          "Title": "⌛",
+          "ShowTitle": true
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Used to cycle between scenes and states used in our workflow.",
+      "UUID": "com.esamarathon.streamdeck.scenecycler"
     }
   ],
   "Author": "zoton2",

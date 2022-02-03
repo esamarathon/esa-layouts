@@ -111,7 +111,7 @@ function reset(): void {
 /**
  * Shows the next slide, either one of the images or if all done, the run information.
  */
-function showNext(): void {
+function showNext(): boolean {
   if (readerIntroduction.value.current !== 'RunInfo') {
     const index = assetsTemp.findIndex((a) => a.sum === readerIntroduction.value.current);
     if (index >= 0 && assetsTemp.length > (index + 1)) {
@@ -120,7 +120,9 @@ function showNext(): void {
       readerIntroduction.value.current = 'RunInfo';
     }
     changeAdvanceSlideSDTitle(index + 1);
+    return true;
   }
+  return false;
 }
 
 // Listens for current/next run ID changes and executes a boxart lookup/download.
@@ -148,8 +150,8 @@ sd.on('init', () => {
 // What to do when any key is lifted on a connected Stream Deck.
 sd.on('keyUp', (data) => {
   if (data.action === sdButtonUUIDMap.advanceSlide) {
-    showNext();
-    sd.send({ event: 'showOk', context: data.context });
+    const success = showNext();
+    if (success) sd.send({ event: 'showOk', context: data.context });
   } else if (data.action === sdButtonUUIDMap.resetSlides) {
     reset();
     sd.send({ event: 'showOk', context: data.context });

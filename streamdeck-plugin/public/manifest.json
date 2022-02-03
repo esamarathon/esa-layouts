@@ -73,7 +73,7 @@
         {
           "Image": "img/actionDefaultImage",
           "TitleAlignment": "middle",
-          "FontSize": "9",
+          "FontSize": "8",
           "Title": "⌛",
           "ShowTitle": true
         }

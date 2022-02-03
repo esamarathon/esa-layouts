@@ -322,8 +322,9 @@ speedcontrol_1.sc.on('timerStopped', () => {
     replicants_1.omnibar.value.miniCredits = { runSubs: [], runCheers: [], runDonations: [] };
     // Collect all information needed.
     const { runSubs, runCheers, runDonations } = tempMiniCreditsStorage;
-    const players = speedcontrol_1.sc.runDataActiveRun.value
-        ? speedcontrol_1.sc.runDataActiveRun.value.teams.reduce((prev, team) => {
+    const run = speedcontrol_1.sc.getRunDataArray().find((r) => { var _a; return r.id === ((_a = speedcontrol_1.sc.runDataActiveRun.value) === null || _a === void 0 ? void 0 : _a.id); });
+    const players = run
+        ? run.teams.reduce((prev, team) => {
             prev.push(...team.players.map((p) => p.name));
             return prev;
         }, [])

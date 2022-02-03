@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatSrcomPronouns = exports.logError = exports.getOtherStreamEventShort = exports.getCurrentEventShort = exports.padTimeNumber = void 0;
+exports.formatSrcomPronouns = exports.logError = exports.getOtherStreamEventShort = exports.getCurrentEventShort = exports.wait = exports.padTimeNumber = void 0;
 const util_1 = __importDefault(require("util"));
 const nodecg_1 = require("./nodecg");
 const config = (0, nodecg_1.get)().bundleConfig;
@@ -15,6 +15,15 @@ function padTimeNumber(num) {
     return num.toString().padStart(2, '0');
 }
 exports.padTimeNumber = padTimeNumber;
+/**
+ * Generates a promise that waits the length (in milliseconds) supplied.
+ * @param length Length to wait in milliseconds
+ * @returns A promise.
+ */
+async function wait(length) {
+    return new Promise((res) => { setTimeout(res, length); });
+}
+exports.wait = wait;
 /**
  * Returns the current event short according to the configuration file.
  */

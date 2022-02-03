@@ -21,7 +21,7 @@
       >
         <!-- Image Slideshow -->
         <img
-          v-for="asset in assets"
+          v-for="asset in assetsTemp"
           v-show="readerIntro.current === asset.sum"
           :src="asset.url"
           :key="asset.sum"
@@ -115,13 +115,14 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component, Watch } from 'vue-property-decorator';
 import MediaBox from '@shared/graphics/mediabox';
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
 import { Asset } from '@shared/types';
 import { ReaderIntroduction } from '@esa-layouts/types/schemas';
 import { RunData } from 'speedcontrol-util/types';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
+import clone from 'clone';
 import { getZoomAmountCSS } from '../_misc/helpers';
 
 @Component({
@@ -138,6 +139,15 @@ export default class extends Vue {
   @replicantNS.State((s) => s.reps.donationReader) readonly reader!: string | null;
   zoom = getZoomAmountCSS();
   boxartImgSuccess = false;
+
+  // Keep a temporary copy of the image assets so things don't break when NodeCG restarts.
+  assetsTemp: Asset[] = [];
+  @Watch('assets', { immediate: true })
+  onAssetsChanged(val: Asset[]): void {
+    if (val.length && val.length !== this.assetsTemp.length) {
+      this.assetsTemp = clone(val);
+    }
+  }
 
   get run(): RunData | undefined {
     return this.runDataArray.find((r) => r.id === this.activeRun?.id);

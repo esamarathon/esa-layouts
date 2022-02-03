@@ -3,7 +3,7 @@
  * runs alongside that to control certain functionality.
  */
 
-import { wait } from './util/helpers';
+import { padTimeNumber, wait } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import { sc } from './util/speedcontrol';
 import sd from './util/streamdeck';
@@ -16,13 +16,20 @@ const disabled = nodecg().Replicant<boolean>('disabled', 'esa-commercials');
  */
 function changeDisableCommercialsSDTitle(): void {
   const text = (() => {
+    if (disabled.value && !['stopped', 'finished'].includes(sc.timer.value.state)) {
+      return 'Ads\nDisabled\nfor Run';
+    }
+    if (sc.twitchCommercialTimer.value.secondsRemaining > 0) {
+      const minutes = Math.floor(sc.twitchCommercialTimer.value.secondsRemaining / 60);
+      const seconds = Math.floor(sc.twitchCommercialTimer.value.secondsRemaining - minutes * 60);
+      return `Ads\nPlaying:\n${minutes}:${padTimeNumber(seconds)}`;
+    }
     if (['stopped', 'finished'].includes(sc.timer.value.state)) {
       return 'Cannot\nDisable\nAds\nCurrently';
     }
-    if (disabled.value) return 'Ads\nDisabled\nfor Run';
     return 'Disable\nAds for\nRun';
   })();
-  sd.setTextOnAllButtonsWithAction('com.esamarathon.streamdeck.disableads', text);
+  sd.setTextOnAllButtonsWithAction('com.esamarathon.streamdeck.twitchads', text);
 }
 
 async function setup(): Promise<void> {
@@ -45,6 +52,9 @@ async function setup(): Promise<void> {
     disabled.on('change', () => {
       changeDisableCommercialsSDTitle();
     });
+    sc.twitchCommercialTimer.on('change', () => {
+      changeDisableCommercialsSDTitle();
+    });
 
     // What to do once Stream Deck connection is initialised.
     sd.on('init', () => {
@@ -53,7 +63,7 @@ async function setup(): Promise<void> {
 
     // What to do when any key is lifted on a connected Stream Deck.
     sd.on('keyUp', async (data) => {
-      if (data.action.endsWith('disableads') && !disabled.value
+      if (data.action.endsWith('twitchads') && !disabled.value
       && !['stopped', 'finished'].includes(sc.timer.value.state)) {
         // Sends a message to the esa-commercials bundle.
         // Because we are using server-to-server messages, no confirmation yet.

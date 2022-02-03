@@ -17,22 +17,6 @@
       "UUID": "com.esamarathon.streamdeck.timer"
     },
     {
-      "Name": "Twitch Ads",
-      "Icon": "img/actionIcon",
-      "States": [
-        {
-          "Image": "img/actionDefaultImage",
-          "TitleAlignment": "middle",
-          "FontSize": "9",
-          "Title": "⌛",
-          "ShowTitle": true
-        }
-      ],
-      "SupportedInMultiActions": false,
-      "Tooltip": "Switches scene, plays ads and displays countdown timer for them.",
-      "UUID": "com.esamarathon.streamdeck.twitchads"
-    },
-    {
       "Name": "TTS Donation Reading",
       "Icon": "img/actionIcon",
       "States": [
@@ -115,7 +99,7 @@
       "UUID": "com.esamarathon.streamdeck.readerintroduction-resetslides"
     },
     {
-      "Name": "Disable Twitch Commercials",
+      "Name": "Twitch Commercials",
       "Icon": "img/actionIcon",
       "States": [
         {
@@ -127,8 +111,8 @@
         }
       ],
       "SupportedInMultiActions": false,
-      "Tooltip": "Used to disable Twitch commercial logic for the remainder of a run.",
-      "UUID": "com.esamarathon.streamdeck.disableads"
+      "Tooltip": "Used to show running Twitch commercials, and disable commercial logic for the remainder of a run.",
+      "UUID": "com.esamarathon.streamdeck.twitchads"
     }
   ],
   "Author": "zoton2",

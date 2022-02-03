@@ -4,7 +4,7 @@
   "additionalProperties": false,
   "properties": {
     "current": {
-      "oneOf": [
+      "anyOf": [
         {
           "type": "string"
         },

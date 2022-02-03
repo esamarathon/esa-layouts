@@ -81,6 +81,38 @@
       "SupportedInMultiActions": false,
       "Tooltip": "Used to trigger certain messages to be displayed on the player HUD graphic.",
       "UUID": "com.esamarathon.streamdeck.playerhudtrigger-message"
+    },
+    {
+      "Name": "Reader Introduction: Advance Slide",
+      "Icon": "img/actionIcon",
+      "States": [
+        {
+          "Image": "img/actionDefaultImage",
+          "TitleAlignment": "middle",
+          "FontSize": "9",
+          "Title": "⌛",
+          "ShowTitle": true
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Used to advance to the next slide on the \"Reader Introduction\" graphic.",
+      "UUID": "com.esamarathon.streamdeck.readerintroduction-advanceslide"
+    },
+    {
+      "Name": "Reader Introduction: Reset Slides",
+      "Icon": "img/actionIcon",
+      "States": [
+        {
+          "Image": "img/actionDefaultImage",
+          "TitleAlignment": "middle",
+          "FontSize": "9",
+          "Title": "Reset\nSlides",
+          "ShowTitle": true
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Used to fully reset back to the first slide on the \"Reader Introduction\" graphic.",
+      "UUID": "com.esamarathon.streamdeck.readerintroduction-resetslides"
     }
   ],
   "Author": "zoton2",

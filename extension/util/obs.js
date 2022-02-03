@@ -18,7 +18,7 @@ async function changeScene({ scene, force = false }) {
         || obs.isCurrentScene(scene)
         || (!force && (replicants_1.obsData.value.transitioning
             || replicants_1.obsData.value.disableTransitioning))) {
-        return;
+        return false;
     }
     try {
         if (replicants_1.currentRunDelay.value.audio === 0
@@ -47,6 +47,7 @@ async function changeScene({ scene, force = false }) {
     catch (err) {
         (0, helpers_1.logError)('[Layouts] Could not change scene [name: %s]', err, scene);
     }
+    return true;
 }
 exports.changeScene = changeScene;
 (0, nodecg_1.get)().listenFor('obsChangeScene', changeScene);

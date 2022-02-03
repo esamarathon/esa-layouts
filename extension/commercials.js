@@ -27,7 +27,7 @@ function changeDisableCommercialsSDTitle() {
             return `Ads\nPlaying:\n${minutes}:${(0, helpers_1.padTimeNumber)(seconds)}`;
         }
         if (['stopped', 'finished'].includes(speedcontrol_1.sc.timer.value.state)) {
-            return 'Cannot\nDisable\nAds\nCurrently';
+            return '⚠\nCannot\nDisable\nAds';
         }
         return 'Disable\nAds for\nRun';
     })();
@@ -58,6 +58,13 @@ async function setup() {
         // What to do once Stream Deck connection is initialised.
         streamdeck_1.default.on('init', () => {
             changeDisableCommercialsSDTitle();
+        });
+        // What to do when a button "appears" in the Stream Deck software,
+        // usually after dragging on a new instance.
+        streamdeck_1.default.on('willAppear', (data) => {
+            if (data.action.endsWith('twitchads')) {
+                changeDisableCommercialsSDTitle();
+            }
         });
         // What to do when any key is lifted on a connected Stream Deck.
         streamdeck_1.default.on('keyUp', async (data) => {

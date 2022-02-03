@@ -30,8 +30,48 @@ const nodecg_1 = require("./util/nodecg");
 const obs_1 = __importStar(require("./util/obs"));
 const replicants_1 = require("./util/replicants");
 const speedcontrol_1 = require("./util/speedcontrol");
+const streamdeck_1 = __importDefault(require("./util/streamdeck"));
 const evtConfig = (0, nodecg_1.get)().bundleConfig.event;
 const config = (0, nodecg_1.get)().bundleConfig.obs;
+/**
+ * Correctly changes the title text on the Stream Deck "Scene Cycle" buttons.
+ */
+function changeSceneCyclerSDTitle() {
+    const { disableTransitioning, transitioning, connected } = replicants_1.obsData.value;
+    const text = (() => {
+        if (disableTransitioning || transitioning || !connected
+            || ['running', 'paused'].includes(speedcontrol_1.sc.timer.value.state)
+            || (obs_1.default.isCurrentScene(config.names.scenes.readerIntroduction)
+                && replicants_1.readerIntroduction.value.current !== 'RunInfo')) {
+            return '⚠\nCannot\nChange\nScene';
+        }
+        if (obs_1.default.isCurrentScene(config.names.scenes.intermission)) {
+            return 'Go to\nIntro\nScene';
+        }
+        if (obs_1.default.isCurrentScene(config.names.scenes.readerIntroduction)) {
+            return 'Go to\nGame\nScene';
+        }
+        if (obs_1.default.isCurrentScene(config.names.scenes.gameLayout)) {
+            return 'Go to\nInter-\nmission';
+        }
+        return '⌛';
+    })();
+    streamdeck_1.default.setTextOnAllButtonsWithAction('com.esamarathon.streamdeck.scenecycler', text);
+}
+/**
+ * Tries to start video playlist, if playlist is empty then acts as if there isn't one.
+ */
+async function startIntermission() {
+    if (replicants_1.videoPlayer.value.playlist.length) {
+        await (0, intermission_player_1.startPlaylist)();
+    }
+    else if (obs_1.default.findScene(config.names.scenes.commercials)) {
+        await (0, obs_1.changeScene)({ scene: config.names.scenes.commercials });
+    }
+    else {
+        await (0, obs_1.changeScene)({ scene: config.names.scenes.intermission });
+    }
+}
 let gameLayoutScreenshotInterval;
 async function takeGameLayoutScreenshot() {
     try {
@@ -95,14 +135,61 @@ speedcontrol_1.sc.twitchCommercialTimer.on('change', async (newVal) => {
 });
 // Triggered via button in "OBS Control" dashboard panel.
 (0, nodecg_1.get)().listenFor('startIntermission', async () => {
-    // Tries to start video playlist, if playlist is empty then acts as if there isn't one.
-    if (replicants_1.videoPlayer.value.playlist.length) {
-        await (0, intermission_player_1.startPlaylist)();
+    await startIntermission();
+});
+// Triggers a Stream Deck title text update when certain replicants change.
+replicants_1.obsData.on('change', (newVal, oldVal) => {
+    if (newVal.disableTransitioning !== (oldVal === null || oldVal === void 0 ? void 0 : oldVal.disableTransitioning)
+        || newVal.transitioning !== oldVal.transitioning
+        || newVal.scene !== oldVal.scene
+        || newVal.connected !== oldVal.connected) {
+        changeSceneCyclerSDTitle();
     }
-    else if (obs_1.default.findScene(config.names.scenes.commercials)) {
-        await (0, obs_1.changeScene)({ scene: config.names.scenes.commercials });
+});
+speedcontrol_1.sc.timer.on('change', (newVal, oldVal) => {
+    if (newVal.state !== (oldVal === null || oldVal === void 0 ? void 0 : oldVal.state)) {
+        changeSceneCyclerSDTitle();
     }
-    else {
-        await (0, obs_1.changeScene)({ scene: config.names.scenes.intermission });
+});
+replicants_1.readerIntroduction.on('change', (newVal, oldVal) => {
+    if (newVal.current !== (oldVal === null || oldVal === void 0 ? void 0 : oldVal.current)) {
+        changeSceneCyclerSDTitle();
+    }
+});
+// What to do once Stream Deck connection is initialised.
+streamdeck_1.default.on('init', () => {
+    changeSceneCyclerSDTitle();
+});
+// What to do when a button "appears" in the Stream Deck software,
+// usually after dragging on a new instance.
+streamdeck_1.default.on('willAppear', (data) => {
+    if (data.action.endsWith('scenecycler')) {
+        changeSceneCyclerSDTitle();
+    }
+});
+// What to do when any key is lifted on a connected Stream Deck.
+streamdeck_1.default.on('keyUp', async (data) => {
+    if (data.action.endsWith('scenecycler')) {
+        const { disableTransitioning, transitioning, connected } = replicants_1.obsData.value;
+        if (disableTransitioning || transitioning || !connected
+            || ['running', 'paused'].includes(speedcontrol_1.sc.timer.value.state)) {
+            return;
+        }
+        if (obs_1.default.isCurrentScene(config.names.scenes.intermission)) {
+            const success = await (0, obs_1.changeScene)({ scene: config.names.scenes.readerIntroduction });
+            if (success)
+                streamdeck_1.default.send({ event: 'showOk', context: data.context });
+        }
+        if (obs_1.default.isCurrentScene(config.names.scenes.readerIntroduction)
+            && replicants_1.readerIntroduction.value.current === 'RunInfo') {
+            const success = await (0, obs_1.changeScene)({ scene: config.names.scenes.gameLayout });
+            if (success)
+                streamdeck_1.default.send({ event: 'showOk', context: data.context });
+        }
+        if (obs_1.default.isCurrentScene(config.names.scenes.gameLayout)) {
+            // TODO: Confirm this worked before sending "showOk".
+            await startIntermission();
+            streamdeck_1.default.send({ event: 'showOk', context: data.context });
+        }
     }
 });

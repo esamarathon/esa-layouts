@@ -17,22 +17,6 @@
       "UUID": "com.esamarathon.streamdeck.timer"
     },
     {
-      "Name": "Twitch Ads",
-      "Icon": "img/actionIcon",
-      "States": [
-        {
-          "Image": "img/actionDefaultImage",
-          "TitleAlignment": "middle",
-          "FontSize": "9",
-          "Title": "⌛",
-          "ShowTitle": true
-        }
-      ],
-      "SupportedInMultiActions": false,
-      "Tooltip": "Switches scene, plays ads and displays countdown timer for them.",
-      "UUID": "com.esamarathon.streamdeck.twitchads"
-    },
-    {
       "Name": "TTS Donation Reading",
       "Icon": "img/actionIcon",
       "States": [
@@ -81,6 +65,54 @@
       "SupportedInMultiActions": false,
       "Tooltip": "Used to trigger certain messages to be displayed on the player HUD graphic.",
       "UUID": "com.esamarathon.streamdeck.playerhudtrigger-message"
+    },
+    {
+      "Name": "Reader Introduction: Advance Slide",
+      "Icon": "img/actionIcon",
+      "States": [
+        {
+          "Image": "img/actionDefaultImage",
+          "TitleAlignment": "middle",
+          "FontSize": "9",
+          "Title": "⌛",
+          "ShowTitle": true
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Used to advance to the next slide on the \"Reader Introduction\" graphic.",
+      "UUID": "com.esamarathon.streamdeck.readerintroduction-advanceslide"
+    },
+    {
+      "Name": "Reader Introduction: Reset Slides",
+      "Icon": "img/actionIcon",
+      "States": [
+        {
+          "Image": "img/actionDefaultImage",
+          "TitleAlignment": "middle",
+          "FontSize": "9",
+          "Title": "Reset\nSlides",
+          "ShowTitle": true
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Used to fully reset back to the first slide on the \"Reader Introduction\" graphic.",
+      "UUID": "com.esamarathon.streamdeck.readerintroduction-resetslides"
+    },
+    {
+      "Name": "Twitch Commercials",
+      "Icon": "img/actionIcon",
+      "States": [
+        {
+          "Image": "img/actionDefaultImage",
+          "TitleAlignment": "middle",
+          "FontSize": "9",
+          "Title": "⌛",
+          "ShowTitle": true
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Used to show running Twitch commercials, and disable commercial logic for the remainder of a run.",
+      "UUID": "com.esamarathon.streamdeck.twitchads"
     }
   ],
   "Author": "zoton2",

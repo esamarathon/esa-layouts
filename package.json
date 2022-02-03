@@ -254,6 +254,11 @@
         "height": 1080
       },
       {
+        "file": "reader-introduction.html",
+        "width": 1920,
+        "height": 1080
+      },
+      {
         "file": "game-layout.html",
         "width": 1920,
         "height": 1080
@@ -278,6 +283,10 @@
       {
         "directory": "shared/flags",
         "endpoint": "flags"
+      },
+      {
+        "directory": "boxart",
+        "endpoint": "boxart"
       }
     ],
     "assetCategories": [
@@ -313,6 +322,18 @@
           "svg",
           "mp4",
           "webm",
+          "webp",
+          "gif"
+        ]
+      },
+      {
+        "name": "reader-introduction-images",
+        "title": "Reader Introduction Images",
+        "allowedTypes": [
+          "jpg",
+          "jpeg",
+          "png",
+          "svg",
           "webp",
           "gif"
         ]

@@ -44,6 +44,8 @@ export = (nodecg: NodeCG): ExtensionReturn => {
   require('./intermission-player');
   require('./flagcarrier');
   require('./omnibar');
+  require('./reader-introduction');
+  require('./commercials');
 
   return {
     obs: require('./util/obs').default,

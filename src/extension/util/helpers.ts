@@ -13,6 +13,15 @@ export function padTimeNumber(num: number): string {
 }
 
 /**
+ * Generates a promise that waits the length (in milliseconds) supplied.
+ * @param length Length to wait in milliseconds
+ * @returns A promise.
+ */
+export async function wait(length: number): Promise<void> {
+  return new Promise((res) => { setTimeout(res, length); });
+}
+
+/**
  * Returns the current event short according to the configuration file.
  */
 export function getCurrentEventShort(): string {

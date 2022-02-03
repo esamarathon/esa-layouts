@@ -1,4 +1,5 @@
-import type { Bids, BigbuttonPlayerMap, Commentators, Countdown, CurrentRunDelay, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, ObsData, Omnibar, OtherStreamData, Prizes, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import type { Bids, BigbuttonPlayerMap, Commentators, Countdown, CurrentRunDelay, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import { Asset } from '@shared/types';
 import clone from 'clone';
 import type { ReplicantBrowser } from 'nodecg/types/browser';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
@@ -13,6 +14,7 @@ const sc = new SpeedcontrolUtilBrowser(nodecg);
 
 // Declaring replicants.
 export const reps: {
+  assetsReaderIntroductionImages: ReplicantBrowser<Asset[]>;
   bids: ReplicantBrowser<Bids>;
   bigbuttonPlayerMap: ReplicantBrowser<BigbuttonPlayerMap>;
   commentators: ReplicantBrowser<Commentators>;
@@ -27,6 +29,7 @@ export const reps: {
   omnibar: ReplicantBrowser<Omnibar>;
   otherStreamData: ReplicantBrowser<OtherStreamData>;
   prizes: ReplicantBrowser<Prizes>;
+  readerIntroduction: ReplicantBrowser<ReaderIntroduction>;
   runDataActiveRun: ReplicantBrowser<RunDataActiveRun>;
   runDataActiveRunSurrounding: ReplicantBrowser<RunDataActiveRunSurrounding>;
   runDataArray: ReplicantBrowser<RunDataArray>;
@@ -38,6 +41,7 @@ export const reps: {
   videoPlayer: ReplicantBrowser<VideoPlayer>;
   [k: string]: ReplicantBrowser<unknown>;
 } = {
+  assetsReaderIntroductionImages: nodecg.Replicant('assets:reader-introduction-images'),
   bids: nodecg.Replicant('bids'),
   bigbuttonPlayerMap: nodecg.Replicant('bigbuttonPlayerMap'),
   commentators: nodecg.Replicant('commentators'),
@@ -52,6 +56,7 @@ export const reps: {
   omnibar: nodecg.Replicant('omnibar'),
   otherStreamData: nodecg.Replicant('otherStreamData'),
   prizes: nodecg.Replicant('prizes'),
+  readerIntroduction: nodecg.Replicant('readerIntroduction'),
   runDataActiveRun: sc.runDataActiveRun,
   runDataActiveRunSurrounding: sc.runDataActiveRunSurrounding,
   runDataArray: sc.runDataArray,
@@ -65,6 +70,7 @@ export const reps: {
 
 // All the replicant types.
 export interface ReplicantTypes {
+  assetsReaderIntroductionImages: Asset[];
   bids: Bids;
   bigbuttonPlayerMap: BigbuttonPlayerMap;
   commentators: Commentators;
@@ -79,6 +85,7 @@ export interface ReplicantTypes {
   omnibar: Omnibar;
   otherStreamData: OtherStreamData;
   prizes: Prizes;
+  readerIntroduction: ReaderIntroduction;
   runDataActiveRun: RunDataActiveRun;
   runDataActiveRunSurrounding: RunDataActiveRunSurrounding;
   runDataArray: RunDataArray;

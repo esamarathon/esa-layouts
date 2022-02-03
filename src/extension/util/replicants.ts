@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import { Bids, BigbuttonPlayerMap, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, MusicData, NameCycle, NotableDonations, ObsData, Omnibar, OtherStreamData, Prizes, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import { Bids, BigbuttonPlayerMap, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, MusicData, NameCycle, NotableDonations, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import type { Asset } from '@shared/types';
 import { get as nodecg } from './nodecg';
 
@@ -10,6 +10,7 @@ import { get as nodecg } from './nodecg';
  */
 export const assetsIntermissionSlides = nodecg().Replicant<Asset[]>('assets:intermission-slides');
 export const assetsMediaBoxImages = nodecg().Replicant<Asset[]>('assets:media-box-images');
+export const assetsReaderIntroductionImages = nodecg().Replicant<Asset[]>('assets:reader-introduction-images');
 export const assetsVideos = nodecg().Replicant<Asset[]>('assets:videos');
 export const bids = nodecg().Replicant<Bids>('bids', { persistent: false });
 export const bigbuttonPlayerMap = nodecg().Replicant<BigbuttonPlayerMap>('bigbuttonPlayerMap');
@@ -30,6 +31,7 @@ export const obsData = nodecg().Replicant<ObsData>('obsData', { persistent: fals
 export const omnibar = nodecg().Replicant<Omnibar>('omnibar');
 export const otherStreamData = nodecg().Replicant<OtherStreamData>('otherStreamData');
 export const prizes = nodecg().Replicant<Prizes>('prizes', { persistent: false });
+export const readerIntroduction = nodecg().Replicant<ReaderIntroduction>('readerIntroduction');
 export const serverTimestamp = nodecg().Replicant<ServerTimestamp>('serverTimestamp');
 export const streamDeckData = nodecg().Replicant<StreamDeckData>('streamDeckData');
 export const ttsVoices = nodecg().Replicant<TtsVoices>('ttsVoices');

@@ -107,6 +107,7 @@ import { Vue, Component } from 'vue-property-decorator';
 import { CurrentRunDelay, ObsData, ServerTimestamp, VideoPlayer } from '@esa-layouts/types/schemas';
 import { Configschema } from '@esa-layouts/types/schemas/configschema';
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
+import { Timer } from 'speedcontrol-util/types';
 
 @Component
 export default class extends Vue {
@@ -114,6 +115,7 @@ export default class extends Vue {
   @replicantNS.State((s) => s.reps.currentRunDelay) readonly currentRunDelay!: CurrentRunDelay;
   @replicantNS.State((s) => s.reps.serverTimestamp) readonly serverTimestamp!: ServerTimestamp;
   @replicantNS.State((s) => s.reps.videoPlayer) readonly videoPlayer!: VideoPlayer;
+  @replicantNS.State((s) => s.reps.timer) readonly timer!: Timer;
   evtConfig = (nodecg.bundleConfig as Configschema).event;
   obsConfig = (nodecg.bundleConfig as Configschema).obs;
   gameLayoutPreviewToggle = true;
@@ -133,7 +135,8 @@ export default class extends Vue {
     ];
     return this.obsData.transitioning
     || this.obsData.disableTransitioning
-    || !!intermissionScenes.find((s) => this.obsData.scene?.startsWith(s));
+    || !!intermissionScenes.find((s) => this.obsData.scene?.startsWith(s))
+    || ['running', 'paused'].includes(this.timer.state);
   }
 
   startIntermission(): void {

@@ -211,6 +211,10 @@
                   "type": "string",
                   "default": "Game Layout"
                 },
+                "readerIntroduction": {
+                  "type": "string",
+                  "default": "Reader Introduction"
+                },
                 "intermission": {
                   "type": "string",
                   "default": "Intermission"
@@ -227,6 +231,7 @@
               "required": [
                 "commercials",
                 "gameLayout",
+                "readerIntroduction",
                 "intermission",
                 "intermissionPlayer",
                 "countdown"

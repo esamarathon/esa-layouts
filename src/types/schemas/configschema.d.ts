@@ -47,6 +47,7 @@ export interface Configschema {
 			scenes: {
 				commercials: string;
 				gameLayout: string;
+				readerIntroduction: string;
 				intermission: string;
 				intermissionPlayer: string;
 				countdown: string;

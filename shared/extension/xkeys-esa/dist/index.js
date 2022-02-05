@@ -24,48 +24,54 @@ var XKeysClass = /** @class */ (function (_super) {
         _this.nodecg = nodecg;
         _this.config = config;
         if (config.enabled) {
-            _this.connect();
+            var watcher = new xkeys_1.XKeysWatcher();
+            _this.nodecg.log.info('[XKeys] Watching for panel');
+            watcher.on('connected', function (xkeysPanel) {
+                _this.panel = xkeysPanel;
+                _this.initPanel();
+            });
+            watcher.on('error', function (err) {
+                _this.nodecg.log.debug('[XKeys] Watcher error:', err);
+            });
         }
         return _this;
     }
-    XKeysClass.prototype.connect = function () {
+    XKeysClass.prototype.initPanel = function () {
         var _this = this;
-        try {
-            this.nodecg.log.info('[XKeys] Setting up panel');
-            this.panel = new xkeys_1.XKeys();
-            this.nodecg.log.info('[XKeys] Panel successfully found');
-            this.panel.on('error', function (err) {
-                _this.nodecg.log.debug('[XKeys] Panel error:', err);
-            });
-            // Turn off all lights.
-            this.panel.setAllBacklights(false, false);
-            this.panel.setAllBacklights(false, true);
-            // Set intensity to full.
-            this.panel.setBacklightIntensity(255);
-            // Set flashing frequency.
-            this.panel.setFrequency(50);
-            this.panel.on('down', function (keyIndex) {
-                _this.nodecg.log.debug('[XKeys] Key pressed:', keyIndex);
-                _this.emit('down', keyIndex);
-            });
-            this.panel.on('up', function (keyIndex) {
-                _this.nodecg.log.debug('[XKeys] Key released:', keyIndex);
-                _this.emit('up', keyIndex);
-            });
-            this.panel.on('jog', function (position) {
-                _this.nodecg.log.debug('[XKeys] Jog moved:', position);
-                _this.emit('jog', position);
-            });
-            this.panel.on('shuttle', function (position) {
-                _this.nodecg.log.debug('[XKeys] Shuttle moved:', position);
-                _this.emit('shuttle', position);
-            });
-        }
-        catch (err) {
-            this.nodecg.log.debug('[XKeys] Panel error:', err);
-            this.nodecg.log.debug('[XKeys] Panel error, retrying in 5 seconds');
-            setTimeout(function () { return _this.connect(); }, 5 * 1000);
-        }
+        if (!this.panel)
+            return;
+        this.nodecg.log.info('[XKeys] Panel successfully found');
+        this.panel.on('error', function (err) {
+            _this.nodecg.log.debug('[XKeys] Panel error:', err);
+        });
+        // Turn off all lights.
+        this.panel.setAllBacklights(false);
+        // Set intensity to full.
+        this.panel.setBacklightIntensity(255);
+        // Set flashing frequency.
+        this.panel.setFrequency(50);
+        this.panel.on('down', function (keyIndex) {
+            _this.nodecg.log.debug('[XKeys] Key pressed:', keyIndex);
+            _this.emit('down', keyIndex);
+        });
+        this.panel.on('up', function (keyIndex) {
+            _this.nodecg.log.debug('[XKeys] Key released:', keyIndex);
+            _this.emit('up', keyIndex);
+        });
+        this.panel.on('jog', function (index, position) {
+            _this.nodecg.log.debug("[XKeys] Jog ".concat(index, " moved:"), position);
+            _this.emit('jog', index, position);
+        });
+        this.panel.on('shuttle', function (index, position) {
+            _this.nodecg.log.debug("[XKeys] Shuttle ".concat(index, " moved:"), position);
+            _this.emit('shuttle', index, position);
+        });
+        this.panel.on('disconnected', function () {
+            _this.nodecg.log.debug('[XKeys] Panel disconnected');
+        });
+        this.panel.on('reconnected', function () {
+            _this.nodecg.log.debug('[XKeys] Panel reconnected');
+        });
     };
     XKeysClass.prototype.setBacklight = function (keyIndex, on, redLight, flashing) {
         if (on === void 0) { on = true; }
@@ -76,7 +82,10 @@ var XKeysClass = /** @class */ (function (_super) {
             this.nodecg.log.warn("[XKeys] Cannot set backlight on ".concat(keyIndex, ", panel not connected"));
             return;
         }
-        this.panel.setBacklight(keyIndex, on, redLight, flashing);
+        if (!Number.isNaN(Number(keyIndex))) {
+            var colour = redLight ? 'red' : 'blue';
+            this.panel.setBacklight(Number(keyIndex), on ? colour : false, flashing);
+        }
     };
     return XKeysClass;
 }(events_1.EventEmitter));

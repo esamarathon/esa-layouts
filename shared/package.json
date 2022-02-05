@@ -32,7 +32,7 @@
     "string-similarity": "^4.0.4",
     "tiny-typed-emitter": "^2.1.0",
     "uuid": "^8.3.2",
-    "xkeys": "^1.1.1"
+    "xkeys": "^2.3.2"
   },
   "devDependencies": {
     "@esamarathon/mq-events": "^1.0.1",

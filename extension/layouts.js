@@ -11,13 +11,19 @@ const replicants_1 = require("./util/replicants");
 const speedcontrol_1 = require("./util/speedcontrol");
 const config = (0, nodecg_1.get)().bundleConfig;
 new countdown_1.default((0, nodecg_1.get)()); // eslint-disable-line no-new
+const gameCaptures = Array.isArray(config.obs.names.groups.gameCaptures)
+    ? config.obs.names.groups.gameCaptures
+    : [config.obs.names.groups.gameCaptures];
+const cameraCaptures = Array.isArray(config.obs.names.groups.cameraCaptures)
+    ? config.obs.names.groups.cameraCaptures
+    : [config.obs.names.groups.cameraCaptures];
+const gameSources = Array.isArray(config.obs.names.sources.gameSources)
+    ? config.obs.names.sources.gameSources
+    : [config.obs.names.sources.gameSources];
+const cameraSources = Array.isArray(config.obs.names.sources.cameraSources)
+    ? config.obs.names.sources.cameraSources
+    : [config.obs.names.sources.cameraSources];
 // CSS ID -> OBS source name mapping
-const gameCaptures = Array.isArray(config.obs.names.sources.gameCaptures)
-    ? config.obs.names.sources.gameCaptures
-    : [config.obs.names.sources.gameCaptures];
-const cameraCaptures = Array.isArray(config.obs.names.sources.cameraCaptures)
-    ? config.obs.names.sources.cameraCaptures
-    : [config.obs.names.sources.cameraCaptures];
 const obsSourceKeys = {
     GameCapture1: gameCaptures[0],
     GameCapture2: gameCaptures[1],
@@ -27,7 +33,7 @@ const obsSourceKeys = {
     CameraCapture2: cameraCaptures[1],
     CameraCapture3: cameraCaptures[2],
     CameraCapture4: cameraCaptures[3],
-    CameraCaptureCrowd: config.obs.names.sources.cameraCaptureCrowd || undefined,
+    CameraCaptureCrowd: config.obs.names.sources.cameraSourceCrowd || undefined,
 };
 // Controls the name cycling ticks for user information.
 function cycleNames(reset = false) {

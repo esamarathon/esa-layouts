@@ -29,7 +29,7 @@
           :style="{
             width: '100%',
             height: '100%',
-            padding: '50px',
+            padding: '10%',
             'box-sizing': 'border-box',
             'object-fit': 'contain',
             overflow: 'hidden',

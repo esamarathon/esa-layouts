@@ -1,11 +1,12 @@
 <template>
   <div id="ReaderIntroduction" :style="{ zoom }">
-    <div id="Background" />
+    <div id="Background"/>
     <div
       id="Layout"
       class="Flex"
       :style="{
-        padding: '120px',
+        height: '1000px',
+        padding: '80px',
         'box-sizing': 'border-box',
       }"
     >

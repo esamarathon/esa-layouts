@@ -12,14 +12,14 @@
 }
 
 
-.BoxArt[data-v-50f6f5e7] {
+.BoxArt[data-v-3a34eadc] {
   height: 100%;
   margin-right: 50px;
 }
-.fade-enter-active[data-v-50f6f5e7], .fade-leave-active[data-v-50f6f5e7] {
+.fade-enter-active[data-v-3a34eadc], .fade-leave-active[data-v-3a34eadc] {
   transition: opacity 1s;
 }
-.fade-enter[data-v-50f6f5e7], .fade-leave-to[data-v-50f6f5e7] {
+.fade-enter[data-v-3a34eadc], .fade-leave-to[data-v-3a34eadc] {
   opacity: 0;
 }
 

@@ -145,11 +145,11 @@
 }
 
 
-.Msg > span + span[data-v-42171e52]::before {
+.Msg > span + span[data-v-b0f6cf94]::before {
   content: '';
   margin: 0 10px 0 7px;
 }
-.Title[data-v-42171e52] {
+.Title[data-v-b0f6cf94] {
   font-weight: 600;
 }
 

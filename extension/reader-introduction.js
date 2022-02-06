@@ -109,8 +109,9 @@ function changeAdvanceSlideSDTitle(i) {
  * Resets the temporarily stored assets ands the current slide value.
  */
 function reset() {
+    var _a;
     assetsTemp = assetsSorted();
-    replicants_1.readerIntroduction.value.current = assetsTemp[0].sum || 'RunInfo';
+    replicants_1.readerIntroduction.value.current = ((_a = assetsTemp[0]) === null || _a === void 0 ? void 0 : _a.sum) || 'RunInfo';
     changeAdvanceSlideSDTitle();
 }
 /**

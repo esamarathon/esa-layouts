@@ -5,11 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.logVideoPlay = exports.logSponsorLogoChange = exports.logRunChange = exports.logTimerChange = exports.logSceneSwitch = exports.logStreamingStatusChange = void 0;
 const mediabox_1 = __importDefault(require("./mediabox"));
-const nodecg_1 = require("./nodecg");
 const rabbitmq_1 = require("./rabbitmq");
 const replicants_1 = require("./replicants");
 const speedcontrol_1 = require("./speedcontrol");
-const config = (0, nodecg_1.get)().bundleConfig;
 /**
  * Logs OBS streaming status changes.
  * @param streaming If the streaming was started or stopped.
@@ -25,9 +23,7 @@ exports.logStreamingStatusChange = logStreamingStatusChange;
  * @param name Name of scene.
  * @param action If this is the start or end of the scene being shown.
  */
-function logSceneSwitch(name, action) {
-    const isGameScene = name === config.obs.names.scenes.gameLayout
-        || name === config.obs.names.scenes.readerIntroduction;
+function logSceneSwitch(name, action, isGameScene) {
     rabbitmq_1.mq.send(`obs.scene.${name.replace(/[. ]/g, '_')}.${action}${isGameScene ? '.gamescene' : ''}`, {
         action,
         scene: name,

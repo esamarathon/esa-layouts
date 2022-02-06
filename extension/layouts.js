@@ -9,6 +9,7 @@ const nodecg_1 = require("./util/nodecg");
 const obs_1 = __importDefault(require("./util/obs"));
 const replicants_1 = require("./util/replicants");
 const speedcontrol_1 = require("./util/speedcontrol");
+const xkeys_1 = __importDefault(require("./util/xkeys"));
 const config = (0, nodecg_1.get)().bundleConfig;
 new countdown_1.default((0, nodecg_1.get)()); // eslint-disable-line no-new
 const gameCaptures = Array.isArray(config.obs.names.groups.gameCaptures)
@@ -187,4 +188,229 @@ replicants_1.capturePositions.on('change', async (val) => {
             }
         }
     }
+});
+// Hardcoded (for now) sets of keys to use for sources/groups/cropping for XKeys panel.
+const gameCaptureKeys = [61, 62, 63, 64];
+const gameSourceKeys = [69, 70, 71, 72];
+const gameCropKeys = [77, 78, 79, 80];
+const gameCropResetKeys = { selected: 76, all: 68 };
+const gameCropValues = Array(gameCaptures.length).fill({ top: 0, right: 0, bottom: 0, left: 0 });
+const cameraCaptureKeys = [49, 57, 65, 73];
+const cameraSourceKeys = [50, 58, 66, 74];
+const selected = {
+    gameCapture: -1,
+    gameSource: Array(gameCaptures.length).fill(-1),
+    gameCrop: -1,
+    cameraCapture: -1,
+    cameraSource: -1,
+};
+obs_1.default.conn.on('ConnectionOpened', async () => {
+    for (const capName of gameCaptures) {
+        // Gets cropping values and stores them on initial connection.
+        try {
+            const itemProperties = await obs_1.default.conn.send('GetSceneItemProperties', {
+                'scene-name': config.obs.names.scenes.gameLayout,
+                item: { name: capName },
+            });
+            gameCropValues[gameCaptures.indexOf(capName)] = itemProperties.crop;
+        }
+        catch (err) {
+            // TODO: Log!
+        }
+        // Gets rack selection value and stores it on initial connection.
+        for (const sourceName of gameSources) {
+            try {
+                const itemProperties = await obs_1.default.conn.send('GetSceneItemProperties', {
+                    'scene-name': capName,
+                    item: { name: sourceName },
+                });
+                if (itemProperties.visible) {
+                    selected.gameSource[gameCaptures.indexOf(capName)] = gameSources.indexOf(sourceName);
+                }
+            }
+            catch (err) {
+                // TODO: Log!
+            }
+        }
+    }
+});
+function calculateCrop(side, position) {
+    let amount = side + position;
+    if (amount < 0)
+        amount = 0;
+    return amount;
+}
+async function changeCrop(value) {
+    const capture = selected.gameCapture;
+    if (value && selected.gameCrop >= 0) {
+        switch (selected.gameCrop) {
+            case 0:
+                gameCropValues[capture].top = calculateCrop(gameCropValues[capture].top, value);
+                break;
+            case 1:
+                gameCropValues[capture].right = calculateCrop(gameCropValues[capture].right, value);
+                break;
+            case 2:
+                gameCropValues[capture].bottom = calculateCrop(gameCropValues[capture].bottom, value);
+                break;
+            case 3:
+                gameCropValues[capture].left = calculateCrop(gameCropValues[capture].left, value);
+                break;
+            default:
+            // nothing
+        }
+        // If no value is supplied, reset the cropping instead.
+    }
+    else {
+        gameCropValues[capture] = { top: 0, right: 0, bottom: 0, left: 0 };
+    }
+    try {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore: Typings say we need to specify more than we actually do.
+        await obs_1.default.conn.send('SetSceneItemProperties', {
+            'scene-name': config.obs.names.scenes.gameLayout,
+            item: { name: gameCaptures[selected.gameCapture] },
+            crop: gameCropValues[capture],
+        });
+    }
+    catch (err) {
+        // TODO: Log!
+    }
+}
+xkeys_1.default.on('down', async (keyIndex) => {
+    // A Game Capture key was pressed.
+    if (gameCaptureKeys.includes(keyIndex)) {
+        const capture = gameCaptureKeys.indexOf(keyIndex);
+        // If capture has been changed.
+        if (capture !== selected.gameCapture) {
+            // Turn old key off, turn new key on.
+            xkeys_1.default.setBacklight(gameCaptureKeys[selected.gameCapture], false);
+            xkeys_1.default.setBacklight(gameCaptureKeys[capture], true, true);
+            // Make relevant source keys blink, except the currently selected one.
+            gameSourceKeys.forEach((key) => {
+                if (key === gameSourceKeys[selected.gameSource[capture]]) {
+                    xkeys_1.default.setBacklight(key, true, true);
+                }
+                else {
+                    xkeys_1.default.setBacklight(key, true, false, true);
+                }
+            });
+            // Make cropping keys blink.
+            gameCropKeys.forEach((key) => {
+                xkeys_1.default.setBacklight(key, true, false, true);
+            });
+            // Set new key as current.
+            selected.gameCapture = capture;
+        }
+        else {
+            // Turn off capture key.
+            xkeys_1.default.setBacklight(gameCaptureKeys[capture], false);
+            // Turn off source keys.
+            gameSourceKeys.forEach((key) => {
+                xkeys_1.default.setBacklight(key, false);
+            });
+            // Turn off crop keys.
+            gameCropKeys.forEach((key) => {
+                xkeys_1.default.setBacklight(key, false);
+            });
+            // Unset game capture/cropping.
+            // Source values not removed; kept in memory for future use.
+            selected.gameCapture = -1;
+            selected.gameCrop = -1;
+        }
+        // A Game Source key was pressed and a Capture is selected.
+    }
+    else if (gameSourceKeys.includes(keyIndex) && selected.gameCapture >= 0) {
+        const source = gameSourceKeys.indexOf(keyIndex);
+        // If source has been changed.
+        if (source !== selected.gameSource[selected.gameCapture]) {
+            // Make relevant source keys blink, except the newly selected one.
+            gameSourceKeys.forEach((key) => {
+                if (key === gameSourceKeys[source]) {
+                    xkeys_1.default.setBacklight(key, true, true);
+                }
+                else {
+                    xkeys_1.default.setBacklight(key, true, false, true);
+                }
+            });
+            // Loops through the sources and toggles their visibility for the selected capture.
+            for (const name of config.obs.names.sources.gameSources) {
+                try {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore: Typings say we need to specify more than we actually do.
+                    await obs_1.default.conn.send('SetSceneItemProperties', {
+                        'scene-name': gameCaptures[selected.gameCapture],
+                        item: { name },
+                        visible: config.obs.names.sources.gameSources.indexOf(name) === source,
+                    });
+                }
+                catch (err) {
+                    // TODO: Log!
+                }
+            }
+            // Set new as current.
+            selected.gameSource[selected.gameCapture] = source;
+        }
+        // A Game Cropping key was pressed and a Capture is selected.
+    }
+    else if (gameCropKeys.includes(keyIndex) && selected.gameCapture >= 0) {
+        const side = gameCropKeys.indexOf(keyIndex);
+        // If side has been changed.
+        if (side !== selected.gameCrop) {
+            // Make relevant crop keys blink, except the newly selected one.
+            gameCropKeys.forEach((key) => {
+                if (key === gameCropKeys[side]) {
+                    xkeys_1.default.setBacklight(key, true, true);
+                }
+                else {
+                    xkeys_1.default.setBacklight(key, true, false, true);
+                }
+            });
+            // Set new crop side as current.
+            selected.gameCrop = side;
+        }
+        else {
+            // Make this key go back to just blinking.
+            xkeys_1.default.setBacklight(gameCropKeys[side], true, false, true);
+            // Unset game cropping.
+            selected.gameCrop = -1;
+        }
+        // The button to reset cropping on selected capture was pressed and a Capture is selected.
+    }
+    else if (gameCropResetKeys.selected === keyIndex && selected.gameCapture >= 0) {
+        // Turn on backlight while key is held down.
+        xkeys_1.default.setBacklight(keyIndex, true, true);
+        await changeCrop();
+    }
+    // TODO: Reset cropping on *all* captures button.
+});
+xkeys_1.default.on('up', (keyIndex) => {
+    // Turns off "reset selected capture" cropping button.
+    if (keyIndex === gameCropResetKeys.selected) {
+        xkeys_1.default.setBacklight(keyIndex, false);
+    }
+});
+xkeys_1.default.on('jog', async (index, position) => {
+    if (selected.gameCrop >= 0) {
+        await changeCrop(position);
+    }
+});
+let shuttleInterval;
+let currShuttlePos = 0; // Stores current shuttle position for use by other functions
+xkeys_1.default.on('shuttle', (index, position) => {
+    if (selected.gameCrop >= 0) {
+        // If returned to 0, clear interval.
+        if (position === 0 && shuttleInterval) {
+            clearInterval(shuttleInterval);
+            // If was at one and has now turned, start the 100ms interval.
+            // This then runs the crop function every 100ms with the current position
+            // at that time until the shuttle is returned to 0.
+        }
+        else if (currShuttlePos === 0 && position !== 0) {
+            shuttleInterval = setInterval(async () => {
+                await changeCrop(currShuttlePos);
+            }, 100);
+        }
+    }
+    currShuttlePos = position;
 });

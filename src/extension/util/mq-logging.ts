@@ -29,7 +29,8 @@ export function logStreamingStatusChange(streaming: boolean): void {
  * @param action If this is the start or end of the scene being shown.
  */
 export function logSceneSwitch(name: string, action: 'end' | 'start'): void {
-  const isGameScene = name === config.obs.names.scenes.gameLayout;
+  const isGameScene = name === config.obs.names.scenes.gameLayout
+    || name === config.obs.names.scenes.readerIntroduction;
   mq.send(
     `obs.scene.${name.replace(/[. ]/g, '_')}.${action}${isGameScene ? '.gamescene' : ''}`,
     {

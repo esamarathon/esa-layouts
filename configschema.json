@@ -241,7 +241,7 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {
-                "gameCaptures": {
+                "gameSources": {
                   "oneOf": [
                     {
                       "type": "string"
@@ -255,9 +255,9 @@
                       "minItems": 1
                     }
                   ],
-                  "default": "Game Capture"
+                  "default": "Game Source"
                 },
-                "cameraCaptures": {
+                "cameraSources": {
                   "oneOf": [
                     {
                       "type": "string"
@@ -271,9 +271,9 @@
                       "minItems": 1
                     }
                   ],
-                  "default": "Camera Capture"
+                  "default": "Camera Source"
                 },
-                "cameraCaptureCrowd": {
+                "cameraSourceCrowd": {
                   "oneOf": [
                     {
                       "type": "string"
@@ -310,17 +310,60 @@
                 }
               },
               "required": [
-                "gameCaptures",
-                "cameraCaptures",
+                "gameSources",
+                "cameraSources",
                 "twitchSources",
                 "videoPlayer",
                 "donationSound"
+              ]
+            },
+            "groups": {
+              "type":  "object",
+              "additionalProperties": false,
+              "properties": {
+                "gameCaptures": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "uniqueItems": true,
+                      "minItems": 1
+                    }
+                  ],
+                  "default": "Game Capture"
+                },
+                "cameraCaptures": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "uniqueItems": true,
+                      "minItems": 1
+                    }
+                  ],
+                  "default": "Camera Capture"
+                }
+              },
+              "required": [
+                "gameCaptures",
+                "cameraCaptures"
               ]
             }
           },
           "required": [
             "scenes",
-            "sources"
+            "sources",
+            "groups"
           ]
         }
       },

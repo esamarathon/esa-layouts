@@ -111,7 +111,7 @@ function changeAdvanceSlideSDTitle(i?: number): void {
  */
 function reset(): void {
   assetsTemp = assetsSorted();
-  readerIntroduction.value.current = assetsTemp[0].sum || 'RunInfo';
+  readerIntroduction.value.current = assetsTemp[0]?.sum || 'RunInfo';
   changeAdvanceSlideSDTitle();
 }
 

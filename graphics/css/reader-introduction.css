@@ -12,14 +12,14 @@
 }
 
 
-.BoxArt[data-v-3a34eadc] {
+.BoxArt[data-v-1d8825b6] {
   height: 100%;
   margin-right: 50px;
 }
-.fade-enter-active[data-v-3a34eadc], .fade-leave-active[data-v-3a34eadc] {
+.fade-enter-active[data-v-1d8825b6], .fade-leave-active[data-v-1d8825b6] {
   transition: opacity 1s;
 }
-.fade-enter[data-v-3a34eadc], .fade-leave-to[data-v-3a34eadc] {
+.fade-enter[data-v-1d8825b6], .fade-leave-to[data-v-1d8825b6] {
   opacity: 0;
 }
 

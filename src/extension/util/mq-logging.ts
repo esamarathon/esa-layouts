@@ -1,14 +1,10 @@
 import type { MediaBox } from '@esa-layouts/types/schemas';
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import type { NodeCG as mqTypes } from '@esamarathon/mq-events/types';
 import type { RunData } from 'speedcontrol-util/types';
 import mb from './mediabox';
-import { get as nodecg } from './nodecg';
 import { mq } from './rabbitmq';
 import { assetsMediaBoxImages, assetsVideos } from './replicants';
 import { sc } from './speedcontrol';
-
-const config = nodecg().bundleConfig as Configschema;
 
 /**
  * Logs OBS streaming status changes.
@@ -28,9 +24,7 @@ export function logStreamingStatusChange(streaming: boolean): void {
  * @param name Name of scene.
  * @param action If this is the start or end of the scene being shown.
  */
-export function logSceneSwitch(name: string, action: 'end' | 'start'): void {
-  const isGameScene = name === config.obs.names.scenes.gameLayout
-    || name === config.obs.names.scenes.readerIntroduction;
+export function logSceneSwitch(name: string, action: 'end' | 'start', isGameScene: boolean): void {
   mq.send(
     `obs.scene.${name.replace(/[. ]/g, '_')}.${action}${isGameScene ? '.gamescene' : ''}`,
     {

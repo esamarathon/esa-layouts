@@ -89,11 +89,21 @@ obs.on('streamingStatusChanged', (streaming) => {
 
 obs.on('currentSceneChanged', (current, last) => {
   obsData.value.scene = current;
+  // Slightly hacky way of not sending ".gamescene" at the end of a RabbitMQ routing key
+  // if we are going between 2 different "game scenes", needed for VodManager.
+  let currentIsGameScene = current === obs.findScene(config.names.scenes.gameLayout)
+    || current === obs.findScene(config.names.scenes.readerIntroduction);
+  let lastIsGameScene = last === obs.findScene(config.names.scenes.gameLayout)
+    || last === obs.findScene(config.names.scenes.readerIntroduction);
+  if (currentIsGameScene && lastIsGameScene) {
+    currentIsGameScene = false;
+    lastIsGameScene = false;
+  }
   if (last) {
-    mqLogging.logSceneSwitch(last, 'end');
+    mqLogging.logSceneSwitch(last, 'end', lastIsGameScene);
   }
   if (current) {
-    mqLogging.logSceneSwitch(current, 'start');
+    mqLogging.logSceneSwitch(current, 'start', currentIsGameScene);
   }
 });
 

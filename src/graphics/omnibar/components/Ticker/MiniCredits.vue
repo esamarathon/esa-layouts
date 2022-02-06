@@ -107,8 +107,9 @@ export default class extends Vue {
       const scrollAmount = msgWidth - maxWidth;
       if (scrollAmount > 0) {
         const pps = 110; // Pixels Per Second
-        const minLength = this.seconds - 4;
-        const length = Math.max(Math.round(scrollAmount / pps), minLength);
+        // const minLength = this.seconds - 4;
+        // const length = Math.max(Math.round(scrollAmount / pps), minLength);
+        const length = Math.round(scrollAmount / pps);
         this.timeline = gsap.timeline({
           onComplete: () => {
             window.setTimeout(() => {

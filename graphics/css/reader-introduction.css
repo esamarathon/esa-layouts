@@ -12,14 +12,14 @@
 }
 
 
-.BoxArt[data-v-2ace07a8] {
+.BoxArt[data-v-222a5c25] {
   height: 100%;
   margin-right: 50px;
 }
-.fade-enter-active[data-v-2ace07a8], .fade-leave-active[data-v-2ace07a8] {
+.fade-enter-active[data-v-222a5c25], .fade-leave-active[data-v-222a5c25] {
   transition: opacity 1s;
 }
-.fade-enter[data-v-2ace07a8], .fade-leave-to[data-v-2ace07a8] {
+.fade-enter[data-v-222a5c25], .fade-leave-to[data-v-222a5c25] {
   opacity: 0;
 }
 

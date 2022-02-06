@@ -77,6 +77,9 @@ export interface Configschema {
 		ip: string;
 		localPort: number;
 	};
+	xkeys: {
+		enabled: boolean;
+	};
 	tracker: {
 		enabled: boolean;
 		address: string;

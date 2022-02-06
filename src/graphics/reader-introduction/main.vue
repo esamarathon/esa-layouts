@@ -31,7 +31,8 @@
             height: '100%',
             padding: '50px',
             'box-sizing': 'border-box',
-            'object-fit': 'contain'
+            'object-fit': 'contain',
+            overflow: 'hidden',
           }"
         >
         <!-- Run boxart and information. -->

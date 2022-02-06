@@ -26,7 +26,8 @@ exports.logStreamingStatusChange = logStreamingStatusChange;
  * @param action If this is the start or end of the scene being shown.
  */
 function logSceneSwitch(name, action) {
-    const isGameScene = name === config.obs.names.scenes.gameLayout;
+    const isGameScene = name === config.obs.names.scenes.gameLayout
+        || name === config.obs.names.scenes.readerIntroduction;
     rabbitmq_1.mq.send(`obs.scene.${name.replace(/[. ]/g, '_')}.${action}${isGameScene ? '.gamescene' : ''}`, {
         action,
         scene: name,

@@ -251,6 +251,32 @@ obs.conn.on('ConnectionOpened', async () => {
   }
 });
 
+/**
+ * Sets up a timer to turn off the button lights and functionality after 30s,
+ * if no other keys are pressed.
+ */
+let captureTO: NodeJS.Timeout | undefined;
+function setupIdleTimeout(): void {
+  if (captureTO) clearTimeout(captureTO);
+  captureTO = setTimeout(() => {
+    // Turn off capture key.
+    xkeys.setBacklight(gameCaptureKeys[selected.gameCapture], false);
+
+    // Turn off source keys.
+    gameSourceKeys.forEach((key) => {
+      xkeys.setBacklight(key, false);
+    });
+
+    // Turn off crop keys.
+    gameCropKeys.forEach((key) => {
+      xkeys.setBacklight(key, false);
+    });
+
+    selected.gameCapture = -1;
+    selected.gameCrop = -1;
+  }, 30 * 1000);
+}
+
 // Helper function to calculate crop used below.
 /**
  * Helper function to calculate crop used below to calculate overall crop value for a source.
@@ -335,6 +361,8 @@ xkeys.on('down', async (keyIndex) => {
 
       // Set new key as current.
       selected.gameCapture = capture;
+
+      setupIdleTimeout();
     } else {
       // Turn off capture key.
       xkeys.setBacklight(gameCaptureKeys[capture], false);
@@ -391,6 +419,8 @@ xkeys.on('down', async (keyIndex) => {
 
       // Set new as current.
       selected.gameSource[selected.gameCapture] = source;
+
+      setupIdleTimeout();
     }
   // A Game Cropping key was pressed and a Capture is selected.
   } else if (gameCropKeys.includes(keyIndex) && selected.gameCapture >= 0) {
@@ -416,6 +446,8 @@ xkeys.on('down', async (keyIndex) => {
       // Unset game cropping.
       selected.gameCrop = -1;
     }
+
+    setupIdleTimeout();
   // The button to reset cropping on selected capture was pressed and a Capture is selected.
   } else if (gameCropResetKeys.selected === keyIndex && selected.gameCapture >= 0) {
     // Turn on backlight while key is held down.
@@ -436,6 +468,7 @@ xkeys.on('up', (keyIndex) => {
 
 xkeys.on('jog', async (index, position) => {
   if (selected.gameCrop >= 0) {
+    setupIdleTimeout();
     await changeCrop(position);
   }
 });
@@ -451,6 +484,7 @@ xkeys.on('shuttle', (index, position) => {
     // at that time until the shuttle is returned to 0.
     } else if (currShuttlePos === 0 && position !== 0) {
       shuttleInterval = setInterval(async () => {
+        setupIdleTimeout();
         await changeCrop(currShuttlePos);
       }, 100);
     }

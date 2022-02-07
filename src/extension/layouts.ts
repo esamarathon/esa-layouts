@@ -36,6 +36,27 @@ const obsSourceKeys: { [key: string]: string | undefined } = {
   CameraCaptureCrowd: config.obs.names.sources.cameraSourceCrowd || undefined,
 };
 
+// Hardcoded (for now) sets of keys to use for sources/groups/cropping for XKeys panel.
+const gameCaptureKeys = [61, 62, 63, 64];
+const gameSourceKeys = [69, 70, 71, 72];
+const gameCropKeys = [77, 78, 79, 80];
+const gameCropResetKeys = { selected: 76, all: 68 };
+const cameraCaptureKeys = [49, 57, 65, 73];
+const cameraSourceKeys = [50, 58, 66, 74];
+
+// Stores current game capture cropping values.
+const gameCropValues = Array(gameCaptures.length).fill({ top: 0, right: 0, bottom: 0, left: 0 });
+let currShuttlePos = 0; // Stores current shuttle position for use by other functions
+
+// Things that are currently "selected", mostly used by XKeys for backlights.
+const selected = {
+  gameCapture: -1,
+  gameSource: Array(gameCaptures.length).fill(-1),
+  gameCrop: -1,
+  cameraCapture: -1,
+  cameraSource: -1,
+};
+
 // Controls the name cycling ticks for user information.
 function cycleNames(reset = false): void {
   let cycle = 0;
@@ -127,7 +148,7 @@ capturePositions.on('change', async (val) => {
             crop.right = cropAmount;
           }
         } catch (err) {
-          logError('[Layouts] Cannot find camera source to crop [%s]', err, key);
+          logError('[Layouts] Could not find camera source to crop [%s]', err, key);
         }
       }
 
@@ -188,29 +209,13 @@ capturePositions.on('change', async (val) => {
           })(),
         );
       } catch (err) {
-        logError('[Layouts] Cannot successfully configure capture position [%s]', err, key);
+        logError('[Layouts] Could not successfully configure capture position [%s]', err, key);
       }
     }
   }
 });
 
-// Hardcoded (for now) sets of keys to use for sources/groups/cropping for XKeys panel.
-const gameCaptureKeys = [61, 62, 63, 64];
-const gameSourceKeys = [69, 70, 71, 72];
-const gameCropKeys = [77, 78, 79, 80];
-const gameCropResetKeys = { selected: 76, all: 68 };
-const gameCropValues = Array(gameCaptures.length).fill({ top: 0, right: 0, bottom: 0, left: 0 });
-const cameraCaptureKeys = [49, 57, 65, 73];
-const cameraSourceKeys = [50, 58, 66, 74];
-
-const selected = {
-  gameCapture: -1,
-  gameSource: Array(gameCaptures.length).fill(-1),
-  gameCrop: -1,
-  cameraCapture: -1,
-  cameraSource: -1,
-};
-
+// Things to do on OBS initial connection.
 obs.conn.on('ConnectionOpened', async () => {
   for (const capName of gameCaptures) {
     // Gets cropping values and stores them on initial connection.
@@ -221,7 +226,7 @@ obs.conn.on('ConnectionOpened', async () => {
       });
       gameCropValues[gameCaptures.indexOf(capName)] = itemProperties.crop;
     } catch (err) {
-      // TODO: Log!
+      logError('[Layouts] Could not get initial game capture cropping values [%s]', err, capName);
     }
 
     // Gets rack selection value and stores it on initial connection.
@@ -235,18 +240,34 @@ obs.conn.on('ConnectionOpened', async () => {
           selected.gameSource[gameCaptures.indexOf(capName)] = gameSources.indexOf(sourceName);
         }
       } catch (err) {
-        // TODO: Log!
+        logError(
+          '[Layouts] Could not get initial game source visible values [%s: %s]',
+          err,
+          capName,
+          sourceName,
+        );
       }
     }
   }
 });
 
+// Helper function to calculate crop used below.
+/**
+ * Helper function to calculate crop used below to calculate overall crop value for a source.
+ * @param side Crop amount already applied.
+ * @param position The position of the jog/shutter.
+ * @returns Calculated value.
+ */
 function calculateCrop(side: number, position: number) {
   let amount = side + position;
   if (amount < 0) amount = 0;
   return amount;
 }
 
+/**
+ * Calculates and applies the cropping for a group when ran.
+ * @param value Amount to crop from the selected slide.
+ */
 async function changeCrop(value?: number): Promise<void> {
   const capture = selected.gameCapture;
   if (value && selected.gameCrop >= 0) {
@@ -279,7 +300,11 @@ async function changeCrop(value?: number): Promise<void> {
       crop: gameCropValues[capture],
     });
   } catch (err) {
-    // TODO: Log!
+    logError(
+      '[Layouts] Could not change game capture crop values [%s]',
+      err,
+      gameCaptures[selected.gameCapture],
+    );
   }
 }
 
@@ -355,7 +380,12 @@ xkeys.on('down', async (keyIndex) => {
             visible: config.obs.names.sources.gameSources.indexOf(name) === source,
           });
         } catch (err) {
-          // TODO: Log!
+          logError(
+            '[Layouts] Could not change game source visibility [%s: %s]',
+            err,
+            gameCaptures[selected.gameCapture],
+            name,
+          );
         }
       }
 
@@ -411,7 +441,6 @@ xkeys.on('jog', async (index, position) => {
 });
 
 let shuttleInterval: NodeJS.Timeout | undefined;
-let currShuttlePos = 0; // Stores current shuttle position for use by other functions
 xkeys.on('shuttle', (index, position) => {
   if (selected.gameCrop >= 0) {
     // If returned to 0, clear interval.

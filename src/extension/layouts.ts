@@ -122,7 +122,13 @@ capturePositions.on('change', async (val) => {
   // Loops through all possible sources to move and does the work.
   for (const [key, value] of Object.entries(obsSourceKeys)) {
     if (value) { // Only continue if key -> value pair is set
-      const crop = { top: 0, right: 0, bottom: 0, left: 0 }; // Default crop values
+      let crop = { top: 0, right: 0, bottom: 0, left: 0 }; // Default crop values
+
+      // If this a game capture, use cropping we have stored.
+      if (key.includes('Game')) {
+        const index = gameCaptures.indexOf(value);
+        crop = gameCropValues[index];
+      }
 
       // If this is a camera, it may need cropping.
       if (key.includes('Camera') && val['game-layout'][key]) {
@@ -160,8 +166,12 @@ capturePositions.on('change', async (val) => {
             'scene-name': config.obs.names.scenes.gameLayout,
             item: { name: value },
           });
-          crop.right = key === 'GameCapture1' ? sceneItemProperties.sourceWidth / 2 : 0;
-          crop.left = key === 'GameCapture2' ? sceneItemProperties.sourceWidth / 2 : 0;
+          crop = {
+            top: 0,
+            right: key === 'GameCapture1' ? sceneItemProperties.sourceWidth / 2 : 0,
+            bottom: 0,
+            left: key === 'GameCapture2' ? sceneItemProperties.sourceWidth / 2 : 0,
+          };
         }
 
         await obs.configureSceneItem(
@@ -293,10 +303,11 @@ function calculateCrop(side: number, position: number) {
 /**
  * Calculates and applies the cropping for a group when ran.
  * @param value Amount to crop from the selected slide.
+ * @param cap Override the capture that is cropped.
  */
-async function changeCrop(value?: number): Promise<void> {
-  const capture = selected.gameCapture;
-  if (!capture) return;
+async function changeCrop(value?: number, cap?: number): Promise<void> {
+  const capture = selected.gameCapture >= 0 ? selected.gameCapture : cap;
+  if (typeof capture === 'undefined' || capture < 0) return;
   if (value && selected.gameCrop >= 0) {
     switch (selected.gameCrop) {
       case 0:
@@ -335,6 +346,8 @@ async function changeCrop(value?: number): Promise<void> {
   }
 }
 
+let resetAllGameCropConfirm = false;
+let resetAllGameCropTO: NodeJS.Timeout | undefined;
 xkeys.on('down', async (keyIndex) => {
   // A Game Capture key was pressed.
   if (gameCaptureKeys.includes(keyIndex)) {
@@ -455,9 +468,30 @@ xkeys.on('down', async (keyIndex) => {
     xkeys.setBacklight(keyIndex, true, true);
 
     await changeCrop();
-  }
+  // The "reset all game cropping" key was pressed.
+  // This has a double check so you can't accidentally press it.
+  } else if (gameCropResetKeys.all === keyIndex) {
+    if (!resetAllGameCropConfirm) {
+      // Make the key blink red.
+      xkeys.setBacklight(gameCropResetKeys.all, true, true, true);
 
-  // TODO: Reset cropping on *all* captures button.
+      resetAllGameCropTO = setTimeout(() => {
+        // Turn off key and reset confirm value.
+        xkeys.setBacklight(gameCropResetKeys.all, false);
+        resetAllGameCropConfirm = false;
+      }, 10 * 1000);
+
+      resetAllGameCropConfirm = true;
+    } else {
+      // Turn off key, clear timeout, reset crop on all captures that we have.
+      xkeys.setBacklight(keyIndex, false);
+      if (resetAllGameCropTO) clearTimeout(resetAllGameCropTO);
+      for (let i = 0; i < gameCaptures.length; i += 1) {
+        await changeCrop(undefined, i);
+      }
+      resetAllGameCropConfirm = false;
+    }
+  }
 });
 
 xkeys.on('up', (keyIndex) => {

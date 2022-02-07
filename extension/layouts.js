@@ -43,6 +43,7 @@ const gameCropKeys = [77, 78, 79, 80];
 const gameCropResetKeys = { selected: 76, all: 68 };
 const cameraCaptureKeys = [13, 14, 15, 16];
 const cameraSourceKeys = [5, 6, 7, 8];
+const cameraPositionResetKey = 24;
 // Stores current cropping values.
 const gameCropValues = Array(gameCaptures.length)
     .fill({ top: 0, right: 0, bottom: 0, left: 0 });
@@ -306,18 +307,39 @@ function setupIdleTimeout() {
         clearTimeout(captureTO);
     captureTO = setTimeout(() => { clearAllKeys(); }, 30 * 1000);
 }
-// Helper function to calculate crop used below.
 /**
- * Helper function to calculate crop used below to calculate overall crop value for a source.
+ * Helper function to calculate game crop used below to calculate overall crop value for a source.
  * @param side Crop amount already applied.
- * @param position The position of the jog/shutter.
+ * @param value Amount to crop, usually from the position of the jog/shutter.
  * @returns Calculated value.
  */
-function calculateCrop(side, position) {
-    let amount = side + position;
+function calculateGameCrop(side, value) {
+    let amount = side + value;
     if (amount < 0)
         amount = 0;
     return amount;
+}
+/**
+ * Helper function to calculate camera crop used below to calculate overall crop value for a source.
+ * @param aCurrent Cropping amount for top/left already applied.
+ * @param bCurrent Cropping amount for bottom/right already applied.
+ * @param value Amount to crop, usually from the position of the jog/shutter.
+ * @returns Calculated value.
+ */
+function calculateCameraCrop(aCurrent, bCurrent, value) {
+    // Work out the cropping values.
+    let aCrop = aCurrent + value;
+    let bCrop = bCurrent - value;
+    // Cap the cropping values if they went negative.
+    if (aCrop < 0) {
+        bCrop += aCrop;
+        aCrop = 0;
+    }
+    else if (bCrop < 0) {
+        aCrop += bCrop;
+        bCrop = 0;
+    }
+    return [aCrop, bCrop];
 }
 /**
  * Calculates and applies the cropping for a group when ran.
@@ -325,42 +347,72 @@ function calculateCrop(side, position) {
  * @param cap Override the capture that is cropped.
  */
 async function changeCrop(value, cap) {
-    const capture = selected.gameCapture >= 0 ? selected.gameCapture : cap;
+    const mode = selected.gameCrop >= 0 ? 'game' : 'camera';
+    let capture;
+    if (mode === 'game') {
+        capture = selected.gameCapture >= 0 ? selected.gameCapture : cap;
+        if (typeof capture === 'undefined' || capture < 0)
+            return;
+        if (value && selected.gameCrop >= 0) {
+            switch (selected.gameCrop) {
+                case 0:
+                    gameCropValues[capture].top = calculateGameCrop(gameCropValues[capture].top, value);
+                    break;
+                case 1:
+                    gameCropValues[capture].right = calculateGameCrop(gameCropValues[capture].right, value);
+                    break;
+                case 2:
+                    gameCropValues[capture].bottom = calculateGameCrop(gameCropValues[capture].bottom, value);
+                    break;
+                case 3:
+                    gameCropValues[capture].left = calculateGameCrop(gameCropValues[capture].left, value);
+                    break;
+                default:
+                // nothing
+            }
+            // If no value is supplied, reset the cropping instead.
+        }
+        else {
+            gameCropValues[capture] = { top: 0, right: 0, bottom: 0, left: 0 };
+        }
+    }
+    else if (mode === 'camera') {
+        capture = selected.cameraCapture >= 0 ? selected.cameraCapture : cap;
+        if (value && typeof capture !== 'undefined' && capture >= 0) {
+            const crop = cameraCropValues[selected.cameraCapture];
+            // Top/bottom cropping.
+            if (crop.top > 0 || crop.bottom > 0) {
+                const croppingValues = calculateCameraCrop(crop.top, crop.bottom, value);
+                [
+                    cameraCropValues[selected.cameraCapture].top,
+                    cameraCropValues[selected.cameraCapture].bottom,
+                ] = croppingValues;
+            }
+            // Left/right cropping.
+            if (crop.left > 0 || crop.right > 0) {
+                const croppingValues = calculateCameraCrop(crop.left, crop.right, value);
+                [
+                    cameraCropValues[selected.cameraCapture].left,
+                    cameraCropValues[selected.cameraCapture].right,
+                ] = croppingValues;
+            }
+        }
+    }
     if (typeof capture === 'undefined' || capture < 0)
         return;
-    if (value && selected.gameCrop >= 0) {
-        switch (selected.gameCrop) {
-            case 0:
-                gameCropValues[capture].top = calculateCrop(gameCropValues[capture].top, value);
-                break;
-            case 1:
-                gameCropValues[capture].right = calculateCrop(gameCropValues[capture].right, value);
-                break;
-            case 2:
-                gameCropValues[capture].bottom = calculateCrop(gameCropValues[capture].bottom, value);
-                break;
-            case 3:
-                gameCropValues[capture].left = calculateCrop(gameCropValues[capture].left, value);
-                break;
-            default:
-            // nothing
-        }
-        // If no value is supplied, reset the cropping instead.
-    }
-    else {
-        gameCropValues[capture] = { top: 0, right: 0, bottom: 0, left: 0 };
-    }
+    const captures = mode === 'game' ? gameCaptures : cameraCaptures;
+    const cropValues = mode === 'game' ? gameCropValues : cameraCropValues;
     try {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore: Typings say we need to specify more than we actually do.
         await obs_1.default.conn.send('SetSceneItemProperties', {
             'scene-name': config.obs.names.scenes.gameLayout,
-            item: { name: gameCaptures[capture] },
-            crop: gameCropValues[capture],
+            item: { name: captures[capture] },
+            crop: cropValues[capture],
         });
     }
     catch (err) {
-        (0, helpers_1.logError)('[Layouts] Could not change game capture crop values [%s]', err, gameCaptures[capture]);
+        (0, helpers_1.logError)('[Layouts] Could not change capture crop values [%s]', err, captures[capture]);
     }
 }
 let resetAllGameCropConfirm = false;
@@ -374,7 +426,7 @@ xkeys_1.default.on('down', async (keyIndex) => {
             .includes(keyIndex)) {
             return 'game';
         }
-        if (cameraCaptureKeys.concat(cameraSourceKeys).includes(keyIndex)) {
+        if (cameraCaptureKeys.concat(cameraSourceKeys, cameraPositionResetKey).includes(keyIndex)) {
             return 'camera';
         }
         return undefined;
@@ -413,6 +465,14 @@ xkeys_1.default.on('down', async (keyIndex) => {
                     xkeys_1.default.setBacklight(key, true, false, true);
                 });
                 selected.gameCrop = -1;
+            }
+            // Update the camera capture cropping in case it is now different due to game-layout changes.
+            if (mode === 'camera') {
+                const itemProperties = await obs_1.default.conn.send('GetSceneItemProperties', {
+                    'scene-name': config.obs.names.scenes.gameLayout,
+                    item: { name: captures[capture] },
+                });
+                cameraCropValues[capture] = itemProperties.crop;
             }
             // Set new key as current.
             selected[`${mode}Capture`] = capture;
@@ -528,15 +588,29 @@ xkeys_1.default.on('down', async (keyIndex) => {
             resetAllGameCropConfirm = false;
         }
     }
+    else if (mode === 'camera') {
+        // The button to reset camera "crop" if we have a camera capture selected.
+        // TODO: Store value generated when game-layout changes and use that instead if possible!
+        if (cameraPositionResetKey === keyIndex && selected.cameraCapture >= 0) {
+            xkeys_1.default.setBacklight(keyIndex, true, true);
+            // Calculate the centre to the cropping.
+            const crop = cameraCropValues[selected.cameraCapture];
+            const cropH = (crop.left + crop.right) / 2;
+            const cropV = (crop.top + crop.bottom) / 2;
+            const newCrop = { top: cropV, right: cropH, bottom: cropV, left: cropH };
+            cameraCropValues[selected.cameraCapture] = newCrop; // Update local cropping values.
+            await changeCrop(undefined, selected.cameraCapture);
+        }
+    }
 });
 xkeys_1.default.on('up', (keyIndex) => {
-    // Turns off "reset selected capture" cropping button.
-    if (keyIndex === gameCropResetKeys.selected) {
+    // Turns off "reset selected capture cropping" and "reset camera position" button.
+    if (keyIndex === gameCropResetKeys.selected || keyIndex === cameraPositionResetKey) {
         xkeys_1.default.setBacklight(keyIndex, false);
     }
 });
 xkeys_1.default.on('jog', async (index, position) => {
-    if (selected.gameCrop >= 0) {
+    if (selected.gameCrop >= 0 || selected.cameraCapture >= 0) {
         setupIdleTimeout();
         await changeCrop(position);
     }
@@ -552,9 +626,10 @@ xkeys_1.default.on('shuttle', (index, position) => {
     }
     else if (currShuttlePos === 0 && position !== 0) {
         shuttleInterval = setInterval(async () => {
-            setupIdleTimeout();
-            if (selected.gameCrop >= 0)
+            if (selected.gameCrop >= 0 || selected.cameraCapture >= 0) {
+                setupIdleTimeout();
                 await changeCrop(currShuttlePos);
+            }
         }, 100);
     }
     currShuttlePos = position;

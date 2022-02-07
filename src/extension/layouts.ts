@@ -372,6 +372,7 @@ xkeys.on('down', async (keyIndex) => {
       gameCropKeys.forEach((key) => {
         xkeys.setBacklight(key, true, false, true);
       });
+      selected.gameCrop = -1;
 
       // Set new key as current.
       selected.gameCapture = capture;
@@ -510,19 +511,17 @@ xkeys.on('jog', async (index, position) => {
 
 let shuttleInterval: NodeJS.Timeout | undefined;
 xkeys.on('shuttle', (index, position) => {
-  if (selected.gameCrop >= 0) {
-    // If returned to 0, clear interval.
-    if (position === 0 && shuttleInterval) {
-      clearInterval(shuttleInterval);
-    // If was at one and has now turned, start the 100ms interval.
-    // This then runs the crop function every 100ms with the current position
-    // at that time until the shuttle is returned to 0.
-    } else if (currShuttlePos === 0 && position !== 0) {
-      shuttleInterval = setInterval(async () => {
-        setupIdleTimeout();
-        await changeCrop(currShuttlePos);
-      }, 100);
-    }
+  // If returned to 0, clear interval.
+  if (position === 0 && shuttleInterval) {
+    clearInterval(shuttleInterval);
+  // If was at one and has now turned, start the 100ms interval.
+  // This then runs the crop function every 100ms with the current position
+  // at that time until the shuttle is returned to 0.
+  } else if (currShuttlePos === 0 && position !== 0) {
+    shuttleInterval = setInterval(async () => {
+      setupIdleTimeout();
+      if (selected.gameCrop >= 0) await changeCrop(currShuttlePos);
+    }, 100);
   }
   currShuttlePos = position;
 });

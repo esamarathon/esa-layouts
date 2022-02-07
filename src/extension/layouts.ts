@@ -296,6 +296,7 @@ function calculateCrop(side: number, position: number) {
  */
 async function changeCrop(value?: number): Promise<void> {
   const capture = selected.gameCapture;
+  if (!capture) return;
   if (value && selected.gameCrop >= 0) {
     switch (selected.gameCrop) {
       case 0:
@@ -322,14 +323,14 @@ async function changeCrop(value?: number): Promise<void> {
     // @ts-ignore: Typings say we need to specify more than we actually do.
     await obs.conn.send('SetSceneItemProperties', {
       'scene-name': config.obs.names.scenes.gameLayout,
-      item: { name: gameCaptures[selected.gameCapture] },
+      item: { name: gameCaptures[capture] },
       crop: gameCropValues[capture],
     });
   } catch (err) {
     logError(
       '[Layouts] Could not change game capture crop values [%s]',
       err,
-      gameCaptures[selected.gameCapture],
+      gameCaptures[capture],
     );
   }
 }

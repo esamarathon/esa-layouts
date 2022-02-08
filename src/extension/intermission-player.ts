@@ -83,7 +83,7 @@ sc.on('timerStopped', () => {
   if (run?.customData.intermission) {
     // Creates a compiled list of what videos should be played and
     // where commercials should be played if needed.
-    const splitList = run.customData.intermission.split(',');
+    const splitList = run.customData.intermission.split(',').filter(Boolean);
     const formattedList: { name?: string, commercial: number }[] = [];
     for (let i = 0; i < splitList.length;) {
       if (splitList[i].startsWith('ad')) {

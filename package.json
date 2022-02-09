@@ -38,6 +38,7 @@
     "moment": "^2.29.1",
     "needle": "^3.0.0",
     "sharp": "^0.29.3",
+    "socket.io-client": "^4.4.1",
     "speedcontrol-util": "^0.6.0-RC6",
     "streamdeck-util": "^0.4.0",
     "uuid": "^8.3.2"

@@ -7,6 +7,7 @@ import needle from 'needle';
 import { join } from 'path';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
+import offsite from './util/offsite';
 import { assetsReaderIntroductionImages, obsData, readerIntroduction } from './util/replicants';
 import { sc } from './util/speedcontrol';
 import sd from './util/streamdeck';
@@ -181,4 +182,14 @@ sd.on('keyUp', (data) => {
     reset();
     sd.send({ event: 'showOk', context: data.context });
   }
+});
+
+// Offsite reader controls.
+offsite.on('slidesAdvance', () => {
+  const success = showNext();
+  // TODO: Something with success message.
+});
+offsite.on('slidesReset', () => {
+  reset();
+  // TODO: Send success.
 });

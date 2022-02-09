@@ -5,6 +5,7 @@
 
 import { padTimeNumber, wait } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
+import offsite from './util/offsite';
 import { sc } from './util/speedcontrol';
 import sd from './util/streamdeck';
 
@@ -79,6 +80,15 @@ async function setup(): Promise<void> {
         changeDisableCommercialsSDTitle();
         await wait(100); // Hopefully stop a race condition so below "OK" displays.
         sd.send({ event: 'showOk', context: data.context });
+      }
+    });
+
+    offsite.on('commercialsDisable', () => {
+      if (!disabled.value && !['stopped', 'finished'].includes(sc.timer.value.state)) {
+        // Sends a message to the esa-commercials bundle.
+        // Because we are using server-to-server messages, no confirmation yet.
+        nodecg().sendMessageToBundle('disable', 'esa-commercials');
+        // TODO: Send success.
       }
     });
   }

@@ -5,6 +5,7 @@ import { startPlaylist } from './intermission-player';
 import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs, { changeScene } from './util/obs';
+import offsite from './util/offsite';
 import { obsData, readerIntroduction, videoPlayer } from './util/replicants';
 import { sc } from './util/speedcontrol';
 import sd from './util/streamdeck';
@@ -167,27 +168,42 @@ sd.on('willAppear', (data) => {
   }
 });
 
+/**
+ * Tries to cycle to the next scene to be shown if possible according to other factors.
+ * @returns Boolean for if scene was able to cycle or not.
+ */
+async function cycleScene(): Promise<boolean> {
+  const { disableTransitioning, transitioning, connected } = obsData.value;
+  if (disableTransitioning || transitioning || !connected
+  || ['running', 'paused'].includes(sc.timer.value.state)) {
+    return false;
+  }
+  if (obs.isCurrentScene(config.names.scenes.intermission)) {
+    const success = await changeScene({ scene: config.names.scenes.readerIntroduction });
+    return success;
+  }
+  if (obs.isCurrentScene(config.names.scenes.readerIntroduction)
+  && readerIntroduction.value.current === 'RunInfo') {
+    const success = await changeScene({ scene: config.names.scenes.gameLayout });
+    return success;
+  }
+  if (obs.isCurrentScene(config.names.scenes.gameLayout)) {
+    // TODO: Confirm this worked before sending "showOk".
+    await startIntermission();
+    return true;
+  }
+  return false;
+}
+
 // What to do when any key is lifted on a connected Stream Deck.
 sd.on('keyUp', async (data) => {
   if (data.action.endsWith('scenecycler')) {
-    const { disableTransitioning, transitioning, connected } = obsData.value;
-    if (disableTransitioning || transitioning || !connected
-    || ['running', 'paused'].includes(sc.timer.value.state)) {
-      return;
-    }
-    if (obs.isCurrentScene(config.names.scenes.intermission)) {
-      const success = await changeScene({ scene: config.names.scenes.readerIntroduction });
-      if (success) sd.send({ event: 'showOk', context: data.context });
-    }
-    if (obs.isCurrentScene(config.names.scenes.readerIntroduction)
-    && readerIntroduction.value.current === 'RunInfo') {
-      const success = await changeScene({ scene: config.names.scenes.gameLayout });
-      if (success) sd.send({ event: 'showOk', context: data.context });
-    }
-    if (obs.isCurrentScene(config.names.scenes.gameLayout)) {
-      // TODO: Confirm this worked before sending "showOk".
-      await startIntermission();
-      sd.send({ event: 'showOk', context: data.context });
-    }
+    const success = await cycleScene();
+    if (success) sd.send({ event: 'showOk', context: data.context });
   }
+});
+
+offsite.on('sceneCycle', async () => {
+  await cycleScene();
+  // TODO: Send success.
 });

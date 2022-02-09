@@ -520,6 +520,29 @@
         "enabled",
         "group"
       ]
+    },
+    "offsite": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "address": {
+          "type": "string",
+          "default": "https://app.esamarathon.com/offsite/api"
+        },
+        "key": {
+          "type": "string",
+          "default": "SECRET_KEY"
+        }
+      },
+      "required": [
+        "enabled",
+        "address",
+        "key"
+      ]
     }
   },
   "required": [
@@ -534,6 +557,7 @@
     "xkeys",
     "tracker",
     "tts",
-    "flagcarrier"
+    "flagcarrier",
+    "offsite"
   ]
 }

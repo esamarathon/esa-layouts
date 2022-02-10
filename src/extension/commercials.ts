@@ -13,10 +13,12 @@ import sd from './util/streamdeck';
 const disabled = nodecg().Replicant<boolean>('disabled', 'esa-commercials');
 
 /**
- * Correctly changes the title text on the Stream Deck "Disable Twitch Commercials" buttons.
+ * Generates the text needed to be displayed on the "Disable Twitch Commercial" button.
+ * @param linebreaks If you wish to include linebreaks in the text for Stream Deck purposes.
+ * @returns String with title to use.
  */
-function changeDisableCommercialsSDTitle(): void {
-  const text = (() => {
+function generateDisableCommercialsTitle(linebreaks: boolean): string {
+  let text = (() => {
     if (disabled.value && !['stopped', 'finished'].includes(sc.timer.value.state)) {
       return 'Ads\nDisabled\nfor Run';
     }
@@ -30,7 +32,24 @@ function changeDisableCommercialsSDTitle(): void {
     }
     return 'Disable\nAds for\nRun';
   })();
+  if (!linebreaks) text = text.replace(/\n/g, ' ');
+  return text;
+}
+
+/**
+ * Correctly changes the title text on the Stream Deck "Disable Twitch Commercials" buttons.
+ */
+function changeDisableCommercialsSDTitle(): void {
+  const text = generateDisableCommercialsTitle(true);
   sd.setTextOnAllButtonsWithAction('com.esamarathon.streamdeck.twitchads', text);
+}
+
+/**
+ * Correctly changes the title text on the offsite "Disbale Twitch Commercials" buttons.
+ */
+function changeDisableCommercialsOffsiteTitle(): void {
+  const title = generateDisableCommercialsTitle(false);
+  offsite.emit('title', { name: 'commercialsDisable', title });
 }
 
 async function setup(): Promise<void> {
@@ -48,13 +67,16 @@ async function setup(): Promise<void> {
     sc.timer.on('change', (newVal, oldVal) => {
       if (newVal.state !== oldVal?.state) {
         changeDisableCommercialsSDTitle();
+        changeDisableCommercialsOffsiteTitle();
       }
     });
     disabled.on('change', () => {
       changeDisableCommercialsSDTitle();
+      changeDisableCommercialsOffsiteTitle();
     });
     sc.twitchCommercialTimer.on('change', () => {
       changeDisableCommercialsSDTitle();
+      changeDisableCommercialsOffsiteTitle();
     });
 
     // What to do once Stream Deck connection is initialised.
@@ -83,12 +105,20 @@ async function setup(): Promise<void> {
       }
     });
 
+    offsite.on('authenticated', () => {
+      changeDisableCommercialsOffsiteTitle();
+    });
+
     offsite.on('commercialsDisable', () => {
       if (!disabled.value && !['stopped', 'finished'].includes(sc.timer.value.state)) {
         // Sends a message to the esa-commercials bundle.
         // Because we are using server-to-server messages, no confirmation yet.
         nodecg().sendMessageToBundle('disable', 'esa-commercials');
-        // TODO: Send success.
+        offsite.emit('ack', {
+          name: 'commercialsDisable',
+          success: true,
+          title: generateDisableCommercialsTitle(false),
+        });
       }
     });
   }

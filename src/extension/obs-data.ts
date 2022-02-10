@@ -14,11 +14,13 @@ const evtConfig = (nodecg().bundleConfig as Configschema).event;
 const config = (nodecg().bundleConfig as Configschema).obs;
 
 /**
- * Correctly changes the title text on the Stream Deck "Scene Cycle" buttons.
+ * Generate the text needed to be displayed on the "Scene Cycle" button.
+ * @param linebreaks If you wish to include linebreaks in the text for Stream Deck purposes.
+ * @returns String with title to use.
  */
-function changeSceneCyclerSDTitle(): void {
+function generateSceneCyclerTitle(linebreaks: boolean): string {
   const { disableTransitioning, transitioning, connected } = obsData.value;
-  const text = (() => {
+  let text = (() => {
     if (disableTransitioning || transitioning || !connected
     || ['running', 'paused'].includes(sc.timer.value.state)
     || (obs.isCurrentScene(config.names.scenes.readerIntroduction)
@@ -36,10 +38,27 @@ function changeSceneCyclerSDTitle(): void {
     }
     return '⌛';
   })();
-  sd.setTextOnAllButtonsWithAction(
-    'com.esamarathon.streamdeck.scenecycler',
-    text,
-  );
+  if (!linebreaks) {
+    text = text.replace(/\n/g, ' ');
+    text = text.replace('Inter- ', 'Inter');
+  }
+  return text;
+}
+
+/**
+ * Correctly changes the title text on the Stream Deck "Scene Cycle" buttons.
+ */
+function changeSceneCyclerSDTitle(): void {
+  const text = generateSceneCyclerTitle(true);
+  sd.setTextOnAllButtonsWithAction('com.esamarathon.streamdeck.scenecycler', text);
+}
+
+/**
+ * Correctly changes the title text on the offsite "Scene Cycle" buttons.
+ */
+function changeSceneCyclerOffsiteTitle(): void {
+  const title = generateSceneCyclerTitle(false);
+  offsite.emit('title', { name: 'sceneCycle', title });
 }
 
 /**
@@ -142,16 +161,19 @@ obsData.on('change', (newVal, oldVal) => {
   || newVal.scene !== oldVal.scene
   || newVal.connected !== oldVal.connected) {
     changeSceneCyclerSDTitle();
+    changeSceneCyclerOffsiteTitle();
   }
 });
 sc.timer.on('change', (newVal, oldVal) => {
   if (newVal.state !== oldVal?.state) {
     changeSceneCyclerSDTitle();
+    changeSceneCyclerOffsiteTitle();
   }
 });
 readerIntroduction.on('change', (newVal, oldVal) => {
   if (newVal.current !== oldVal?.current) {
     changeSceneCyclerSDTitle();
+    changeSceneCyclerOffsiteTitle();
   }
 });
 
@@ -203,7 +225,11 @@ sd.on('keyUp', async (data) => {
   }
 });
 
+offsite.on('authenticated', () => {
+  changeSceneCyclerOffsiteTitle();
+});
+
 offsite.on('sceneCycle', async () => {
-  await cycleScene();
-  // TODO: Send success.
+  const success = await cycleScene();
+  offsite.emit('ack', { name: 'sceneCycle', success, title: generateSceneCyclerTitle(false) });
 });

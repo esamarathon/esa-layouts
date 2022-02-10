@@ -84,10 +84,12 @@ async function downloadBoxart(id: string): Promise<void> {
 }
 
 /**
- * Correctly changes the title text on the Stream Deck "Advance Slide" buttons.
+ * Generate the text needed to be displayed on the "Advance Slide" button.
+ * @param linebreaks If you wish to include linebreaks in the text for Stream Deck purposes.
  * @param i The index you wish to force this to display, 0-based.
+ * @returns String with title to use.
  */
-function changeAdvanceSlideSDTitle(i?: number): void {
+function generateAdvanceSlideTitle(linebreaks: boolean, i?: number): string {
   let index = typeof i === 'number'
     ? i
     : assetsTemp.findIndex((a) => a.sum === readerIntroduction.value.current);
@@ -101,10 +103,27 @@ function changeAdvanceSlideSDTitle(i?: number): void {
     if (index < assetsTemp.length) return 'Advance\nSlide';
     return 'Slides\nComplete!';
   })();
-  sd.setTextOnAllButtonsWithAction(
-    sdButtonUUIDMap.advanceSlide,
-    `${prependText}\n(${index >= 0 ? (index + 1) : '?'}/${assetsTemp.length + 1})`,
-  );
+  let text = `${prependText}\n(${index >= 0 ? (index + 1) : '?'}/${assetsTemp.length + 1})`;
+  if (!linebreaks) text = text.replace(/\n/g, ' ');
+  return text;
+}
+
+/**
+ * Correctly changes the title text on the Stream Deck "Advance Slide" buttons.
+ * @param i The index you wish to force this to display, 0-based.
+ */
+function changeAdvanceSlideSDTitle(i?: number): void {
+  const text = generateAdvanceSlideTitle(true, i);
+  sd.setTextOnAllButtonsWithAction(sdButtonUUIDMap.advanceSlide, text);
+}
+
+/**
+ * Correctly changes the title text on the offsite "Advance Slide" buttons.
+ * @param i The index you wish to force this to display, 0-based.
+ */
+function changeAdvanceSlideOffsiteTitle(i?: number): void {
+  const title = generateAdvanceSlideTitle(false, i);
+  offsite.emit('title', { name: 'slidesAdvance', title });
 }
 
 /**
@@ -114,6 +133,7 @@ function reset(): void {
   assetsTemp = assetsSorted();
   readerIntroduction.value.current = assetsTemp[0]?.sum || 'RunInfo';
   changeAdvanceSlideSDTitle();
+  changeAdvanceSlideOffsiteTitle();
 }
 
 /**
@@ -131,6 +151,7 @@ function showNext(): boolean {
       readerIntroduction.value.current = 'RunInfo';
     }
     changeAdvanceSlideSDTitle(index + 1);
+    changeAdvanceSlideOffsiteTitle();
     return true;
   }
   return false;
@@ -157,6 +178,7 @@ assetsReaderIntroductionImages.on('change', (newVal) => {
 obsData.on('change', (newVal, oldVal) => {
   if (newVal.scene !== oldVal?.scene) {
     changeAdvanceSlideSDTitle();
+    changeAdvanceSlideOffsiteTitle();
   }
 });
 
@@ -184,12 +206,20 @@ sd.on('keyUp', (data) => {
   }
 });
 
+offsite.on('authenticated', () => {
+  changeAdvanceSlideOffsiteTitle();
+});
+
 // Offsite reader controls.
 offsite.on('slidesAdvance', () => {
   const success = showNext();
-  // TODO: Something with success message.
+  offsite.emit('ack', {
+    name: 'slidesAdvance',
+    success,
+    title: generateAdvanceSlideTitle(false),
+  });
 });
 offsite.on('slidesReset', () => {
   reset();
-  // TODO: Send success.
+  offsite.emit('ack', { name: 'slidesReset', success: true });
 });

@@ -95,4 +95,9 @@ export interface Configschema {
 		allowedDevices?: string | [string, ...string[]] | null;
 		group: string;
 	};
+	offsite: {
+		enabled: boolean;
+		address: string;
+		key: string;
+	};
 }

@@ -5,6 +5,7 @@ import { startPlaylist } from './intermission-player';
 import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs, { changeScene } from './util/obs';
+import offsite from './util/offsite';
 import { obsData, readerIntroduction, videoPlayer } from './util/replicants';
 import { sc } from './util/speedcontrol';
 import sd from './util/streamdeck';
@@ -13,11 +14,13 @@ const evtConfig = (nodecg().bundleConfig as Configschema).event;
 const config = (nodecg().bundleConfig as Configschema).obs;
 
 /**
- * Correctly changes the title text on the Stream Deck "Scene Cycle" buttons.
+ * Generate the text needed to be displayed on the "Scene Cycle" button.
+ * @param linebreaks If you wish to include linebreaks in the text for Stream Deck purposes.
+ * @returns String with title to use.
  */
-function changeSceneCyclerSDTitle(): void {
+function generateSceneCyclerTitle(linebreaks: boolean): string {
   const { disableTransitioning, transitioning, connected } = obsData.value;
-  const text = (() => {
+  let text = (() => {
     if (disableTransitioning || transitioning || !connected
     || ['running', 'paused'].includes(sc.timer.value.state)
     || (obs.isCurrentScene(config.names.scenes.readerIntroduction)
@@ -35,10 +38,27 @@ function changeSceneCyclerSDTitle(): void {
     }
     return '⌛';
   })();
-  sd.setTextOnAllButtonsWithAction(
-    'com.esamarathon.streamdeck.scenecycler',
-    text,
-  );
+  if (!linebreaks) {
+    text = text.replace(/\n/g, ' ');
+    text = text.replace('Inter- ', 'Inter');
+  }
+  return text;
+}
+
+/**
+ * Correctly changes the title text on the Stream Deck "Scene Cycle" buttons.
+ */
+function changeSceneCyclerSDTitle(): void {
+  const text = generateSceneCyclerTitle(true);
+  sd.setTextOnAllButtonsWithAction('com.esamarathon.streamdeck.scenecycler', text);
+}
+
+/**
+ * Correctly changes the title text on the offsite "Scene Cycle" buttons.
+ */
+function changeSceneCyclerOffsiteTitle(): void {
+  const title = generateSceneCyclerTitle(false);
+  offsite.emit('title', { name: 'sceneCycle', title });
 }
 
 /**
@@ -141,16 +161,19 @@ obsData.on('change', (newVal, oldVal) => {
   || newVal.scene !== oldVal.scene
   || newVal.connected !== oldVal.connected) {
     changeSceneCyclerSDTitle();
+    changeSceneCyclerOffsiteTitle();
   }
 });
 sc.timer.on('change', (newVal, oldVal) => {
   if (newVal.state !== oldVal?.state) {
     changeSceneCyclerSDTitle();
+    changeSceneCyclerOffsiteTitle();
   }
 });
 readerIntroduction.on('change', (newVal, oldVal) => {
   if (newVal.current !== oldVal?.current) {
     changeSceneCyclerSDTitle();
+    changeSceneCyclerOffsiteTitle();
   }
 });
 
@@ -167,27 +190,46 @@ sd.on('willAppear', (data) => {
   }
 });
 
+/**
+ * Tries to cycle to the next scene to be shown if possible according to other factors.
+ * @returns Boolean for if scene was able to cycle or not.
+ */
+async function cycleScene(): Promise<boolean> {
+  const { disableTransitioning, transitioning, connected } = obsData.value;
+  if (disableTransitioning || transitioning || !connected
+  || ['running', 'paused'].includes(sc.timer.value.state)) {
+    return false;
+  }
+  if (obs.isCurrentScene(config.names.scenes.intermission)) {
+    const success = await changeScene({ scene: config.names.scenes.readerIntroduction });
+    return success;
+  }
+  if (obs.isCurrentScene(config.names.scenes.readerIntroduction)
+  && readerIntroduction.value.current === 'RunInfo') {
+    const success = await changeScene({ scene: config.names.scenes.gameLayout });
+    return success;
+  }
+  if (obs.isCurrentScene(config.names.scenes.gameLayout)) {
+    // TODO: Confirm this worked before sending "showOk".
+    await startIntermission();
+    return true;
+  }
+  return false;
+}
+
 // What to do when any key is lifted on a connected Stream Deck.
 sd.on('keyUp', async (data) => {
   if (data.action.endsWith('scenecycler')) {
-    const { disableTransitioning, transitioning, connected } = obsData.value;
-    if (disableTransitioning || transitioning || !connected
-    || ['running', 'paused'].includes(sc.timer.value.state)) {
-      return;
-    }
-    if (obs.isCurrentScene(config.names.scenes.intermission)) {
-      const success = await changeScene({ scene: config.names.scenes.readerIntroduction });
-      if (success) sd.send({ event: 'showOk', context: data.context });
-    }
-    if (obs.isCurrentScene(config.names.scenes.readerIntroduction)
-    && readerIntroduction.value.current === 'RunInfo') {
-      const success = await changeScene({ scene: config.names.scenes.gameLayout });
-      if (success) sd.send({ event: 'showOk', context: data.context });
-    }
-    if (obs.isCurrentScene(config.names.scenes.gameLayout)) {
-      // TODO: Confirm this worked before sending "showOk".
-      await startIntermission();
-      sd.send({ event: 'showOk', context: data.context });
-    }
+    const success = await cycleScene();
+    if (success) sd.send({ event: 'showOk', context: data.context });
   }
+});
+
+offsite.on('authenticated', () => {
+  changeSceneCyclerOffsiteTitle();
+});
+
+offsite.on('sceneCycle', async () => {
+  const success = await cycleScene();
+  offsite.emit('ack', { name: 'sceneCycle', success, title: generateSceneCyclerTitle(false) });
 });

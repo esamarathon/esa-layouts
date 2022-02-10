@@ -39,6 +39,7 @@ export default class extends Vue {
       }
     }
     if (oldVal && oldVal.crowdCamera !== newVal.crowdCamera) {
+      await Vue.nextTick();
       this.clipPath = generateClipPath();
       updateCapturePositionData(document.title);
     }

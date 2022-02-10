@@ -64,9 +64,9 @@
       class="Capture BorderTop BorderRight BorderLeft"
       :style="{
         left: '660px',
-        top: '801px',
+        top: '800px',
         width: '600px',
-        height: '139px',
+        height: '140px',
       }"
     />
 

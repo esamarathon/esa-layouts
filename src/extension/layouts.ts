@@ -229,8 +229,9 @@ capturePositions.on('change', async (val) => {
   }
 });
 
-// Things to do on OBS initial connection.
-obs.conn.on('ConnectionOpened', async () => {
+// Things to do on OBS initial connection/authentication.
+// This should also trigger even if authentication is turned off, after initial connection.
+obs.conn.on('AuthenticationSuccess', async () => {
   // Game
   for (const capName of gameCaptures) {
     // Gets cropping values and stores them on initial connection.

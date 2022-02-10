@@ -10,6 +10,7 @@ const needle_1 = __importDefault(require("needle"));
 const path_1 = require("path");
 const nodecg_1 = require("./util/nodecg");
 const obs_1 = __importDefault(require("./util/obs"));
+const offsite_1 = __importDefault(require("./util/offsite"));
 const replicants_1 = require("./util/replicants");
 const speedcontrol_1 = require("./util/speedcontrol");
 const streamdeck_1 = __importDefault(require("./util/streamdeck"));
@@ -85,10 +86,12 @@ async function downloadBoxart(id) {
     }
 }
 /**
- * Correctly changes the title text on the Stream Deck "Advance Slide" buttons.
+ * Generate the text needed to be displayed on the "Advance Slide" button.
+ * @param linebreaks If you wish to include linebreaks in the text for Stream Deck purposes.
  * @param i The index you wish to force this to display, 0-based.
+ * @returns String with title to use.
  */
-function changeAdvanceSlideSDTitle(i) {
+function generateAdvanceSlideTitle(linebreaks, i) {
     let index = typeof i === 'number'
         ? i
         : assetsTemp.findIndex((a) => a.sum === replicants_1.readerIntroduction.value.current);
@@ -103,7 +106,26 @@ function changeAdvanceSlideSDTitle(i) {
             return 'Advance\nSlide';
         return 'Slides\nComplete!';
     })();
-    streamdeck_1.default.setTextOnAllButtonsWithAction(sdButtonUUIDMap.advanceSlide, `${prependText}\n(${index >= 0 ? (index + 1) : '?'}/${assetsTemp.length + 1})`);
+    let text = `${prependText}\n(${index >= 0 ? (index + 1) : '?'}/${assetsTemp.length + 1})`;
+    if (!linebreaks)
+        text = text.replace(/\n/g, ' ');
+    return text;
+}
+/**
+ * Correctly changes the title text on the Stream Deck "Advance Slide" buttons.
+ * @param i The index you wish to force this to display, 0-based.
+ */
+function changeAdvanceSlideSDTitle(i) {
+    const text = generateAdvanceSlideTitle(true, i);
+    streamdeck_1.default.setTextOnAllButtonsWithAction(sdButtonUUIDMap.advanceSlide, text);
+}
+/**
+ * Correctly changes the title text on the offsite "Advance Slide" buttons.
+ * @param i The index you wish to force this to display, 0-based.
+ */
+function changeAdvanceSlideOffsiteTitle(i) {
+    const title = generateAdvanceSlideTitle(false, i);
+    offsite_1.default.emit('title', { name: 'slidesAdvance', title });
 }
 /**
  * Resets the temporarily stored assets ands the current slide value.
@@ -113,6 +135,7 @@ function reset() {
     assetsTemp = assetsSorted();
     replicants_1.readerIntroduction.value.current = ((_a = assetsTemp[0]) === null || _a === void 0 ? void 0 : _a.sum) || 'RunInfo';
     changeAdvanceSlideSDTitle();
+    changeAdvanceSlideOffsiteTitle();
 }
 /**
  * Shows the next slide, either one of the images or if all done, the run information.
@@ -130,6 +153,7 @@ function showNext() {
             replicants_1.readerIntroduction.value.current = 'RunInfo';
         }
         changeAdvanceSlideSDTitle(index + 1);
+        changeAdvanceSlideOffsiteTitle();
         return true;
     }
     return false;
@@ -158,6 +182,7 @@ replicants_1.assetsReaderIntroductionImages.on('change', (newVal) => {
 replicants_1.obsData.on('change', (newVal, oldVal) => {
     if (newVal.scene !== (oldVal === null || oldVal === void 0 ? void 0 : oldVal.scene)) {
         changeAdvanceSlideSDTitle();
+        changeAdvanceSlideOffsiteTitle();
     }
 });
 // What to do once Stream Deck connection is initialised.
@@ -182,4 +207,20 @@ streamdeck_1.default.on('keyUp', (data) => {
         reset();
         streamdeck_1.default.send({ event: 'showOk', context: data.context });
     }
+});
+offsite_1.default.on('authenticated', () => {
+    changeAdvanceSlideOffsiteTitle();
+});
+// Offsite reader controls.
+offsite_1.default.on('slidesAdvance', () => {
+    const success = showNext();
+    offsite_1.default.emit('ack', {
+        name: 'slidesAdvance',
+        success,
+        title: generateAdvanceSlideTitle(false),
+    });
+});
+offsite_1.default.on('slidesReset', () => {
+    reset();
+    offsite_1.default.emit('ack', { name: 'slidesReset', success: true });
 });

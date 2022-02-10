@@ -9,9 +9,6 @@ const nodecg_1 = require("./util/nodecg");
 const obs_1 = __importDefault(require("./util/obs"));
 const replicants_1 = require("./util/replicants");
 const x32_1 = __importDefault(require("./util/x32"));
-/**
- * TODO: Check all of this against new mixer setup/config!
- */
 const config = (0, nodecg_1.get)().bundleConfig;
 function getNonGameScenes() {
     // These scenes will *not* have "LIVE Game/Mics" DCAs audible.
@@ -72,22 +69,82 @@ function toggleLiveMics(scene) {
     }
 }
 exports.toggleLiveMics = toggleLiveMics;
+let init = false;
+async function setInitialFaders() {
+    await (0, helpers_1.wait)(1000); // Waiting 1s as a workaround to make sure the OBS helper has all info.
+    if (!init && obs_1.default.connected && x32_1.default.ready) {
+        init = true;
+        // On-Site
+        if (!config.event.online) {
+            const readerScenes = [
+                obs_1.default.findScene(config.obs.names.scenes.commercials),
+                obs_1.default.findScene(config.obs.names.scenes.gameLayout),
+                obs_1.default.findScene(config.obs.names.scenes.intermission),
+                obs_1.default.findScene(config.obs.names.scenes.readerIntroduction),
+            ].filter(Boolean);
+            // These scenes will have the game and players audible.
+            const gameScenes = [
+                obs_1.default.findScene(config.obs.names.scenes.gameLayout),
+            ].filter(Boolean);
+            if (readerScenes.includes(obs_1.default.currentScene || '')) {
+                x32_1.default.setFader('/dca/2/fader', 0.75); // LIVE Readers
+            }
+            else {
+                x32_1.default.setFader('/dca/2/fader', 0); // LIVE Readers
+            }
+            if (gameScenes.includes(obs_1.default.currentScene || '')) {
+                x32_1.default.setFader('/dca/1/fader', 0.75); // LIVE Runners
+                x32_1.default.setFader('/dca/3/fader', 0.75); // LIVE Games
+            }
+            else {
+                x32_1.default.setFader('/dca/1/fader', 0); // LIVE Runners
+                x32_1.default.setFader('/dca/3/fader', 0); // LIVE Games
+            }
+        }
+    }
+}
+x32_1.default.on('ready', async () => {
+    await setInitialFaders();
+});
+obs_1.default.conn.on('AuthenticationSuccess', async () => {
+    await setInitialFaders();
+});
 obs_1.default.conn.on('TransitionBegin', async (data) => {
-    if (config.x32.enabled && config.event.online !== 'partial') {
-        const nonGameScenes = getNonGameScenes(); // These scenes will *not* have "LIVE" DCAs audible.
-        const intermissionScenes = [
-            obs_1.default.findScene(config.obs.names.scenes.commercials),
-            obs_1.default.findScene(config.obs.names.scenes.intermission),
-        ];
-        toggleFadeHelper('/dca/1/fader', nonGameScenes, data);
-        if (replicants_1.currentRunDelay.value.audio > 0) {
-            setTimeout(() => {
-                toggleFadeHelper('/dca/2/fader', nonGameScenes, data, true, true);
-            }, 1500);
+    if (config.x32.enabled) {
+        // On-Site
+        if (!config.event.online) {
+            // These scenes will have the reader audible.
+            const readerScenes = [
+                obs_1.default.findScene(config.obs.names.scenes.commercials),
+                obs_1.default.findScene(config.obs.names.scenes.gameLayout),
+                obs_1.default.findScene(config.obs.names.scenes.intermission),
+                obs_1.default.findScene(config.obs.names.scenes.readerIntroduction),
+            ].filter(Boolean);
+            // These scenes will have the game and players audible.
+            const gameScenes = [
+                obs_1.default.findScene(config.obs.names.scenes.gameLayout),
+            ].filter(Boolean);
+            toggleFadeHelper('/dca/1/fader', gameScenes, data, false); // LIVE Runners
+            toggleFadeHelper('/dca/2/fader', readerScenes, data, false); // LIVE Readers
+            toggleFadeHelper('/dca/3/fader', gameScenes, data, false); // LIVE Games
+            // Online
         }
-        else {
-            toggleFadeHelper('/dca/2/fader', nonGameScenes, data);
+        if (config.event.online === true || config.event.online === 'full') {
+            const nonGameScenes = getNonGameScenes(); // These scenes will *not* have "LIVE" DCAs audible.
+            const intermissionScenes = [
+                obs_1.default.findScene(config.obs.names.scenes.commercials),
+                obs_1.default.findScene(config.obs.names.scenes.intermission),
+            ];
+            toggleFadeHelper('/dca/1/fader', nonGameScenes, data);
+            if (replicants_1.currentRunDelay.value.audio > 0) {
+                setTimeout(() => {
+                    toggleFadeHelper('/dca/2/fader', nonGameScenes, data, true, true);
+                }, 1500);
+            }
+            else {
+                toggleFadeHelper('/dca/2/fader', nonGameScenes, data);
+            }
+            toggleFadeHelper('/dca/3/fader', intermissionScenes, data, false);
         }
-        toggleFadeHelper('/dca/3/fader', intermissionScenes, data, false);
     }
 });

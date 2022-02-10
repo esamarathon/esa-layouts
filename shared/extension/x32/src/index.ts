@@ -1,11 +1,17 @@
 import type { NodeCG } from 'nodecg/types/server';
 import osc from 'osc';
+import { TypedEmitter } from 'tiny-typed-emitter';
 import { X32 as X32Types } from '../../../types';
 
-class X32 {
+interface X32Events {
+  'ready': () => void;
+}
+
+class X32 extends TypedEmitter<X32Events> {
   private nodecg: NodeCG;
   private config: X32Types.Config;
   conn: osc.UDPPort | undefined;
+  ready = false;
   faders: { [k: string]: number } = {};
   fadersExpected: { [k: string]: {
     value: number, increase: boolean, seenOnce: boolean,
@@ -13,6 +19,7 @@ class X32 {
   private fadersInterval: { [k: string]: NodeJS.Timeout } = {};
 
   constructor(nodecg: NodeCG, config: X32Types.Config) {
+    super();
     this.nodecg = nodecg;
     this.config = config;
 
@@ -70,6 +77,7 @@ class X32 {
 
       this.conn.on('close', () => {
         nodecg.log.info('[X32] Connection closed');
+        this.ready = false;
       });
 
       this.conn.on('open', () => {
@@ -88,6 +96,9 @@ class X32 {
             this.conn.send({ address: '/xremote', args: [] });
           }
         }, 8 * 1000);
+
+        this.ready = true;
+        this.emit('ready');
       });
 
       this.conn.open();

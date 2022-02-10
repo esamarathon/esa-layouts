@@ -38,6 +38,7 @@ module.exports = (nodecg) => {
     require('./omnibar');
     require('./reader-introduction');
     require('./commercials');
+    require('./player-hud');
     return {
         obs: require('./util/obs').default,
         mixer: require('./mixer'),

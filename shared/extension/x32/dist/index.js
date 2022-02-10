@@ -1,30 +1,48 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 var osc_1 = __importDefault(require("osc"));
-var X32 = /** @class */ (function () {
+var tiny_typed_emitter_1 = require("tiny-typed-emitter");
+var X32 = /** @class */ (function (_super) {
+    __extends(X32, _super);
     function X32(nodecg, config) {
-        var _this = this;
-        this.faders = {};
-        this.fadersExpected = {};
-        this.fadersInterval = {};
-        this.nodecg = nodecg;
-        this.config = config;
+        var _this = _super.call(this) || this;
+        _this.ready = false;
+        _this.faders = {};
+        _this.fadersExpected = {};
+        _this.fadersInterval = {};
+        _this.nodecg = nodecg;
+        _this.config = config;
         if (config.enabled) {
             nodecg.log.info('[X32] Setting up connection');
-            this.conn = new osc_1.default.UDPPort({
+            _this.conn = new osc_1.default.UDPPort({
                 localAddress: '0.0.0.0',
                 localPort: config.localPort,
                 remoteAddress: config.ip,
                 remotePort: 10023,
                 metadata: true,
             });
-            this.conn.on('error', function (err) {
+            _this.conn.on('error', function (err) {
                 nodecg.log.warn('[X32] Error on connection');
                 nodecg.log.debug('[X32] Error on connection:', err);
             });
-            this.conn.on('message', function (message) {
+            _this.conn.on('message', function (message) {
                 // I don't trust myself with all posibilities, so wrapping this up.
                 try {
                     if (message.address.endsWith('/fader')) {
@@ -58,13 +76,14 @@ var X32 = /** @class */ (function () {
                     nodecg.log.debug('[X32] Error parsing message:', err);
                 }
             });
-            this.conn.on('close', function () {
+            _this.conn.on('close', function () {
                 nodecg.log.info('[X32] Connection closed');
+                _this.ready = false;
             });
-            this.conn.on('open', function () {
+            _this.conn.on('open', function () {
                 nodecg.log.info('[X32] Connection opened');
             });
-            this.conn.on('ready', function () {
+            _this.conn.on('ready', function () {
                 nodecg.log.info('[X32] Connection ready');
                 // Subscribe/renew to updates (must be done every <10 seconds).
                 if (_this.conn) {
@@ -75,9 +94,12 @@ var X32 = /** @class */ (function () {
                         _this.conn.send({ address: '/xremote', args: [] });
                     }
                 }, 8 * 1000);
+                _this.ready = true;
+                _this.emit('ready');
             });
-            this.conn.open();
+            _this.conn.open();
         }
+        return _this;
     }
     /**
      * Just set a specific fader to the supplied value.
@@ -138,5 +160,5 @@ var X32 = /** @class */ (function () {
         }, 100);
     };
     return X32;
-}());
+}(tiny_typed_emitter_1.TypedEmitter));
 module.exports = X32;

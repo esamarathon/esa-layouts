@@ -28,17 +28,20 @@ const intermission_player_1 = require("./intermission-player");
 const mqLogging = __importStar(require("./util/mq-logging"));
 const nodecg_1 = require("./util/nodecg");
 const obs_1 = __importStar(require("./util/obs"));
+const offsite_1 = __importDefault(require("./util/offsite"));
 const replicants_1 = require("./util/replicants");
 const speedcontrol_1 = require("./util/speedcontrol");
 const streamdeck_1 = __importDefault(require("./util/streamdeck"));
 const evtConfig = (0, nodecg_1.get)().bundleConfig.event;
 const config = (0, nodecg_1.get)().bundleConfig.obs;
 /**
- * Correctly changes the title text on the Stream Deck "Scene Cycle" buttons.
+ * Generate the text needed to be displayed on the "Scene Cycle" button.
+ * @param linebreaks If you wish to include linebreaks in the text for Stream Deck purposes.
+ * @returns String with title to use.
  */
-function changeSceneCyclerSDTitle() {
+function generateSceneCyclerTitle(linebreaks) {
     const { disableTransitioning, transitioning, connected } = replicants_1.obsData.value;
-    const text = (() => {
+    let text = (() => {
         if (disableTransitioning || transitioning || !connected
             || ['running', 'paused'].includes(speedcontrol_1.sc.timer.value.state)
             || (obs_1.default.isCurrentScene(config.names.scenes.readerIntroduction)
@@ -56,7 +59,25 @@ function changeSceneCyclerSDTitle() {
         }
         return '⌛';
     })();
+    if (!linebreaks) {
+        text = text.replace(/\n/g, ' ');
+        text = text.replace('Inter- ', 'Inter');
+    }
+    return text;
+}
+/**
+ * Correctly changes the title text on the Stream Deck "Scene Cycle" buttons.
+ */
+function changeSceneCyclerSDTitle() {
+    const text = generateSceneCyclerTitle(true);
     streamdeck_1.default.setTextOnAllButtonsWithAction('com.esamarathon.streamdeck.scenecycler', text);
+}
+/**
+ * Correctly changes the title text on the offsite "Scene Cycle" buttons.
+ */
+function changeSceneCyclerOffsiteTitle() {
+    const title = generateSceneCyclerTitle(false);
+    offsite_1.default.emit('title', { name: 'sceneCycle', title });
 }
 /**
  * Tries to start video playlist, if playlist is empty then acts as if there isn't one.
@@ -154,16 +175,19 @@ replicants_1.obsData.on('change', (newVal, oldVal) => {
         || newVal.scene !== oldVal.scene
         || newVal.connected !== oldVal.connected) {
         changeSceneCyclerSDTitle();
+        changeSceneCyclerOffsiteTitle();
     }
 });
 speedcontrol_1.sc.timer.on('change', (newVal, oldVal) => {
     if (newVal.state !== (oldVal === null || oldVal === void 0 ? void 0 : oldVal.state)) {
         changeSceneCyclerSDTitle();
+        changeSceneCyclerOffsiteTitle();
     }
 });
 replicants_1.readerIntroduction.on('change', (newVal, oldVal) => {
     if (newVal.current !== (oldVal === null || oldVal === void 0 ? void 0 : oldVal.current)) {
         changeSceneCyclerSDTitle();
+        changeSceneCyclerOffsiteTitle();
     }
 });
 // What to do once Stream Deck connection is initialised.
@@ -177,29 +201,44 @@ streamdeck_1.default.on('willAppear', (data) => {
         changeSceneCyclerSDTitle();
     }
 });
+/**
+ * Tries to cycle to the next scene to be shown if possible according to other factors.
+ * @returns Boolean for if scene was able to cycle or not.
+ */
+async function cycleScene() {
+    const { disableTransitioning, transitioning, connected } = replicants_1.obsData.value;
+    if (disableTransitioning || transitioning || !connected
+        || ['running', 'paused'].includes(speedcontrol_1.sc.timer.value.state)) {
+        return false;
+    }
+    if (obs_1.default.isCurrentScene(config.names.scenes.intermission)) {
+        const success = await (0, obs_1.changeScene)({ scene: config.names.scenes.readerIntroduction });
+        return success;
+    }
+    if (obs_1.default.isCurrentScene(config.names.scenes.readerIntroduction)
+        && replicants_1.readerIntroduction.value.current === 'RunInfo') {
+        const success = await (0, obs_1.changeScene)({ scene: config.names.scenes.gameLayout });
+        return success;
+    }
+    if (obs_1.default.isCurrentScene(config.names.scenes.gameLayout)) {
+        // TODO: Confirm this worked before sending "showOk".
+        await startIntermission();
+        return true;
+    }
+    return false;
+}
 // What to do when any key is lifted on a connected Stream Deck.
 streamdeck_1.default.on('keyUp', async (data) => {
     if (data.action.endsWith('scenecycler')) {
-        const { disableTransitioning, transitioning, connected } = replicants_1.obsData.value;
-        if (disableTransitioning || transitioning || !connected
-            || ['running', 'paused'].includes(speedcontrol_1.sc.timer.value.state)) {
-            return;
-        }
-        if (obs_1.default.isCurrentScene(config.names.scenes.intermission)) {
-            const success = await (0, obs_1.changeScene)({ scene: config.names.scenes.readerIntroduction });
-            if (success)
-                streamdeck_1.default.send({ event: 'showOk', context: data.context });
-        }
-        if (obs_1.default.isCurrentScene(config.names.scenes.readerIntroduction)
-            && replicants_1.readerIntroduction.value.current === 'RunInfo') {
-            const success = await (0, obs_1.changeScene)({ scene: config.names.scenes.gameLayout });
-            if (success)
-                streamdeck_1.default.send({ event: 'showOk', context: data.context });
-        }
-        if (obs_1.default.isCurrentScene(config.names.scenes.gameLayout)) {
-            // TODO: Confirm this worked before sending "showOk".
-            await startIntermission();
+        const success = await cycleScene();
+        if (success)
             streamdeck_1.default.send({ event: 'showOk', context: data.context });
-        }
     }
+});
+offsite_1.default.on('authenticated', () => {
+    changeSceneCyclerOffsiteTitle();
+});
+offsite_1.default.on('sceneCycle', async () => {
+    const success = await cycleScene();
+    offsite_1.default.emit('ack', { name: 'sceneCycle', success, title: generateSceneCyclerTitle(false) });
 });

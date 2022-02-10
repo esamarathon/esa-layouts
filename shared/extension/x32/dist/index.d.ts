@@ -1,10 +1,15 @@
 import type { NodeCG } from 'nodecg/types/server';
 import osc from 'osc';
+import { TypedEmitter } from 'tiny-typed-emitter';
 import { X32 as X32Types } from '../../../types';
-declare class X32 {
+interface X32Events {
+    'ready': () => void;
+}
+declare class X32 extends TypedEmitter<X32Events> {
     private nodecg;
     private config;
     conn: osc.UDPPort | undefined;
+    ready: boolean;
     faders: {
         [k: string]: number;
     };

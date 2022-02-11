@@ -237,18 +237,20 @@ obs_1.default.conn.on('AuthenticationSuccess', async () => {
             (0, helpers_1.logError)('[Layouts] Could not get initial game capture cropping values [%s]', err, capName);
         }
         // Gets source visibility value and stores it on initial connection.
-        for (const sourceName of gameSources) {
-            try {
-                const itemProperties = await obs_1.default.conn.send('GetSceneItemProperties', {
-                    'scene-name': capName,
-                    item: { name: sourceName },
-                });
-                if (itemProperties.visible) {
-                    selected.gameSource[gameCaptures.indexOf(capName)] = gameSources.indexOf(sourceName);
+        if (!config.event.online) {
+            for (const sourceName of gameSources) {
+                try {
+                    const itemProperties = await obs_1.default.conn.send('GetSceneItemProperties', {
+                        'scene-name': capName,
+                        item: { name: sourceName },
+                    });
+                    if (itemProperties.visible) {
+                        selected.gameSource[gameCaptures.indexOf(capName)] = gameSources.indexOf(sourceName);
+                    }
                 }
-            }
-            catch (err) {
-                (0, helpers_1.logError)('[Layouts] Could not get initial game source visibility values [%s: %s]', err, capName, sourceName);
+                catch (err) {
+                    (0, helpers_1.logError)('[Layouts] Could not get initial game source visibility values [%s: %s]', err, capName, sourceName);
+                }
             }
         }
     }
@@ -266,19 +268,21 @@ obs_1.default.conn.on('AuthenticationSuccess', async () => {
             (0, helpers_1.logError)('[Layouts] Could not get initial camera capture cropping values [%s]', err, camName);
         }
         // Gets source visibility value and stores it on initial connection.
-        for (const sourceName of cameraSources) {
-            try {
-                const itemProperties = await obs_1.default.conn.send('GetSceneItemProperties', {
-                    'scene-name': camName,
-                    item: { name: sourceName },
-                });
-                if (itemProperties.visible) {
-                    selected.cameraSource[cameraCaptures.indexOf(camName)] = cameraSources
-                        .indexOf(sourceName);
+        if (!config.event.online) {
+            for (const sourceName of cameraSources) {
+                try {
+                    const itemProperties = await obs_1.default.conn.send('GetSceneItemProperties', {
+                        'scene-name': camName,
+                        item: { name: sourceName },
+                    });
+                    if (itemProperties.visible) {
+                        selected.cameraSource[cameraCaptures.indexOf(camName)] = cameraSources
+                            .indexOf(sourceName);
+                    }
                 }
-            }
-            catch (err) {
-                (0, helpers_1.logError)('[Layouts] Could not get initial camera source visibility values [%s: %s]', err, camName, sourceName);
+                catch (err) {
+                    (0, helpers_1.logError)('[Layouts] Could not get initial camera source visibility values [%s: %s]', err, camName, sourceName);
+                }
             }
         }
     }

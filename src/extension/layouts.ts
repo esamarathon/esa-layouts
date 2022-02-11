@@ -1,5 +1,6 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import Countdown from '@shared/extension/countdown';
+import clone from 'clone';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
@@ -41,8 +42,8 @@ const gameCaptureKeys = [61, 62, 63, 64];
 const gameSourceKeys = [69, 70, 71, 72];
 const gameCropKeys = [77, 78, 79, 80];
 const gameCropResetKeys = { selected: 76, all: 68 };
-const cameraCaptureKeys = [13, 14, 15, 16];
-const cameraSourceKeys = [5, 6, 7, 8];
+const cameraCaptureKeys = [5, 6, 7, 8];
+const cameraSourceKeys = [13, 14, 15, 16];
 const cameraPositionResetKey = 24;
 
 // Stores current cropping values.
@@ -129,10 +130,7 @@ capturePositions.on('change', async (val) => {
       let crop = { top: 0, right: 0, bottom: 0, left: 0 }; // Default crop values
 
       // If this a game capture, use cropping we have stored.
-      if (key.includes('Game')) {
-        const index = gameCaptures.indexOf(value);
-        crop = gameCropValues[index];
-      }
+      if (key.includes('Game')) crop = gameCropValues[gameCaptures.indexOf(value)];
 
       // If this is a camera, it may need cropping.
       if (key.includes('Camera') && val['game-layout'][key]) {
@@ -157,6 +155,7 @@ capturePositions.on('change', async (val) => {
             crop.left = cropAmount;
             crop.right = cropAmount;
           }
+          cameraCropValues[cameraCaptures.indexOf(value)] = clone(crop);
         } catch (err) {
           logError('[Layouts] Could not find camera source to crop [%s]', err, key);
         }
@@ -379,7 +378,12 @@ function calculateCameraCrop(
  * @param cap Override the capture that is cropped.
  */
 async function changeCrop(value?: number, cap?: number): Promise<void> {
-  const mode = selected.gameCrop >= 0 ? 'game' : 'camera';
+  const mode = (() => {
+    if (selected.gameCapture >= 0) return 'game';
+    if (selected.cameraCapture >= 0) return 'camera';
+    return undefined;
+  })();
+  if (!mode) return;
   let capture: number | undefined;
   if (mode === 'game') {
     capture = selected.gameCapture >= 0 ? selected.gameCapture : cap;
@@ -501,15 +505,6 @@ xkeys.on('down', async (keyIndex) => {
           xkeys.setBacklight(key, true, false, true);
         });
         selected.gameCrop = -1;
-      }
-
-      // Update the camera capture cropping in case it is now different due to game-layout changes.
-      if (mode === 'camera') {
-        const itemProperties = await obs.conn.send('GetSceneItemProperties', {
-          'scene-name': config.obs.names.scenes.gameLayout,
-          item: { name: captures[capture] },
-        });
-        cameraCropValues[capture] = itemProperties.crop;
       }
 
       // Set new key as current.

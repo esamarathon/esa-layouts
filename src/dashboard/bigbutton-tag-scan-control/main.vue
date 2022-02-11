@@ -1,6 +1,8 @@
 <template>
-  <v-app v-if="config.event.online" class="font-italic">
-    Not used for online only events.
+  <v-app v-if="config.event.online">
+    <span class="font-italic">
+      Not used for online only events.
+    </span>
   </v-app>
   <v-app v-else>
     <!-- Big button tag scanning alerts. -->

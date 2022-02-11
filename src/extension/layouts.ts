@@ -626,7 +626,7 @@ xkeys.on('down', async (keyIndex) => {
       xkeys.setBacklight(keyIndex, false);
       if (resetAllGameCropTO) clearTimeout(resetAllGameCropTO);
       for (let i = 0; i < gameCaptures.length; i += 1) {
-        await changeCrop(undefined, i);
+        await changeCrop(undefined, i, 'game');
       }
       resetAllGameCropConfirm = false;
     }

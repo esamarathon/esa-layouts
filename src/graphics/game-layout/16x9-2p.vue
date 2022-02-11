@@ -200,7 +200,7 @@ export default class extends Vue {
 
   get extraPlayers(): { name: string, pronouns?: string }[] {
     if (this.runData?.relay) return [];
-    return (this.runData?.teams[0].players || []).slice(2).map((p) => ({
+    return (this.runData?.teams[0]?.players || []).slice(2).map((p) => ({
       name: p.name,
       pronouns: p.pronouns,
     }));

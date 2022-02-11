@@ -95,7 +95,8 @@ function setup() {
     // RabbitMQ events from the "big red buttons", used for players/commentators.
     rabbitmq_1.mq.evt.on('bigbuttonTagScanned', async (data) => {
         var _a;
-        if (config.event.thisEvent === 1 && data.flagcarrier.group === 'stream1') {
+        if (!config.event.online && config.event.thisEvent === 1
+            && data.flagcarrier.group === 'stream1') {
             // Stores a state for messages sent out at the bottom.
             let scanState;
             // str = await searchSrcomPronouns(str);

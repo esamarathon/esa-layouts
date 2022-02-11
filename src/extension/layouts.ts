@@ -41,8 +41,8 @@ const gameCaptureKeys = [61, 62, 63, 64];
 const gameSourceKeys = [69, 70, 71, 72];
 const gameCropKeys = [77, 78, 79, 80];
 const gameCropResetKeys = { selected: 76, all: 68 };
-const cameraCaptureKeys = [13, 14, 15, 16];
-const cameraSourceKeys = [5, 6, 7, 8];
+const cameraCaptureKeys = [5, 6, 7, 8];
+const cameraSourceKeys = [13, 14, 15, 16];
 const cameraPositionResetKey = 24;
 
 // Stores current cropping values.

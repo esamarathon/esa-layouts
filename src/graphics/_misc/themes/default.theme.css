@@ -130,7 +130,7 @@ body {
 
 #Intermission .BottomBox,
 #Intermission .Content {
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.85);
 }
 
 #IntermissionPlayer .UpcomingBar .Header {

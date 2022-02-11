@@ -70,6 +70,11 @@ body {
   background-color: #4d83aa;
 }
 
+#Intermission .BottomBox,
+#Intermission .Content {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
 #IntermissionPlayer .UpcomingBar .Header {
   background-color: #4d83aa;
 }

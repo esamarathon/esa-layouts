@@ -101,7 +101,8 @@ function mapScannedPlayersToTeams(run: RunData, players: BigbuttonPlayerMap[0]):
 function setup(): void {
   // RabbitMQ events from the "big red buttons", used for players/commentators.
   mq.evt.on('bigbuttonTagScanned', async (data) => {
-    if (config.event.thisEvent === 1 && data.flagcarrier.group === 'stream1') {
+    if (!config.event.online && config.event.thisEvent === 1
+    && data.flagcarrier.group === 'stream1') {
       // Stores a state for messages sent out at the bottom.
       let scanState: 'success_comm' | 'success_player' | 'fail_player' | undefined;
       // str = await searchSrcomPronouns(str);

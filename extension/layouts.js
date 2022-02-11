@@ -350,19 +350,22 @@ function calculateCameraCrop(aCurrent, bCurrent, value) {
  * Calculates and applies the cropping for a group when ran.
  * @param value Amount to crop from the selected slide.
  * @param cap Override the capture that is cropped.
+ * @patam mode Override the mode this function will run with.
  */
-async function changeCrop(value, cap) {
-    const mode = (() => {
+async function changeCrop(value, cap, mode) {
+    const m = (() => {
+        if (mode)
+            return mode;
         if (selected.gameCapture >= 0)
             return 'game';
         if (selected.cameraCapture >= 0)
             return 'camera';
         return undefined;
     })();
-    if (!mode)
+    if (!m)
         return;
     let capture;
-    if (mode === 'game') {
+    if (m === 'game') {
         capture = selected.gameCapture >= 0 ? selected.gameCapture : cap;
         if (typeof capture === 'undefined' || capture < 0)
             return;
@@ -389,7 +392,7 @@ async function changeCrop(value, cap) {
             gameCropValues[capture] = { top: 0, right: 0, bottom: 0, left: 0 };
         }
     }
-    else if (mode === 'camera') {
+    else if (m === 'camera') {
         capture = selected.cameraCapture >= 0 ? selected.cameraCapture : cap;
         if (value && typeof capture !== 'undefined' && capture >= 0) {
             const crop = cameraCropValues[selected.cameraCapture];
@@ -413,8 +416,8 @@ async function changeCrop(value, cap) {
     }
     if (typeof capture === 'undefined' || capture < 0)
         return;
-    const captures = mode === 'game' ? gameCaptures : cameraCaptures;
-    const cropValues = mode === 'game' ? gameCropValues : cameraCropValues;
+    const captures = m === 'game' ? gameCaptures : cameraCaptures;
+    const cropValues = m === 'game' ? gameCropValues : cameraCropValues;
     try {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore: Typings say we need to specify more than we actually do.

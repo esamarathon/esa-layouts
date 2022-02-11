@@ -1,5 +1,8 @@
 <template>
-  <v-app>
+  <v-app v-if="config.event.online" class="font-italic">
+    Not used for online only events.
+  </v-app>
+  <v-app v-else>
     <!-- Big button tag scanning alerts. -->
     <v-alert v-if="['success_player', 'success_comm'].includes(tagScanned)" type="success">
       <template v-if="tagScanned === 'success_player'">
@@ -71,7 +74,7 @@
 
 <script lang="ts">
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
-import { BigbuttonPlayerMap } from '@esa-layouts/types/schemas';
+import { BigbuttonPlayerMap, Configschema } from '@esa-layouts/types/schemas';
 import { Vue, Component } from 'vue-property-decorator';
 import { RunDataActiveRun, RunDataArray, RunData, RunDataPlayer, Timer } from 'speedcontrol-util/types';
 import { differenceWith } from 'lodash';
@@ -83,6 +86,7 @@ export default class extends Vue {
   @replicantNS.State((s) => s.reps.runDataArray) readonly runArray!: RunDataArray;
   @replicantNS.State((s) => s.reps.runDataActiveRun) readonly activeRun!: RunDataActiveRun;
   @replicantNS.State((s) => s.reps.bigbuttonPlayerMap) readonly bbpMap!: BigbuttonPlayerMap;
+  config = nodecg.bundleConfig as Configschema;
   tagScanned: 'success_comm' | 'success_player' | 'fail_player' | boolean = false;
   scannedData: FlagCarrier.TagScanned | null = null;
   tagScanTimeout!: number;

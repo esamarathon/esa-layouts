@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const countdown_1 = __importDefault(require("@shared/extension/countdown"));
+const clone_1 = __importDefault(require("clone"));
 const helpers_1 = require("./util/helpers");
 const nodecg_1 = require("./util/nodecg");
 const obs_1 = __importDefault(require("./util/obs"));
@@ -41,8 +42,8 @@ const gameCaptureKeys = [61, 62, 63, 64];
 const gameSourceKeys = [69, 70, 71, 72];
 const gameCropKeys = [77, 78, 79, 80];
 const gameCropResetKeys = { selected: 76, all: 68 };
-const cameraCaptureKeys = [13, 14, 15, 16];
-const cameraSourceKeys = [5, 6, 7, 8];
+const cameraCaptureKeys = [5, 6, 7, 8];
+const cameraSourceKeys = [13, 14, 15, 16];
 const cameraPositionResetKey = 24;
 // Stores current cropping values.
 const gameCropValues = Array(gameCaptures.length)
@@ -123,10 +124,8 @@ replicants_1.capturePositions.on('change', async (val) => {
         if (value) { // Only continue if key -> value pair is set
             let crop = { top: 0, right: 0, bottom: 0, left: 0 }; // Default crop values
             // If this a game capture, use cropping we have stored.
-            if (key.includes('Game')) {
-                const index = gameCaptures.indexOf(value);
-                crop = gameCropValues[index];
-            }
+            if (key.includes('Game'))
+                crop = gameCropValues[gameCaptures.indexOf(value)];
             // If this is a camera, it may need cropping.
             if (key.includes('Camera') && val['game-layout'][key]) {
                 try {
@@ -151,6 +150,7 @@ replicants_1.capturePositions.on('change', async (val) => {
                         crop.left = cropAmount;
                         crop.right = cropAmount;
                     }
+                    cameraCropValues[cameraCaptures.indexOf(value)] = (0, clone_1.default)(crop);
                 }
                 catch (err) {
                     (0, helpers_1.logError)('[Layouts] Could not find camera source to crop [%s]', err, key);
@@ -352,7 +352,15 @@ function calculateCameraCrop(aCurrent, bCurrent, value) {
  * @param cap Override the capture that is cropped.
  */
 async function changeCrop(value, cap) {
-    const mode = selected.gameCrop >= 0 ? 'game' : 'camera';
+    const mode = (() => {
+        if (selected.gameCapture >= 0)
+            return 'game';
+        if (selected.cameraCapture >= 0)
+            return 'camera';
+        return undefined;
+    })();
+    if (!mode)
+        return;
     let capture;
     if (mode === 'game') {
         capture = selected.gameCapture >= 0 ? selected.gameCapture : cap;
@@ -470,14 +478,6 @@ xkeys_1.default.on('down', async (keyIndex) => {
                     xkeys_1.default.setBacklight(key, true, false, true);
                 });
                 selected.gameCrop = -1;
-            }
-            // Update the camera capture cropping in case it is now different due to game-layout changes.
-            if (mode === 'camera') {
-                const itemProperties = await obs_1.default.conn.send('GetSceneItemProperties', {
-                    'scene-name': config.obs.names.scenes.gameLayout,
-                    item: { name: captures[capture] },
-                });
-                cameraCropValues[capture] = itemProperties.crop;
             }
             // Set new key as current.
             selected[`${mode}Capture`] = capture;

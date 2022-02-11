@@ -3,30 +3,37 @@
     <v-toolbar-title>
       Available Images
     </v-toolbar-title>
-    <media-card
-      v-if="!images.length"
+    <div
       :style="{
-        'font-style': 'italic',
-        'white-space': 'unset',
+        'max-height': '400px',
+        'overflow-y': 'auto',
       }"
     >
-      Add images under "Assets" > "{{ bundleName }}" > "Media Box Images".
-    </media-card>
-    <draggable
-      v-else
-      :list="images"
-      :group="{ name: 'media', pull: 'clone', put: false }"
-      :sort="false"
-      :clone="clone"
-    >
       <media-card
-        v-for="image in images"
-        :key="image.sum"
-        :title="image.name"
+        v-if="!images.length"
+        :style="{
+          'font-style': 'italic',
+          'white-space': 'unset',
+        }"
       >
-        {{ image.name }}
+        Add images under "Assets" > "{{ bundleName }}" > "Media Box Images".
       </media-card>
-    </draggable>
+      <draggable
+        v-else
+        :list="images"
+        :group="{ name: 'media', pull: 'clone', put: false }"
+        :sort="false"
+        :clone="clone"
+      >
+        <media-card
+          v-for="image in images"
+          :key="image.sum"
+          :title="image.name"
+        >
+          {{ image.name }}
+        </media-card>
+      </draggable>
+    </div>
   </div>
 </template>
 

@@ -3,49 +3,56 @@
     <v-toolbar-title>
       Rotation
     </v-toolbar-title>
-    <media-card
-      v-if="!newRotation.length"
-      :style="{ 'font-style': 'italic' }"
-    >
-      Drag elements from above to here to configure.
-    </media-card>
-    <draggable
-      v-model="newRotation"
-      group="media"
+    <div
+      :style="{
+        'max-height': '400px',
+        'overflow-y': 'auto',
+      }"
     >
       <media-card
-        v-for="(media, i) in newRotation"
-        :key="media.id"
-        class="d-flex"
+        v-if="!newRotation.length"
+        :style="{ 'font-style': 'italic' }"
       >
-        <applicable-icon :is-applicable="isApplicable(media)" />
-        <div
-          class="d-flex align-center justify-center flex-grow-1"
-          :title="getMediaDetails(media).name"
-          :style="{
-            'overflow': 'hidden',
-            'font-weight': media.type === 'prize_generic' ? '500' : undefined,
-            'font-style': !getMediaDetails(media).name ? 'italic' : undefined,
-          }"
-        >
-          {{ getMediaDetails(media).name || 'Could not find media name.' }}
-        </div>
-        <div class="d-flex">
-          <v-text-field
-            v-model="media.seconds"
-            class="pa-0 ma-0"
-            type="number"
-            hide-details
-            dense
-            :style="{ 'width': '40px !important' }"
-            @input="parseSeconds(i)"
-          />
-          <v-icon @click="remove(i)">
-            mdi-delete
-          </v-icon>
-        </div>
+        Drag elements from above to here to configure.
       </media-card>
-    </draggable>
+      <draggable
+        v-model="newRotation"
+        group="media"
+      >
+        <media-card
+          v-for="(media, i) in newRotation"
+          :key="media.id"
+          class="d-flex"
+        >
+          <applicable-icon :is-applicable="isApplicable(media)" />
+          <div
+            class="d-flex align-center justify-center flex-grow-1"
+            :title="getMediaDetails(media).name"
+            :style="{
+              'overflow': 'hidden',
+              'font-weight': media.type === 'prize_generic' ? '500' : undefined,
+              'font-style': !getMediaDetails(media).name ? 'italic' : undefined,
+            }"
+          >
+            {{ getMediaDetails(media).name || 'Could not find media name.' }}
+          </div>
+          <div class="d-flex">
+            <v-text-field
+              v-model="media.seconds"
+              class="pa-0 ma-0"
+              type="number"
+              hide-details
+              dense
+              :style="{ 'width': '40px !important' }"
+              @input="parseSeconds(i)"
+            />
+            <v-icon @click="remove(i)">
+              mdi-delete
+            </v-icon>
+          </div>
+        </media-card>
+      </draggable>
+    </div>
   </div>
 </template>
 

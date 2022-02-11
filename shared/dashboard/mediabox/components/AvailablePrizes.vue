@@ -3,56 +3,63 @@
     <v-toolbar-title>
       Available Prizes
     </v-toolbar-title>
-    <media-card
-      v-if="!prizes.length"
-      :style="{ 'font-style': 'italic' }"
-    >
-      No prizes available from the tracker.
-    </media-card>
-    <!-- All Prizes -->
-    <draggable
-      v-else
-      :list="prizes"
-      :group="{ name: 'media', pull: 'clone', put: false }"
-      :sort="false"
-      :clone="clone"
+    <div
+      :style="{
+        'max-height': '400px',
+        'overflow-y': 'auto',
+      }"
     >
       <media-card
-        v-for="prize in prizes"
-        :key="prize.id"
-        class="d-flex"
+        v-if="!prizes.length"
+        :style="{ 'font-style': 'italic' }"
       >
-        <applicable-icon :is-applicable="isPrizeApplicable(prize)" />
-        <div
-          class="flex-grow-1"
-          :title="prize.name"
-        >
-          {{ prize.name }}
-        </div>
+        No prizes available from the tracker.
       </media-card>
-    </draggable>
+      <!-- All Prizes -->
+      <draggable
+        v-else
+        :list="prizes"
+        :group="{ name: 'media', pull: 'clone', put: false }"
+        :sort="false"
+        :clone="clone"
+      >
+        <media-card
+          v-for="prize in prizes"
+          :key="prize.id"
+          class="d-flex"
+        >
+          <applicable-icon :is-applicable="isPrizeApplicable(prize)" />
+          <div
+            class="flex-grow-1"
+            :title="prize.name"
+          >
+            {{ prize.name }}
+          </div>
+        </media-card>
+      </draggable>
 
-    <!-- Generic Prize Slide -->
-    <draggable
-      :list="['generic_prize']"
-      :group="{ name: 'media', pull: 'clone', put: false }"
-      :sort="false"
-      :clone="cloneGeneric"
-    >
-      <media-card
-        key="generic_prize"
-        class="d-flex"
-        :style="{ 'font-weight': '500' }"
+      <!-- Generic Prize Slide -->
+      <draggable
+        :list="['generic_prize']"
+        :group="{ name: 'media', pull: 'clone', put: false }"
+        :sort="false"
+        :clone="cloneGeneric"
       >
-        <applicable-icon :is-applicable="!!prizes.filter((p) => isPrizeApplicable(p)).length" />
-        <div
-          class="flex-grow-1"
-          title="Generic Prize Slide"
+        <media-card
+          key="generic_prize"
+          class="d-flex"
+          :style="{ 'font-weight': '500' }"
         >
-          Generic Prize Slide
-        </div>
-      </media-card>
-    </draggable>
+          <applicable-icon :is-applicable="!!prizes.filter((p) => isPrizeApplicable(p)).length" />
+          <div
+            class="flex-grow-1"
+            title="Generic Prize Slide"
+          >
+            Generic Prize Slide
+          </div>
+        </media-card>
+      </draggable>
+    </div>
   </div>
 </template>
 

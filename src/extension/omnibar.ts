@@ -272,10 +272,12 @@ mq.evt.on('newScreenedSub', (data) => {
   omnibar.value.miniCredits.runSubs.push(clone(overriddenTypes));
 });
 mq.evt.on('newScreenedCheer', (data) => {
-  omnibar.value.miniCredits.runCheers.push(clone(data));
+  const overriddenTypes = data as unknown as never;
+  omnibar.value.miniCredits.runCheers.push(clone(overriddenTypes));
 });
 mq.evt.on('donationFullyProcessed', (data) => {
-  omnibar.value.miniCredits.runDonations.push(clone(data));
+  const overriddenTypes = data as unknown as never;
+  omnibar.value.miniCredits.runDonations.push(clone(overriddenTypes));
 });
 
 // Pushes our "mini credits" to the alert queue.
@@ -314,9 +316,11 @@ sc.on('timerStopped', () => {
   const donators = runDonations.length
     ? orderBy( // Groups donation totals amounts by name and sorts descending.
       Object.entries(runDonations.reduce<{ [k: string]: number }>((prev, curr) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const current = curr as any;
         const obj = prev;
-        if (!obj[curr.donor_visiblename]) obj[curr.donor_visiblename] = 0;
-        obj[curr.donor_visiblename] += Number(curr.amount);
+        if (!obj[current.donor_visiblename]) obj[current.donor_visiblename] = 0;
+        obj[current.donor_visiblename] += Number(curr.amount);
         return obj;
       }, {})).filter(([,v]) => v > 0),
       ([,v]) => v,
@@ -330,9 +334,13 @@ sc.on('timerStopped', () => {
   const cheers = runCheers.length
     ? orderBy( // Groups cheer amounts by name and sorts descending.
       Object.entries(runCheers.reduce<{ [k: string]: number }>((prev, curr) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const current = curr as any;
         const obj = prev;
-        if (!obj[curr.message.tags['display-name']]) obj[curr.message.tags['display-name']] = 0;
-        obj[curr.message.tags['display-name']] += Number(curr.message.tags.bits);
+        if (!obj[current.message.tags['display-name']]) {
+          obj[current.message.tags['display-name']] = 0;
+        }
+        obj[current.message.tags['display-name']] += Number(current.message.tags.bits);
         return obj;
       }, {})).filter(([,v]) => v > 0),
       ([,v]) => v,

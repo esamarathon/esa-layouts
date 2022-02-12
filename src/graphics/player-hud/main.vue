@@ -1,63 +1,86 @@
 <template>
   <div
-    :class="`PlayerHUD Flex ${alertClass}`"
+    class="Flex"
     :style="{
       'flex-direction': 'column',
       'width': '100vw',
       'height': '100vh',
-      'box-sizing': 'border-box',
-      'padding': '0 5vw',
-      'transition': 'background-color 1s',
-      'text-align': 'center',
-      'font-size': '18vh',
     }"
   >
-    <!-- Tag scanning messages. -->
-    <template v-if="tagScanned">
-      <template v-if="tagScanned === 'success_comm'">
-        <div>✔</div>
-        <div>
-          <span :style="{ 'font-weight': 600 }">{{ tagDisplayName }}</span>
-          scanned in as commentator
-        </div>
+    <!-- Main messages. -->
+    <div
+      :class="`PlayerHUD Flex ${alertClass}`"
+      :style="{
+        width: '100%',
+        'flex-grow': 1,
+        'flex-direction': 'column',
+        'box-sizing': 'border-box',
+        'padding': '0 5vw',
+        'transition': 'background-color 1s',
+        'text-align': 'center',
+        'font-size': '15vh',
+      }"
+    >
+      <!-- Tag scanning messages. -->
+      <template v-if="tagScanned">
+        <template v-if="tagScanned === 'success_comm'">
+          <div>✔</div>
+          <div>
+            <span :style="{ 'font-weight': 600 }">{{ tagDisplayName }}</span>
+            scanned in as commentator
+          </div>
+        </template>
+        <template v-else-if="tagScanned === 'success_player'">
+          <div>✔</div>
+          <div>
+            <span :style="{ 'font-weight': 600 }">{{ tagDisplayName }}</span>
+            scanned in as player on
+            <span :style="{ 'white-space': 'nowrap' }">button {{ buttonId }}!</span>
+          </div>
+        </template>
+        <template v-else-if="tagScanned === 'fail_player'">
+          <div>❌</div>
+          <div>
+            <span :style="{ 'font-weight': 600 }">{{ tagDisplayName }}</span>
+            cannot scan in as player on
+            <span :style="{ 'white-space': 'nowrap' }">button {{ buttonId }}!</span>
+          </div>
+        </template>
+        <template v-else>
+          <div>❔</div>
+          <div>Tag was scanned but not needed</div>
+        </template>
       </template>
-      <template v-else-if="tagScanned === 'success_player'">
-        <div>✔</div>
-        <div>
-          <span :style="{ 'font-weight': 600 }">{{ tagDisplayName }}</span>
-          scanned in as player on
-          <span :style="{ 'white-space': 'nowrap' }">button {{ buttonId }}!</span>
-        </div>
+      <!-- Manually triggered message from readers via Stream Deck. -->
+      <template v-else-if="streamDeckData.playerHUDTriggerType === 'message'">
+        Any time
+        <br>for messages?
       </template>
-      <template v-else-if="tagScanned === 'fail_player'">
-        <div>❌</div>
-        <div>
-          <span :style="{ 'font-weight': 600 }">{{ tagDisplayName }}</span>
-          cannot scan in as player on
-          <span :style="{ 'white-space': 'nowrap' }">button {{ buttonId }}!</span>
-        </div>
+      <!-- Donations to be read message. -->
+      <template v-else-if="donationsToRead.length">
+        Donations Pending:
+        <br>{{ donationsToRead.length }}
+        <br>Largest Unread Donation: {{ largestDonation }}
       </template>
+      <!-- Nothing. -->
       <template v-else>
-        <div>❔</div>
-        <div>Tag was scanned but not needed</div>
+        Nothing currently
+        <br>to be read
       </template>
-    </template>
-    <!-- Manually triggered message from readers via Stream Deck. -->
-    <template v-else-if="streamDeckData.playerHUDTriggerType === 'message'">
-      Any time
-      <br>for messages?
-    </template>
-    <!-- Donations to be read message (only if run has started). -->
-    <template v-else-if="donationsToRead.length && timer.state !== 'stopped'">
-      Donations Pending:
-      <br>{{ donationsToRead.length }}
-      <br>Largest Unread Donation: {{ largestDonation }}
-    </template>
-    <!-- Nothing. -->
-    <template v-else>
-      Nothing currently
-      <br>to be read
-    </template>
+    </div>
+    <!-- Timer -->
+    <div
+      :style="{
+        background: 'black',
+        color: 'white',
+        width: '100%',
+        'text-align': 'center',
+        'font-size': '15vh',
+        'padding-bottom': '2vh',
+      }"
+    >
+      {{ timer.time }}
+    </div>
   </div>
 </template>
 
@@ -126,7 +149,7 @@ export default class extends Vue {
     if (this.streamDeckData.playerHUDTriggerType === 'message') {
       return 'MessageToRead';
     }
-    if (this.donationsToRead.length && this.timer.state !== 'stopped') {
+    if (this.donationsToRead.length) {
       return 'DonationsToRead';
     }
     return '';

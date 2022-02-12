@@ -168,14 +168,16 @@
         "runCheers": {
           "type": "array",
           "items": {
-            "$ref": "../node_modules/@esamarathon/mq-events/definitions/OmnibarModeration/NewScreenedCheer.json"
+            "type": "object",
+            "additionalProperties": true
           },
           "default": []
         },
         "runDonations": {
           "type": "array",
           "items": {
-            "$ref": "../node_modules/@esamarathon/mq-events/definitions/Tracker/DonationFullyProcessed.json"
+            "type": "object",
+            "additionalProperties": true
           },
           "default": []
         }

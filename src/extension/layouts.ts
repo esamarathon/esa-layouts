@@ -388,7 +388,7 @@ async function changeCrop(value?: number, cap?: number, mode?: 'game' | 'camera'
   if (!m) return;
   let capture: number | undefined;
   if (m === 'game') {
-    capture = selected.gameCapture >= 0 ? selected.gameCapture : cap;
+    capture = cap || selected.gameCapture;
     if (typeof capture === 'undefined' || capture < 0) return;
     if (value && selected.gameCrop >= 0) {
       switch (selected.gameCrop) {

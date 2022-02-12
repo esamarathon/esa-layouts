@@ -296,10 +296,12 @@ rabbitmq_1.mq.evt.on('newScreenedSub', (data) => {
     replicants_1.omnibar.value.miniCredits.runSubs.push((0, clone_1.default)(overriddenTypes));
 });
 rabbitmq_1.mq.evt.on('newScreenedCheer', (data) => {
-    replicants_1.omnibar.value.miniCredits.runCheers.push((0, clone_1.default)(data));
+    const overriddenTypes = data;
+    replicants_1.omnibar.value.miniCredits.runCheers.push((0, clone_1.default)(overriddenTypes));
 });
 rabbitmq_1.mq.evt.on('donationFullyProcessed', (data) => {
-    replicants_1.omnibar.value.miniCredits.runDonations.push((0, clone_1.default)(data));
+    const overriddenTypes = data;
+    replicants_1.omnibar.value.miniCredits.runDonations.push((0, clone_1.default)(overriddenTypes));
 });
 // Pushes our "mini credits" to the alert queue.
 speedcontrol_1.sc.on('timerStopped', () => {
@@ -336,10 +338,12 @@ speedcontrol_1.sc.on('timerStopped', () => {
     const donators = runDonations.length
         ? (0, lodash_1.orderBy)(// Groups donation totals amounts by name and sorts descending.
         Object.entries(runDonations.reduce((prev, curr) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const current = curr;
             const obj = prev;
-            if (!obj[curr.donor_visiblename])
-                obj[curr.donor_visiblename] = 0;
-            obj[curr.donor_visiblename] += Number(curr.amount);
+            if (!obj[current.donor_visiblename])
+                obj[current.donor_visiblename] = 0;
+            obj[current.donor_visiblename] += Number(curr.amount);
             return obj;
         }, {})).filter(([, v]) => v > 0), ([, v]) => v, 'desc')
         : undefined;
@@ -350,10 +354,13 @@ speedcontrol_1.sc.on('timerStopped', () => {
     const cheers = runCheers.length
         ? (0, lodash_1.orderBy)(// Groups cheer amounts by name and sorts descending.
         Object.entries(runCheers.reduce((prev, curr) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const current = curr;
             const obj = prev;
-            if (!obj[curr.message.tags['display-name']])
-                obj[curr.message.tags['display-name']] = 0;
-            obj[curr.message.tags['display-name']] += Number(curr.message.tags.bits);
+            if (!obj[current.message.tags['display-name']]) {
+                obj[current.message.tags['display-name']] = 0;
+            }
+            obj[current.message.tags['display-name']] += Number(current.message.tags.bits);
             return obj;
         }, {})).filter(([, v]) => v > 0), ([, v]) => v, 'desc')
         : undefined;

@@ -129,8 +129,12 @@ speedcontrol_1.sc.on('timerStopped', () => {
         // This filters out any items that have no asset *and* no commercial, which are useless.
         replicants_1.videoPlayer.value.playlist = formattedList.reduce((prev, { name, commercial }) => {
             const asset = replicants_1.assetsVideos.value.find((v) => v.name === (name === null || name === void 0 ? void 0 : name.trim()));
-            if (asset || commercial)
+            if (asset || commercial) {
                 prev.push({ sum: asset === null || asset === void 0 ? void 0 : asset.sum, commercial });
+            }
+            else if (!asset) {
+                (0, nodecg_1.get)().log.warn('[Intermission Player] Asset named "%s" was not found, so skipping in playlist', name);
+            }
             return prev;
         }, []);
         (0, nodecg_1.get)().log.info('[Intermission Player] Automatically set playlist from run data');

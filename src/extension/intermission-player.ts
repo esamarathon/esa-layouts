@@ -70,7 +70,7 @@ export async function startPlaylist(): Promise<void> {
   } catch (err) {
     logError('[Intermission Player] Could not be started', err);
     // Return to the intermission scene if there was an issue starting the playlist.
-    await new Promise((res) => { setTimeout(res, 2000); });
+    await new Promise((res) => { setTimeout(res, 5000); });
     // TODO: Should this be commercials scene if available?
     await changeScene({ scene: config.obs.names.scenes.intermission });
   }

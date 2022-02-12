@@ -108,7 +108,14 @@ sc.on('timerStopped', () => {
     videoPlayer.value.playlist = formattedList.reduce<VideoPlayer['playlist']>(
       (prev, { name, commercial }) => {
         const asset = assetsVideos.value.find((v) => v.name === name?.trim());
-        if (asset || commercial) prev.push({ sum: asset?.sum, commercial });
+        if (asset || commercial) {
+          prev.push({ sum: asset?.sum, commercial });
+        } else if (!asset) {
+          nodecg().log.warn(
+            '[Intermission Player] Asset named "%s" was not found, so skipping in playlist',
+            name,
+          );
+        }
         return prev;
       },
       [],

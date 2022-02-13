@@ -150,11 +150,14 @@ exports.searchSrcomPronouns = searchSrcomPronouns;
 async function changeTwitchMetadata(title, gameId) {
     var _a, _b;
     try {
-        let t = title || replicants_1.twitchChannelInfo.value.title;
+        // Hardcoded fallback title for now!
+        // TODO: Unhardcode!
+        let t = title || '🔴 ESA Winter 2022 - {{total}}/$100,000 in aid of Alzheimerfonden';
         if (t) {
             t = t.replace(/{{total}}/g, (0, helpers_1.formatUSD)(replicants_1.donationTotal.value, true));
         }
-        const gID = gameId || replicants_1.twitchChannelInfo.value.gamme_id;
+        const gID = gameId || replicants_1.twitchChannelInfo.value.game_id;
+        (0, nodecg_1.get)().log.info('[Misc] Decided Twitch title is: %s - Decided game ID is %s', t, gID);
         const resp = await speedcontrol_1.sc.sendMessage('twitchAPIRequest', {
             method: 'patch',
             endpoint: `/channels?broadcaster_id=${replicants_1.twitchAPIData.value.channelID}`,
@@ -169,8 +172,9 @@ async function changeTwitchMetadata(title, gameId) {
         }
         // "New" API doesn't return anything so update the data with what we've got.
         replicants_1.twitchChannelInfo.value.title = ((_b = t) === null || _b === void 0 ? void 0 : _b.slice(0, 140)) || '';
-        // twitchChannelInfo.value.game_id = dir?.id || '';
+        replicants_1.twitchChannelInfo.value.game_id = gID || '';
         // twitchChannelInfo.value.game_name = dir?.name || '';
+        (0, nodecg_1.get)().log.info('[Misc] Twitch title/game updated');
     }
     catch (err) {
         (0, helpers_1.logError)('[Misc] Error updating Twitch channel information:', err);
@@ -178,12 +182,15 @@ async function changeTwitchMetadata(title, gameId) {
 }
 // Used to change the Twitch title when requested by nodecg-speedcontrol.
 (0, nodecg_1.get)().listenFor('twitchExternalMetadata', 'nodecg-speedcontrol', async ({ title, gameID }) => {
+    (0, nodecg_1.get)().log.info('[Misc] Message received to change title/game, will attempt (title: %s, game id: %s)', title, gameID);
     await changeTwitchMetadata(title, gameID);
 });
 // Used to change the Twitch title when the donation total updates.
 let donationTotalInit = false;
-replicants_1.donationTotal.on('change', async () => {
-    if (donationTotalInit)
+replicants_1.donationTotal.on('change', async (val) => {
+    if (donationTotalInit) {
+        (0, nodecg_1.get)().log.info('[Misc] Donation total updated to %s, will attempt to set title', val);
         await changeTwitchMetadata();
+    }
     donationTotalInit = true;
 });

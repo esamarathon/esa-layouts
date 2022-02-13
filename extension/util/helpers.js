@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatSrcomPronouns = exports.logError = exports.getOtherStreamEventShort = exports.getCurrentEventShort = exports.wait = exports.padTimeNumber = void 0;
+exports.formatUSD = exports.formatSrcomPronouns = exports.logError = exports.getOtherStreamEventShort = exports.getCurrentEventShort = exports.wait = exports.padTimeNumber = void 0;
 const util_1 = __importDefault(require("util"));
 const nodecg_1 = require("./nodecg");
 const config = (0, nodecg_1.get)().bundleConfig;
@@ -82,3 +82,15 @@ function formatSrcomPronouns(pronouns) {
     return split[0];
 }
 exports.formatSrcomPronouns = formatSrcomPronouns;
+/**
+ * Simple formatter for displaying USD amounts.
+ * @param amount Amount as a integer/float.
+ * @param noCents Never display cents, even if under $100.
+ */
+function formatUSD(amount, noCents = false) {
+    if (amount >= 100 || noCents) {
+        return `$${Math.floor(amount).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+    }
+    return `$${amount.toFixed(2)}`;
+}
+exports.formatUSD = formatUSD;

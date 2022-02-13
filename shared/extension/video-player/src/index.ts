@@ -65,7 +65,7 @@ class VideoPlayer extends TypedEmitter<VideoPlayerEvents> {
       if (item.commercial) this.emit('playCommercial', item);
       if (item.video) await this.playVideo(item.video);
       else {
-        await new Promise((res) => { setTimeout(res, 2500); });
+        await new Promise((res) => { setTimeout(res, 5000); });
         this.emit('videoEnded', item); // "Pretend" video ended in this case.
       }
     } else {

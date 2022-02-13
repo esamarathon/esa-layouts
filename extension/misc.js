@@ -147,3 +147,43 @@ exports.searchSrcomPronouns = searchSrcomPronouns;
         ack(null);
     }
 });
+async function changeTwitchMetadata(title, gameId) {
+    var _a, _b;
+    try {
+        let t = title || replicants_1.twitchChannelInfo.value.title;
+        if (t) {
+            t = t.replace(/{{total}}/g, (0, helpers_1.formatUSD)(replicants_1.donationTotal.value, true));
+        }
+        const gID = gameId || replicants_1.twitchChannelInfo.value.gamme_id;
+        const resp = await speedcontrol_1.sc.sendMessage('twitchAPIRequest', {
+            method: 'patch',
+            endpoint: `/channels?broadcaster_id=${replicants_1.twitchAPIData.value.channelID}`,
+            data: {
+                title: (_a = t) === null || _a === void 0 ? void 0 : _a.slice(0, 140),
+                game_id: gID || '',
+            },
+            newAPI: true,
+        });
+        if (resp.statusCode !== 204) {
+            throw new Error(JSON.stringify(resp.body));
+        }
+        // "New" API doesn't return anything so update the data with what we've got.
+        replicants_1.twitchChannelInfo.value.title = ((_b = t) === null || _b === void 0 ? void 0 : _b.slice(0, 140)) || '';
+        // twitchChannelInfo.value.game_id = dir?.id || '';
+        // twitchChannelInfo.value.game_name = dir?.name || '';
+    }
+    catch (err) {
+        (0, helpers_1.logError)('[Misc] Error updating Twitch channel information:', err);
+    }
+}
+// Used to change the Twitch title when requested by nodecg-speedcontrol.
+(0, nodecg_1.get)().listenFor('twitchExternalMetadata', 'nodecg-speedcontrol', async ({ title, gameID }) => {
+    await changeTwitchMetadata(title, gameID);
+});
+// Used to change the Twitch title when the donation total updates.
+let donationTotalInit = false;
+replicants_1.donationTotal.on('change', async () => {
+    if (donationTotalInit)
+        await changeTwitchMetadata();
+    donationTotalInit = true;
+});

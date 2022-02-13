@@ -114,7 +114,7 @@ var VideoPlayer = /** @class */ (function (_super) {
                     case 1:
                         _a.sent();
                         return [3 /*break*/, 4];
-                    case 2: return [4 /*yield*/, new Promise(function (res) { setTimeout(res, 2500); })];
+                    case 2: return [4 /*yield*/, new Promise(function (res) { setTimeout(res, 5000); })];
                     case 3:
                         _a.sent();
                         this.emit('videoEnded', item); // "Pretend" video ended in this case.

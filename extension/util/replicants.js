@@ -1,7 +1,7 @@
 "use strict";
 /* eslint-disable max-len */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.videoPlayer = exports.upcomingRunID = exports.ttsVoices = exports.streamDeckData = exports.serverTimestamp = exports.readerIntroduction = exports.prizes = exports.otherStreamData = exports.omnibar = exports.obsData = exports.notableDonations = exports.nameCycle = exports.musicData = exports.gameLayouts = exports.donationTotalMilestones = exports.donationTotal = exports.donationsToRead = exports.donationReader = exports.delayedTimer = exports.currentRunDelay = exports.countdown = exports.commentators = exports.capturePositions = exports.bigbuttonPlayerMap = exports.bids = exports.assetsVideos = exports.assetsReaderIntroductionImages = exports.assetsMediaBoxImages = exports.assetsIntermissionSlides = void 0;
+exports.videoPlayer = exports.upcomingRunID = exports.twitchChannelInfo = exports.twitchAPIData = exports.ttsVoices = exports.streamDeckData = exports.serverTimestamp = exports.readerIntroduction = exports.prizes = exports.otherStreamData = exports.omnibar = exports.obsData = exports.notableDonations = exports.nameCycle = exports.musicData = exports.gameLayouts = exports.donationTotalMilestones = exports.donationTotal = exports.donationsToRead = exports.donationReader = exports.delayedTimer = exports.currentRunDelay = exports.countdown = exports.commentators = exports.capturePositions = exports.bigbuttonPlayerMap = exports.bids = exports.assetsVideos = exports.assetsReaderIntroductionImages = exports.assetsMediaBoxImages = exports.assetsIntermissionSlides = void 0;
 const nodecg_1 = require("./nodecg");
 /**
  * This is where you can declare all your replicant to import easily into other files,
@@ -34,5 +34,7 @@ exports.readerIntroduction = (0, nodecg_1.get)().Replicant('readerIntroduction')
 exports.serverTimestamp = (0, nodecg_1.get)().Replicant('serverTimestamp');
 exports.streamDeckData = (0, nodecg_1.get)().Replicant('streamDeckData');
 exports.ttsVoices = (0, nodecg_1.get)().Replicant('ttsVoices');
+exports.twitchAPIData = (0, nodecg_1.get)().Replicant('twitchAPIData', 'nodecg-speedcontrol');
+exports.twitchChannelInfo = (0, nodecg_1.get)().Replicant('twitchChannelInfo', 'nodecg-speedcontrol');
 exports.upcomingRunID = (0, nodecg_1.get)().Replicant('upcomingRunID');
 exports.videoPlayer = (0, nodecg_1.get)().Replicant('videoPlayer');

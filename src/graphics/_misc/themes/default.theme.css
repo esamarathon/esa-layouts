@@ -123,13 +123,13 @@ body {
   background-color: #41245b;
 }
 
-#Intermission .Header {
+#Intermission .Header, #ReaderIntroduction .Header {
   background-color: #41245b;
   color: white;
 }
 
 #Intermission .BottomBox,
-#Intermission .Content {
+#Intermission .Content, #ReaderIntroduction .Content {
   background-color: rgba(0, 0, 0, 0.85);
 }
 

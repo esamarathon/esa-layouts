@@ -80,34 +80,39 @@
                 height: '100%',
                 'flex-grow': 1,
                 'flex-direction': 'column',
-                'justify-content': 'space-between',
+                'row-gap': '20px',
               }"
             >
-              <div>
-                Game:
-                <br>{{ run.game }}
-                <br>{{ run.category }}
+              <container>
+                <template v-slot:header>Game</template>
+                <template v-slot:content>{{ run.game }}</template>
+              </container>
+              <div class="Flex" :style="{ width: '100%', 'column-gap': '20px' }">
+                <container :style="{ 'flex-basis': 0, 'flex-grow': 1 }">
+                  <template v-slot:header>Category</template>
+                  <template v-slot:content>{{ run.category }}</template>
+                </container>
+                <container :style="{ 'flex-basis': 0, 'flex-grow': 1 }">
+                  <template v-slot:header>Estimate</template>
+                  <template v-slot:content>{{ run.estimate }}</template>
+                </container>
+                <container :style="{ 'flex-basis': 0, 'flex-grow': 1 }">
+                  <template v-slot:header>System</template>
+                  <template v-slot:content>{{ run.system }}</template>
+                </container>
               </div>
-              <div>
-                Runners:
-                <br>{{ players }}
-              </div>
-              <div>
-                Estimate:
-                <br>{{ run.estimate }}
-              </div>
-              <div>
-                System:
-                <br>{{ run.system }}
-              </div>
-              <div>
-                Commentators:
-                <br>{{ comms }}
-              </div>
-              <div>
-                Donation Reader:
-                <br>{{ reader }}
-              </div>
+              <container>
+                <template v-slot:header>Runners</template>
+                <template v-slot:content>{{ players }}</template>
+              </container>
+              <container v-show="comms">
+                <template v-slot:header>Commentators</template>
+                <template v-slot:content>{{ comms }}</template>
+              </container>
+              <container v-show="reader">
+                <template v-slot:header>Donation Reader</template>
+                <template v-slot:content>{{ reader }}</template>
+              </container>
             </div>
           </template>
         </div>
@@ -125,11 +130,13 @@ import { ReaderIntroduction } from '@esa-layouts/types/schemas';
 import { RunData } from 'speedcontrol-util/types';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import clone from 'clone';
+import Container from './components/Container.vue';
 import { getZoomAmountCSS } from '../_misc/helpers';
 
 @Component({
   components: {
     MediaBox,
+    Container,
   },
 })
 export default class extends Vue {

@@ -73,3 +73,15 @@ export function formatSrcomPronouns(pronouns?: string): string | undefined {
   }
   return split[0];
 }
+
+/**
+ * Simple formatter for displaying USD amounts.
+ * @param amount Amount as a integer/float.
+ * @param noCents Never display cents, even if under $100.
+ */
+export function formatUSD(amount: number, noCents = false): string {
+  if (amount >= 100 || noCents) {
+    return `$${Math.floor(amount).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+  }
+  return `$${amount.toFixed(2)}`;
+}

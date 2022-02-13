@@ -115,6 +115,11 @@ const routes = [
     component: List.L_2CamsOnly,
   },
   {
+    name: 'Full Crowd Camera',
+    path: '/full-crowd-cam',
+    component: List.L_FullCrowdCam,
+  },
+  {
     path: '*',
     redirect: '/4x3-1p',
   },

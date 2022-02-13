@@ -1,12 +1,12 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import AudioNormaliser from '@shared/extension/audio-normaliser';
 import type { RunData } from 'speedcontrol-util/types';
-import { formatSrcomPronouns, getOtherStreamEventShort } from './util/helpers';
+import { formatSrcomPronouns, formatUSD, getOtherStreamEventShort, logError } from './util/helpers';
 import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
-import { bigbuttonPlayerMap, commentators, donationReader, otherStreamData, serverTimestamp, upcomingRunID } from './util/replicants';
+import { bigbuttonPlayerMap, commentators, donationReader, donationTotal, otherStreamData, serverTimestamp, twitchAPIData, twitchChannelInfo, upcomingRunID } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const config = (nodecg().bundleConfig as Configschema);
@@ -131,4 +131,48 @@ nodecg().listenFor('readerModify', async (val: string | null | undefined, ack) =
   if (ack && !ack.handled) {
     ack(null);
   }
+});
+
+async function changeTwitchMetadata(title?: string, gameId?: string): Promise<void> {
+  try {
+    let t = title || twitchChannelInfo.value.title;
+    if (t) {
+      t = (t as string).replace(/{{total}}/g, formatUSD(donationTotal.value, true));
+    }
+    const gID = gameId || twitchChannelInfo.value.gamme_id;
+    const resp = await sc.sendMessage('twitchAPIRequest', {
+      method: 'patch',
+      endpoint: `/channels?broadcaster_id=${twitchAPIData.value.channelID}`,
+      data: {
+        title: (t as string)?.slice(0, 140),
+        game_id: gID || '',
+      },
+      newAPI: true,
+    });
+    if (resp.statusCode !== 204) {
+      throw new Error(JSON.stringify(resp.body));
+    }
+    // "New" API doesn't return anything so update the data with what we've got.
+    twitchChannelInfo.value.title = (t as string)?.slice(0, 140) || '';
+    // twitchChannelInfo.value.game_id = dir?.id || '';
+    // twitchChannelInfo.value.game_name = dir?.name || '';
+  } catch (err) {
+    logError('[Misc] Error updating Twitch channel information:', err);
+  }
+}
+
+// Used to change the Twitch title when requested by nodecg-speedcontrol.
+nodecg().listenFor('twitchExternalMetadata', 'nodecg-speedcontrol', async ({ title, gameID }: {
+  channelID?: string,
+  title?: string,
+  gameID: string,
+}) => {
+  await changeTwitchMetadata(title, gameID);
+});
+
+// Used to change the Twitch title when the donation total updates.
+let donationTotalInit = false;
+donationTotal.on('change', async () => {
+  if (donationTotalInit) await changeTwitchMetadata();
+  donationTotalInit = true;
 });

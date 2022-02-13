@@ -81,7 +81,7 @@
     <!-- Media Box -->
     <media-box
       vertical
-      :font-size="42"
+      :font-size="36"
       :style="{
         left: '0px',
         top: '684px',

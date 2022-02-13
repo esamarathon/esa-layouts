@@ -66,7 +66,7 @@
 
     <!-- Media Box -->
     <media-box
-      :font-size="45"
+      :font-size="40"
       :style="{
         left: '0px',
         top: '770px',

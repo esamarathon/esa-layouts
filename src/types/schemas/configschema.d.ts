@@ -100,4 +100,9 @@ export interface Configschema {
 		address: string;
 		key: string;
 	};
+	discord: {
+		enabled: boolean;
+		token: string;
+		textChannelId: string;
+	};
 }

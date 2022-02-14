@@ -1,15 +1,57 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
+import { Client, Intents, TextChannel } from 'discord.js';
 import mb from './util/mediabox';
 import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 
 /**
- * Everything in this file right now is related to RabbitMQ.
+ * Lots of stuff in this file right now is related to RabbitMQ.
  * TODO: Should this be moved somewhere else?
  */
 
-const obsConfig = (nodecg().bundleConfig as Configschema).obs;
+const config = nodecg().bundleConfig as Configschema;
+const discord = new Client({ intents: [Intents.FLAGS.GUILDS] });
+
+// Discord integration, used to listen for speedrunstore.com purchase notifications.
+if (config.discord.enabled) {
+  nodecg().log.info('[Media Box] Discord integration enabled');
+  discord.on('ready', async () => {
+    nodecg().log.info('[Media Box] Discord bot connection ready');
+
+    // TEST CODE
+    const channel = discord.channels.cache.get(config.discord.textChannelId) as TextChannel;
+    const msgs = await channel.messages.fetch({ limit: 10 });
+    msgs.forEach(async (msg) => {
+      const user = msg.content.match(/\*(.*?)\*/g)?.[0].replace(/\*/g, '');
+      const productName = msg.embeds[0].fields[0].name;
+      const imgURL = msg.embeds[0].image?.url;
+      if (user && productName && imgURL) {
+        mb.pushMerchPurchase({ user, productName, imgURL });
+      }
+    });
+  });
+  discord.on('error', () => {
+    nodecg().log.warn('[Media Box] Discord bot connection error');
+  });
+  discord.on('disconnect', () => {
+    nodecg().log.warn('[Media Box] Discord bot disconnected, will reconnect');
+    setTimeout(() => {
+      discord.login(config.discord.token);
+    }, 10 * 1000);
+  });
+  discord.on('messageCreate', (msg) => {
+    if (msg.channelId === config.discord.textChannelId && msg.webhookId !== null) {
+      const user = msg.content.match(/\*(.*?)\*/g)?.[0].replace(/\*/g, '');
+      const productName = msg.embeds[0].fields[0].name;
+      const imgURL = msg.embeds[0].image?.url;
+      if (user && productName && imgURL) {
+        mb.pushMerchPurchase({ user, productName, imgURL });
+      }
+    }
+  });
+  discord.login(config.discord.token);
+}
 
 /**
  * Check to know if a specified scene has sponsor logos in it or not.
@@ -21,9 +63,9 @@ function doesSceneHaveSponsorLogos(name?: string): boolean {
   }
   // Hardcoded scenes that have sponsor logos on them as of "now".
   const scenes = [
-    obs.findScene(obsConfig.names.scenes.gameLayout),
-    obs.findScene(obsConfig.names.scenes.intermission),
-    obs.findScene(obsConfig.names.scenes.commercials),
+    obs.findScene(config.obs.names.scenes.gameLayout),
+    obs.findScene(config.obs.names.scenes.intermission),
+    obs.findScene(config.obs.names.scenes.commercials),
   ];
   const namedScene = obs.findScene(name);
   return scenes.includes(namedScene);

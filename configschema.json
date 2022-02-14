@@ -543,6 +543,29 @@
         "address",
         "key"
       ]
+    },
+    "discord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "token": {
+          "type": "string",
+          "default": "BOT_TOKEN"
+        },
+        "textChannelId": {
+          "type": "string",
+          "default": "TEXT_CHANNEL_ID"
+        }
+      },
+      "required": [
+        "enabled",
+        "token",
+        "textChannelId"
+      ]
     }
   },
   "required": [
@@ -558,6 +581,7 @@
     "tracker",
     "tts",
     "flagcarrier",
-    "offsite"
+    "offsite",
+    "discord"
   ]
 }

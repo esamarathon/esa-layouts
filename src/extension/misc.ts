@@ -142,7 +142,7 @@ async function changeTwitchMetadata(title?: string, gameId?: string): Promise<vo
       t = (t as string).replace(/{{total}}/g, formatUSD(donationTotal.value, true));
     }
     const gID = gameId || twitchChannelInfo.value.game_id;
-    nodecg().log.info('[Misc] Decided Twitch title is: %s - Decided game ID is %s', t, gID);
+    nodecg().log.debug('[Misc] Decided Twitch title is: %s - Decided game ID is %s', t, gID);
     const resp = await sc.sendMessage('twitchAPIRequest', {
       method: 'patch',
       endpoint: `/channels?broadcaster_id=${twitchAPIData.value.channelID}`,
@@ -159,7 +159,7 @@ async function changeTwitchMetadata(title?: string, gameId?: string): Promise<vo
     twitchChannelInfo.value.title = (t as string)?.slice(0, 140) || '';
     twitchChannelInfo.value.game_id = gID || '';
     // twitchChannelInfo.value.game_name = dir?.name || '';
-    nodecg().log.info('[Misc] Twitch title/game updated');
+    nodecg().log.debug('[Misc] Twitch title/game updated');
   } catch (err) {
     logError('[Misc] Error updating Twitch channel information:', err);
   }
@@ -171,7 +171,7 @@ nodecg().listenFor('twitchExternalMetadata', 'nodecg-speedcontrol', async ({ tit
   title?: string,
   gameID: string,
 }) => {
-  nodecg().log.info(
+  nodecg().log.debug(
     '[Misc] Message received to change title/game, will attempt (title: %s, game id: %s)',
     title,
     gameID,
@@ -183,7 +183,7 @@ nodecg().listenFor('twitchExternalMetadata', 'nodecg-speedcontrol', async ({ tit
 let donationTotalInit = false;
 donationTotal.on('change', async (val) => {
   if (donationTotalInit) {
-    nodecg().log.info('[Misc] Donation total updated to %s, will attempt to set title', val);
+    nodecg().log.debug('[Misc] Donation total updated to %s, will attempt to set title', val);
     await changeTwitchMetadata();
   }
   donationTotalInit = true;

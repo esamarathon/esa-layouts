@@ -7,7 +7,7 @@ import { store } from '../store';
  * @param type Type of alert
  */
 export function isAlertType(type: MediaBox.Types): boolean {
-  return ['donation', 'subscription', 'cheer'].includes(type);
+  return ['donation', 'subscription', 'cheer', 'merch'].includes(type);
 }
 
 /**

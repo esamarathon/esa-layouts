@@ -349,7 +349,18 @@ speedcontrol_1.sc.on('timerStopped', () => {
         : undefined;
     const subscribers = runSubs.length // TODO: Update MQ event, change subgifts logic!
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ? runSubs.map((s) => s.user.displayName)
+        // ? runSubs.map((s) => (s as unknown as { [k: string]: any }).user.displayName)
+        ? (0, lodash_1.orderBy)(// Groups subs/giftsub bombs by name, counts them and sorts descending.
+        Object.entries(runSubs.reduce((prev, curr) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const current = curr;
+            const obj = prev;
+            if (!obj[current.user.displayName]) {
+                obj[current.user.displayName] = 0;
+            }
+            obj[current.user.displayName] += 1;
+            return obj;
+        }, {})).filter(([, v]) => v > 0), ([, v]) => v, 'desc')
         : undefined;
     const cheers = runCheers.length
         ? (0, lodash_1.orderBy)(// Groups cheer amounts by name and sorts descending.

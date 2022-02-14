@@ -22,15 +22,57 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const discord_js_1 = require("discord.js");
 const mediabox_1 = __importDefault(require("./util/mediabox"));
 const mqLogging = __importStar(require("./util/mq-logging"));
 const nodecg_1 = require("./util/nodecg");
 const obs_1 = __importDefault(require("./util/obs"));
 /**
- * Everything in this file right now is related to RabbitMQ.
+ * Lots of stuff in this file right now is related to RabbitMQ.
  * TODO: Should this be moved somewhere else?
  */
-const obsConfig = (0, nodecg_1.get)().bundleConfig.obs;
+const config = (0, nodecg_1.get)().bundleConfig;
+const discord = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS] });
+// Discord integration, used to listen for speedrunstore.com purchase notifications.
+if (config.discord.enabled) {
+    (0, nodecg_1.get)().log.info('[Media Box] Discord integration enabled');
+    discord.on('ready', async () => {
+        (0, nodecg_1.get)().log.info('[Media Box] Discord bot connection ready');
+        // TEST CODE
+        const channel = discord.channels.cache.get(config.discord.textChannelId);
+        const msgs = await channel.messages.fetch({ limit: 10 });
+        msgs.forEach(async (msg) => {
+            var _a, _b;
+            const user = (_a = msg.content.match(/\*(.*?)\*/g)) === null || _a === void 0 ? void 0 : _a[0].replace(/\*/g, '');
+            const productName = msg.embeds[0].fields[0].name;
+            const imgURL = (_b = msg.embeds[0].image) === null || _b === void 0 ? void 0 : _b.url;
+            if (user && productName && imgURL) {
+                mediabox_1.default.pushMerchPurchase({ user, productName, imgURL });
+            }
+        });
+    });
+    discord.on('error', () => {
+        (0, nodecg_1.get)().log.warn('[Media Box] Discord bot connection error');
+    });
+    discord.on('disconnect', () => {
+        (0, nodecg_1.get)().log.warn('[Media Box] Discord bot disconnected, will reconnect');
+        setTimeout(() => {
+            discord.login(config.discord.token);
+        }, 10 * 1000);
+    });
+    discord.on('messageCreate', (msg) => {
+        var _a, _b;
+        if (msg.channelId === config.discord.textChannelId && msg.webhookId !== null) {
+            const user = (_a = msg.content.match(/\*(.*?)\*/g)) === null || _a === void 0 ? void 0 : _a[0].replace(/\*/g, '');
+            const productName = msg.embeds[0].fields[0].name;
+            const imgURL = (_b = msg.embeds[0].image) === null || _b === void 0 ? void 0 : _b.url;
+            if (user && productName && imgURL) {
+                mediabox_1.default.pushMerchPurchase({ user, productName, imgURL });
+            }
+        }
+    });
+    discord.login(config.discord.token);
+}
 /**
  * Check to know if a specified scene has sponsor logos in it or not.
  * @param name Name of scene to check; will be fully confirmed with OBS.
@@ -41,9 +83,9 @@ function doesSceneHaveSponsorLogos(name) {
     }
     // Hardcoded scenes that have sponsor logos on them as of "now".
     const scenes = [
-        obs_1.default.findScene(obsConfig.names.scenes.gameLayout),
-        obs_1.default.findScene(obsConfig.names.scenes.intermission),
-        obs_1.default.findScene(obsConfig.names.scenes.commercials),
+        obs_1.default.findScene(config.obs.names.scenes.gameLayout),
+        obs_1.default.findScene(config.obs.names.scenes.intermission),
+        obs_1.default.findScene(config.obs.names.scenes.commercials),
     ];
     const namedScene = obs_1.default.findScene(name);
     return scenes.includes(namedScene);

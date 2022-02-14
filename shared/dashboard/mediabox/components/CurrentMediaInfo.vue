@@ -51,7 +51,7 @@ export default class extends Vue {
 
   mediaLength(media: MediaBox.ActiveElem): number {
     if (media && isAlertType(media.type)) {
-      return 10; // Alerts have a hardcoded 10 second length for now.
+      return 15; // Alerts have a hardcoded 15 second length for now.
     }
     return this.settings.rotationApplicable
       .find((i) => i.id === media?.id)?.seconds || 0;

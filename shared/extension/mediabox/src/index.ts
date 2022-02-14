@@ -72,12 +72,25 @@ class MediaBox {
     setInterval(() => this.update(), 1000);
   }
 
+  pushMerchPurchase({ user, productName, imgURL }: {
+    user: string,
+    productName: string,
+    imgURL: string,
+  }): void {
+    this.nodecg.log.debug('[Media Box] Received new merch purchase');
+    this.mediaBox.value.alertQueue.push({
+      type: 'merch',
+      id: uuid(),
+      data: { user, productName, imgURL },
+    });
+  }
+
   /**
    * Checks if the supplied type is that of an alert.
    * @param type Type of alert
    */
   private isAlertType(type: MediaBoxType.Types): boolean {
-    return ['donation', 'subscription', 'cheer'].includes(type);
+    return ['donation', 'subscription', 'cheer', 'merch'].includes(type);
   }
 
   /**

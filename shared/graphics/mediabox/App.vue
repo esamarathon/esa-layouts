@@ -45,6 +45,12 @@
           class="Slide"
           :vertical="vertical"
         />
+        <merch
+          v-else-if="type === 6"
+          :key="mediaBox.current.id"
+          class="Slide"
+          :vertical="vertical"
+        />
       </transition>
     </div>
   </div>
@@ -60,6 +66,7 @@ import PrizeGeneric from './components/PrizeGeneric.vue';
 import Donation from './components/Donation.vue';
 import Subscription from './components/Subscription.vue';
 import Cheer from './components/Cheer.vue';
+import Merch from './components/Merch.vue';
 import store from './store';
 import { replicantNS } from '../../browser_shared/replicant_store';
 
@@ -72,6 +79,7 @@ import { replicantNS } from '../../browser_shared/replicant_store';
     Donation,
     Subscription,
     Cheer,
+    Merch,
   },
 })
 export default class extends Vue {
@@ -95,6 +103,8 @@ export default class extends Vue {
         return 4;
       case 'cheer':
         return 5;
+      case 'merch':
+        return 6;
       default:
         return -1;
     }

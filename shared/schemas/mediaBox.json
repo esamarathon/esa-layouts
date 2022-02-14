@@ -9,7 +9,8 @@
         "prize_generic",
         "donation",
         "subscription",
-        "cheer"
+        "cheer",
+        "merch"
       ]
     },
     "rotation": {
@@ -108,7 +109,8 @@
             "enum": [
               "donation",
               "subscription",
-              "cheer"
+              "cheer",
+              "merch"
             ]
           },
           "id": {
@@ -171,6 +173,27 @@
                   "name",
                   "amount",
                   "message"
+                ]
+              },
+              {
+                "description": "Merchandise Purchase",
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "user": {
+                    "type": "string"
+                  },
+                  "productName": {
+                    "type": "string"
+                  },
+                  "imgURL": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "user",
+                  "productName",
+                  "imgURL"
                 ]
               }
             ]

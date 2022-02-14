@@ -1,5 +1,5 @@
 export namespace MediaBox {
-  type Types = 'image' | 'prize' | 'prize_generic' | 'donation' | 'subscription' | 'cheer';
+  type Types = 'image' | 'prize' | 'prize_generic' | 'donation' | 'subscription' | 'cheer' | 'merch';
 
   type ActiveElem = {
     type: Types;
@@ -18,7 +18,7 @@ export namespace MediaBox {
   }
 
   interface AlertElem {
-    type: 'donation' | 'subscription' | 'cheer';
+    type: 'donation' | 'subscription' | 'cheer' | 'merch';
     id: string;
     data:
     | {
@@ -34,6 +34,11 @@ export namespace MediaBox {
       name: string;
       amount: number;
       message: string;
+    }
+    | {
+      user: string;
+      productName: string;
+      imgURL: string;
     };
   }
 }

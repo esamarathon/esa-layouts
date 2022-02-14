@@ -64,12 +64,21 @@ var MediaBox = /** @class */ (function () {
         this.update();
         setInterval(function () { return _this.update(); }, 1000);
     }
+    MediaBox.prototype.pushMerchPurchase = function (_a) {
+        var user = _a.user, productName = _a.productName, imgURL = _a.imgURL;
+        this.nodecg.log.debug('[Media Box] Received new merch purchase');
+        this.mediaBox.value.alertQueue.push({
+            type: 'merch',
+            id: (0, uuid_1.v4)(),
+            data: { user: user, productName: productName, imgURL: imgURL },
+        });
+    };
     /**
      * Checks if the supplied type is that of an alert.
      * @param type Type of alert
      */
     MediaBox.prototype.isAlertType = function (type) {
-        return ['donation', 'subscription', 'cheer'].includes(type);
+        return ['donation', 'subscription', 'cheer', 'merch'].includes(type);
     };
     /**
      * Get the length in milliseconds a piece of media should remain,

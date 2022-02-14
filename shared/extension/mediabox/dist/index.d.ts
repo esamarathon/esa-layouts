@@ -7,6 +7,11 @@ declare class MediaBox {
     prizes: Replicant<Prizes>;
     assetsMediaBoxImages: Replicant<Asset[]>;
     constructor(nodecg: NodeCG, evt: RabbitMQ.Events);
+    pushMerchPurchase({ user, productName, imgURL }: {
+        user: string;
+        productName: string;
+        imgURL: string;
+    }): void;
     /**
      * Checks if the supplied type is that of an alert.
      * @param type Type of alert

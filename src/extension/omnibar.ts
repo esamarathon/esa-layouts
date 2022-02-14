@@ -329,7 +329,21 @@ sc.on('timerStopped', () => {
     : undefined;
   const subscribers = runSubs.length // TODO: Update MQ event, change subgifts logic!
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ? runSubs.map((s) => (s as unknown as { [k: string]: any }).user.displayName)
+    // ? runSubs.map((s) => (s as unknown as { [k: string]: any }).user.displayName)
+    ? orderBy( // Groups subs/giftsub bombs by name, counts them and sorts descending.
+      Object.entries(runSubs.reduce<{ [k: string]: number }>((prev, curr) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const current = curr as any;
+        const obj = prev;
+        if (!obj[current.user.displayName]) {
+          obj[current.user.displayName] = 0;
+        }
+        obj[current.user.displayName] += 1;
+        return obj;
+      }, {})).filter(([,v]) => v > 0),
+      ([,v]) => v,
+      'desc',
+    )
     : undefined;
   const cheers = runCheers.length
     ? orderBy( // Groups cheer amounts by name and sorts descending.

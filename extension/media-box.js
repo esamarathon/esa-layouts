@@ -38,18 +38,6 @@ if (config.discord.enabled) {
     (0, nodecg_1.get)().log.info('[Media Box] Discord integration enabled');
     discord.on('ready', async () => {
         (0, nodecg_1.get)().log.info('[Media Box] Discord bot connection ready');
-        // TEST CODE
-        const channel = discord.channels.cache.get(config.discord.textChannelId);
-        const msgs = await channel.messages.fetch({ limit: 10 });
-        msgs.forEach(async (msg) => {
-            var _a, _b;
-            const user = (_a = msg.content.match(/\*(.*?)\*/g)) === null || _a === void 0 ? void 0 : _a[0].replace(/\*/g, '');
-            const productName = msg.embeds[0].fields[0].name;
-            const imgURL = (_b = msg.embeds[0].image) === null || _b === void 0 ? void 0 : _b.url;
-            if (user && productName && imgURL) {
-                mediabox_1.default.pushMerchPurchase({ user, productName, imgURL });
-            }
-        });
     });
     discord.on('error', () => {
         (0, nodecg_1.get)().log.warn('[Media Box] Discord bot connection error');

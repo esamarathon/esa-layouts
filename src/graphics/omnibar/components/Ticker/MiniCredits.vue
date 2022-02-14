@@ -50,11 +50,11 @@
           <template v-else>Donator:</template>
         </span> {{ donatorsFormatted.join(', ') }}
       </span>
-      <span v-if="subscribers && subscribers.length">
+      <span v-if="subsFormatted.length">
         <span class="Title">
-          <template v-if="subscribers.length >= 2">Subscribers:</template>
+          <template v-if="subsFormatted.length >= 2">Subscribers:</template>
           <template v-else>Subscriber:</template>
-        </span> {{ subscribers.join(', ')}}
+        </span> {{ subsFormatted.join(', ')}}
       </span>
       <span v-if="cheersFormatted.length">
         <span class="Title">
@@ -83,7 +83,7 @@ export default class extends Vue {
   @Prop(String) readonly screeners!: string | undefined;
   @Prop(String) readonly tech!: string | undefined;
   @Prop(Array) readonly donators!: [string, number][] | undefined;
-  @Prop(Array) readonly subscribers!: string[] | undefined;
+  @Prop(Array) readonly subscribers!: [string, number][] | undefined;
   @Prop(Array) readonly cheers!: [string, number][] | undefined;
   @Ref('MiniCredits') elem!: HTMLDivElement;
   @Ref('Msg') msgElem!: HTMLDivElement;
@@ -97,6 +97,13 @@ export default class extends Vue {
 
   get cheersFormatted(): string[] {
     return this.cheers?.map(([k, v]) => `${k} (${v} bits)`) || [];
+  }
+
+  get subsFormatted(): string[] {
+    return this.subscribers?.map(([k, v]) => {
+      if (v > 1) return `${k} (x${v})`;
+      return k;
+    }) || [];
   }
 
   async created(): Promise<void> {

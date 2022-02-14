@@ -1,5 +1,5 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
-import { Client, Intents, TextChannel } from 'discord.js';
+import { Client, Intents } from 'discord.js';
 import mb from './util/mediabox';
 import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
@@ -18,18 +18,6 @@ if (config.discord.enabled) {
   nodecg().log.info('[Media Box] Discord integration enabled');
   discord.on('ready', async () => {
     nodecg().log.info('[Media Box] Discord bot connection ready');
-
-    // TEST CODE
-    const channel = discord.channels.cache.get(config.discord.textChannelId) as TextChannel;
-    const msgs = await channel.messages.fetch({ limit: 10 });
-    msgs.forEach(async (msg) => {
-      const user = msg.content.match(/\*(.*?)\*/g)?.[0].replace(/\*/g, '');
-      const productName = msg.embeds[0].fields[0].name;
-      const imgURL = msg.embeds[0].image?.url;
-      if (user && productName && imgURL) {
-        mb.pushMerchPurchase({ user, productName, imgURL });
-      }
-    });
   });
   discord.on('error', () => {
     nodecg().log.warn('[Media Box] Discord bot connection error');

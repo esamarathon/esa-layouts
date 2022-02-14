@@ -110,6 +110,7 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
 // Listens to the replicant that stores the "capture positions" for various graphics
 // sent by the browser (as of writing, only game-layout), to know where to move OBS items.
 let positionsInit = false;
+let crowdCamPrevious = gameLayouts.value.crowdCamera;
 capturePositions.on('change', async (val) => {
   // Ignore first emitted event on start up.
   if (!positionsInit) {
@@ -221,6 +222,15 @@ capturePositions.on('change', async (val) => {
             return !!val['game-layout'][key];
           })(),
         );
+
+        // If crowd camera has changed since last time and we're on the game layout, transition.
+        if (crowdCamPrevious !== gameLayouts.value.crowdCamera) {
+          if (obs.isCurrentScene(config.obs.names.scenes.gameLayout)) {
+            // eslint-disable-next-line import/no-named-as-default-member
+            await obs.changeScene(config.obs.names.scenes.gameLayout);
+          }
+          crowdCamPrevious = gameLayouts.value.crowdCamera;
+        }
       } catch (err) {
         logError('[Layouts] Could not successfully configure capture position [%s]', err, key);
       }

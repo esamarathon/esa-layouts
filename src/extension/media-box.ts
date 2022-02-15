@@ -29,11 +29,32 @@ if (config.discord.enabled) {
     }, 10 * 1000);
   });
   discord.on('messageCreate', (msg) => {
-    if (msg.channelId === config.discord.textChannelId && msg.webhookId !== null) {
+    nodecg().log.debug(
+      '[Media Box] Received Discord "messageCreate" event, '
+        + 'id: %s - textChannelId: %s - webhookId: %s - content: %s',
+      msg.id,
+      msg.channelId,
+      msg.webhookId,
+      msg.content,
+    );
+    // if (msg.channelId === config.discord.textChannelId && msg.webhookId !== null) {
+    if (msg.channelId === config.discord.textChannelId) {
+      nodecg().log.debug(
+        '[Media Box] Discord message with ID %s came from the correct channel',
+        msg.id,
+      );
       const user = msg.content.match(/\*(.*?)\*/g)?.[0].replace(/\*/g, '');
       const productName = msg.embeds[0].fields[0].name;
       const imgURL = msg.embeds[0].image?.url;
+      nodecg().log.debug(
+        '[Media Box] Information parsed from Discord message, '
+          + 'user: %s - productName: %s - imgURL: %s',
+        user,
+        productName,
+        imgURL,
+      );
       if (user && productName && imgURL) {
+        nodecg().log.debug('[Media Box] Discord message contained all correct info');
         mb.pushMerchPurchase({ user, productName, imgURL });
       }
     }

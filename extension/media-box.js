@@ -50,11 +50,18 @@ if (config.discord.enabled) {
     });
     discord.on('messageCreate', (msg) => {
         var _a, _b;
-        if (msg.channelId === config.discord.textChannelId && msg.webhookId !== null) {
+        (0, nodecg_1.get)().log.debug('[Media Box] Received Discord "messageCreate" event, '
+            + 'id: %s - textChannelId: %s - webhookId: %s - content: %s', msg.id, msg.channelId, msg.webhookId, msg.content);
+        // if (msg.channelId === config.discord.textChannelId && msg.webhookId !== null) {
+        if (msg.channelId === config.discord.textChannelId) {
+            (0, nodecg_1.get)().log.debug('[Media Box] Discord message with ID %s came from the correct channel', msg.id);
             const user = (_a = msg.content.match(/\*(.*?)\*/g)) === null || _a === void 0 ? void 0 : _a[0].replace(/\*/g, '');
             const productName = msg.embeds[0].fields[0].name;
             const imgURL = (_b = msg.embeds[0].image) === null || _b === void 0 ? void 0 : _b.url;
+            (0, nodecg_1.get)().log.debug('[Media Box] Information parsed from Discord message, '
+                + 'user: %s - productName: %s - imgURL: %s', user, productName, imgURL);
             if (user && productName && imgURL) {
+                (0, nodecg_1.get)().log.debug('[Media Box] Discord message contained all correct info');
                 mediabox_1.default.pushMerchPurchase({ user, productName, imgURL });
             }
         }

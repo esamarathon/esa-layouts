@@ -214,19 +214,24 @@ replicants_1.capturePositions.on('change', async (val) => {
                     }
                     return !!val['game-layout'][key];
                 })());
-                // If crowd camera has changed since last time and we're on the game layout, transition.
-                if (crowdCamPrevious !== replicants_1.gameLayouts.value.crowdCamera) {
-                    if (obs_1.default.isCurrentScene(config.obs.names.scenes.gameLayout)) {
-                        // eslint-disable-next-line import/no-named-as-default-member
-                        await obs_1.default.changeScene(config.obs.names.scenes.gameLayout);
-                    }
-                    crowdCamPrevious = replicants_1.gameLayouts.value.crowdCamera;
-                }
             }
             catch (err) {
                 (0, helpers_1.logError)('[Layouts] Could not successfully configure capture position [%s]', err, key);
             }
         }
+    }
+    // If crowd camera has changed since last time and we're on the game layout, transition.
+    try {
+        if (crowdCamPrevious !== replicants_1.gameLayouts.value.crowdCamera) {
+            if (obs_1.default.isCurrentScene(config.obs.names.scenes.gameLayout)) {
+                // eslint-disable-next-line import/no-named-as-default-member
+                await obs_1.default.changeScene(config.obs.names.scenes.gameLayout);
+            }
+            crowdCamPrevious = replicants_1.gameLayouts.value.crowdCamera;
+        }
+    }
+    catch (err) {
+        (0, helpers_1.logError)('[Layouts] Could not successfully update live Game Layout', err);
     }
 });
 // Things to do on OBS initial connection/authentication.

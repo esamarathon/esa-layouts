@@ -38,6 +38,20 @@
 }
 
 
+.Pronouns[data-v-771bcc66] {
+  position: relative;
+  display: inline-block;
+  font-weight: 400;
+  font-size: 0.75em;
+  top: -0.1em;
+  line-height: 1.5em;
+  color: #cccccc;
+  text-transform: uppercase;
+  padding: 0 3px;
+  margin-left: 3px;
+}
+
+
 .RunInfoExtra > span[data-v-850a45e2]:not(:last-child)::after {
   content: ' /';
 }
@@ -52,20 +66,6 @@
 }
 .donations-move[data-v-6adf2293] {
   transition: transform 1s;
-}
-
-
-.Pronouns[data-v-771bcc66] {
-  position: relative;
-  display: inline-block;
-  font-weight: 400;
-  font-size: 0.75em;
-  top: -0.1em;
-  line-height: 1.5em;
-  color: #cccccc;
-  text-transform: uppercase;
-  padding: 0 3px;
-  margin-left: 3px;
 }
 
 

@@ -11,7 +11,7 @@ import obs from './util/obs';
  */
 
 const config = nodecg().bundleConfig as Configschema;
-const discord = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const discord = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
 // Discord integration, used to listen for speedrunstore.com purchase notifications.
 if (config.discord.enabled) {
@@ -44,8 +44,8 @@ if (config.discord.enabled) {
         msg.id,
       );
       const user = msg.content.match(/\*(.*?)\*/g)?.[0].replace(/\*/g, '');
-      const productName = msg.embeds[0].fields[0].name;
-      const imgURL = msg.embeds[0].image?.url;
+      const productName = msg.embeds?.[0]?.fields?.[0]?.name;
+      const imgURL = msg.embeds?.[0]?.image?.url;
       nodecg().log.debug(
         '[Media Box] Information parsed from Discord message, '
           + 'user: %s - productName: %s - imgURL: %s',

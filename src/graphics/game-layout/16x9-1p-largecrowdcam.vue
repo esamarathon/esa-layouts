@@ -63,29 +63,31 @@
       />
     </div>
 
-    <!-- Player/Commetator -->
+    <!-- Player/Commetator/Media Box -->
     <div
-      class="Fixed"
+      class="Fixed FlexColumn"
       :style="{
         left: '0px',
         top: '650px',
         width: '533px',
+        height: '290px',
       }"
     >
+      <!-- Player/Commetator -->
       <player />
-      <comm-and-reader />
-    </div>
+      <commentators-reader />
+      <commentators-reader show-reader />
 
-    <!-- Media Box -->
-    <media-box
-      :font-size="30"
-      :style="{
-        left: '0px',
-        top: '740px',
-        width: '533px',
-        height: '200px',
-      }"
-    />
+      <!-- Media Box -->
+      <media-box
+        :font-size="25"
+        :style="{
+          'flex-grow': 1,
+          position: 'unset',
+          width: '100%',
+        }"
+      />
+    </div>
 
     <!-- Donation Bar -->
     <donation-bar
@@ -104,7 +106,7 @@ import { Vue, Component } from 'vue-property-decorator';
 import MediaBox from '@shared/graphics/mediabox';
 import GameCapture from './components/GameCapture.vue';
 import Player from './components/Player.vue';
-import CommAndReader from './components/CommAndReader.vue';
+import CommentatorsReader from './components/CommentatorsReader.vue';
 import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
 import DonationBar from './components/DonationBar.vue';
@@ -113,7 +115,7 @@ import DonationBar from './components/DonationBar.vue';
   components: {
     GameCapture,
     Player,
-    CommAndReader,
+    CommentatorsReader,
     RunInfo,
     Timer,
     MediaBox,

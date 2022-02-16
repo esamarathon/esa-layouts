@@ -12,9 +12,9 @@
       }"
     />
 
-    <!-- Camera Captures -->
+    <!-- Crowd Camera Capture -->
     <div
-      id="CameraCapture1"
+      id="CameraCaptureCrowd"
       class="Capture"
       :style="{
         left: '0px',
@@ -23,8 +23,10 @@
         height: '325px',
       }"
     />
+
+    <!-- Camera Captures -->
     <div
-      id="CameraCapture2"
+      id="CameraCapture1"
       class="Capture BorderTop"
       :style="{
         left: '0px',

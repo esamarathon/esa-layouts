@@ -32,7 +32,7 @@ const obs_1 = __importDefault(require("./util/obs"));
  * TODO: Should this be moved somewhere else?
  */
 const config = (0, nodecg_1.get)().bundleConfig;
-const discord = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS] });
+const discord = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
 // Discord integration, used to listen for speedrunstore.com purchase notifications.
 if (config.discord.enabled) {
     (0, nodecg_1.get)().log.info('[Media Box] Discord integration enabled');
@@ -49,15 +49,15 @@ if (config.discord.enabled) {
         }, 10 * 1000);
     });
     discord.on('messageCreate', (msg) => {
-        var _a, _b;
+        var _a, _b, _c, _d, _e, _f, _g, _h;
         (0, nodecg_1.get)().log.debug('[Media Box] Received Discord "messageCreate" event, '
             + 'id: %s - textChannelId: %s - webhookId: %s - content: %s', msg.id, msg.channelId, msg.webhookId, msg.content);
         // if (msg.channelId === config.discord.textChannelId && msg.webhookId !== null) {
         if (msg.channelId === config.discord.textChannelId) {
             (0, nodecg_1.get)().log.debug('[Media Box] Discord message with ID %s came from the correct channel', msg.id);
             const user = (_a = msg.content.match(/\*(.*?)\*/g)) === null || _a === void 0 ? void 0 : _a[0].replace(/\*/g, '');
-            const productName = msg.embeds[0].fields[0].name;
-            const imgURL = (_b = msg.embeds[0].image) === null || _b === void 0 ? void 0 : _b.url;
+            const productName = (_e = (_d = (_c = (_b = msg.embeds) === null || _b === void 0 ? void 0 : _b[0]) === null || _c === void 0 ? void 0 : _c.fields) === null || _d === void 0 ? void 0 : _d[0]) === null || _e === void 0 ? void 0 : _e.name;
+            const imgURL = (_h = (_g = (_f = msg.embeds) === null || _f === void 0 ? void 0 : _f[0]) === null || _g === void 0 ? void 0 : _g.image) === null || _h === void 0 ? void 0 : _h.url;
             (0, nodecg_1.get)().log.debug('[Media Box] Information parsed from Discord message, '
                 + 'user: %s - productName: %s - imgURL: %s', user, productName, imgURL);
             if (user && productName && imgURL) {

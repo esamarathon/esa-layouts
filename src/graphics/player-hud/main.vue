@@ -98,6 +98,7 @@ export default class extends Vue {
   @replicantNS.State((s) => s.reps.donationsToRead) readonly donationsToReadR!: DonationsToRead;
   @replicantNS.State((s) => s.reps.streamDeckData) readonly streamDeckData!: StreamDeckData;
   donationsToRead: DonationsToRead = []; // Local copy to add a artificial delay.
+  donationsToReadTO = 0;
   tagScanned: 'success_comm' | 'success_player' | 'fail_player' | boolean = false;
   scannedData: FlagCarrier.TagScanned | null = null;
   tagScanTimeout!: number;
@@ -105,9 +106,11 @@ export default class extends Vue {
   // Add artificial delay to unread donations, unless it's emptied, then just empty ours too.
   @Watch('donationsToReadR')
   onDonationsToReadChanged(val: DonationsToRead): void {
-    if (!val.length) this.donationsToRead.length = 0;
-    else {
-      window.setTimeout(() => {
+    if (!val.length) {
+      this.donationsToRead.splice(0);
+      window.clearTimeout(this.donationsToReadTO);
+    } else {
+      this.donationsToReadTO = window.setTimeout(() => {
         this.donationsToRead = clone(val);
       }, 30 * 1000);
     }

@@ -380,7 +380,7 @@ async function changeCrop(value, cap, mode) {
         return;
     let capture;
     if (m === 'game') {
-        capture = cap || selected.gameCapture;
+        capture = cap !== null && cap !== void 0 ? cap : selected.gameCapture;
         if (typeof capture === 'undefined' || capture < 0)
             return;
         if (value && selected.gameCrop >= 0) {
@@ -407,7 +407,7 @@ async function changeCrop(value, cap, mode) {
         }
     }
     else if (m === 'camera') {
-        capture = selected.cameraCapture >= 0 ? selected.cameraCapture : cap;
+        capture = cap !== null && cap !== void 0 ? cap : selected.cameraCapture;
         if (value && typeof capture !== 'undefined' && capture >= 0) {
             const crop = cameraCropValues[selected.cameraCapture];
             // Top/bottom cropping.
@@ -621,7 +621,7 @@ xkeys_1.default.on('down', async (keyIndex) => {
             const cropV = (crop.top + crop.bottom) / 2;
             const newCrop = { top: cropV, right: cropH, bottom: cropV, left: cropH };
             cameraCropValues[selected.cameraCapture] = newCrop; // Update local cropping values.
-            await changeCrop(undefined, selected.cameraCapture);
+            await changeCrop();
         }
     }
 });

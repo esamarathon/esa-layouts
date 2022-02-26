@@ -45,7 +45,8 @@ function generateSceneCyclerTitle(linebreaks) {
         if (disableTransitioning || transitioning || !connected
             || ['running', 'paused'].includes(speedcontrol_1.sc.timer.value.state)
             || (obs_1.default.isCurrentScene(config.names.scenes.readerIntroduction)
-                && replicants_1.readerIntroduction.value.current !== 'RunInfo')) {
+                && replicants_1.readerIntroduction.value.current !== 'RunInfo')
+            || obs_1.default.isCurrentScene(config.names.scenes.countdown)) {
             return '⚠\nCannot\nChange\nScene';
         }
         if (obs_1.default.isCurrentScene(config.names.scenes.intermission)) {
@@ -57,7 +58,7 @@ function generateSceneCyclerTitle(linebreaks) {
         if (obs_1.default.isCurrentScene(config.names.scenes.gameLayout)) {
             return 'Go to\nInter-\nmission';
         }
-        return '⌛';
+        return '⌛\nWaiting\nfor\nTech';
     })();
     if (!linebreaks) {
         text = text.replace(/\n/g, ' ');

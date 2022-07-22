@@ -14,7 +14,7 @@
   font-display: swap;
   font-weight: 100;
   src: url(../font/montserrat-cyrillic-100-italic.woff2) format('woff2'), url(../font/montserrat-all-100-italic.woff) format('woff');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 /* montserrat-vietnamese-100-italic*/
 @font-face {
@@ -60,7 +60,7 @@
   font-display: swap;
   font-weight: 100;
   src: url(../font/montserrat-cyrillic-100-normal.woff2) format('woff2'), url(../font/montserrat-all-100-normal.woff) format('woff');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 /* montserrat-vietnamese-100-normal*/
 @font-face {
@@ -106,7 +106,7 @@
   font-display: swap;
   font-weight: 200;
   src: url(../font/montserrat-cyrillic-200-italic.woff2) format('woff2'), url(../font/montserrat-all-200-italic.woff) format('woff');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 /* montserrat-vietnamese-200-italic*/
 @font-face {
@@ -152,7 +152,7 @@
   font-display: swap;
   font-weight: 200;
   src: url(../font/montserrat-cyrillic-200-normal.woff2) format('woff2'), url(../font/montserrat-all-200-normal.woff) format('woff');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 /* montserrat-vietnamese-200-normal*/
 @font-face {
@@ -198,7 +198,7 @@
   font-display: swap;
   font-weight: 300;
   src: url(../font/montserrat-cyrillic-300-italic.woff2) format('woff2'), url(../font/montserrat-all-300-italic.woff) format('woff');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 /* montserrat-vietnamese-300-italic*/
 @font-face {
@@ -244,7 +244,7 @@
   font-display: swap;
   font-weight: 300;
   src: url(../font/montserrat-cyrillic-300-normal.woff2) format('woff2'), url(../font/montserrat-all-300-normal.woff) format('woff');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 /* montserrat-vietnamese-300-normal*/
 @font-face {
@@ -290,7 +290,7 @@
   font-display: swap;
   font-weight: 400;
   src: url(../font/montserrat-cyrillic-400-italic.woff2) format('woff2'), url(../font/montserrat-all-400-italic.woff) format('woff');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 /* montserrat-vietnamese-400-italic*/
 @font-face {
@@ -336,7 +336,7 @@
   font-display: swap;
   font-weight: 400;
   src: url(../font/montserrat-cyrillic-400-normal.woff2) format('woff2'), url(../font/montserrat-all-400-normal.woff) format('woff');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 /* montserrat-vietnamese-400-normal*/
 @font-face {
@@ -382,7 +382,7 @@
   font-display: swap;
   font-weight: 500;
   src: url(../font/montserrat-cyrillic-500-italic.woff2) format('woff2'), url(../font/montserrat-all-500-italic.woff) format('woff');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 /* montserrat-vietnamese-500-italic*/
 @font-face {
@@ -428,7 +428,7 @@
   font-display: swap;
   font-weight: 500;
   src: url(../font/montserrat-cyrillic-500-normal.woff2) format('woff2'), url(../font/montserrat-all-500-normal.woff) format('woff');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 /* montserrat-vietnamese-500-normal*/
 @font-face {
@@ -474,7 +474,7 @@
   font-display: swap;
   font-weight: 600;
   src: url(../font/montserrat-cyrillic-600-italic.woff2) format('woff2'), url(../font/montserrat-all-600-italic.woff) format('woff');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 /* montserrat-vietnamese-600-italic*/
 @font-face {
@@ -520,7 +520,7 @@
   font-display: swap;
   font-weight: 600;
   src: url(../font/montserrat-cyrillic-600-normal.woff2) format('woff2'), url(../font/montserrat-all-600-normal.woff) format('woff');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 /* montserrat-vietnamese-600-normal*/
 @font-face {
@@ -566,7 +566,7 @@
   font-display: swap;
   font-weight: 700;
   src: url(../font/montserrat-cyrillic-700-italic.woff2) format('woff2'), url(../font/montserrat-all-700-italic.woff) format('woff');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 /* montserrat-vietnamese-700-italic*/
 @font-face {
@@ -612,7 +612,7 @@
   font-display: swap;
   font-weight: 700;
   src: url(../font/montserrat-cyrillic-700-normal.woff2) format('woff2'), url(../font/montserrat-all-700-normal.woff) format('woff');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 /* montserrat-vietnamese-700-normal*/
 @font-face {
@@ -658,7 +658,7 @@
   font-display: swap;
   font-weight: 800;
   src: url(../font/montserrat-cyrillic-800-italic.woff2) format('woff2'), url(../font/montserrat-all-800-italic.woff) format('woff');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 /* montserrat-vietnamese-800-italic*/
 @font-face {
@@ -704,7 +704,7 @@
   font-display: swap;
   font-weight: 800;
   src: url(../font/montserrat-cyrillic-800-normal.woff2) format('woff2'), url(../font/montserrat-all-800-normal.woff) format('woff');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 /* montserrat-vietnamese-800-normal*/
 @font-face {
@@ -750,7 +750,7 @@
   font-display: swap;
   font-weight: 900;
   src: url(../font/montserrat-cyrillic-900-italic.woff2) format('woff2'), url(../font/montserrat-all-900-italic.woff) format('woff');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 /* montserrat-vietnamese-900-italic*/
 @font-face {
@@ -796,7 +796,7 @@
   font-display: swap;
   font-weight: 900;
   src: url(../font/montserrat-cyrillic-900-normal.woff2) format('woff2'), url(../font/montserrat-all-900-normal.woff) format('woff');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 /* montserrat-vietnamese-900-normal*/
 @font-face {

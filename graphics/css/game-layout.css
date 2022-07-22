@@ -12,10 +12,10 @@
 }
 
 
-.fade-enter-active[data-v-4b70a2dd], .fade-leave-active[data-v-4b70a2dd] {
+.fade-enter-active[data-v-879e78e0], .fade-leave-active[data-v-879e78e0] {
   transition: opacity 0.5s;
 }
-.fade-enter[data-v-4b70a2dd], .fade-leave-to[data-v-4b70a2dd] {
+.fade-enter[data-v-879e78e0], .fade-leave-to[data-v-879e78e0] {
   opacity: 0;
 }
 

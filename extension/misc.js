@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -148,7 +152,6 @@ exports.searchSrcomPronouns = searchSrcomPronouns;
     }
 });
 async function changeTwitchMetadata(title, gameId) {
-    var _a, _b;
     try {
         // Hardcoded fallback title for now!
         // TODO: Unhardcode!
@@ -162,7 +165,7 @@ async function changeTwitchMetadata(title, gameId) {
             method: 'patch',
             endpoint: `/channels?broadcaster_id=${replicants_1.twitchAPIData.value.channelID}`,
             data: {
-                title: (_a = t) === null || _a === void 0 ? void 0 : _a.slice(0, 140),
+                title: t === null || t === void 0 ? void 0 : t.slice(0, 140),
                 game_id: gID || '',
             },
             newAPI: true,
@@ -171,7 +174,7 @@ async function changeTwitchMetadata(title, gameId) {
             throw new Error(JSON.stringify(resp.body));
         }
         // "New" API doesn't return anything so update the data with what we've got.
-        replicants_1.twitchChannelInfo.value.title = ((_b = t) === null || _b === void 0 ? void 0 : _b.slice(0, 140)) || '';
+        replicants_1.twitchChannelInfo.value.title = (t === null || t === void 0 ? void 0 : t.slice(0, 140)) || '';
         replicants_1.twitchChannelInfo.value.game_id = gID || '';
         // twitchChannelInfo.value.game_name = dir?.name || '';
         (0, nodecg_1.get)().log.debug('[Misc] Twitch title/game updated');

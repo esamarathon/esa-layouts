@@ -28,10 +28,10 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { RunDataActiveRun, TeamFinishTime } from 'speedcontrol-util/types';
 import { CurrentRunDelay, DelayedTimer } from '@esa-layouts/types/schemas';
+import { RunDataActiveRun, TeamFinishTime } from 'speedcontrol-util/types';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 
 @Component
 export default class extends Vue {
@@ -41,7 +41,7 @@ export default class extends Vue {
   @Prop(Number) slotNo!: number;
   @Prop({
     default: 'bottomleft',
-    validator: (v) => ['topleft', 'topright', 'bottomleft', 'bottomright'].includes(v),
+    validator: (v: string) => ['topleft', 'topright', 'bottomleft', 'bottomright'].includes(v),
   }) finishTimePos!: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
 
   get teamFinishTime(): TeamFinishTime | undefined {

@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import { Users } from '../store';
 
@@ -32,7 +32,7 @@ export default class extends Vue {
   @State users!: Users;
   @Prop({
     default: 'middle',
-    validator: (v) => ['left', 'midleft', 'middle', 'midright', 'right'].includes(v),
+    validator: (v: string) => ['left', 'midleft', 'middle', 'midright', 'right'].includes(v),
   }) pos!: string;
 }
 </script>

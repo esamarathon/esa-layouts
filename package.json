@@ -279,6 +279,11 @@
         "file": "player-hud.html",
         "width": 800,
         "height": 480
+      },
+      {
+        "file": "media-box-only.html",
+        "width": 1920,
+        "height": 1080
       }
     ],
     "mount": [

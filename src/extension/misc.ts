@@ -137,7 +137,7 @@ async function changeTwitchMetadata(title?: string, gameId?: string): Promise<vo
   try {
     // Hardcoded fallback title for now!
     // TODO: Unhardcode!
-    let t = title || '🔴 ESA Winter 2022 - {{total}}/$100,000 in aid of Alzheimerfonden';
+    let t = title || '🔴 ESA Summer 2022 - {{total}}/$115,000 in aid of Save the Children';
     if (t) {
       t = (t as string).replace(/{{total}}/g, formatUSD(donationTotal.value, true));
     }

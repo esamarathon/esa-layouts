@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const clone_1 = __importDefault(require("clone"));
 const lodash_1 = require("lodash");
 const uuid_1 = require("uuid");
-const countries_1 = __importDefault(require("./util/countries"));
+const server_1 = require("./server");
 const helpers_1 = require("./util/helpers");
 const nodecg_1 = require("./util/nodecg");
 const rabbitmq_1 = require("./util/rabbitmq");
@@ -26,9 +26,9 @@ const buttonIds = [
     '4',
 ];
 // Function used if all player tags have been scanned, or a tech has forced this to run.
-function mapScannedPlayersToTeams(run, players) {
+function mapScannedPlayersToTeams(run) {
     const teams = (0, clone_1.default)(run.teams);
-    let newTeams = [];
+    const newTeams = [];
     // Go through each button and sort the teams in the correct order.
     // This assumes the button IDs can be sorted alphabetically.
     Object.keys(replicants_1.bigbuttonPlayerMap.value).sort().forEach((id) => {
@@ -36,7 +36,7 @@ function mapScannedPlayersToTeams(run, players) {
             // Find which team has a player in it from this button ID, if any.
             const teamIndex = teams.findIndex((t) => t.players
                 .find((p) => replicants_1.bigbuttonPlayerMap.value[id]
-                .find((u) => u.user.displayName.toLowerCase() === p.name.toLowerCase())));
+                .find((u) => Number(u.raw.user_id) === Number(p.customData.id))));
             // If team found, remove from search array and push to new array.
             if (teamIndex >= 0) {
                 newTeams.push((0, clone_1.default)(teams[teamIndex]));
@@ -67,7 +67,7 @@ function mapScannedPlayersToTeams(run, players) {
                             displayName: p.name,
                         },
                         raw: {
-                            pronouns: (0, helpers_1.formatSrcomPronouns)(p.pronouns) || '',
+                            pronouns: p.pronouns || '',
                         },
                     }));
                     return true;
@@ -77,15 +77,6 @@ function mapScannedPlayersToTeams(run, players) {
         });
         replicants_1.bigbuttonPlayerMap.value = (0, clone_1.default)(newMap);
     }
-    // Replace Twitch username, country code and pronouns if any are found on the tags.
-    newTeams = newTeams.map((team) => (Object.assign(Object.assign({}, team), { players: team.players.map((p) => {
-            var _a;
-            const scanned = players
-                .find((u) => u.user.displayName.toLowerCase() === p.name.toLowerCase());
-            const countryCode = (_a = countries_1.default
-                .find((c) => c.code === (scanned === null || scanned === void 0 ? void 0 : scanned.raw.country_code.toLowerCase()))) === null || _a === void 0 ? void 0 : _a.code;
-            return Object.assign(Object.assign({}, p), { social: Object.assign(Object.assign({}, p.social), { twitch: (scanned === null || scanned === void 0 ? void 0 : scanned.raw.twitch_name) || p.social.twitch }), country: countryCode || p.country, pronouns: scanned ? (scanned.raw.pronouns || '') : p.pronouns });
-        }) })));
     // Finally, set these teams to the currently active run.
     if (speedcontrol_1.sc.runDataActiveRun.value)
         speedcontrol_1.sc.runDataActiveRun.value.teams = newTeams;
@@ -105,14 +96,14 @@ function setup() {
                 .find((r) => { var _a; return r.id === ((_a = speedcontrol_1.sc.runDataActiveRun.value) === null || _a === void 0 ? void 0 : _a.id); });
             // Compile raw arrays of all players on the run for easy checking later.
             const allPlayersRun = currentRunInRunArray === null || currentRunInRunArray === void 0 ? void 0 : currentRunInRunArray.teams.reduce((prev, t) => prev.concat(...t.players), []);
-            const player = allPlayersRun === null || allPlayersRun === void 0 ? void 0 : allPlayersRun.find((p) => p.name.toLowerCase() === data.user.displayName.toLowerCase());
+            const player = allPlayersRun === null || allPlayersRun === void 0 ? void 0 : allPlayersRun.find((p) => Number(p.customData.id) === Number(data.raw.user_id));
             // Check if teams haven't been mapped yet and the user is a player in this run,
             // and that the timer is stopped.
             if (player && currentRunInRunArray && !((_a = speedcontrol_1.sc.getCurrentRun()) === null || _a === void 0 ? void 0 : _a.teams.length)
                 && speedcontrol_1.sc.timer.value.state === 'stopped') {
                 const playerTeam = currentRunInRunArray.teams.find((t) => t.id === (player === null || player === void 0 ? void 0 : player.teamID));
                 const otherPlayersOnBtn = replicants_1.bigbuttonPlayerMap.value[data.flagcarrier.id] || [];
-                const otherTeamPlayersOnBtn = otherPlayersOnBtn.filter((u) => playerTeam === null || playerTeam === void 0 ? void 0 : playerTeam.players.find((p) => p.name.toLowerCase() === u.user.displayName.toLowerCase()));
+                const otherTeamPlayersOnBtn = otherPlayersOnBtn.filter((u) => playerTeam === null || playerTeam === void 0 ? void 0 : playerTeam.players.find((p) => Number(p.customData.id) === Number(u.raw.user_id)));
                 if (otherPlayersOnBtn.length !== otherTeamPlayersOnBtn.length) {
                     // Error, player scanning into a button another team is already on.
                     (0, nodecg_1.get)().log.warn('[FlagCarrier] Scanned in user was player '
@@ -123,7 +114,7 @@ function setup() {
                     const newMap = (0, clone_1.default)(replicants_1.bigbuttonPlayerMap.value);
                     // Delete scanned user from big button player map if already in a slot.
                     Object.entries(newMap).forEach(([key, value]) => {
-                        const index = value.findIndex((p) => p.user.displayName === data.user.displayName);
+                        const index = value.findIndex((p) => p.raw.user_id === data.raw.user_id);
                         if (index >= 0) {
                             newMap[key].splice(index, 1);
                         }
@@ -139,18 +130,16 @@ function setup() {
                     // All players scanned in?
                     const allScannedPlayers = Object.values(replicants_1.bigbuttonPlayerMap.value)
                         .reduce((prev, b) => prev.concat(...b), []);
-                    const leftToScan = (0, lodash_1.differenceWith)(allPlayersRun, allScannedPlayers, (x, y) => x.name
-                        .toLowerCase() === y.user.displayName.toLowerCase());
+                    const leftToScan = (0, lodash_1.differenceWith)(allPlayersRun, allScannedPlayers, (x, y) => Number(x.customData.id) === Number(y.raw.user_id));
                     if (!leftToScan.length) {
-                        mapScannedPlayersToTeams(currentRunInRunArray, allScannedPlayers);
+                        mapScannedPlayersToTeams(currentRunInRunArray);
                     }
                 }
                 // If not a player in the run and not already a commentator, adds them as one.
             }
             else if (!player) {
-                const name = data.user.displayName;
-                const pronouns = data.raw.pronouns;
-                const str = pronouns ? `${name} (${pronouns})` : name;
+                const user = await (0, server_1.lookupUserByID)(Number(data.raw.user_id));
+                const str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
                 // We show a "success" message to users even if the tag was already scanned, for simplicity.
                 scanState = 'success_comm';
                 if (!replicants_1.commentators.value.includes(str)) {
@@ -180,10 +169,8 @@ function setup() {
         // Get the original run from the array (before the teams were removed).
         const currentRunInRunArray = speedcontrol_1.sc.runDataArray.value
             .find((r) => { var _a; return r.id === ((_a = speedcontrol_1.sc.runDataActiveRun.value) === null || _a === void 0 ? void 0 : _a.id); });
-        const allScannedPlayers = Object.values(replicants_1.bigbuttonPlayerMap.value)
-            .reduce((prev, b) => prev.concat(...b), []);
         if (currentRunInRunArray) {
-            mapScannedPlayersToTeams(currentRunInRunArray, allScannedPlayers);
+            mapScannedPlayersToTeams(currentRunInRunArray);
         }
     });
     // HTTP endpoint, used for donation readers.
@@ -210,12 +197,18 @@ function setup() {
         }
         // Donation Reader: login, login_clear
         if (req.body.position === 'reader' && action.startsWith('login')) {
-            const data = req.body.tag_data;
-            const str = data.pronouns ? `${data.display_name} (${data.pronouns})` : data.display_name;
-            // donationReader.value = await searchSrcomPronouns(str);
-            replicants_1.donationReader.value = str;
-            (0, nodecg_1.get)().log.info('[FlagCarrier] Donation reader was updated (Name: %s, DeviceID: %s)', str, device);
-            return res.send('You\'ve been logged in.');
+            try {
+                const data = req.body.tag_data;
+                const user = await (0, server_1.lookupUserByID)(data.user_id);
+                const str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+                // donationReader.value = await searchSrcomPronouns(str);
+                replicants_1.donationReader.value = str;
+                (0, nodecg_1.get)().log.info('[FlagCarrier] Donation reader was updated (Name: %s, DeviceID: %s)', str, device);
+                return res.send('You\'ve been logged in.');
+            }
+            catch (err) {
+                return res.send('Error logging in.');
+            }
         }
         // Reject other positions.
         if (req.body.position !== 'reader') {

@@ -6,7 +6,8 @@ import { sc } from './util/speedcontrol';
 
 const config = (nodecg().bundleConfig as Configschema).server;
 
-async function lookupUserByID(id: number): Promise<any> {
+// eslint-disable-next-line import/prefer-default-export
+export async function lookupUserByID(id: number): Promise<any> {
   await new Promise((res) => { setTimeout(res, 500); }); // 500ms wait to not hammer the server
   const resp = await needle(
     'get',
@@ -44,6 +45,7 @@ horaroImportStatus.on('change', async (newVal, oldVal) => {
       const { teams } = run;
       teams.forEach((team, x) => {
         team.players.forEach((player, y) => {
+          teams[x].players[y].customData.id = userIds[i];
           if (userDataArr[i] !== null) {
             teams[x].players[y].name = userDataArr[i].name;
             teams[x].players[y].country = userDataArr[i].country || undefined;

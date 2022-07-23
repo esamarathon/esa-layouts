@@ -100,6 +100,11 @@ export interface Configschema {
 		address: string;
 		key: string;
 	};
+	server: {
+		enabled: boolean;
+		address: string;
+		key: string;
+	};
 	discord: {
 		enabled: boolean;
 		token: string;

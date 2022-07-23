@@ -2,7 +2,7 @@
 
 import { Bids, BigbuttonPlayerMap, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, MusicData, NameCycle, NotableDonations, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import type { Asset } from '@shared/types';
-import { TwitchAPIData, TwitchChannelInfo } from 'speedcontrol-util/types/speedcontrol/schemas';
+import { HoraroImportStatus, TwitchAPIData, TwitchChannelInfo } from 'speedcontrol-util/types/speedcontrol/schemas';
 import { get as nodecg } from './nodecg';
 
 /**
@@ -25,6 +25,7 @@ export const donationsToRead = nodecg().Replicant<DonationsToRead>('donationsToR
 export const donationTotal = nodecg().Replicant<DonationTotal>('donationTotal');
 export const donationTotalMilestones = nodecg().Replicant<DonationTotalMilestones>('donationTotalMilestones');
 export const gameLayouts = nodecg().Replicant<GameLayouts>('gameLayouts');
+export const horaroImportStatus = nodecg().Replicant<HoraroImportStatus>('horaroImportStatus', 'nodecg-speedcontrol');
 export const musicData = nodecg().Replicant<MusicData>('musicData');
 export const nameCycle = nodecg().Replicant<NameCycle>('nameCycle', { persistent: false });
 export const notableDonations = nodecg().Replicant<NotableDonations>('notableDonations');

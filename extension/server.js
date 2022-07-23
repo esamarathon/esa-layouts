@@ -22,7 +22,7 @@ async function lookupUserByID(id) {
 exports.lookupUserByID = lookupUserByID;
 replicants_1.horaroImportStatus.on('change', async (newVal, oldVal) => {
     if (oldVal && oldVal.importing && !newVal.importing) {
-        (0, nodecg_1.get)().log.debug('[Server] Schedule reimported, looking up user information');
+        (0, nodecg_1.get)().log.info('[Server] Schedule reimported, looking up user information');
         const runs = speedcontrol_1.sc.getRunDataArray();
         for (const run of runs) {
             const userIds = run.customData.userIds ? run.customData.userIds.split(',') : [];
@@ -61,6 +61,6 @@ replicants_1.horaroImportStatus.on('change', async (newVal, oldVal) => {
                 runData: Object.assign(Object.assign({}, run), { teams }),
             });
         }
-        (0, nodecg_1.get)().log.debug('[Server] Schedule reimport user information lookup complete');
+        (0, nodecg_1.get)().log.info('[Server] Schedule reimport user information lookup complete');
     }
 });

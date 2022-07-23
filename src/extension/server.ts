@@ -23,7 +23,7 @@ export async function lookupUserByID(id: number): Promise<any> {
 
 horaroImportStatus.on('change', async (newVal, oldVal) => {
   if (oldVal && oldVal.importing && !newVal.importing) {
-    nodecg().log.debug('[Server] Schedule reimported, looking up user information');
+    nodecg().log.info('[Server] Schedule reimported, looking up user information');
     const runs = sc.getRunDataArray();
     for (const run of runs) {
       const userIds = run.customData.userIds ? run.customData.userIds.split(',') : [];
@@ -62,6 +62,6 @@ horaroImportStatus.on('change', async (newVal, oldVal) => {
         },
       });
     }
-    nodecg().log.debug('[Server] Schedule reimport user information lookup complete');
+    nodecg().log.info('[Server] Schedule reimport user information lookup complete');
   }
 });

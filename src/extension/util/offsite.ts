@@ -18,7 +18,7 @@ socket.on('authenticated', () => {
   nodecg().log.info('[Offsite] Socket.IO client authenticated');
 });
 socket.on('disconnect', (reason: string) => {
-  logError('[Server] Socket.IO client disconnected', reason);
+  logError('[Offsite] Socket.IO client disconnected', reason);
 });
 
 if (config.offsite.enabled) {

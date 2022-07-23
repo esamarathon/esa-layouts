@@ -35,47 +35,50 @@
     />
 
     <!-- Camera Captures -->
-    <!-- Old 1 camera only spot. -->
-    <!--<div
+    <!-- Online has 3 camera spots. -->
+    <div
+      v-if="!online"
       id="CameraCapture1"
       class="Capture BorderRight BorderLeft"
       :style="{
         left: '600px',
         top: '530px',
         width: '721px',
-        height: '410px',
-      }"
-    />-->
-    <div
-      id="CameraCapture1"
-      class="Capture BorderRight BorderLeft"
-      :style="{
-        left: '600px',
-        top: '530px',
-        width: '240px',
-        height: !online && crowdCam ? '243px' : '410px',
+        height: crowdCam ? '243px' : '410px',
       }"
     />
-    <div
-      id="CameraCapture2"
-      class="Capture BorderRight"
-      :style="{
-        left: '840px',
-        top: '530px',
-        width: '240px',
-        height: !online && crowdCam ? '243px' : '410px',
-      }"
-    />
-    <div
-      id="CameraCapture3"
-      class="Capture BorderRight"
-      :style="{
-        left: '1080px',
-        top: '530px',
-        width: '241px',
-        height: !online && crowdCam ? '243px' : '410px',
-      }"
-    />
+    <template v-else>
+      <div
+        id="CameraCapture1"
+        class="Capture BorderRight BorderLeft"
+        :style="{
+          left: '600px',
+          top: '530px',
+          width: '240px',
+          height: '410px',
+        }"
+      />
+      <div
+        id="CameraCapture2"
+        class="Capture BorderRight"
+        :style="{
+          left: '840px',
+          top: '530px',
+          width: '240px',
+          height: '410px',
+        }"
+      />
+      <div
+        id="CameraCapture3"
+        class="Capture BorderRight"
+        :style="{
+          left: '1080px',
+          top: '530px',
+          width: '241px',
+          height: '410px',
+        }"
+      />
+    </template>
 
     <!-- Crowd Camera Capture -->
     <div
@@ -177,16 +180,16 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import MediaBox from '@shared/graphics/mediabox';
 import { Configschema } from '@esa-layouts/types/schemas';
+import MediaBox from '@shared/graphics/mediabox';
+import { Component, Vue } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import CommentatorsReader from './components/CommentatorsReader.vue';
+import DonationBar from './components/DonationBar.vue';
 import GameCapture from './components/GameCapture.vue';
 import Player from './components/Player.vue';
-import CommentatorsReader from './components/CommentatorsReader.vue';
 import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
-import DonationBar from './components/DonationBar.vue';
 
 @Component({
   components: {

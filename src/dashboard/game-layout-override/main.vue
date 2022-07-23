@@ -7,14 +7,14 @@
       "Game Layout" graphic must be open.
     </div>
     <template v-else>
-      <v-switch
+      <!--<v-switch
         v-if="!online"
         v-model="crowdCamera"
         class="mx-3 mt-1 mb-2 pa-0"
         inset
         hide-details
         label="Crowd Camera"
-      />
+      />-->
       <div
         id="LayoutList"
         :style="{
@@ -44,9 +44,9 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator';
-import { Configschema, GameLayouts } from '@esa-layouts/types/schemas';
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
+import { Configschema, GameLayouts } from '@esa-layouts/types/schemas';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { storeModule } from './store';
 
 @Component

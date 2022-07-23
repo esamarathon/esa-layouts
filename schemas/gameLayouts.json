@@ -28,7 +28,7 @@
     },
     "crowdCamera": {
       "type": "boolean",
-      "default": true
+      "default": false
     }
   },
   "required": [

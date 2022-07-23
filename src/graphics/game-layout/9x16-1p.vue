@@ -20,7 +20,7 @@
         left: '241px',
         top: '0px',
         width: '875px',
-        height: '550px',
+        height: '490px',
       }"
     />
 
@@ -29,9 +29,9 @@
       class="Fixed FlexColumn BorderBottom BorderLeft"
       :style="{
         left: '241px',
-        top: '550px',
+        top: '490px',
         width: '875px',
-        height: '200px',
+        height: '260px',
       }"
     >
       <player />

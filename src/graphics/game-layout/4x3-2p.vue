@@ -25,37 +25,40 @@
     />
 
     <!-- Camera Captures -->
-    <!-- Old 1 camera only spot. -->
-    <!--<div
+    <!-- Online has 2 camera spots. -->
+    <div
+      v-if="!online"
       id="CameraCapture1"
       class="Capture BorderTop BorderRight BorderLeft"
       :style="{
         left: '711px',
         top: '720px',
         width: '498px',
-        height: '280px',
-      }"
-    />-->
-    <div
-      id="CameraCapture1"
-      class="Capture BorderTop BorderRight BorderLeft"
-      :style="{
-        left: '711px',
-        top: '720px',
-        width: '249px',
-        height: !online && crowdCam ? '187px' : '280px',
+        height: crowdCam ? '187px' : '280px',
       }"
     />
-    <div
-      id="CameraCapture2"
-      class="Capture BorderTop BorderRight"
-      :style="{
-        left: '960px',
-        top: '720px',
-        width: '249px',
-        height: !online && crowdCam ? '187px' : '280px',
-      }"
-    />
+    <template v-else>
+      <div
+        id="CameraCapture1"
+        class="Capture BorderTop BorderRight BorderLeft"
+        :style="{
+          left: '711px',
+          top: '720px',
+          width: '249px',
+          height: '280px',
+        }"
+      />
+      <div
+        id="CameraCapture2"
+        class="Capture BorderTop BorderRight"
+        :style="{
+          left: '960px',
+          top: '720px',
+          width: '249px',
+          height: '280px',
+        }"
+      />
+    </template>
 
     <!-- Crowd Camera Capture -->
     <div
@@ -137,16 +140,16 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { Configschema } from '@esa-layouts/types/schemas/configschema';
 import MediaBox from '@shared/graphics/mediabox';
+import { Component, Vue } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import CommentatorsReader from './components/CommentatorsReader.vue';
+import DonationBar from './components/DonationBar.vue';
 import GameCapture from './components/GameCapture.vue';
 import Player from './components/Player.vue';
-import CommentatorsReader from './components/CommentatorsReader.vue';
 import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
-import DonationBar from './components/DonationBar.vue';
 
 @Component({
   components: {

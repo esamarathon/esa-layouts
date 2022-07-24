@@ -142,15 +142,13 @@ async function changeTwitchMetadata(title?: string, gameId?: string): Promise<vo
     if (t) {
       t = (t as string).replace(/{{total}}/g, formatUSD(donationTotal.value, true));
     }
-    const gID = gameId || twitchChannelInfo.value.game_id;
-    nodecg().log.debug('[Misc] Decided Twitch title is: %s - Decided game ID is %s', t, gID);
+    nodecg().log.debug('[Misc] Decided Twitch title is: %s - Decided game ID is %s', t, gameId);
+    const data: { title: string, game_id?: string } = { title: (t as string)?.slice(0, 140) };
+    if (gameId) data.game_id = gameId;
     const resp = await sc.sendMessage('twitchAPIRequest', {
       method: 'patch',
       endpoint: `/channels?broadcaster_id=${twitchAPIData.value.channelID}`,
-      data: {
-        title: (t as string)?.slice(0, 140),
-        game_id: gID || '',
-      },
+      data,
       newAPI: true,
     });
     if (resp.statusCode !== 204) {

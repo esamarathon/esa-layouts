@@ -156,7 +156,7 @@ async function changeTwitchMetadata(title?: string, gameId?: string): Promise<vo
     }
     // "New" API doesn't return anything so update the data with what we've got.
     twitchChannelInfo.value.title = (t as string)?.slice(0, 140) || '';
-    twitchChannelInfo.value.game_id = gID || '';
+    if (gameId) twitchChannelInfo.value.game_id = gameId;
     // twitchChannelInfo.value.game_name = dir?.name || '';
     nodecg().log.debug('[Misc] Twitch title/game updated');
   } catch (err) {

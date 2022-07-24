@@ -478,11 +478,16 @@
         "voiceAPI": {
           "type": "string",
           "default": "URL"
+        },
+        "key": {
+          "type": "string",
+          "default": "TOKEN"
         }
       },
       "required": [
         "enabled",
-        "voiceAPI"
+        "voiceAPI",
+        "key"
       ]
     },
     "flagcarrier": {

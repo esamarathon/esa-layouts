@@ -4,6 +4,11 @@
       Not used for online only events.
     </span>
   </v-app>
+  <v-app v-else-if="!config.flagcarrier.enabled">
+    <span class="font-italic">
+      Flagcarrier support is not enabled.
+    </span>
+  </v-app>
   <v-app v-else>
     <!-- Big button tag scanning alerts. -->
     <v-alert v-if="['success_player', 'success_comm'].includes(tagScanned)" type="success">
@@ -77,10 +82,10 @@
 <script lang="ts">
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
 import { BigbuttonPlayerMap, Configschema } from '@esa-layouts/types/schemas';
-import { Vue, Component } from 'vue-property-decorator';
-import { RunDataActiveRun, RunDataArray, RunData, RunDataPlayer, Timer } from 'speedcontrol-util/types';
-import { differenceWith } from 'lodash';
 import { FlagCarrier } from '@esamarathon/mq-events/types';
+import { differenceWith } from 'lodash';
+import { RunData, RunDataActiveRun, RunDataArray, RunDataPlayer, Timer } from 'speedcontrol-util/types';
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class extends Vue {

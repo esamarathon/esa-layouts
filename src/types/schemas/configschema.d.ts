@@ -89,6 +89,7 @@ export interface Configschema {
 	tts: {
 		enabled: boolean;
 		voiceAPI: string;
+		key: string;
 	};
 	flagcarrier: {
 		enabled: boolean;

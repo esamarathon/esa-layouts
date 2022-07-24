@@ -58,8 +58,9 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
     // Having things erased.
     if (sc.runDataActiveRun.value && newVal && newVal.scheduled) {
       commentators.value.length = 0;
-      // If not online, we also clear the teams and big button player map.
-      if (!config.event.online) {
+      // If not online and flagcarrier is enabled,
+      // we also clear the teams and big button player map.
+      if (!config.event.online && config.flagcarrier.enabled) {
         bigbuttonPlayerMap.value = {};
         // TODO: Reselecting the current run would overwrite these, but not much I can do right now!
         sc.runDataActiveRun.value.teams = [];

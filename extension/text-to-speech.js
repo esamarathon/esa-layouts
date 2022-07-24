@@ -17,7 +17,7 @@ async function speak(donation) {
     const text = `${donation.name} donated $${donation.amount.toFixed(2)}`
         + `${donation.comment ? `: ${donation.comment}` : ''}`;
     const url = `${config.voiceAPI}?voice=${replicants_1.ttsVoices.value.selected}`
-        + `&text=${encodeURIComponent(text)}`;
+        + `&text=${encodeURIComponent(text)}&key=${config.key}`;
     (0, nodecg_1.get)().sendMessage('ttsToRead', url);
     (0, nodecg_1.get)().log.debug('[TTS] URL sent to overlay:', url);
 }

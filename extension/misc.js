@@ -80,8 +80,9 @@ speedcontrol_1.sc.runDataActiveRun.on('change', (newVal, oldVal) => {
         // Having things erased.
         if (speedcontrol_1.sc.runDataActiveRun.value && newVal && newVal.scheduled) {
             replicants_1.commentators.value.length = 0;
-            // If not online, we also clear the teams and big button player map.
-            if (!config.event.online) {
+            // If not online and flagcarrier is enabled,
+            // we also clear the teams and big button player map.
+            if (!config.event.online && config.flagcarrier.enabled) {
                 replicants_1.bigbuttonPlayerMap.value = {};
                 // TODO: Reselecting the current run would overwrite these, but not much I can do right now!
                 speedcontrol_1.sc.runDataActiveRun.value.teams = [];

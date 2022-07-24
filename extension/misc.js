@@ -160,15 +160,14 @@ async function changeTwitchMetadata(title, gameId) {
         if (t) {
             t = t.replace(/{{total}}/g, (0, helpers_1.formatUSD)(replicants_1.donationTotal.value, true));
         }
-        const gID = gameId || replicants_1.twitchChannelInfo.value.game_id;
-        (0, nodecg_1.get)().log.debug('[Misc] Decided Twitch title is: %s - Decided game ID is %s', t, gID);
+        (0, nodecg_1.get)().log.debug('[Misc] Decided Twitch title is: %s - Decided game ID is %s', t, gameId);
+        const data = { title: t === null || t === void 0 ? void 0 : t.slice(0, 140) };
+        if (gameId)
+            data.game_id = gameId;
         const resp = await speedcontrol_1.sc.sendMessage('twitchAPIRequest', {
             method: 'patch',
             endpoint: `/channels?broadcaster_id=${replicants_1.twitchAPIData.value.channelID}`,
-            data: {
-                title: t === null || t === void 0 ? void 0 : t.slice(0, 140),
-                game_id: gID || '',
-            },
+            data,
             newAPI: true,
         });
         if (resp.statusCode !== 204) {
@@ -176,7 +175,8 @@ async function changeTwitchMetadata(title, gameId) {
         }
         // "New" API doesn't return anything so update the data with what we've got.
         replicants_1.twitchChannelInfo.value.title = (t === null || t === void 0 ? void 0 : t.slice(0, 140)) || '';
-        replicants_1.twitchChannelInfo.value.game_id = gID || '';
+        if (gameId)
+            replicants_1.twitchChannelInfo.value.game_id = gameId;
         // twitchChannelInfo.value.game_name = dir?.name || '';
         (0, nodecg_1.get)().log.debug('[Misc] Twitch title/game updated');
     }

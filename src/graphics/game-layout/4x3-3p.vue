@@ -35,18 +35,30 @@
     />
 
     <!-- Camera Captures -->
+    <!-- On-site has 2 camera spots. -->
     <!-- Online has 3 camera spots. -->
-    <div
-      v-if="!online"
-      id="CameraCapture1"
-      class="Capture BorderRight BorderLeft"
-      :style="{
-        left: '600px',
-        top: '530px',
-        width: '721px',
-        height: crowdCam ? '243px' : '410px',
-      }"
-    />
+    <template v-if="!online">
+      <div
+        id="CameraCapture1"
+        class="Capture BorderLeft"
+        :style="{
+          left: '600px',
+          top: '530px',
+          width: '481px',
+          height: crowdCam ? '243px' : '410px',
+        }"
+      />
+      <div
+        id="CameraCapture2"
+        class="Capture BorderRight BorderLeft"
+        :style="{
+          left: '1081px',
+          top: '530px',
+          width: '240px',
+          height: crowdCam ? '243px' : '410px',
+        }"
+      />
+    </template>
     <template v-else>
       <div
         id="CameraCapture1"

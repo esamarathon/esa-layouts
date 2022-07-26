@@ -85,6 +85,8 @@ export interface Configschema {
 		address: string;
 		username: string;
 		password: string;
+		commentaryBias: BidwarBias;
+		otherBidwarBias: BidwarBias;
 	};
 	tts: {
 		enabled: boolean;
@@ -111,4 +113,10 @@ export interface Configschema {
 		token: string;
 		textChannelId: string;
 	};
+}
+export interface BidwarBias {
+	bidId: number;
+	option1Id: number;
+	option2Id: number;
+	optionTitle: string;
 }

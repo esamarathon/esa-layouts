@@ -49,8 +49,12 @@ replicants_1.horaroImportStatus.on('change', async (newVal, oldVal) => {
                     var _a;
                     teams[x].players[y].customData.id = userIds[i];
                     if (userDataArr[i] !== null) {
+                        // Fix some flags which use a different format (mostly GB).
+                        let { country } = userDataArr[i];
+                        if (country && country.includes('-'))
+                            country = country.replace('-', '/');
                         teams[x].players[y].name = userDataArr[i].name;
-                        teams[x].players[y].country = userDataArr[i].country || undefined;
+                        teams[x].players[y].country = country || undefined;
                         teams[x].players[y].pronouns = userDataArr[i].pronouns || undefined;
                         teams[x].players[y].social.twitch = ((_a = userDataArr[i].twitch) === null || _a === void 0 ? void 0 : _a.displayName) || undefined;
                     }

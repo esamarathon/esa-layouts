@@ -1,5 +1,39 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "bidwarBias": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "bidId": {
+          "type": "number",
+          "default": 0,
+          "$comment": "ID of relevant bid in the tracker."
+        },
+        "option1Id": {
+          "type": "number",
+          "default": 0,
+          "$comment": "ID of option of team 1 in the tracker on the above bid."
+        },
+        "option2Id": {
+          "type": "number",
+          "default": 0,
+          "$comment": "ID of option of team 2 in the tracker on the above bid."
+        },
+        "optionTitle": {
+          "type": "string",
+          "default": "Commentary Bias",
+          "$comment": "String to be used on layout to describe the visual bar."
+        }
+      },
+      "required": [
+        "bidId",
+        "option1Id",
+        "option2Id",
+        "optionTitle"
+      ]
+    }
+  },
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -460,30 +494,10 @@
           "default": "PASSWORD"
         },
         "commentaryBias": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "bidId": {
-              "type": "number",
-              "default": 0,
-              "$comment": "ID of relevant bid in the tracker."
-            },
-            "option1Id": {
-              "type": "number",
-              "default": 0,
-              "$comment": "ID of option of team 1 in the tracker on the above bid."
-            },
-            "option2Id": {
-              "type": "number",
-              "default": 0,
-              "$comment": "ID of option of team 2 in the tracker on the above bid."
-            }
-          },
-          "required": [
-            "bidId",
-            "option1Id",
-            "option2Id"
-          ]
+          "$ref": "#/definitions/bidwarBias"
+        },
+        "otherBidwarBias": {
+          "$ref": "#/definitions/bidwarBias"
         }
       },
       "required": [
@@ -491,7 +505,8 @@
         "address",
         "username",
         "password",
-        "commentaryBias"
+        "commentaryBias",
+        "otherBidwarBias"
       ]
     },
     "tts": {

@@ -65,6 +65,11 @@ const routes = [
     component: List.L_16x9_1p_LargeCrowdCam,
   },
   {
+    name: '16:9 1 Player (HEK)',
+    path: '/16x9-1p-hek',
+    component: List.L_16x9_1p_HEK,
+  },
+  {
     name: '16:9 2 Player',
     path: '/16x9-2p',
     component: List.L_16x9_2p,

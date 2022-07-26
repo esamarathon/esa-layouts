@@ -99,7 +99,7 @@
     >
       <player :slot-no="1" />
 
-      <div
+      <!--<div
         v-if="extraPlayers.length"
         class="Flex CommAndReader"
         :style="{
@@ -130,7 +130,7 @@
             :key="name"
           >,&nbsp;</span>
         </template>
-      </div>
+      </div>-->
 
       <!-- Run Game Info/Timer -->
       <div

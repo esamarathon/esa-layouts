@@ -458,13 +458,40 @@
         "password": {
           "type": "string",
           "default": "PASSWORD"
+        },
+        "commentaryBias": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "bidId": {
+              "type": "number",
+              "default": 0,
+              "$comment": "ID of relevant bid in the tracker."
+            },
+            "option1Id": {
+              "type": "number",
+              "default": 0,
+              "$comment": "ID of option of team 1 in the tracker on the above bid."
+            },
+            "option2Id": {
+              "type": "number",
+              "default": 0,
+              "$comment": "ID of option of team 2 in the tracker on the above bid."
+            }
+          },
+          "required": [
+            "bidId",
+            "option1Id",
+            "option2Id"
+          ]
         }
       },
       "required": [
         "enabled",
         "address",
         "username",
-        "password"
+        "password",
+        "commentaryBias"
       ]
     },
     "tts": {

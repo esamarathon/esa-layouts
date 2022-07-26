@@ -70,6 +70,11 @@ const routes = [
     component: List.L_16x9_2p,
   },
   {
+    name: '16:9 2 Player (HEK)',
+    path: '/16x9-2p-hek',
+    component: List.L_16x9_2p_HEK,
+  },
+  {
     name: '16:9 3 Player',
     path: '/16x9-3p',
     component: List.L_16x9_3p,

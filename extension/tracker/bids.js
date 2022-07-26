@@ -11,7 +11,7 @@ const replicants_1 = require("../util/replicants");
 const eventConfig = (0, nodecg_1.get)().bundleConfig.event;
 const config = (0, nodecg_1.get)().bundleConfig.tracker;
 const { useTestData } = (0, nodecg_1.get)().bundleConfig;
-const refreshTime = 15 * 1000; // Get bids every 15s.
+const refreshTime = 30 * 1000; // Get bids every 30s.
 // Processes the response from the API.
 function processRawBids(rawBids) {
     const parentBids = {};

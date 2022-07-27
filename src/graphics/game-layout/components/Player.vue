@@ -156,11 +156,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'; // eslint-disable-line object-curly-newline, max-len
-import { State } from 'vuex-class';
-import fitty, { FittyInstance } from 'fitty';
 import { NameCycle } from '@esa-layouts/types/schemas';
-import { RunDataActiveRun, RunDataTeam, RunDataPlayer } from 'speedcontrol-util/types';
+import fitty, { FittyInstance } from 'fitty';
+import { RunDataActiveRun, RunDataPlayer, RunDataTeam } from 'speedcontrol-util/types';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'; // eslint-disable-line object-curly-newline, max-len
+import { State } from 'vuex-class';
 
 @Component
 export default class extends Vue {
@@ -179,17 +179,15 @@ export default class extends Vue {
   }
 
   updateTeam(): void {
-    // Makes a fake team with just 1 player in it.
-    if (typeof this.slotNo === 'number' && (this.coop || this.runData?.relay)) {
-      if (this.runData?.relay) {
-        const team = this.runData.teams[this.slotNo];
-        const player = team?.players.find((p) => p.id === team.relayPlayerID);
-        this.team = player ? { name: team.name, id: player.id, players: [player] } : null;
-      } else if (this.coop) {
-        const team = this.runData?.teams[0];
-        const player = team?.players[this.slotNo];
-        this.team = team && player ? { name: team.name, id: player.id, players: [player] } : null;
-      }
+    // Makes a fake team with just 1 player in it for coop/relay.
+    if (this.runData?.relay) {
+      const team = this.runData?.teams[this.slotNo ?? 0];
+      const player = team?.players.find((p) => p.id === team.relayPlayerID);
+      this.team = player ? { name: team.name, id: player.id, players: [player] } : null;
+    } else if (typeof this.slotNo === 'number' && this.coop) {
+      const team = this.runData?.teams[0];
+      const player = team?.players[this.slotNo];
+      this.team = team && player ? { name: team.name, id: player.id, players: [player] } : null;
     } else {
       this.team = this.runData?.teams[this.slotNo || 0] || null;
     }

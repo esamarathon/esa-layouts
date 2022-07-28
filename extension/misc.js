@@ -28,6 +28,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.searchSrcomPronouns = void 0;
 const audio_normaliser_1 = __importDefault(require("@shared/extension/audio-normaliser"));
+const server_1 = require("./server");
 const helpers_1 = require("./util/helpers");
 const mqLogging = __importStar(require("./util/mq-logging"));
 const nodecg_1 = require("./util/nodecg");
@@ -131,9 +132,18 @@ exports.searchSrcomPronouns = searchSrcomPronouns;
 // Processes adding commentators from the dashboard panel.
 (0, nodecg_1.get)().listenFor('commentatorAdd', async (val, ack) => {
     if (val) {
-        const str = await searchSrcomPronouns(val);
-        if (!replicants_1.commentators.value.includes(str)) {
-            replicants_1.commentators.value.push(str);
+        let user;
+        try {
+            [user] = (await (0, server_1.lookupUsersByStr)(val));
+        }
+        catch (err) {
+            // catch
+        }
+        if (user) {
+            const str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+            if (!replicants_1.commentators.value.includes(str)) {
+                replicants_1.commentators.value.push(str);
+            }
         }
     }
     if (ack && !ack.handled) {

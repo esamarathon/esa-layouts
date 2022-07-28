@@ -3,15 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.lookupUserByID = void 0;
+exports.lookupUsersByStr = exports.lookupUserByID = void 0;
 const needle_1 = __importDefault(require("needle"));
 const nodecg_1 = require("./util/nodecg");
 const replicants_1 = require("./util/replicants");
 const speedcontrol_1 = require("./util/speedcontrol");
 const config = (0, nodecg_1.get)().bundleConfig.server;
-// eslint-disable-next-line import/prefer-default-export
 async function lookupUserByID(id) {
-    await new Promise((res) => { setTimeout(res, 500); }); // 500ms wait to not hammer the server
     const resp = await (0, needle_1.default)('get', `${config.address}/users/${id}`, {
         headers: {
             Authorization: `Bearer ${config.key}`,
@@ -20,6 +18,15 @@ async function lookupUserByID(id) {
     return resp.body.data;
 }
 exports.lookupUserByID = lookupUserByID;
+async function lookupUsersByStr(str) {
+    const resp = await (0, needle_1.default)('get', `${config.address}/users?search=${str}`, {
+        headers: {
+            Authorization: `Bearer ${config.key}`,
+        },
+    });
+    return resp.body.data;
+}
+exports.lookupUsersByStr = lookupUsersByStr;
 replicants_1.horaroImportStatus.on('change', async (newVal, oldVal) => {
     if (oldVal && oldVal.importing && !newVal.importing) {
         (0, nodecg_1.get)().log.info('[Server] Schedule reimported, looking up user information');
@@ -30,6 +37,8 @@ replicants_1.horaroImportStatus.on('change', async (newVal, oldVal) => {
             for (const id of userIds) {
                 try {
                     if (Number(id) > 0) {
+                        // 500ms wait to not hammer the server
+                        await new Promise((res) => { setTimeout(res, 500); });
                         const userData = await lookupUserByID(Number(id));
                         userDataArr.push(userData);
                     }

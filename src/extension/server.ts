@@ -6,12 +6,23 @@ import { sc } from './util/speedcontrol';
 
 const config = (nodecg().bundleConfig as Configschema).server;
 
-// eslint-disable-next-line import/prefer-default-export
 export async function lookupUserByID(id: number): Promise<any> {
-  await new Promise((res) => { setTimeout(res, 500); }); // 500ms wait to not hammer the server
   const resp = await needle(
     'get',
     `${config.address}/users/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${config.key}`,
+      },
+    },
+  );
+  return resp.body.data;
+}
+
+export async function lookupUsersByStr(str: string): Promise<any[]> {
+  const resp = await needle(
+    'get',
+    `${config.address}/users?search=${str}`,
     {
       headers: {
         Authorization: `Bearer ${config.key}`,
@@ -31,6 +42,8 @@ horaroImportStatus.on('change', async (newVal, oldVal) => {
       for (const id of userIds) {
         try {
           if (Number(id) > 0) {
+            // 500ms wait to not hammer the server
+            await new Promise((res) => { setTimeout(res, 500); });
             const userData = await lookupUserByID(Number(id));
             userDataArr.push(userData);
           } else {

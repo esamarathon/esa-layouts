@@ -1,6 +1,7 @@
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import AudioNormaliser from '@shared/extension/audio-normaliser';
 import type { RunData } from 'speedcontrol-util/types';
+import { lookupUsersByStr } from './server';
 import { formatSrcomPronouns, formatUSD, getOtherStreamEventShort, logError } from './util/helpers';
 import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
@@ -112,9 +113,17 @@ export async function searchSrcomPronouns(val: string): Promise<string> {
 // Processes adding commentators from the dashboard panel.
 nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack) => {
   if (val) {
-    const str = await searchSrcomPronouns(val);
-    if (!commentators.value.includes(str)) {
-      commentators.value.push(str);
+    let user;
+    try {
+      [user] = (await lookupUsersByStr(val));
+    } catch (err) {
+      // catch
+    }
+    if (user) {
+      const str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+      if (!commentators.value.includes(str)) {
+        commentators.value.push(str);
+      }
     }
   }
   if (ack && !ack.handled) {

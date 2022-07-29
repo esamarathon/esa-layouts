@@ -139,11 +139,15 @@ exports.searchSrcomPronouns = searchSrcomPronouns;
         catch (err) {
             // catch
         }
+        let str = '';
         if (user) {
-            const str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
-            if (!replicants_1.commentators.value.includes(str)) {
-                replicants_1.commentators.value.push(str);
-            }
+            str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+        }
+        else {
+            str = val;
+        }
+        if (str && !replicants_1.commentators.value.includes(str)) {
+            replicants_1.commentators.value.push(str);
         }
     }
     if (ack && !ack.handled) {

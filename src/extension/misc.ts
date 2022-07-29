@@ -119,11 +119,14 @@ nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack)
     } catch (err) {
       // catch
     }
+    let str = '';
     if (user) {
-      const str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
-      if (!commentators.value.includes(str)) {
-        commentators.value.push(str);
-      }
+      str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+    } else {
+      str = val;
+    }
+    if (str && !commentators.value.includes(str)) {
+      commentators.value.push(str);
     }
   }
   if (ack && !ack.handled) {

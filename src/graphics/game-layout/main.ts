@@ -20,6 +20,11 @@ const routes = [
     component: List.L_4x3_1p,
   },
   {
+    name: '4:3 1 Player (2 Cameras)',
+    path: '/4x3-1p-2cams',
+    component: List.L_4x3_1p_2Cams,
+  },
+  {
     name: '4:3 2 Player',
     path: '/4x3-2p',
     component: List.L_4x3_2p,

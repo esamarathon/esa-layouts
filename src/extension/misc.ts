@@ -139,7 +139,19 @@ nodecg().listenFor('readerModify', async (val: string | null | undefined, ack) =
   if (!val) {
     donationReader.value = null;
   } else {
-    donationReader.value = await searchSrcomPronouns(val);
+    let user;
+    try {
+      [user] = (await lookupUsersByStr(val));
+    } catch (err) {
+      // catch
+    }
+    let str = '';
+    if (user) {
+      str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+    } else {
+      str = val;
+    }
+    donationReader.value = str;
   }
   if (ack && !ack.handled) {
     ack(null);

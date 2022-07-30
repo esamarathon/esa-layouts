@@ -87,8 +87,8 @@
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
 import { formatUSD, wait } from '@esa-layouts/graphics/_misc/helpers';
 import { DonationTotal, DonationTotalMilestones } from '@esa-layouts/types/schemas';
-import { Vue, Component, Prop } from 'vue-property-decorator';
 import gsap from 'gsap';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
 @Component({
   name: 'Milestone',
@@ -141,6 +141,12 @@ export default class extends Vue {
       await wait(this.seconds * 1000); // Wait the specified length.
       this.end();
     }
+  }
+
+  // Update tween values if donation total is changed while milestone is being displayed.
+  @Watch('donationTotal')
+  onAmountLeftChange(): void {
+    this.tweenValues();
   }
 }
 </script>

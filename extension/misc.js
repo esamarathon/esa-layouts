@@ -160,7 +160,21 @@ exports.searchSrcomPronouns = searchSrcomPronouns;
         replicants_1.donationReader.value = null;
     }
     else {
-        replicants_1.donationReader.value = await searchSrcomPronouns(val);
+        let user;
+        try {
+            [user] = (await (0, server_1.lookupUsersByStr)(val));
+        }
+        catch (err) {
+            // catch
+        }
+        let str = '';
+        if (user) {
+            str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+        }
+        else {
+            str = val;
+        }
+        replicants_1.donationReader.value = str;
     }
     if (ack && !ack.handled) {
         ack(null);

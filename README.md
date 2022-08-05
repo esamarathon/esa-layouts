@@ -87,7 +87,7 @@ Here's a list of events this bundle has been used at so far, most recent first.
 * ESA Summer 2019 (including some streams on [SpeedGaming](https://www.twitch.tv/speedgaming) during the event).
 * UKSG Summer 2019
 * All BSG's from BSG @Home 2020 onwards (Aug 2020)
-* Hekathon 2021
+* All Hekathon events from 2021 onwards
 
 ### Previous Bundles
 

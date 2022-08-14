@@ -37,7 +37,7 @@
           color: 'lightgrey', // move to theme!
         }"
       >
-        See all prizes available<br>@ {{ prizeUrl }}
+        See all prizes available<br>@ {{ prizesUrl }}
       </div>
     </div>
   </div>
@@ -61,8 +61,8 @@ export default class extends Vue {
     return this.prizes.find((s) => s.id.toString() === this.mediaBox.current?.mediaUUID);
   }
 
-  get prizeUrl(): string {
-    return nodecg.bundleConfig?.tracker?.prizeUrl || 'prizes.esamarathon.com';
+  get prizesUrl(): string {
+    return nodecg.bundleConfig?.tracker?.prizesUrl || 'prizes.esamarathon.com';
   }
 }
 </script>

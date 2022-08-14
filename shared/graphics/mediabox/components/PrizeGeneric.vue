@@ -37,18 +37,18 @@
           color: 'lightgrey', // move to theme!
         }"
       >
-        See all prizes available<br>@ prizes.esamarathon.com
+        See all prizes available<br>@ {{ prizeUrl }}
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
-import { MediaBox, Prizes } from '../../../types/schemas';
-import { Tracker } from '../../../types';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import { formatUSD } from '../../../browser_shared/helpers';
 import { replicantNS } from '../../../browser_shared/replicant_store';
+import { Tracker } from '../../../types';
+import { MediaBox, Prizes } from '../../../types/schemas';
 
 @Component
 export default class extends Vue {
@@ -59,6 +59,10 @@ export default class extends Vue {
 
   get prize(): Tracker.FormattedPrize | undefined {
     return this.prizes.find((s) => s.id.toString() === this.mediaBox.current?.mediaUUID);
+  }
+
+  get prizeUrl(): string {
+    return nodecg.bundleConfig?.tracker?.prizeUrl || 'prizes.esamarathon.com';
   }
 }
 </script>

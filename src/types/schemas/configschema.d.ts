@@ -85,6 +85,7 @@ export interface Configschema {
 		address: string;
 		username: string;
 		password: string;
+		prizesUrl: string;
 		commentaryBias: BidwarBias;
 		otherBidwarBias: BidwarBias;
 	};

@@ -507,6 +507,10 @@
         },
         "otherBidwarBias": {
           "$ref": "#/definitions/bidwarBias"
+        },
+        "donationTotalInTitle": {
+          "type": "boolean",
+          "default": true
         }
       },
       "required": [
@@ -516,7 +520,8 @@
         "password",
         "prizesUrl",
         "commentaryBias",
-        "otherBidwarBias"
+        "otherBidwarBias",
+        "donationTotalInTitle"
       ]
     },
     "tts": {

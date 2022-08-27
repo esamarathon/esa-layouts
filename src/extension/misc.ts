@@ -188,26 +188,28 @@ async function changeTwitchMetadata(title?: string, gameId?: string): Promise<vo
   }
 }
 
-// Used to change the Twitch title when requested by nodecg-speedcontrol.
-nodecg().listenFor('twitchExternalMetadata', 'nodecg-speedcontrol', async ({ title, gameID }: {
-  channelID?: string,
-  title?: string,
-  gameID: string,
-}) => {
-  nodecg().log.debug(
-    '[Misc] Message received to change title/game, will attempt (title: %s, game id: %s)',
-    title,
-    gameID,
-  );
-  await changeTwitchMetadata(title, gameID);
-});
+if (config.tracker.donationTotalInTitle) {
+  // Used to change the Twitch title when requested by nodecg-speedcontrol.
+  nodecg().listenFor('twitchExternalMetadata', 'nodecg-speedcontrol', async ({ title, gameID }: {
+    channelID?: string,
+    title?: string,
+    gameID: string,
+  }) => {
+    nodecg().log.debug(
+      '[Misc] Message received to change title/game, will attempt (title: %s, game id: %s)',
+      title,
+      gameID,
+    );
+    await changeTwitchMetadata(title, gameID);
+  });
 
-// Used to change the Twitch title when the donation total updates.
-let donationTotalInit = false;
-donationTotal.on('change', async (val) => {
-  if (donationTotalInit) {
-    nodecg().log.debug('[Misc] Donation total updated to %s, will attempt to set title', val);
-    await changeTwitchMetadata();
-  }
-  donationTotalInit = true;
-});
+  // Used to change the Twitch title when the donation total updates.
+  let donationTotalInit = false;
+  donationTotal.on('change', async (val) => {
+    if (donationTotalInit) {
+      nodecg().log.debug('[Misc] Donation total updated to %s, will attempt to set title', val);
+      await changeTwitchMetadata();
+    }
+    donationTotalInit = true;
+  });
+}

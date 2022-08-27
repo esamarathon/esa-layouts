@@ -89,6 +89,7 @@ export interface Configschema {
 		prizesUrl: string;
 		commentaryBias: BidwarBias;
 		otherBidwarBias: BidwarBias;
+		donationTotalInTitle: boolean;
 	};
 	tts: {
 		enabled: boolean;

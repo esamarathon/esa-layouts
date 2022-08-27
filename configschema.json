@@ -452,12 +452,17 @@
         "localPort": {
           "type": "number",
           "default": 52361
+        },
+        "xr18": {
+          "type": "boolean",
+          "default": false
         }
       },
       "required": [
         "enabled",
         "ip",
-        "localPort"
+        "localPort",
+        "xr18"
       ]
     },
     "xkeys": {

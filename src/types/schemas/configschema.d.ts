@@ -76,6 +76,7 @@ export interface Configschema {
 		enabled: boolean;
 		ip: string;
 		localPort: number;
+		xr18: boolean;
 	};
 	xkeys: {
 		enabled: boolean;

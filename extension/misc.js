@@ -242,26 +242,34 @@ if (config.tracker.donationTotalInTitle) {
         donationTotalInit = true;
     });
 }
+async function formatScheduleImportedPronouns() {
+    (0, nodecg_1.get)().log.info('[Misc] Schedule reimported, formatting pronouns');
+    const runs = speedcontrol_1.sc.getRunDataArray();
+    for (const run of runs) {
+        const { teams } = run;
+        teams.forEach((team, x) => {
+            team.players.forEach((player, y) => {
+                // Even though the function is named "Srcom", this should also work
+                // fine with those from Oengus imports as well.
+                teams[x].players[y].pronouns = (0, helpers_1.formatSrcomPronouns)(player.pronouns);
+            });
+        });
+        await speedcontrol_1.sc.sendMessage('modifyRun', {
+            runData: Object.assign(Object.assign({}, run), { teams }),
+        });
+    }
+    (0, nodecg_1.get)().log.info('[Music] Schedule reimport pronoun formatting complete');
+}
 if (!config.server.enabled) {
     // If server integration is disabled, checks pronouns formatting on every schedule (re)import.
     replicants_1.horaroImportStatus.on('change', async (newVal, oldVal) => {
         if (oldVal && oldVal.importing && !newVal.importing) {
-            (0, nodecg_1.get)().log.info('[Misc] Schedule reimported, formatting pronouns');
-            const runs = speedcontrol_1.sc.getRunDataArray();
-            for (const run of runs) {
-                const { teams } = run;
-                teams.forEach((team, x) => {
-                    team.players.forEach((player, y) => {
-                        // Even though the function is named "Srcom", this should also work
-                        // fine with those from Oengus imports as well.
-                        teams[x].players[y].pronouns = (0, helpers_1.formatSrcomPronouns)(player.pronouns);
-                    });
-                });
-                await speedcontrol_1.sc.sendMessage('modifyRun', {
-                    runData: Object.assign(Object.assign({}, run), { teams }),
-                });
-            }
-            (0, nodecg_1.get)().log.info('[Music] Schedule reimport pronoun formatting complete');
+            await formatScheduleImportedPronouns();
+        }
+    });
+    replicants_1.oengusImportStatus.on('change', async (newVal, oldVal) => {
+        if (oldVal && oldVal.importing && !newVal.importing) {
+            await formatScheduleImportedPronouns();
         }
     });
 }

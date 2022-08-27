@@ -7,7 +7,7 @@ import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
-import { bigbuttonPlayerMap, commentators, donationReader, donationTotal, horaroImportStatus, otherStreamData, serverTimestamp, twitchAPIData, twitchChannelInfo, upcomingRunID } from './util/replicants';
+import { bigbuttonPlayerMap, commentators, donationReader, donationTotal, horaroImportStatus, oengusImportStatus, otherStreamData, serverTimestamp, twitchAPIData, twitchChannelInfo, upcomingRunID } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const config = (nodecg().bundleConfig as Configschema);
@@ -225,29 +225,38 @@ if (config.tracker.donationTotalInTitle) {
   });
 }
 
+async function formatScheduleImportedPronouns(): Promise<void> {
+  nodecg().log.info('[Misc] Schedule reimported, formatting pronouns');
+  const runs = sc.getRunDataArray();
+  for (const run of runs) {
+    const { teams } = run;
+    teams.forEach((team, x) => {
+      team.players.forEach((player, y) => {
+        // Even though the function is named "Srcom", this should also work
+        // fine with those from Oengus imports as well.
+        teams[x].players[y].pronouns = formatSrcomPronouns(player.pronouns);
+      });
+    });
+    await sc.sendMessage('modifyRun', {
+      runData: {
+        ...run,
+        teams,
+      },
+    });
+  }
+  nodecg().log.info('[Music] Schedule reimport pronoun formatting complete');
+}
+
 if (!config.server.enabled) {
   // If server integration is disabled, checks pronouns formatting on every schedule (re)import.
   horaroImportStatus.on('change', async (newVal, oldVal) => {
     if (oldVal && oldVal.importing && !newVal.importing) {
-      nodecg().log.info('[Misc] Schedule reimported, formatting pronouns');
-      const runs = sc.getRunDataArray();
-      for (const run of runs) {
-        const { teams } = run;
-        teams.forEach((team, x) => {
-          team.players.forEach((player, y) => {
-            // Even though the function is named "Srcom", this should also work
-            // fine with those from Oengus imports as well.
-            teams[x].players[y].pronouns = formatSrcomPronouns(player.pronouns);
-          });
-        });
-        await sc.sendMessage('modifyRun', {
-          runData: {
-            ...run,
-            teams,
-          },
-        });
-      }
-      nodecg().log.info('[Music] Schedule reimport pronoun formatting complete');
+      await formatScheduleImportedPronouns();
+    }
+  });
+  oengusImportStatus.on('change', async (newVal, oldVal) => {
+    if (oldVal && oldVal.importing && !newVal.importing) {
+      await formatScheduleImportedPronouns();
     }
   });
 }

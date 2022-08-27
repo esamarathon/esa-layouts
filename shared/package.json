@@ -20,8 +20,8 @@
     "schema-types": "nodecg schema-types -o types/schemas --no-config-schema"
   },
   "dependencies": {
-    "amqp-connection-manager": "^4.1.3",
-    "amqplib": "^0.10.0",
+    "amqp-connection-manager": "^4.1.6",
+    "amqplib": "^0.10.2",
     "clone": "^2.1.2",
     "fs-extra": "^10.1.0",
     "get-video-duration": "3.0.2",

@@ -76,6 +76,7 @@ export interface Configschema {
 		enabled: boolean;
 		ip: string;
 		localPort: number;
+		xr18: boolean;
 	};
 	xkeys: {
 		enabled: boolean;
@@ -88,6 +89,7 @@ export interface Configschema {
 		prizesUrl: string;
 		commentaryBias: BidwarBias;
 		otherBidwarBias: BidwarBias;
+		donationTotalInTitle: boolean;
 	};
 	tts: {
 		enabled: boolean;

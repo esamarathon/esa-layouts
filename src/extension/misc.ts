@@ -7,7 +7,7 @@ import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
-import { bigbuttonPlayerMap, commentators, donationReader, donationTotal, otherStreamData, serverTimestamp, twitchAPIData, twitchChannelInfo, upcomingRunID } from './util/replicants';
+import { bigbuttonPlayerMap, commentators, donationReader, donationTotal, horaroImportStatus, otherStreamData, serverTimestamp, twitchAPIData, twitchChannelInfo, upcomingRunID } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const config = (nodecg().bundleConfig as Configschema);
@@ -107,26 +107,35 @@ export async function searchSrcomPronouns(val: string): Promise<string> {
     ]);
     pronouns = formatSrcomPronouns(data?.pronouns || '') || '';
   }
+  // Allows the user to specify "(none)" and bypass a look-up.
+  if (pronouns.toLowerCase().includes('none')) pronouns = '';
   return pronouns ? `${name} (${pronouns})` : name;
 }
 
 // Processes adding commentators from the dashboard panel.
 nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack) => {
   if (val) {
-    let user;
-    try {
-      [user] = (await lookupUsersByStr(val));
-    } catch (err) {
-      // catch
-    }
-    let str = '';
-    if (user) {
-      str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+    if (config.server.enabled) {
+      let user;
+      try {
+        [user] = (await lookupUsersByStr(val));
+      } catch (err) {
+        // catch
+      }
+      let str = '';
+      if (user) {
+        str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+      } else {
+        str = val;
+      }
+      if (str && !commentators.value.includes(str)) {
+        commentators.value.push(str);
+      }
     } else {
-      str = val;
-    }
-    if (str && !commentators.value.includes(str)) {
-      commentators.value.push(str);
+      const str = await searchSrcomPronouns(val);
+      if (!commentators.value.includes(str)) {
+        commentators.value.push(str);
+      }
     }
   }
   if (ack && !ack.handled) {
@@ -138,7 +147,7 @@ nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack)
 nodecg().listenFor('readerModify', async (val: string | null | undefined, ack) => {
   if (!val) {
     donationReader.value = null;
-  } else {
+  } else if (config.server.enabled) {
     let user;
     try {
       [user] = (await lookupUsersByStr(val));
@@ -152,6 +161,8 @@ nodecg().listenFor('readerModify', async (val: string | null | undefined, ack) =
       str = val;
     }
     donationReader.value = str;
+  } else {
+    donationReader.value = await searchSrcomPronouns(val);
   }
   if (ack && !ack.handled) {
     ack(null);
@@ -188,26 +199,55 @@ async function changeTwitchMetadata(title?: string, gameId?: string): Promise<vo
   }
 }
 
-// Used to change the Twitch title when requested by nodecg-speedcontrol.
-nodecg().listenFor('twitchExternalMetadata', 'nodecg-speedcontrol', async ({ title, gameID }: {
-  channelID?: string,
-  title?: string,
-  gameID: string,
-}) => {
-  nodecg().log.debug(
-    '[Misc] Message received to change title/game, will attempt (title: %s, game id: %s)',
-    title,
-    gameID,
-  );
-  await changeTwitchMetadata(title, gameID);
-});
+if (config.tracker.donationTotalInTitle) {
+  // Used to change the Twitch title when requested by nodecg-speedcontrol.
+  nodecg().listenFor('twitchExternalMetadata', 'nodecg-speedcontrol', async ({ title, gameID }: {
+    channelID?: string,
+    title?: string,
+    gameID: string,
+  }) => {
+    nodecg().log.debug(
+      '[Misc] Message received to change title/game, will attempt (title: %s, game id: %s)',
+      title,
+      gameID,
+    );
+    await changeTwitchMetadata(title, gameID);
+  });
 
-// Used to change the Twitch title when the donation total updates.
-let donationTotalInit = false;
-donationTotal.on('change', async (val) => {
-  if (donationTotalInit) {
-    nodecg().log.debug('[Misc] Donation total updated to %s, will attempt to set title', val);
-    await changeTwitchMetadata();
-  }
-  donationTotalInit = true;
-});
+  // Used to change the Twitch title when the donation total updates.
+  let donationTotalInit = false;
+  donationTotal.on('change', async (val) => {
+    if (donationTotalInit) {
+      nodecg().log.debug('[Misc] Donation total updated to %s, will attempt to set title', val);
+      await changeTwitchMetadata();
+    }
+    donationTotalInit = true;
+  });
+}
+
+if (!config.server.enabled) {
+  // If server integration is disabled, checks pronouns formatting on every schedule (re)import.
+  horaroImportStatus.on('change', async (newVal, oldVal) => {
+    if (oldVal && oldVal.importing && !newVal.importing) {
+      nodecg().log.info('[Misc] Schedule reimported, formatting pronouns');
+      const runs = sc.getRunDataArray();
+      for (const run of runs) {
+        const { teams } = run;
+        teams.forEach((team, x) => {
+          team.players.forEach((player, y) => {
+            // Even though the function is named "Srcom", this should also work
+            // fine with those from Oengus imports as well.
+            teams[x].players[y].pronouns = formatSrcomPronouns(player.pronouns);
+          });
+        });
+        await sc.sendMessage('modifyRun', {
+          runData: {
+            ...run,
+            teams,
+          },
+        });
+      }
+      nodecg().log.info('[Music] Schedule reimport pronoun formatting complete');
+    }
+  });
+}

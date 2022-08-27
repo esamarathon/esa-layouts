@@ -452,12 +452,17 @@
         "localPort": {
           "type": "number",
           "default": 52361
+        },
+        "xr18": {
+          "type": "boolean",
+          "default": false
         }
       },
       "required": [
         "enabled",
         "ip",
-        "localPort"
+        "localPort",
+        "xr18"
       ]
     },
     "xkeys": {
@@ -502,6 +507,10 @@
         },
         "otherBidwarBias": {
           "$ref": "#/definitions/bidwarBias"
+        },
+        "donationTotalInTitle": {
+          "type": "boolean",
+          "default": true
         }
       },
       "required": [
@@ -511,7 +520,8 @@
         "password",
         "prizesUrl",
         "commentaryBias",
-        "otherBidwarBias"
+        "otherBidwarBias",
+        "donationTotalInTitle"
       ]
     },
     "tts": {

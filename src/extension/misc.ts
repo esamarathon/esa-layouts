@@ -107,26 +107,35 @@ export async function searchSrcomPronouns(val: string): Promise<string> {
     ]);
     pronouns = formatSrcomPronouns(data?.pronouns || '') || '';
   }
+  // Allows the user to specify "(none)" and bypass a look-up.
+  if (pronouns.toLowerCase().includes('none')) pronouns = '';
   return pronouns ? `${name} (${pronouns})` : name;
 }
 
 // Processes adding commentators from the dashboard panel.
 nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack) => {
   if (val) {
-    let user;
-    try {
-      [user] = (await lookupUsersByStr(val));
-    } catch (err) {
-      // catch
-    }
-    let str = '';
-    if (user) {
-      str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+    if (config.server.enabled) {
+      let user;
+      try {
+        [user] = (await lookupUsersByStr(val));
+      } catch (err) {
+        // catch
+      }
+      let str = '';
+      if (user) {
+        str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+      } else {
+        str = val;
+      }
+      if (str && !commentators.value.includes(str)) {
+        commentators.value.push(str);
+      }
     } else {
-      str = val;
-    }
-    if (str && !commentators.value.includes(str)) {
-      commentators.value.push(str);
+      const str = await searchSrcomPronouns(val);
+      if (!commentators.value.includes(str)) {
+        commentators.value.push(str);
+      }
     }
   }
   if (ack && !ack.handled) {
@@ -138,7 +147,7 @@ nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack)
 nodecg().listenFor('readerModify', async (val: string | null | undefined, ack) => {
   if (!val) {
     donationReader.value = null;
-  } else {
+  } else if (config.server.enabled) {
     let user;
     try {
       [user] = (await lookupUsersByStr(val));
@@ -152,6 +161,8 @@ nodecg().listenFor('readerModify', async (val: string | null | undefined, ack) =
       str = val;
     }
     donationReader.value = str;
+  } else {
+    donationReader.value = await searchSrcomPronouns(val);
   }
   if (ack && !ack.handled) {
     ack(null);

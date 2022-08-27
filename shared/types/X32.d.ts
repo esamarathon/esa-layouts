@@ -3,5 +3,6 @@ export namespace X32 {
     enabled: boolean;
     ip: string;
     localPort: number;
+    xr18: boolean;
   }
 }

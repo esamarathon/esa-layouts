@@ -30,7 +30,7 @@ class X32 extends TypedEmitter<X32Events> {
         localAddress: '0.0.0.0',
         localPort: config.localPort,
         remoteAddress: config.ip,
-        remotePort: 10023,
+        remotePort: config.xr18 ? 10024 : 10023,
         metadata: true,
       });
 

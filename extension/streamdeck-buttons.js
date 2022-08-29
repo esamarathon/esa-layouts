@@ -8,8 +8,10 @@ const donations_1 = require("./tracker/donations");
 const replicants_1 = require("./util/replicants");
 const speedcontrol_1 = require("./util/speedcontrol");
 const streamdeck_1 = __importDefault(require("./util/streamdeck"));
+const x32_1 = __importDefault(require("./util/x32"));
 const defaultTimerText = 'Start\nTimer';
 const defaultPlayerHudMsgText = 'Message\nTo Read';
+const muteToggleState = {};
 // com.esamarathon.streamdeck.timer
 // Controls the text on the buttons.
 speedcontrol_1.sc.timer.on('change', (val) => {
@@ -33,6 +35,7 @@ speedcontrol_1.sc.timer.on('change', (val) => {
     });
 });
 streamdeck_1.default.on('keyUp', async (data) => {
+    var _a, _b;
     // com.esamarathon.streamdeck.timer
     // Controls the nodecg-speedcontrol timer when the button is pressed.
     // Currently the "Stop Timer" state works if there's only 1 team.
@@ -93,6 +96,18 @@ streamdeck_1.default.on('keyUp', async (data) => {
             replicants_1.streamDeckData.value.playerHUDTriggerType = 'message';
         }
     }
+    // com.esamarathon.streamdeck.mixermutetoggle
+    if (data.action === 'com.esamarathon.streamdeck.mixermutetoggle') {
+        if (data.payload.settings.address) {
+            const toggle = (_a = muteToggleState[data.payload.settings.address]) !== null && _a !== void 0 ? _a : true;
+            (_b = x32_1.default.conn) === null || _b === void 0 ? void 0 : _b.send({
+                address: data.payload.settings.address,
+                args: [{ type: 'i', value: toggle ? 0 : 1 }],
+            });
+            muteToggleState[data.payload.settings.address] = !toggle;
+            streamdeck_1.default.updateButtonText(data.context, !toggle ? '🔊\nUnmuted' : '🔇\nMuted');
+        }
+    }
 });
 streamdeck_1.default.on('willAppear', (data) => {
     // Set default text on buttons.
@@ -103,12 +118,21 @@ streamdeck_1.default.on('willAppear', (data) => {
     else if (data.action === 'com.esamarathon.streamdeck.playerhudtrigger-message') {
         streamdeck_1.default.updateButtonText(data.context, defaultPlayerHudMsgText);
     }
+    else if (data.action === 'com.esamarathon.streamdeck.mixermutetoggle') {
+        if (data.payload.settings.address) {
+            const toggle = muteToggleState[data.payload.settings.address];
+            streamdeck_1.default.updateButtonText(data.context, typeof toggle !== 'undefined'
+                ? `${toggle ? '🔊\nUnmuted' : '🔇\nMuted'}`
+                : 'Press\nto\nactivate');
+        }
+    }
 });
 streamdeck_1.default.on('init', () => {
     // Set default text on buttons.
     // TODO: Make these check *what* text they should actually show!
     streamdeck_1.default.setTextOnAllButtonsWithAction('com.esamarathon.streamdeck.timer', defaultTimerText);
     streamdeck_1.default.setTextOnAllButtonsWithAction('com.esamarathon.streamdeck.playerhudtrigger-message', defaultPlayerHudMsgText);
+    streamdeck_1.default.setTextOnAllButtonsWithAction('com.esamarathon.streamdeck.mixermutetoggle', 'Press\nto\nactivate');
     // Clearing this on initial connection for now for simplicity.
     delete replicants_1.streamDeckData.value.playerHUDTriggerType;
 });

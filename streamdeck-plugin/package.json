@@ -6,12 +6,14 @@
   },
   "dependencies": {
     "events": "^3.3.0",
+    "lodash.debounce": "^4.0.8",
     "vue": "^2.7.10",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2"
   },
   "devDependencies": {
     "@types/events": "^3.0.0",
+    "@types/lodash.debounce": "^4.0.7",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "@vue/cli-plugin-eslint": "~4.5.15",

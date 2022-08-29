@@ -129,6 +129,23 @@
       "SupportedInMultiActions": false,
       "Tooltip": "Used to cycle between scenes and states used in our workflow.",
       "UUID": "com.esamarathon.streamdeck.scenecycler"
+    },
+    {
+      "Name": "Mixer Mute Toggle",
+      "Icon": "img/actionIcon",
+      "States": [
+        {
+          "Image": "img/actionDefaultImage",
+          "TitleAlignment": "middle",
+          "FontSize": "9",
+          "Title": "⌛",
+          "ShowTitle": true
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Toggle a channel's mute status on the mixer.",
+      "UUID": "com.esamarathon.streamdeck.mixermutetoggle",
+      "PropertyInspectorPath": "pi_mixer.html"
     }
   ],
   "Author": "zoton2",

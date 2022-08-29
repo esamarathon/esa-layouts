@@ -3,9 +3,12 @@ import { markDonationAsRead } from './tracker/donations';
 import { donationsToRead, streamDeckData } from './util/replicants';
 import { sc } from './util/speedcontrol';
 import sd from './util/streamdeck';
+import x32 from './util/x32';
 
 const defaultTimerText = 'Start\nTimer';
 const defaultPlayerHudMsgText = 'Message\nTo Read';
+
+const muteToggleState: { [k: string]: boolean } = {};
 
 // com.esamarathon.streamdeck.timer
 // Controls the text on the buttons.
@@ -96,6 +99,19 @@ sd.on('keyUp', async (data) => {
       streamDeckData.value.playerHUDTriggerType = 'message';
     }
   }
+
+  // com.esamarathon.streamdeck.mixermutetoggle
+  if (data.action === 'com.esamarathon.streamdeck.mixermutetoggle') {
+    if ((data.payload as any).settings.address) {
+      const toggle = muteToggleState[(data.payload as any).settings.address] ?? true;
+      x32.conn?.send({
+        address: (data.payload as any).settings.address,
+        args: [{ type: 'i', value: toggle ? 0 : 1 }],
+      });
+      muteToggleState[(data.payload as any).settings.address] = !toggle;
+      sd.updateButtonText(data.context as string, !toggle ? '🔊\nUnmuted' : '🔇\nMuted');
+    }
+  }
 });
 
 sd.on('willAppear', (data) => {
@@ -105,6 +121,16 @@ sd.on('willAppear', (data) => {
     sd.updateButtonText(data.context as string, defaultTimerText);
   } else if (data.action === 'com.esamarathon.streamdeck.playerhudtrigger-message') {
     sd.updateButtonText(data.context as string, defaultPlayerHudMsgText);
+  } else if (data.action === 'com.esamarathon.streamdeck.mixermutetoggle') {
+    if ((data.payload as any).settings.address) {
+      const toggle = muteToggleState[(data.payload as any).settings.address];
+      sd.updateButtonText(
+        data.context as string,
+        typeof toggle !== 'undefined'
+          ? `${toggle ? '🔊\nUnmuted' : '🔇\nMuted'}`
+          : 'Press\nto\nactivate',
+      );
+    }
   }
 });
 
@@ -115,6 +141,10 @@ sd.on('init', () => {
   sd.setTextOnAllButtonsWithAction(
     'com.esamarathon.streamdeck.playerhudtrigger-message',
     defaultPlayerHudMsgText,
+  );
+  sd.setTextOnAllButtonsWithAction(
+    'com.esamarathon.streamdeck.mixermutetoggle',
+    'Press\nto\nactivate',
   );
 
   // Clearing this on initial connection for now for simplicity.

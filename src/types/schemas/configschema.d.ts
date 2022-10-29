@@ -37,6 +37,7 @@ export interface Configschema {
 	};
 	obs: {
 		enabled: boolean;
+		isV5?: boolean;
 		address: string;
 		password: string;
 		canvasResolution: {

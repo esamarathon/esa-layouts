@@ -128,7 +128,7 @@ obs.on('currentSceneChanged', (current, last) => {
   }
 });
 
-obs.on('sceneListChanged', (list) => {
+obs.on('sceneListChanged', (list: string[]) => {
   // Don't include scenes after the first that starts with "---".
   const stopIndex = list.findIndex((s) => s.startsWith('---'));
   obsData.value.sceneList = clone(list).slice(0, stopIndex >= 0 ? stopIndex : undefined);

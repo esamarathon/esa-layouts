@@ -203,6 +203,10 @@
           "type": "boolean",
           "default": true
         },
+        "isV5": {
+          "type": "boolean",
+          "default": false
+        },
         "address": {
           "type": "string",
           "default": "localhost:4444"

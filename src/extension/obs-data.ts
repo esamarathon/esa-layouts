@@ -78,12 +78,8 @@ async function startIntermission(): Promise<void> {
 let gameLayoutScreenshotInterval: NodeJS.Timeout;
 async function takeGameLayoutScreenshot(): Promise<void> {
   try {
-    const gameLayoutScreenshot = await obs.conn.send('TakeSourceScreenshot', {
-      sourceName: config.names.scenes.gameLayout,
-      embedPictureFormat: 'png',
-      height: 360,
-    });
-    const compressed = await sharp(Buffer.from(gameLayoutScreenshot.img.split(',')[1], 'base64'))
+    const gameLayoutScreenshot = await obs.takeScreenshot(config.names.scenes.gameLayout);
+    const compressed = await sharp(Buffer.from(gameLayoutScreenshot.split(',')[1], 'base64'))
       .jpeg({ mozjpeg: true }).toBuffer();
     obsData.value.gameLayoutScreenshot = `data:image/jpeg;base64,${compressed.toString('base64')}`;
   } catch (err) {
@@ -134,11 +130,11 @@ obs.on('sceneListChanged', (list: string[]) => {
   obsData.value.sceneList = clone(list).slice(0, stopIndex >= 0 ? stopIndex : undefined);
 });
 
-obs.conn.on('TransitionBegin', (data) => {
+obs.on('TransitionBegin', (data) => {
   obsData.value.transitioning = true;
   if (data.name === 'Stinger') nodecg().sendMessage('showTransition');
 });
-obs.conn.on('TransitionEnd', () => {
+obs.on('TransitionEnd', () => {
   obsData.value.transitioning = false;
 });
 

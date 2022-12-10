@@ -7,42 +7,43 @@
 
 export interface OtherStreamData {
 	show: boolean;
-	runData: {
-		game?: string;
-		gameTwitch?: string;
-		system?: string;
-		region?: string;
-		release?: string;
-		category?: string;
-		estimate?: string;
-		estimateS?: number;
-		setupTime?: string;
-		setupTimeS?: number;
-		scheduled?: string;
-		scheduledS?: number;
-		relay?: boolean;
-		teams: {
-			name?: string;
-			id: string;
-			relayPlayerID?: string;
-			players: {
-				name: string;
-				id: string;
-				teamID: string;
-				country?: string;
-				pronouns?: string;
-				social: {
-					twitch?: string;
-				};
-				customData: {
-					[k: string]: string;
-				};
-			}[];
-		}[];
-		customData: {
-			[k: string]: string;
-		};
+	runData: RunData | null;
+}
+export interface RunData {
+	game?: string;
+	gameTwitch?: string;
+	system?: string;
+	region?: string;
+	release?: string;
+	category?: string;
+	estimate?: string;
+	estimateS?: number;
+	setupTime?: string;
+	setupTimeS?: number;
+	scheduled?: string;
+	scheduledS?: number;
+	relay?: boolean;
+	teams: {
+		name?: string;
 		id: string;
-		externalID?: string;
-	} | null;
+		relayPlayerID?: string;
+		players: {
+			name: string;
+			id: string;
+			teamID: string;
+			country?: string;
+			pronouns?: string;
+			social: {
+				twitch?: string;
+			};
+			customData: {
+				[k: string]: string;
+			};
+		}[];
+	}[];
+	customData: {
+		[k: string]: string;
+	};
+	id: string;
+	externalID?: string;
 }

@@ -20,8 +20,8 @@
     "schema-types": "nodecg schema-types -o types/schemas --no-config-schema"
   },
   "dependencies": {
-    "amqp-connection-manager": "^4.1.6",
-    "amqplib": "^0.10.2",
+    "amqp-connection-manager": "^4.1.9",
+    "amqplib": "^0.10.3",
     "clone": "^2.1.2",
     "fs-extra": "^10.1.0",
     "get-video-duration": "3.0.2",
@@ -32,18 +32,18 @@
     "string-similarity": "^4.0.4",
     "tiny-typed-emitter": "^2.1.0",
     "uuid": "^8.3.2",
-    "xkeys": "^2.3.4"
+    "xkeys": "^2.4.0"
   },
   "devDependencies": {
     "@esamarathon/mq-events": "^1.0.1",
     "@types/amqp-connection-manager": "^2.0.12",
-    "@types/amqplib": "^0.8.2",
+    "@types/amqplib": "^0.10.0",
     "@types/clone": "^2.1.1",
     "@types/fs-extra": "^9.0.13",
     "@types/node-fetch": "^2.6.2",
     "@types/string-similarity": "^4.0.0",
     "@types/uuid": "^8.3.4",
-    "nodecg-cli": "^8.0.1",
+    "nodecg-cli": "^8.3.0",
     "vuedraggable": "^2.24.3",
     "vuex-class-state2way": "^1.0.1"
   }

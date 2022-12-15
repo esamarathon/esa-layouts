@@ -1,0 +1,130 @@
+/* For this theme, we've copied the entirety of default (mostly), just for safety! */
+
+body {
+  color: white;
+}
+
+#Background {
+  background: url("./swcf/Background.png");
+}
+
+*[class*='Border'] {
+  border-color: #1cc1ea;
+}
+
+.TimerStopped, .TimerPaused {
+  color: #b7b7b7;
+}
+.TimerRunning {
+  color: #1cc1ea;
+}
+.TimerFinished {
+  color: white;
+}
+
+#GameLayout .RunInfoExtra {
+  color: #b7b7b7;
+}
+
+.Player {
+  color: white;
+  background-color: #1cc1ea;
+}
+
+.Player .Pronouns,
+.DonationReader .Pronouns,
+.CommAndReader .Pronouns {
+  font-weight: 400;
+  font-size: 0.8em;
+  color: #cccccc;
+  text-transform: uppercase;
+  background-color: #062d3d;
+}
+
+/** New commentators and reader component! **/
+#GameLayout .CommentatorsReader .Header {
+  background-color: #062d3d;
+}
+#GameLayout .CommentatorsReader .Pronouns {
+  background-color: #062d3d;
+}
+
+.Player .Icon {
+  filter: invert(1);
+}
+
+.Player .Flag {
+ border-color: white;
+}
+
+.GameCapture {
+  color: white;
+}
+
+.GameCapture .TeamFinishTime {
+  background-color: rgba(6, 45, 60, 0.502);
+}
+
+.CommAndReader {
+  background-color: #062d3d;
+  color: white;
+}
+
+.DonationBar {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+/* DonationBox styling left out, as not used for this event! */
+
+#Intermission .Logo > img {
+  display: none;
+}
+
+#Intermission .DonationReader .Mic,
+#Intermission .MusicTrack .MCat {
+  background-color: #1cc1ea;
+}
+
+#Intermission .Header, #ReaderIntroduction .Header {
+  background-color: #1cc1ea;
+  color: white;
+}
+
+#Intermission .BottomBox,
+#Intermission .Content, #ReaderIntroduction .Content {
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+#IntermissionPlayer .UpcomingBar .Header {
+  background-color: #1cc1ea;
+}
+
+#Countdown .Logo {
+  content: url('./swcf/CountdownLogo.png');
+  height: 601px;
+}
+
+#Omnibar {
+  color: white;
+  background: #062d3d;
+}
+
+/* "#Omnibar > #Logo" rule omitted as not used for this event! */
+
+#Omnibar #CharityLogo {
+  content: url('./swcf/OmnibarCharityLogo.png');
+}
+
+#Omnibar .Divider {
+  background-color: #1cc1ea;
+}
+
+#Omnibar .Alert {
+  background-color: rgba(255, 255, 255, 0.22);
+}
+
+/* Most Omnibar styling left out, as not used for this event! */
+
+#Omnibar .MiniCredits > .Msg > span + span::before {
+  border-left: solid white 5px;
+}

@@ -51,9 +51,9 @@
         class="Fixed"
         :run-data="nextRuns[0]"
         :style="{
-          left: '718px',
+          left: theme === 'swcf' ? '200px' : '718px',
           top: '31px',
-          width: '1172px',
+          width: theme === 'swcf' ? '1520px' : '1172px',
           height: '199px',
         }"
       />
@@ -61,9 +61,9 @@
       <!-- Rotation -->
       <rotation
         :style="{
-          left: '718px',
+          left: theme === 'swcf' ? '200px' : '718px',
           top: '240px',
-          width: '1172px',
+          width: theme === 'swcf' ? '1520px' : '1172px',
           height: '660px',
         }"
       />
@@ -72,33 +72,34 @@
       <div
         class="BottomBox Fixed Flex"
         :style="{
-          left: '718px',
+          left: theme === 'swcf' ? '200px' : '718px',
           top: '910px',
-          width: '1172px',
+          width: theme === 'swcf' ? '1520px' : '1172px',
           height: '60px',
           'justify-content': 'flex-start',
           'font-size': '30px',
         }"
       >
         <donation-reader />
-        <music-track />
+        <music-track v-if="theme !== 'swcf'" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import { RunData } from 'speedcontrol-util/types';
+import { Component, Vue } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 // import { generateClipPath } from '../_misc/cut-background';
+import { Configschema } from '@esa-layouts/types/schemas';
 import MediaBox from '@shared/graphics/mediabox';
+import { getZoomAmountCSS } from '../_misc/helpers';
 import CommercialTimer from './components/CommercialTimer.vue';
-import UpcomingRun from './components/UpcomingRun.vue';
-import Rotation from './components/Rotation.vue';
 import DonationReader from './components/DonationReader.vue';
 import MusicTrack from './components/MusicTrack.vue';
-import { getZoomAmountCSS } from '../_misc/helpers';
+import Rotation from './components/Rotation.vue';
+import UpcomingRun from './components/UpcomingRun.vue';
 
 @Component({
   components: {
@@ -114,6 +115,7 @@ export default class extends Vue {
   @State nextRuns!: RunData[];
   clipPath = 'unset';
   zoom = getZoomAmountCSS();
+  theme = (nodecg.bundleConfig as Configschema).event.theme;
 
   mounted(): void {
     // Bring this back if we actually gain some cameras on this layout.

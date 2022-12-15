@@ -13,6 +13,7 @@ const { default: uksga } = require('./themes/uksga.theme.css');
 const { default: uksgw } = require('./themes/uksgw.theme.css');
 const { default: summer } = require('./themes/summer.theme.css');
 const { default: winter } = require('./themes/winter.theme.css');
+const { default: swcf } = require('./themes/swcf.theme.css');
 
 defaultTheme.use();
 
@@ -44,6 +45,9 @@ switch (theme) {
     break;
   case 'winter':
     winter.use();
+    break;
+  case 'swcf':
+    swcf.use();
     break;
   default:
     // do nothing

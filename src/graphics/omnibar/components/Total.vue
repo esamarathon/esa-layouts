@@ -2,7 +2,7 @@
   <div
     class="Flex"
     :style="{
-      'margin-right': '20px',
+      'margin-right': theme === 'swcf' ? '10px' : '20px',
        overflow: 'hidden',
     }"
   >
@@ -10,38 +10,26 @@
     <!--<audio ref="SFX">
       <source src="./sfx/mario_coin.mp3" type="audio/mpeg">
     </audio>-->
-    <div class="Grid" :style="{ 'min-width': '110px' }">
-      <!-- Charity logo. -->
-      <div class="Flex" :style="{ 'z-index': 0 }">
-        <img
-          id="CharityLogo"
-          :style="{
-            opacity: showAlert ? 0.3 : 1,
-            transition: 'opacity 0.5s',
-          }"
-        >
-      </div>
+    <template v-if="theme === 'swcf'">
       <!-- Alerts. -->
       <div
         class="Flex"
         :style="{
-            'z-index': 1,
             opacity: showAlert ? 1 : 0,
             transition: 'opacity 0.5s',
         }"
-
       >
         <img
           src="./img/RetroCoin.png"
           :style="{
-            height: '30px',
+            height: '40px',
             'image-rendering': 'pixelated',
             'margin-right': '2px',
           }"
         >
         <span
           :style="{
-            'font-size': '20px',
+            'font-size': '30px',
             color: '#7FFF00', // Basic green, no need to use theme
             'font-weight': 600,
             'background-color': 'rgba(0,0,0,0.6)',
@@ -52,37 +40,110 @@
           +{{ alertText }}
         </span>
       </div>
-    </div>
-    <!-- Actual total. -->
-    <div
-      id="Total"
-      class="Flex"
-      :style="{
-        'font-size': '40px',
-        'font-weight': 500,
-        'min-width': '80px',
-      }"
-    >
-      <span
-        v-for="(char, i) in totalStr"
-        :key="i"
-        :class="(char === ',' ? 'Comma' : undefined)"
+      <!-- Actual total. -->
+      <div
+        id="Total"
+        class="Flex"
+        :style="{
+          'font-size': '40px',
+          'font-weight': 500,
+          'min-width': '80px',
+          'padding': '0 15px 0 25px',
+        }"
       >
-        {{ char }}
-      </span>
-    </div>
+        <span
+          v-for="(char, i) in totalStr"
+          :key="i"
+          :class="(char === ',' ? 'Comma' : undefined)"
+        >
+          {{ char }}
+        </span>
+      </div>
+      <!-- Charity logo. -->
+      <img
+        id="CharityLogo"
+        :style="{
+          transition: 'opacity 0.5s',
+        }"
+      >
+    </template>
+    <template v-else>
+      <div class="Grid" :style="{ 'min-width': '110px' }">
+        <!-- Charity logo. -->
+        <div class="Flex" :style="{ 'z-index': 0 }">
+          <img
+            id="CharityLogo"
+            :style="{
+              opacity: showAlert ? 0.3 : 1,
+              transition: 'opacity 0.5s',
+            }"
+          >
+        </div>
+        <!-- Alerts. -->
+        <div
+          class="Flex"
+          :style="{
+              'z-index': 1,
+              opacity: showAlert ? 1 : 0,
+              transition: 'opacity 0.5s',
+          }"
+
+        >
+          <img
+            src="./img/RetroCoin.png"
+            :style="{
+              height: '30px',
+              'image-rendering': 'pixelated',
+              'margin-right': '2px',
+            }"
+          >
+          <span
+            :style="{
+              'font-size': '20px',
+              color: '#7FFF00', // Basic green, no need to use theme
+              'font-weight': 600,
+              'background-color': 'rgba(0,0,0,0.6)',
+              padding: '4px 8px',
+              'border-radius': '10px',
+            }"
+          >
+            +{{ alertText }}
+          </span>
+        </div>
+      </div>
+      <!-- Actual total. -->
+      <div
+        id="Total"
+        class="Flex"
+        :style="{
+          'font-size': '40px',
+          'font-weight': 500,
+          'min-width': '80px',
+        }"
+      >
+        <span
+          v-for="(char, i) in totalStr"
+          :key="i"
+          :class="(char === ',' ? 'Comma' : undefined)"
+        >
+          {{ char }}
+        </span>
+      </div>
+    </template>
   </div>
 </template>
 
 <script lang="ts">
 import { replicantModule } from '@esa-layouts/browser_shared/replicant_store';
 import { formatUSD } from '@esa-layouts/graphics/_misc/helpers';
-import { Vue, Component, Watch } from 'vue-property-decorator';
+import { Configschema } from '@esa-layouts/types/schemas';
 import gsap from 'gsap';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 
 @Component
 export default class extends Vue {
   // @Ref('SFX') sfx!: HTMLAudioElement;
+  theme = (nodecg.bundleConfig as Configschema).event.theme;
   total = 0;
   playingAlerts = false;
   showAlert = false;

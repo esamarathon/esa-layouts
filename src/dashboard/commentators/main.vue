@@ -4,17 +4,19 @@
       :style="{ 'margin-bottom': '10px' }"
       tile
     >
-      <v-list
-        dense
-        disabled
-      >
+      <v-list dense>
         <v-list-item-group>
           <template v-if="commentators.length">
             <v-list-item
               v-for="(name, i) in commentators"
               :key="i"
             >
-              {{ name }}
+              <v-list-item-action>
+                <v-icon @click="del(i)">mdi-delete</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                {{ name }}
+              </v-list-item-content>
             </v-list-item>
           </template>
           <v-list-item
@@ -56,9 +58,9 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-import { Commentators } from '@esa-layouts/types/schemas';
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
+import { Commentators } from '@esa-layouts/types/schemas';
+import { Component, Vue } from 'vue-property-decorator';
 import { storeModule } from './store';
 
 @Component
@@ -77,6 +79,16 @@ export default class extends Vue {
     }
     this.disable = false;
     this.nameEntry = '';
+  }
+
+  async del(index: number): Promise<void> {
+    this.disable = true;
+    try {
+      await nodecg.sendMessage('commentatorRemove', index);
+    } catch (err) {
+      // catch
+    }
+    this.disable = false;
   }
 }
 </script>

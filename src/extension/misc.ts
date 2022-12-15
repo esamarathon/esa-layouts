@@ -58,7 +58,7 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
     // imported from an external schedule. This stops manually added runs (like bonus runs)
     // Having things erased.
     if (sc.runDataActiveRun.value && newVal && newVal.scheduled) {
-      commentators.value.length = 0;
+      if (config.event.shorts !== 'swcf') commentators.value.length = 0;
       // If not online and flagcarrier is enabled,
       // we also clear the teams and big button player map.
       if (!config.event.online && config.flagcarrier.enabled) {
@@ -138,6 +138,13 @@ nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack)
       }
     }
   }
+  if (ack && !ack.handled) {
+    ack(null);
+  }
+});
+
+nodecg().listenFor('commentatorRemove', (val: number, ack) => {
+  commentators.value.splice(val, 1);
   if (ack && !ack.handled) {
     ack(null);
   }

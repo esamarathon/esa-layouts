@@ -12,6 +12,20 @@
 }
 
 
+.PronounsComms[data-v-54f61752] {
+  position: relative;
+  display: inline-block;
+  font-weight: 400;
+  font-size: 0.75em;
+  top: -0.1em;
+  line-height: 1.5em;
+  color: #cccccc;
+  text-transform: uppercase;
+  padding: 0 3px;
+  margin-left: 3px;
+}
+
+
 .RunInfoExtra > span[data-v-2206150d]:not(:last-child)::after {
   content: ' /';
 }

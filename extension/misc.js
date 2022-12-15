@@ -80,7 +80,8 @@ speedcontrol_1.sc.runDataActiveRun.on('change', (newVal, oldVal) => {
         // imported from an external schedule. This stops manually added runs (like bonus runs)
         // Having things erased.
         if (speedcontrol_1.sc.runDataActiveRun.value && newVal && newVal.scheduled) {
-            replicants_1.commentators.value.length = 0;
+            if (config.event.shorts !== 'swcf')
+                replicants_1.commentators.value.length = 0;
             // If not online and flagcarrier is enabled,
             // we also clear the teams and big button player map.
             if (!config.event.online && config.flagcarrier.enabled) {
@@ -161,6 +162,12 @@ exports.searchSrcomPronouns = searchSrcomPronouns;
             }
         }
     }
+    if (ack && !ack.handled) {
+        ack(null);
+    }
+});
+(0, nodecg_1.get)().listenFor('commentatorRemove', (val, ack) => {
+    replicants_1.commentators.value.splice(val, 1);
     if (ack && !ack.handled) {
         ack(null);
     }

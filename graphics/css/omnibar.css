@@ -1,15 +1,4 @@
 
-/* Each character in the total is in a span; setting width so the numbers appear monospaced. */
-#Total > span[data-v-100bc883] {
-  display: inline-block;
-  width: 0.45em;
-  text-align: center;
-}
-#Total > .Comma[data-v-100bc883] {
-  width: 0.22em;
-}
-
-
 .Msg > span + span[data-v-24cfa16e]::before {
   content: '';
   margin: 0 10px 0 7px;
@@ -63,5 +52,16 @@
 }
 .ticker-enter[data-v-75858218], .ticker-leave-to[data-v-75858218] {
   opacity: 0;
+}
+
+
+/* Each character in the total is in a span; setting width so the numbers appear monospaced. */
+#Total > span[data-v-1c1a8a3d] {
+  display: inline-block;
+  width: 0.45em;
+  text-align: center;
+}
+#Total > .Comma[data-v-1c1a8a3d] {
+  width: 0.22em;
 }
 

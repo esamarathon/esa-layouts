@@ -4,16 +4,16 @@ import { get as nodecg } from './util/nodecg';
 import { horaroImportStatus } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
-const config = (nodecg().bundleConfig as Configschema).server;
+const config = nodecg().bundleConfig as Configschema;
 
 export async function lookupUserByID(id: number): Promise<any> {
-  if (!config.enabled) throw new Error('server integration disabled');
+  if (!config.server.enabled) throw new Error('server integration disabled');
   const resp = await needle(
     'get',
-    `${config.address}/users/${id}`,
+    `${config.server.address}/users/${id}`,
     {
       headers: {
-        Authorization: `Bearer ${config.key}`,
+        Authorization: `Bearer ${config.server.key}`,
       },
     },
   );
@@ -21,20 +21,20 @@ export async function lookupUserByID(id: number): Promise<any> {
 }
 
 export async function lookupUsersByStr(str: string): Promise<any[]> {
-  if (!config.enabled) throw new Error('server integration disabled');
+  if (!config.server.enabled) throw new Error('server integration disabled');
   const resp = await needle(
     'get',
-    `${config.address}/users?search=${str}`,
+    `${config.server.address}/users?search=${str}`,
     {
       headers: {
-        Authorization: `Bearer ${config.key}`,
+        Authorization: `Bearer ${config.server.key}`,
       },
     },
   );
   return resp.body.data;
 }
 
-if (config.enabled) {
+if (config.server.enabled) {
   horaroImportStatus.on('change', async (newVal, oldVal) => {
     if (oldVal && oldVal.importing && !newVal.importing) {
       nodecg().log.info('[Server] Schedule reimported, looking up user information');
@@ -59,10 +59,20 @@ if (config.enabled) {
         }
         let i = 0;
         const { teams } = run;
-        teams.forEach((team, x) => {
-          team.players.forEach((player, y) => {
+        for (const [x, team] of teams.entries()) {
+          for (const [y, player] of team.players.entries()) {
             teams[x].players[y].customData.id = userIds[i];
-            if (userDataArr[i] !== null) {
+            let userData = userDataArr[i];
+            if (!userData && config.event.shorts === 'swcf') {
+              try {
+                // 500ms wait to not hammer the server
+                await new Promise((res) => { setTimeout(res, 500); });
+                userData = await lookupUsersByStr(player.name.toLowerCase());
+              } catch (err) {
+                userData = null;
+              }
+            }
+            if (userData) {
               // Fix some flags which use a different format (mostly GB).
               let { country } = userDataArr[i];
               if (country && country.includes('-')) country = country.replace('-', '/');
@@ -72,8 +82,8 @@ if (config.enabled) {
               teams[x].players[y].social.twitch = userDataArr[i].twitch?.displayName || undefined;
             }
             i += 1;
-          });
-        });
+          }
+        }
         await sc.sendMessage('modifyRun', {
           runData: {
             ...run,

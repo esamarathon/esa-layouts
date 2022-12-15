@@ -6,7 +6,7 @@
       class="Flex"
       :style="{
         'flex-direction': 'column',
-        height: '1000px',
+        height: '1080px',
       }"
     >
       <img class="Logo">
@@ -16,8 +16,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
 import Countdown from '@shared/graphics/countdown';
+import { Component, Vue } from 'vue-property-decorator';
 import { getZoomAmountCSS } from '../_misc/helpers';
 
 @Component({

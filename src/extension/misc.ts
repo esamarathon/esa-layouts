@@ -143,6 +143,13 @@ nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack)
   }
 });
 
+nodecg().listenFor('commentatorRemove', (val: number, ack) => {
+  commentators.value.splice(val, 1);
+  if (ack && !ack.handled) {
+    ack(null);
+  }
+});
+
 // Processes modifying the reader from the dasboard panel.
 nodecg().listenFor('readerModify', async (val: string | null | undefined, ack) => {
   if (!val) {

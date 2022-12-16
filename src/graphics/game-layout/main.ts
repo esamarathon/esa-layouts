@@ -15,6 +15,21 @@ Vue.use(VueRouter);
 
 const routes = [
   {
+    name: '(SWCF) 16:9 2 Feeds (Dance Pad)',
+    path: '/swcf_16x9-2feeds-dancepad',
+    component: List.L_SWCF_16x9_2Feeds_Dancepad,
+  },
+  {
+    name: '(SWCF) 16:9 2 Player (Bingo)',
+    path: '/swcf_16x9-2p-bingo',
+    component: List.L_SWCF_16x9_2p_Bingo,
+  },
+  {
+    name: '(SWCF) 16:9 4 Player (Bingo)',
+    path: '/swcf_16x9-4p-bingo',
+    component: List.L_SWCF_16x9_4p_Bingo,
+  },
+  {
     name: '4:3 1 Player',
     path: '/4x3-1p',
     component: List.L_4x3_1p,

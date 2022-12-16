@@ -67,19 +67,19 @@ if (config.server.enabled) {
               try {
                 // 500ms wait to not hammer the server
                 await new Promise((res) => { setTimeout(res, 500); });
-                userData = await lookupUsersByStr(player.name.toLowerCase());
+                userData = (await lookupUsersByStr(player.name.toLowerCase()))[0] || null;
               } catch (err) {
                 userData = null;
               }
             }
             if (userData) {
               // Fix some flags which use a different format (mostly GB).
-              let { country } = userDataArr[i];
+              let { country } = userData;
               if (country && country.includes('-')) country = country.replace('-', '/');
-              teams[x].players[y].name = userDataArr[i].name;
+              teams[x].players[y].name = userData.name;
               teams[x].players[y].country = country || undefined;
-              teams[x].players[y].pronouns = userDataArr[i].pronouns || undefined;
-              teams[x].players[y].social.twitch = userDataArr[i].twitch?.displayName || undefined;
+              teams[x].players[y].pronouns = userData.pronouns || undefined;
+              teams[x].players[y].social.twitch = userData.twitch?.displayName || undefined;
             }
             i += 1;
           }

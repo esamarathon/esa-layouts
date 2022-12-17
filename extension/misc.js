@@ -208,7 +208,8 @@ async function changeTwitchMetadata(title, gameId) {
         const fallback = (() => {
             var _a;
             if (config.event.shorts === 'swcf') {
-                return `{{total}}/$50,000 - Souls Winter !Charity Fest - ${(_a = speedcontrol_1.sc.getCurrentRun()) === null || _a === void 0 ? void 0 : _a.game}`;
+                const run = (_a = speedcontrol_1.sc.getCurrentRun()) === null || _a === void 0 ? void 0 : _a.game;
+                return `{{total}}/$50,000 - Souls Winter !Charity Fest${run ? ` - ${run}` : ''}`;
             }
             return '🔴 ESA Summer 2022 - {{total}}/$115,000 in aid of Save the Children';
         })();

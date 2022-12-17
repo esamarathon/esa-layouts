@@ -116,6 +116,10 @@ export interface Configschema {
 		token: string;
 		textChannelId: string;
 	};
+	streamlabsCharity: {
+		enabled: boolean;
+		apiUrl: string;
+	};
 }
 export interface BidwarBias {
 	bidId: number;

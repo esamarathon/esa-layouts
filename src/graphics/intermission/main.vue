@@ -5,8 +5,20 @@
       :style="{ 'clip-path': clipPath }"
     />
     <div id="Layout">
-      <!-- Logo -->
+    <!-- Logo -->
+      <img
+        v-if="theme === 'swcf'"
+        class="Fixed"
+        :style="{
+          left: '481px',
+          top: '37px',
+          width: '1064px',
+          height: '414px',
+        }"
+        src="../_misc/themes/swcf/CountdownLogo.png"
+      >
       <div
+        v-else
         class="Logo Fixed"
         :style="{
           left: '53px',
@@ -26,6 +38,7 @@
 
       <!-- Commercial Timer -->
       <commercial-timer
+        v-if="theme !== 'swcf'"
         :style="{
           left: '30px',
           top: '370px',
@@ -36,6 +49,7 @@
 
       <!-- Media Box -->
       <media-box
+        v-if="theme !== 'swcf'"
         vertical
         :font-size="50"
         :style="{
@@ -52,7 +66,7 @@
         :run-data="nextRuns[0]"
         :style="{
           left: theme === 'swcf' ? '200px' : '718px',
-          top: '31px',
+          top: theme === 'swcf' ? '492px': '31px',
           width: theme === 'swcf' ? '1520px' : '1172px',
           height: '199px',
         }"
@@ -62,9 +76,9 @@
       <rotation
         :style="{
           left: theme === 'swcf' ? '200px' : '718px',
-          top: '240px',
+          top: theme === 'swcf' ? '701px' : '240px',
           width: theme === 'swcf' ? '1520px' : '1172px',
-          height: '660px',
+          height: theme === 'swcf' ? '199px' : '660px',
         }"
       />
 

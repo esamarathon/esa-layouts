@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="donationReader"
+    v-if="donationReader || (theme == 'swcf' && comms.length)"
     class="Flex DonationReader"
     :style="{ height: '100%' }"
   >

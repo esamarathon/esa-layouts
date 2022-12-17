@@ -306,6 +306,8 @@ rabbitmq_1.mq.evt.on('donationFullyProcessed', (data) => {
 // Pushes our "mini credits" to the alert queue.
 speedcontrol_1.sc.on('timerStopped', () => {
     var _a, _b, _c, _d, _e, _f;
+    if (config.event.shorts === 'swcf')
+        return;
     (0, nodecg_1.get)().log.debug('[Omnibar] Timer stopped, generating mini credits');
     // If there's any credits in the queue, removes them.
     const oldCreditsIndex = replicants_1.omnibar.value.alertQueue.findIndex((a) => a.type === 'MiniCredits');

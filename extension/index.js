@@ -40,6 +40,7 @@ module.exports = (nodecg) => {
     require('./commercials');
     require('./player-hud');
     require('./server');
+    require('./streamlabs-charity');
     return {
         obs: require('./util/obs').default,
         mixer: require('./mixer'),

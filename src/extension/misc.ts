@@ -180,26 +180,40 @@ async function changeTwitchMetadata(title?: string, gameId?: string): Promise<vo
   try {
     // Hardcoded fallback title for now!
     // TODO: Unhardcode!
-    let t = title || '🔴 ESA Summer 2022 - {{total}}/$115,000 in aid of Save the Children';
+    const fallback = (() => {
+      if (config.event.shorts === 'swcf') {
+        return `{{total}}/$50,000 - Souls Winter !Charity Fest - ${sc.getCurrentRun()?.game}`;
+      }
+      return '🔴 ESA Summer 2022 - {{total}}/$115,000 in aid of Save the Children';
+    })();
+    let t = title || fallback;
     if (t) {
       t = (t as string).replace(/{{total}}/g, formatUSD(donationTotal.value, true));
     }
     nodecg().log.debug('[Misc] Decided Twitch title is: %s - Decided game ID is %s', t, gameId);
-    const data: { title: string, game_id?: string } = { title: (t as string)?.slice(0, 140) };
-    if (gameId) data.game_id = gameId;
-    const resp = await sc.sendMessage('twitchAPIRequest', {
-      method: 'patch',
-      endpoint: `/channels?broadcaster_id=${twitchAPIData.value.channelID}`,
-      data,
-      newAPI: true,
-    });
-    if (resp.statusCode !== 204) {
-      throw new Error(JSON.stringify(resp.body));
+    if (config.event.shorts === 'swcf') {
+      nodecg().sendMessageToBundle(
+        'twitchExternalMetadataAltMode',
+        'esa-commercials',
+        { title: (t as string)?.slice(0, 140), gameId },
+      );
+    } else {
+      const data: { title: string, game_id?: string } = { title: (t as string)?.slice(0, 140) };
+      if (gameId) data.game_id = gameId;
+      const resp = await sc.sendMessage('twitchAPIRequest', {
+        method: 'patch',
+        endpoint: `/channels?broadcaster_id=${twitchAPIData.value.channelID}`,
+        data,
+        newAPI: true,
+      });
+      if (resp.statusCode !== 204) {
+        throw new Error(JSON.stringify(resp.body));
+      }
+      // "New" API doesn't return anything so update the data with what we've got.
+      twitchChannelInfo.value.title = (t as string)?.slice(0, 140) || '';
+      if (gameId) twitchChannelInfo.value.game_id = gameId;
+      // twitchChannelInfo.value.game_name = dir?.name || '';
     }
-    // "New" API doesn't return anything so update the data with what we've got.
-    twitchChannelInfo.value.title = (t as string)?.slice(0, 140) || '';
-    if (gameId) twitchChannelInfo.value.game_id = gameId;
-    // twitchChannelInfo.value.game_name = dir?.name || '';
     nodecg().log.debug('[Misc] Twitch title/game updated');
   } catch (err) {
     logError('[Misc] Error updating Twitch channel information:', err);

@@ -31,7 +31,7 @@ function processRawPrizes(rawPrizes) {
 // We always get these from the first listed event, in the case of multiple tracker events.
 async function updatePrizes() {
     try {
-        const resp = await (0, needle_1.default)('get', `https://${config.address}/search/?event=${_1.eventInfo[0].id}&type=prize`, {
+        const resp = await (0, needle_1.default)('get', `https://${config.address}/search/?event=${_1.eventInfo[0].id}&type=prize&feed=current`, {
             cookies: (0, _1.getCookies)(),
         });
         const currentPrizes = processRawPrizes(resp.body);

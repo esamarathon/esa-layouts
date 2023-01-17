@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-import { Configschema } from '@esa-layouts/types/schemas/configschema';
-
-const { theme } = (nodecg.bundleConfig as Configschema).event;
+const { theme } = nodecg.bundleConfig.event;
 const { default: defaultTheme } = require('./themes/default.theme.css');
 const { default: together } = require('./themes/together.theme.css');
 const { default: coronarelief } = require('./themes/coronarelief.theme.css');

@@ -1,8 +1,7 @@
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import StreamdeckUtil from 'streamdeck-util';
 import { get as nodecg } from './nodecg';
 
-const config = (nodecg().bundleConfig as Configschema).streamdeck;
+const config = nodecg().bundleConfig.streamdeck;
 const sd = new StreamdeckUtil();
 
 if (config.enabled) {

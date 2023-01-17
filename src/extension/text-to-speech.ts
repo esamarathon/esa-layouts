@@ -1,12 +1,11 @@
 import type { TextToSpeech } from '@esa-layouts/types';
 import type { TtsVoices } from '@esa-layouts/types/schemas';
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import type { Tracker } from '@shared/types';
 import needle from 'needle';
 import { get as nodecg } from './util/nodecg';
 import { ttsVoices } from './util/replicants';
 
-const config = (nodecg().bundleConfig as Configschema).tts;
+const config = nodecg().bundleConfig.tts;
 
 /**
  * Will attempt to trigger speech for the supplied donation.

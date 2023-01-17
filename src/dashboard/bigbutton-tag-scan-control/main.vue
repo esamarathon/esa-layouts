@@ -11,7 +11,11 @@
   </v-app>
   <v-app v-else>
     <!-- Big button tag scanning alerts. -->
-    <v-alert v-if="['success_player', 'success_comm'].includes(tagScanned)" type="success">
+    <v-alert
+      v-if="typeof tagScanned !== 'boolean'
+        && ['success_player', 'success_comm'].includes(tagScanned)"
+      type="success"
+    >
       <template v-if="tagScanned === 'success_player'">
         {{ scannedData.user.displayName }} scanned in as player on button
         {{ scannedData.flagcarrier.id }}
@@ -81,7 +85,7 @@
 
 <script lang="ts">
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
-import { BigbuttonPlayerMap, Configschema } from '@esa-layouts/types/schemas';
+import { BigbuttonPlayerMap } from '@esa-layouts/types/schemas';
 import { FlagCarrier } from '@esamarathon/mq-events/types';
 import { differenceWith } from 'lodash';
 import { RunData, RunDataActiveRun, RunDataArray, RunDataPlayer, Timer } from 'speedcontrol-util/types';
@@ -93,7 +97,7 @@ export default class extends Vue {
   @replicantNS.State((s) => s.reps.runDataArray) readonly runArray!: RunDataArray;
   @replicantNS.State((s) => s.reps.runDataActiveRun) readonly activeRun!: RunDataActiveRun;
   @replicantNS.State((s) => s.reps.bigbuttonPlayerMap) readonly bbpMap!: BigbuttonPlayerMap;
-  config = nodecg.bundleConfig as Configschema;
+  config = nodecg.bundleConfig;
   tagScanned: 'success_comm' | 'success_player' | 'fail_player' | boolean = false;
   scannedData: FlagCarrier.TagScanned | null = null;
   tagScanTimeout!: number;

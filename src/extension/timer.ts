@@ -1,5 +1,4 @@
 import { BigbuttonPlayerMap } from '@esa-layouts/types/schemas';
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import clone from 'clone';
 import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
@@ -8,7 +7,7 @@ import { mq } from './util/rabbitmq';
 import { bigbuttonPlayerMap, currentRunDelay, delayedTimer } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
-const config = nodecg().bundleConfig as Configschema;
+const config = nodecg().bundleConfig;
 
 // This code keeps a delayed copy of the timer synced to a delay value from external sources.
 // If no delay is present (if not an online marathon), we just make a straight copy.

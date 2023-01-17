@@ -140,7 +140,7 @@
 </template>
 
 <script lang="ts">
-import { Bids, Configschema } from '@esa-layouts/types/schemas';
+import { Bids } from '@esa-layouts/types/schemas';
 import MediaBox from '@shared/graphics/mediabox';
 import { Component, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
@@ -165,7 +165,7 @@ import Timer from './components/Timer.vue';
 })
 export default class extends Vue {
   @State bids!: Bids;
-  bias = (nodecg.bundleConfig as Configschema).tracker.otherBidwarBias;
+  bias = nodecg.bundleConfig.tracker.otherBidwarBias;
 
   get commBiasBid(): Bids[0] | undefined {
     return this.bids.find((b) => b.id === this.bias.bidId);

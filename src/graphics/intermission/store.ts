@@ -1,30 +1,30 @@
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import type { Bids, Commentators, DonationReader, MediaBox, MusicData, Prizes, UpcomingRunID } from '@esa-layouts/types/schemas'; // eslint-disable-line object-curly-newline, max-len
-import type { Asset, Tracker } from '@shared/types';
+import type { Tracker } from '@shared/types';
 import clone from 'clone';
-import type { ReplicantBrowser } from 'nodecg/types/browser';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import { RunData } from 'speedcontrol-util/types';
 import type { RunDataArray, TwitchCommercialTimer } from 'speedcontrol-util/types/speedcontrol/schemas';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
-const sc = new SpeedcontrolUtilBrowser(nodecg);
+const sc = new SpeedcontrolUtilBrowser(nodecg as any); // Needs fixing in speedcontrol-util!
 Vue.use(Vuex);
 
 // Replicants and their types
 const reps: {
-  upcomingRunID: ReplicantBrowser<UpcomingRunID>;
-  musicData: ReplicantBrowser<MusicData>;
-  donationReader: ReplicantBrowser<DonationReader>;
-  mediaBoxImages: ReplicantBrowser<Asset[]>;
-  mediaBox: ReplicantBrowser<MediaBox>;
-  bids: ReplicantBrowser<Bids>;
-  prizes: ReplicantBrowser<Prizes>;
-  commentators: ReplicantBrowser<Commentators>;
-  intermissionSlides: ReplicantBrowser<Asset[]>;
-  runDataArray: ReplicantBrowser<RunDataArray>;
-  twitchCommercialTimer: ReplicantBrowser<TwitchCommercialTimer>;
-  [k: string]: ReplicantBrowser<unknown>;
+  upcomingRunID: NodeCGTypes.ClientReplicant<UpcomingRunID>;
+  musicData: NodeCGTypes.ClientReplicant<MusicData>;
+  donationReader: NodeCGTypes.ClientReplicant<DonationReader>;
+  mediaBoxImages: NodeCGTypes.ClientReplicant<NodeCGTypes.AssetFile[]>;
+  mediaBox: NodeCGTypes.ClientReplicant<MediaBox>;
+  bids: NodeCGTypes.ClientReplicant<Bids>;
+  prizes: NodeCGTypes.ClientReplicant<Prizes>;
+  commentators: NodeCGTypes.ClientReplicant<Commentators>;
+  intermissionSlides: NodeCGTypes.ClientReplicant<NodeCGTypes.AssetFile[]>;
+  runDataArray: NodeCGTypes.ClientReplicant<RunDataArray>;
+  twitchCommercialTimer: NodeCGTypes.ClientReplicant<TwitchCommercialTimer>;
+  [k: string]: NodeCGTypes.ClientReplicant<unknown>;
 } = {
   upcomingRunID: nodecg.Replicant('upcomingRunID'),
   musicData: nodecg.Replicant('musicData'),
@@ -35,19 +35,19 @@ const reps: {
   prizes: nodecg.Replicant('prizes'),
   commentators: nodecg.Replicant('commentators'),
   intermissionSlides: nodecg.Replicant('assets:intermission-slides'),
-  runDataArray: sc.runDataArray,
-  twitchCommercialTimer: sc.twitchCommercialTimer,
+  runDataArray: sc.runDataArray as any, // Needs fixing in speedcontrol-util!
+  twitchCommercialTimer: sc.twitchCommercialTimer as any, // Needs fixing in speedcontrol-util!
 };
 
 interface StateTypes {
   nextRuns: RunData[];
   currentBid?: Tracker.FormattedBid;
   currentPrize?: Tracker.FormattedPrize;
-  currentMedia?: Asset;
+  currentMedia?: NodeCGTypes.AssetFile;
   upcomingRunID: UpcomingRunID;
   bids: Bids;
   prizes: Prizes;
-  intermissionSlides: Asset[];
+  intermissionSlides: NodeCGTypes.AssetFile[];
 }
 
 export const store = new Vuex.Store({
@@ -68,7 +68,7 @@ export const store = new Vuex.Store({
     setCurrentPrize(state, prize?: Tracker.FormattedPrize): void {
       Vue.set(state, 'currentPrize', prize);
     },
-    setCurrentMedia(state, media?: Asset): void {
+    setCurrentMedia(state, media?: NodeCGTypes.AssetFile): void {
       Vue.set(state, 'currentMedia', media);
     },
     setNextRuns(state, runs: RunData[]): void {

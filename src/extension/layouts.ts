@@ -1,4 +1,3 @@
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import Countdown from '@shared/extension/countdown';
 import clone from 'clone';
 import { logError } from './util/helpers';
@@ -8,7 +7,7 @@ import { capturePositions, gameLayouts, nameCycle } from './util/replicants';
 import { sc } from './util/speedcontrol';
 import xkeys from './util/xkeys';
 
-const config = nodecg().bundleConfig as Configschema;
+const config = nodecg().bundleConfig;
 new Countdown(nodecg()); // eslint-disable-line no-new
 
 const gameCaptures = Array.isArray(config.obs.names.groups.gameCaptures)

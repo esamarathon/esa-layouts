@@ -11,16 +11,16 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import { VideoPlayer } from '@esa-layouts/types/schemas';
+import { Component, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Asset } from '@shared/types';
-import { Configschema, VideoPlayer } from '@esa-layouts/types/schemas';
 
 @Component
 export default class extends Vue {
-  @State videos!: Asset[];
+  @State videos!: NodeCGTypes.AssetFile[];
   @State videoPlayer!: VideoPlayer;
-  cfg = nodecg.bundleConfig as Configschema;
+  cfg = nodecg.bundleConfig;
 
   get name(): string | undefined {
     return this.videos.find((a) => a.sum === this.videoPlayer.current)?.name;

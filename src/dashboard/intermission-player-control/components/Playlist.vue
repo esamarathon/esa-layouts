@@ -60,14 +60,14 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator';
-import { State, Mutation } from 'vuex-class';
-import { State2Way } from 'vuex-class-state2way';
-import Draggable from 'vuedraggable';
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import { VideoPlayer } from '@esa-layouts/types/schemas';
-import { Asset } from '@shared/types';
-import { PlaylistAdd, PlaylistRefresh, PlaylistRemove, PlaylistUpdateCommercial } from '../store';
+import { Component, Vue, Watch } from 'vue-property-decorator';
+import Draggable from 'vuedraggable';
+import { Mutation, State } from 'vuex-class';
+import { State2Way } from 'vuex-class-state2way';
 import MediaCard from '../../_misc/components/MediaCard.vue';
+import { PlaylistAdd, PlaylistRefresh, PlaylistRemove, PlaylistUpdateCommercial } from '../store';
 
 @Component({
   components: {
@@ -76,7 +76,7 @@ import MediaCard from '../../_misc/components/MediaCard.vue';
   },
 })
 export default class extends Vue {
-  @State videos!: Asset[];
+  @State videos!: NodeCGTypes.AssetFile[];
   @State videoPlayer!: VideoPlayer;
   @State2Way('updateNewPlaylist', 'newPlaylist') newPlaylist!: VideoPlayer['playlist'];
   @State localEdits!: boolean;
@@ -85,7 +85,7 @@ export default class extends Vue {
   @Mutation playlistRemove!: PlaylistRemove;
   @Mutation playlistRefresh!: PlaylistRefresh;
 
-  getName(sum: string): string | undefined {
+  getName(sum?: string): string | undefined {
     return this.videos.find((a) => a.sum === sum)?.name;
   }
 

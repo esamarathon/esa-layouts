@@ -1,7 +1,6 @@
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import { VideoPlayer } from '@esa-layouts/types/schemas';
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import Player from '@shared/extension/video-player';
-import { Asset } from '@shared/types';
 import { TwitchCommercialTimer } from 'speedcontrol-util/types/speedcontrol/schemas';
 import { v4 as uuid } from 'uuid';
 import { logError } from './util/helpers';
@@ -11,7 +10,7 @@ import obs, { changeScene } from './util/obs';
 import { assetsVideos, obsData, videoPlayer } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
-const config = (nodecg().bundleConfig as Configschema);
+const config = nodecg().bundleConfig;
 const player = new Player(config.obs, obs);
 
 // Reset replicant values on startup.
@@ -40,7 +39,7 @@ async function waitForCommercialEnd(): Promise<void> {
 }
 
 // Converts our current playlist to shared format.
-function generatePlaylist(): { id: string, video?: Asset, commercial: number }[] {
+function generatePlaylist(): { id: string, video?: NodeCGTypes.AssetFile, commercial: number }[] {
   return videoPlayer.value.playlist.map(({ sum, commercial }) => ({
     id: uuid(),
     video: assetsVideos.value.find((v) => v.sum === sum),

@@ -1,6 +1,6 @@
 /* eslint no-new: off, @typescript-eslint/explicit-function-return-type: off */
 
-import { Configschema, UpcomingRunID } from '@esa-layouts/types/schemas';
+import { UpcomingRunID } from '@esa-layouts/types/schemas';
 import { setUpReplicantsComponent as setUpReplicantsMediabox } from '@shared/graphics/mediabox';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import type { RunData } from 'speedcontrol-util/types';
@@ -10,13 +10,13 @@ import '../_misc/theme';
 import App from './main.vue';
 import waitForReplicants from './store';
 
-const sc = new SpeedcontrolUtilBrowser(nodecg);
+const sc = new SpeedcontrolUtilBrowser(nodecg as any); // Needs fixing in speedcontrol-util!
 
 // Gets next 4 runs based on the ID supplied.
 function getNextRuns(id: UpcomingRunID): RunData[] {
   const runIndex = sc.findRunIndex(id);
   if (runIndex >= 0) {
-    const amount = (nodecg.bundleConfig as Configschema).event.shorts === 'swcf'
+    const amount = nodecg.bundleConfig.event.shorts === 'swcf'
       ? 2
       : 4;
     return sc.getRunDataArray().slice(runIndex, runIndex + amount);

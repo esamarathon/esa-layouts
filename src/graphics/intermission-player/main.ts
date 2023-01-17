@@ -10,7 +10,7 @@ import '../_misc/theme';
 import App from './main.vue';
 import store from './store';
 
-const sc = new SpeedcontrolUtilBrowser(nodecg);
+const sc = new SpeedcontrolUtilBrowser(nodecg as any); // Needs fixing in speedcontrol-util!
 
 // Gets next run based on the ID supplied.
 function getNextRun(id: UpcomingRunID): RunData | null {

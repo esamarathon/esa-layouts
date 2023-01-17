@@ -1,7 +1,6 @@
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import type { VideoPlayer } from '@esa-layouts/types/schemas';
-import type { Asset } from '@shared/types';
 import clone from 'clone';
-import type { ReplicantBrowser } from 'nodecg/types/browser';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
@@ -10,9 +9,9 @@ let localEditTimeout: number | undefined;
 
 // Replicants and their types
 const reps: {
-  videoPlayer: ReplicantBrowser<VideoPlayer>;
-  videos: ReplicantBrowser<Asset[]>;
-  [k: string]: ReplicantBrowser<unknown>;
+  videoPlayer: NodeCGTypes.ClientReplicant<VideoPlayer>;
+  videos: NodeCGTypes.ClientReplicant<NodeCGTypes.AssetFile[]>;
+  [k: string]: NodeCGTypes.ClientReplicant<unknown>;
 } = {
   videoPlayer: nodecg.Replicant('videoPlayer'),
   videos: nodecg.Replicant('assets:videos'),
@@ -26,7 +25,7 @@ interface StateTypes {
 
 // Types for mutations/actions below
 export type UpdateNewPlaylist = (arr: VideoPlayer['playlist']) => void;
-export type PlaylistAdd = (sum: string) => void;
+export type PlaylistAdd = (sum?: string) => void;
 export type PlaylistUpdateCommercial = (val: { i: number, length: number }) => void;
 export type PlaylistRemove = (i: number) => void;
 export type PlaylistRefresh = () => void;

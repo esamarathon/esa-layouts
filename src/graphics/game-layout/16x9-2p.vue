@@ -173,7 +173,6 @@
 </template>
 
 <script lang="ts">
-import { Configschema } from '@esa-layouts/types/schemas/configschema';
 import MediaBox from '@shared/graphics/mediabox';
 import { RunDataActiveRun } from 'speedcontrol-util/types';
 import { Component, Vue } from 'vue-property-decorator';
@@ -198,7 +197,7 @@ import Timer from './components/Timer.vue';
 })
 export default class extends Vue {
   @State((s) => s.gameLayouts.crowdCamera) readonly crowdCam!: boolean;
-  online = (nodecg.bundleConfig as Configschema).event.online;
+  online = nodecg.bundleConfig.event.online;
   @State('runDataActiveRun') runData!: RunDataActiveRun;
 
   get extraPlayers(): { name: string, pronouns?: string }[] {

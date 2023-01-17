@@ -1,9 +1,8 @@
-import { Configschema } from '@esa-layouts/types/schemas/configschema';
 import { io, Socket } from 'socket.io-client';
 import { logError } from './helpers';
 import { get as nodecg } from './nodecg';
 
-const config = (nodecg().bundleConfig as Configschema);
+const config = nodecg().bundleConfig;
 const address = new URL(config.offsite.address);
 const socket: typeof Socket = io(
   address.origin,

@@ -1,8 +1,7 @@
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import util from 'util';
 import { get as nodecg } from './nodecg';
 
-const config = nodecg().bundleConfig as Configschema;
+const config = nodecg().bundleConfig;
 
 /**
  * Checks if number needs a 0 adding to the start and does so if needed.

@@ -136,14 +136,13 @@
 <script lang="ts">
 import { replicantModule } from '@esa-layouts/browser_shared/replicant_store';
 import { formatUSD } from '@esa-layouts/graphics/_misc/helpers';
-import { Configschema } from '@esa-layouts/types/schemas';
 import gsap from 'gsap';
 import { Component, Vue, Watch } from 'vue-property-decorator';
 
 @Component
 export default class extends Vue {
   // @Ref('SFX') sfx!: HTMLAudioElement;
-  theme = (nodecg.bundleConfig as Configschema).event.theme;
+  theme = nodecg.bundleConfig.event.theme;
   total = 0;
   playingAlerts = false;
   showAlert = false;

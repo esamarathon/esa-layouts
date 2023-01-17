@@ -34,15 +34,15 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Ref } from 'vue-property-decorator';
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import { Component, Ref, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { Asset } from '@shared/types';
 
 @Component
 export default class extends Vue {
   @Ref('VideoPlayer') player!: HTMLVideoElement;
   @Ref('VideoPlayerSrc') playerSrc!: HTMLSourceElement;
-  @State('currentMedia') media!: Asset | undefined;
+  @State('currentMedia') media!: NodeCGTypes.AssetFile | undefined;
 
   mounted(): void {
     // We should always have media, this is just a backup in case.

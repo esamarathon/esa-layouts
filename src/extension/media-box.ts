@@ -1,4 +1,3 @@
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import { Client, Intents } from 'discord.js';
 import mb from './util/mediabox';
 import * as mqLogging from './util/mq-logging';
@@ -10,7 +9,7 @@ import obs from './util/obs';
  * TODO: Should this be moved somewhere else?
  */
 
-const config = nodecg().bundleConfig as Configschema;
+const config = nodecg().bundleConfig;
 const discord = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
 // Discord integration, used to listen for speedrunstore.com purchase notifications.

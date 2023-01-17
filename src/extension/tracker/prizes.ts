@@ -1,12 +1,11 @@
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import type { Tracker } from '@shared/types';
 import needle from 'needle';
 import { eventInfo, getCookies } from '.';
 import { get as nodecg } from '../util/nodecg';
 import { prizes } from '../util/replicants';
 
-const config = (nodecg().bundleConfig as Configschema).tracker;
-const { useTestData } = nodecg().bundleConfig as Configschema;
+const config = nodecg().bundleConfig.tracker;
+const { useTestData } = nodecg().bundleConfig;
 const refreshTime = 60 * 1000; // Get prizes every 60s.
 
 // Processes the response from the API above.

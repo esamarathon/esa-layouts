@@ -1,6 +1,4 @@
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
-
-const config = nodecg.bundleConfig as Configschema;
+const config = nodecg.bundleConfig;
 
 /**
  * Returns the current event short according to the configuration file.

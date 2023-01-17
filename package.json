@@ -42,9 +42,11 @@
     "socket.io-client": "^4.5.4",
     "speedcontrol-util": "^0.6.0-RC7",
     "streamdeck-util": "^0.4.0",
+    "ts-essentials": "^9.3.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@alvancamp/test-nodecg-types": "^1.9.27",
     "@fontsource/barlow-condensed": "^4.5.9",
     "@fontsource/montserrat": "^4.5.13",
     "@fontsource/roboto": "^4.5.8",

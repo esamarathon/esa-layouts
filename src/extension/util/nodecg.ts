@@ -1,11 +1,12 @@
-import type { NodeCG } from 'nodecg/types/server';
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import { Configschema } from '@esa-layouts/types/schemas';
 
-let nodecg: NodeCG;
+let nodecg: NodeCGTypes.ServerAPI<Configschema>;
 
-export function set(ctx: NodeCG): void {
+export function set(ctx: NodeCGTypes.ServerAPI<Configschema>): void {
   nodecg = ctx;
 }
 
-export function get(): NodeCG {
+export function get(): NodeCGTypes.ServerAPI<Configschema> {
   return nodecg;
 }

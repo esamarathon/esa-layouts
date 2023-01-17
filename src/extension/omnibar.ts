@@ -1,4 +1,4 @@
-import { Bids, Configschema, DonationTotalMilestones, Omnibar, Prizes } from '@esa-layouts/types/schemas';
+import { Bids, DonationTotalMilestones, Omnibar, Prizes } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import { orderBy } from 'lodash';
 import { RunData } from 'speedcontrol-util/types';
@@ -9,7 +9,7 @@ import { mq } from './util/rabbitmq';
 import { bids, commentators, donationReader, donationTotalMilestones, omnibar, prizes } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
-const config = nodecg().bundleConfig as Configschema;
+const config = nodecg().bundleConfig;
 
 // Temporary storage used for mini credits subscriptions/cheers/alerts while they are playing.
 let tempMiniCreditsStorage: Omnibar['miniCredits'] = {

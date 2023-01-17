@@ -1,4 +1,4 @@
-import { BigbuttonPlayerMap, Configschema } from '@esa-layouts/types/schemas';
+import { BigbuttonPlayerMap } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import { differenceWith } from 'lodash';
 import { RunData, RunDataPlayer, RunDataTeam } from 'speedcontrol-util/types';
@@ -11,7 +11,7 @@ import { bigbuttonPlayerMap, commentators, donationReader } from './util/replica
 import { sc } from './util/speedcontrol';
 
 const router = nodecg().Router();
-const config = nodecg().bundleConfig as Configschema;
+const config = nodecg().bundleConfig;
 const allowedDevices = !Array.isArray(config.flagcarrier.allowedDevices)
   && typeof config.flagcarrier.allowedDevices === 'string'
   ? [config.flagcarrier.allowedDevices]

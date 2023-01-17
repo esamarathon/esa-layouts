@@ -1,11 +1,10 @@
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import { logError, wait } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { currentRunDelay, obsData } from './util/replicants';
 import x32 from './util/x32';
 
-const config = (nodecg().bundleConfig as Configschema);
+const config = nodecg().bundleConfig;
 
 function getNonGameScenes(): string[] {
   // These scenes will *not* have "LIVE Game/Mics" DCAs audible.

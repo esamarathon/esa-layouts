@@ -1,4 +1,3 @@
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import type { Tracker } from '@shared/types';
 import clone from 'clone';
 import type { NeedleResponse } from 'needle';
@@ -8,9 +7,9 @@ import { mq } from '../util/rabbitmq';
 import { donationTotal, notableDonations } from '../util/replicants';
 
 export const eventInfo: Tracker.EventInfo[] = [];
-const eventConfig = (nodecg().bundleConfig as Configschema).event;
-const config = (nodecg().bundleConfig as Configschema).tracker;
-const { useTestData } = nodecg().bundleConfig as Configschema;
+const eventConfig = nodecg().bundleConfig.event;
+const config = nodecg().bundleConfig.tracker;
+const { useTestData } = nodecg().bundleConfig;
 let cookies: NeedleResponse['cookies'];
 
 /**

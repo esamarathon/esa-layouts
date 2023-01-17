@@ -135,9 +135,13 @@
               "$ref": "#/definitions/types/pins"
             },
             "id": {
-              "type": [
-                "string",
-                "number"
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
               ]
             }
           },

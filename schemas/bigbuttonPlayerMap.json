@@ -4,6 +4,7 @@
   "additionalProperties": {
     "type": "array",
     "items": {
+      "type": "object",
       "$comment": "Copied from @esamarathon/mq-events/definitions/FlagCarrier/TagScanned.json due to NodeCG issues.",
       "additionalProperties": false,
       "properties": {

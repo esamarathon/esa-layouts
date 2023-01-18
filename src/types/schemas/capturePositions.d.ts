@@ -5,7 +5,9 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface CapturePositions {
+export type CapturePositions = CapturePositions1;
+
+export interface CapturePositions1 {
 	[k: string]: {
 		[k: string]: {
 			x: number;

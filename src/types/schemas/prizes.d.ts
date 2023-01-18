@@ -5,7 +5,8 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type Prizes = {
+export type Prizes = Prizes1;
+export type Prizes1 = {
 	id: number;
 	name: string;
 	provided?: string;

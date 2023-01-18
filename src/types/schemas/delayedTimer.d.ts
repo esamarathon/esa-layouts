@@ -5,7 +5,9 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface DelayedTimer {
+export type DelayedTimer = Timer;
+
+export interface Timer {
 	time: string;
 	state: 'stopped' | 'running' | 'paused' | 'finished';
 	milliseconds: number;

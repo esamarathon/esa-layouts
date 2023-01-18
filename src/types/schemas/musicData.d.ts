@@ -5,7 +5,9 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface MusicData {
+export type MusicData = MusicData1;
+
+export interface MusicData1 {
 	connected: boolean;
 	playing: boolean;
 	track?: {

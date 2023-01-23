@@ -6,11 +6,6 @@ on:
 
   workflow_dispatch:
     inputs:
-      vdon_branch:
-        description: 'Name of branch from nodecg-vdoninja to reference'
-        type: string
-        required: false
-        default: 'master'
       base_branch:
         description: 'Name of branch to base build on'
         type: string

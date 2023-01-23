@@ -1,7 +1,8 @@
-import { BigbuttonPlayerMap } from '@esa-layouts/types/schemas';
+import { BigbuttonPlayerMap, Configschema } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import { differenceWith } from 'lodash';
 import { RunData, RunDataPlayer, RunDataTeam } from 'speedcontrol-util/types';
+import { DeepWritable } from 'ts-essentials';
 import { v4 as uuid } from 'uuid';
 import { lookupUserByID } from './server';
 import { logError } from './util/helpers';
@@ -12,10 +13,10 @@ import { sc } from './util/speedcontrol';
 
 const router = nodecg().Router();
 const config = nodecg().bundleConfig;
-const allowedDevices = !Array.isArray(config.flagcarrier.allowedDevices)
-  && typeof config.flagcarrier.allowedDevices === 'string'
-  ? [config.flagcarrier.allowedDevices]
-  : config.flagcarrier.allowedDevices || [];
+const allowedDevices = (() => {
+  const cfg = (config as DeepWritable<Configschema>).flagcarrier.allowedDevices;
+  return !Array.isArray(cfg) && typeof cfg === 'string' ? [cfg] : cfg || [];
+})();
 const buttonIds = [ // Hardcoded button names for now, used in some cases.
   '1',
   '2',

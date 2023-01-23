@@ -1,5 +1,7 @@
+import { Configschema } from '@esa-layouts/types/schemas';
 import Countdown from '@shared/extension/countdown';
 import clone from 'clone';
+import { DeepWritable } from 'ts-essentials';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
@@ -10,18 +12,19 @@ import xkeys from './util/xkeys';
 const config = nodecg().bundleConfig;
 new Countdown(nodecg()); // eslint-disable-line no-new
 
-const gameCaptures = Array.isArray(config.obs.names.groups.gameCaptures)
-  ? config.obs.names.groups.gameCaptures
-  : [config.obs.names.groups.gameCaptures];
-const cameraCaptures = Array.isArray(config.obs.names.groups.cameraCaptures)
-  ? config.obs.names.groups.cameraCaptures
-  : [config.obs.names.groups.cameraCaptures];
-const gameSources = Array.isArray(config.obs.names.sources.gameSources)
-  ? config.obs.names.sources.gameSources
-  : [config.obs.names.sources.gameSources];
-const cameraSources = Array.isArray(config.obs.names.sources.cameraSources)
-  ? config.obs.names.sources.cameraSources
-  : [config.obs.names.sources.cameraSources];
+const obsNamesCfg = (config as DeepWritable<Configschema>).obs.names;
+const gameCaptures = Array.isArray(obsNamesCfg.groups.gameCaptures)
+  ? obsNamesCfg.groups.gameCaptures
+  : [obsNamesCfg.groups.gameCaptures];
+const cameraCaptures = Array.isArray(obsNamesCfg.groups.cameraCaptures)
+  ? obsNamesCfg.groups.cameraCaptures
+  : [obsNamesCfg.groups.cameraCaptures];
+const gameSources = Array.isArray(obsNamesCfg.sources.gameSources)
+  ? obsNamesCfg.sources.gameSources
+  : [obsNamesCfg.sources.gameSources];
+const cameraSources = Array.isArray(obsNamesCfg.sources.cameraSources)
+  ? obsNamesCfg.sources.cameraSources
+  : [obsNamesCfg.sources.cameraSources];
 
 // CSS ID -> OBS source name mapping
 const obsSourceKeys: { [key: string]: string | undefined } = {

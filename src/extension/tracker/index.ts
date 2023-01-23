@@ -1,7 +1,9 @@
+import { Configschema } from '@esa-layouts/types/schemas';
 import type { Tracker } from '@shared/types';
 import clone from 'clone';
 import type { NeedleResponse } from 'needle';
 import needle from 'needle';
+import { DeepWritable } from 'ts-essentials';
 import { get as nodecg } from '../util/nodecg';
 import { mq } from '../util/rabbitmq';
 import { donationTotal, notableDonations } from '../util/replicants';
@@ -157,7 +159,10 @@ async function setup(): Promise<void> {
     if (!useTestData) await loginToTracker();
 
     // Go through all events and compile the important info for them.
-    const events = (Array.isArray(eventConfig.shorts)) ? eventConfig.shorts : [eventConfig.shorts];
+    const events = (() => {
+      const cfg = (eventConfig as DeepWritable<Configschema['event']>).shorts;
+      return (Array.isArray(cfg)) ? cfg : [cfg];
+    })();
     for (const [index, short] of events.entries()) {
       const id = !useTestData ? await getEventIDFromShort(short) : index + 1;
       eventInfo.push({

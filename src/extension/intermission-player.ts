@@ -1,7 +1,7 @@
 import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import { VideoPlayer } from '@esa-layouts/types/schemas';
 import Player from '@shared/extension/video-player';
-import { TwitchCommercialTimer } from 'speedcontrol-util/types/speedcontrol/schemas';
+import { TwitchCommercialTimer } from 'speedcontrol-util/types/schemas';
 import { v4 as uuid } from 'uuid';
 import { logError } from './util/helpers';
 import * as mqLogging from './util/mq-logging';

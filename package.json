@@ -40,12 +40,12 @@
     "needle": "^3.2.0",
     "sharp": "^0.31.3",
     "socket.io-client": "^4.5.4",
-    "speedcontrol-util": "^0.6.1",
+    "speedcontrol-util": "github:speedcontrol/speedcontrol-util.git#build",
     "streamdeck-util": "^0.4.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@alvancamp/test-nodecg-types": "^1.9.30",
+    "@alvancamp/test-nodecg-types": "^1.9.31",
     "@fontsource/barlow-condensed": "^4.5.9",
     "@fontsource/montserrat": "^4.5.14",
     "@fontsource/roboto": "^4.5.8",

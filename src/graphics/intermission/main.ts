@@ -10,7 +10,7 @@ import '../_misc/theme';
 import App from './main.vue';
 import waitForReplicants from './store';
 
-const sc = new SpeedcontrolUtilBrowser(nodecg as any); // Needs fixing in speedcontrol-util!
+const sc = new SpeedcontrolUtilBrowser(nodecg);
 
 // Gets next 4 runs based on the ID supplied.
 function getNextRuns(id: UpcomingRunID): RunData[] {

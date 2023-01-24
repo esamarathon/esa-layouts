@@ -6,7 +6,7 @@ import type { RunDataActiveRun, Timer } from 'speedcontrol-util/types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
-const sc = new SpeedcontrolUtilBrowser(nodecg as any); // Needs fixing in speedcontrol-util!
+const sc = new SpeedcontrolUtilBrowser(nodecg);
 Vue.use(Vuex);
 
 // Replicants and their types
@@ -37,8 +37,8 @@ const reps: {
   nameCycle: nodecg.Replicant('nameCycle'),
   notableDonations: nodecg.Replicant('notableDonations'),
   prizes: nodecg.Replicant('prizes'),
-  runDataActiveRun: sc.runDataActiveRun as any, // Needs fixing in speedcontrol-util!
-  timer: sc.timer as any, // Needs fixing in speedcontrol-util!
+  runDataActiveRun: sc.runDataActiveRun,
+  timer: sc.timer,
 };
 
 interface StateTypes {

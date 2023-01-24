@@ -4,11 +4,11 @@ import type { Tracker } from '@shared/types';
 import clone from 'clone';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import { RunData } from 'speedcontrol-util/types';
-import type { RunDataArray, TwitchCommercialTimer } from 'speedcontrol-util/types/speedcontrol/schemas';
+import type { RunDataArray, TwitchCommercialTimer } from 'speedcontrol-util/types/schemas';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
-const sc = new SpeedcontrolUtilBrowser(nodecg as any); // Needs fixing in speedcontrol-util!
+const sc = new SpeedcontrolUtilBrowser(nodecg);
 Vue.use(Vuex);
 
 // Replicants and their types
@@ -35,8 +35,8 @@ const reps: {
   prizes: nodecg.Replicant('prizes'),
   commentators: nodecg.Replicant('commentators'),
   intermissionSlides: nodecg.Replicant('assets:intermission-slides'),
-  runDataArray: sc.runDataArray as any, // Needs fixing in speedcontrol-util!
-  twitchCommercialTimer: sc.twitchCommercialTimer as any, // Needs fixing in speedcontrol-util!
+  runDataArray: sc.runDataArray,
+  twitchCommercialTimer: sc.twitchCommercialTimer,
 };
 
 interface StateTypes {

@@ -3,13 +3,13 @@ import type { Bids, BigbuttonPlayerMap, Commentators, Countdown, CurrentRunDelay
 import clone from 'clone';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import { RunDataActiveRun, RunDataArray, Timer } from 'speedcontrol-util/types';
-import { RunDataActiveRunSurrounding } from 'speedcontrol-util/types/speedcontrol/schemas';
+import { RunDataActiveRunSurrounding } from 'speedcontrol-util/types/schemas';
 import Vue from 'vue';
 import type { Store } from 'vuex';
 import { namespace } from 'vuex-class';
 import { getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators';
 
-const sc = new SpeedcontrolUtilBrowser(nodecg as any); // Needs to be fixed in speedcontrol-util!
+const sc = new SpeedcontrolUtilBrowser(nodecg);
 
 // Declaring replicants.
 export const reps: {
@@ -56,12 +56,12 @@ export const reps: {
   otherStreamData: nodecg.Replicant('otherStreamData'),
   prizes: nodecg.Replicant('prizes'),
   readerIntroduction: nodecg.Replicant('readerIntroduction'),
-  runDataActiveRun: sc.runDataActiveRun as any, // Needs to be fixed in speedcontrol-util!
-  runDataActiveRunSurrounding: sc.runDataActiveRunSurrounding as any, // Fix in speedcontrol-util!
-  runDataArray: sc.runDataArray as any, // Needs to be fixed in speedcontrol-util!
+  runDataActiveRun: sc.runDataActiveRun,
+  runDataActiveRunSurrounding: sc.runDataActiveRunSurrounding,
+  runDataArray: sc.runDataArray,
   serverTimestamp: nodecg.Replicant('serverTimestamp'),
   streamDeckData: nodecg.Replicant('streamDeckData'),
-  timer: sc.timer as any, // Needs to be fixed in speedcontrol-util!
+  timer: sc.timer,
   ttsVoices: nodecg.Replicant('ttsVoices'),
   upcomingRunID: nodecg.Replicant('upcomingRunID'),
   videoPlayer: nodecg.Replicant('videoPlayer'),

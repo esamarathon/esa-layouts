@@ -60,7 +60,9 @@ async function lookupScheduleUserInfo(): Promise<void> {
       for (const [y, player] of team.players.entries()) {
         teams[x].players[y].customData.id = userIds[i];
         let userData = userDataArr[i];
-        if (!userData && config.event.shorts === 'swcf') {
+        if (!userData && (config.event.shorts === 'swcf'
+        || (typeof config.event.shorts === 'string'
+        && config.event.shorts.toLowerCase().startsWith('uksg')))) {
           try {
             // 500ms wait to not hammer the server
             await new Promise((res) => { setTimeout(res, 500); });

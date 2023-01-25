@@ -69,6 +69,7 @@ async function lookupScheduleUserInfo(): Promise<void> {
             userData = null;
           }
         }
+        teams[x].players[y].pronouns = undefined; // Erase pronouns, even if no user found
         if (userData) {
           // Fix some flags which use a different format (mostly GB).
           let { country } = userData;

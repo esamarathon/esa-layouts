@@ -182,8 +182,6 @@ player.on('playlistEnded', async (early) => {
   if (!early) videoPlayer.value.playlist.length = 0;
   videoPlayer.value.estimatedFinishTimestamp = 0;
   obsData.value.disableTransitioning = false;
-  // Simple server-to-server message we need; currently used for esa-commercials only.
-  if (!early) nodecg().sendMessage('intermissionPlayerFinished');
   await changeScene({ scene: config.obs.names.scenes.intermission, force: true });
 });
 

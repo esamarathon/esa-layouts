@@ -49,7 +49,7 @@
                 outlined
                 small
                 :style="{ 'margin-right': '10px' }"
-                @click="playlistAdd(video.sum)"
+                @click="playlistAdd({ sum: video.sum, commercial: true })"
               >
                 <v-icon small>
                   mdi-playlist-plus

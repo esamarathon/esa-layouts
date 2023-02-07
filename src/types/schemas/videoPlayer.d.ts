@@ -8,7 +8,8 @@
 export interface VideoPlayer {
 	playlist: {
 		sum?: string;
-		commercial: number;
+		length: number;
+		commercial: boolean;
 	}[];
 	current: string | null;
 	playing: boolean;

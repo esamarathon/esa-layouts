@@ -39,10 +39,16 @@ async function waitForCommercialEnd(): Promise<void> {
 }
 
 // Converts our current playlist to shared format.
-function generatePlaylist(): { id: string, video?: NodeCGTypes.AssetFile, commercial: number }[] {
-  return videoPlayer.value.playlist.map(({ sum, commercial }) => ({
+function generatePlaylist(): {
+  id: string,
+  video?: NodeCGTypes.AssetFile,
+  length?: number,
+  commercial?: boolean,
+}[] {
+  return videoPlayer.value.playlist.map(({ sum, length, commercial }) => ({
     id: uuid(),
     video: assetsVideos.value.find((v) => v.sum === sum),
+    length,
     commercial,
   }));
 }
@@ -59,6 +65,8 @@ export async function startPlaylist(): Promise<void> {
     } else {
       // Does not work if first element is not a video and we're already on the
       // intermission player scene, but waitForCommercialEnd handles that.
+      // TODO: Support this? We don't use "force" here for some reason, but as of
+      //       writing this comment, not sure why.
       await changeScene({ scene: config.obs.names.scenes.intermission });
     }
     obsData.value.disableTransitioning = true;
@@ -83,7 +91,7 @@ sc.on('timerStopped', () => {
     // Creates a compiled list of what videos should be played and
     // where commercials should be played if needed.
     const splitList = run.customData.intermission.split(',').filter(Boolean);
-    const formattedList: { name?: string, commercial: number }[] = [];
+    const formattedList: { name?: string, length: number, commercial: boolean }[] = [];
     for (let i = 0; i < splitList.length;) {
       if (splitList[i].startsWith('ad')) {
         const replaceStr = splitList[i].startsWith('adwait') ? 'adwait' : 'ad';
@@ -92,23 +100,27 @@ sc.on('timerStopped', () => {
           let name: string | undefined;
           if (!splitList[i].startsWith('adwait')) {
             name = splitList[i + 1];
-            i += 2;
-          } else {
-            i += 1;
+            i += 1; // Adds an extra 1 if this is present
           }
-          formattedList.push({ name, commercial });
+          formattedList.push({ name, length: commercial, commercial: !!commercial });
         }
+        i += 1;
+      // There is also a special entry, "wait", which plays no videos or commercials.
+      } else if (splitList[i].startsWith('wait')) {
+        const waitLength = Number(splitList[i].replace('wait', ''));
+        if (waitLength) formattedList.push({ length: waitLength, commercial: false });
+        i += 1;
       } else {
-        formattedList.push({ name: splitList[i], commercial: 0 });
+        formattedList.push({ name: splitList[i], length: 0, commercial: false });
         i += 1;
       }
     }
     // This filters out any items that have no asset *and* no commercial, which are useless.
     videoPlayer.value.playlist = formattedList.reduce<VideoPlayer['playlist']>(
-      (prev, { name, commercial }) => {
+      (prev, { name, length, commercial }) => {
         const asset = assetsVideos.value.find((v) => v.name === name?.trim());
-        if (asset || commercial) {
-          prev.push({ sum: asset?.sum, commercial });
+        if (asset || length) {
+          prev.push({ sum: asset?.sum, length, commercial });
         } else if (!asset) {
           nodecg().log.warn(
             '[Intermission Player] Asset named "%s" was not found, so skipping in playlist',
@@ -187,6 +199,6 @@ player.on('playlistEnded', async (early) => {
 
 player.on('playCommercial', async (item) => {
   try {
-    await sc.sendMessage('twitchStartCommercial', { duration: item.commercial });
+    await sc.sendMessage('twitchStartCommercial', { duration: item.length });
   } catch (err) { /* catch */ }
 });

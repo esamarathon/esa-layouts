@@ -1,6 +1,5 @@
 import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import type { Bids, Commentators, DonationReader, IntermissionSlides, MediaBox, MusicData, Prizes, UpcomingRunID } from '@esa-layouts/types/schemas'; // eslint-disable-line object-curly-newline, max-len
-import type { Tracker } from '@shared/types';
 import clone from 'clone';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import { RunData } from 'speedcontrol-util/types';
@@ -43,8 +42,6 @@ const reps: {
 
 interface StateTypes {
   nextRuns: RunData[];
-  currentBid?: Tracker.FormattedBid;
-  currentPrize?: Tracker.FormattedPrize;
   upcomingRunID: UpcomingRunID;
   bids: Bids;
   prizes: Prizes;
@@ -62,12 +59,6 @@ export const store = new Vuex.Store({
   mutations: {
     setState(state, { name, val }): void {
       Vue.set(state, name, val);
-    },
-    setCurrentBid(state, bid?: Tracker.FormattedBid): void {
-      Vue.set(state, 'currentBid', bid);
-    },
-    setCurrentPrize(state, prize?: Tracker.FormattedPrize): void {
-      Vue.set(state, 'currentPrize', prize);
     },
     setNextRuns(state, runs: RunData[]): void {
       Vue.set(state, 'nextRuns', runs);

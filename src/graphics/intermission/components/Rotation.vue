@@ -21,6 +21,20 @@
           :current="current"
           @end="showNextSlide()"
         />
+        <bid
+          v-else-if="current?.type === 'RandomBid'"
+          :key="`${current.id}_RandomBid`"
+          class="Slide"
+          :current="current"
+          @end="showNextSlide()"
+        />
+        <prize
+          v-else-if="current?.type === 'RandomPrize'"
+          :key="`${current.id}_RandomPrize`"
+          class="Slide"
+          :current="current"
+          @end="showNextSlide()"
+        />
       </transition>
     </div>
   </div>

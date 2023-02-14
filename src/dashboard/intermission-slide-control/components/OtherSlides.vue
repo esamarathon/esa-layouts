@@ -46,6 +46,14 @@ export default class extends Vue {
       type: 'UpcomingRuns',
       name: 'Upcoming Runs',
     },
+    {
+      type: 'RandomBid',
+      name: 'Random Bid',
+    },
+    {
+      type: 'RandomPrize',
+      name: 'Random Prize',
+    },
   ];
 
   clone(selection: this['selection'][0]): IntermissionSlides['rotation'][0] {

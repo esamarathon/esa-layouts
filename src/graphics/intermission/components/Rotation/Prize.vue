@@ -32,15 +32,16 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { IntermissionSlides, Prizes } from '@esa-layouts/types/schemas';
 import { Tracker } from '@shared/types';
 import dayjs from 'dayjs';
+import en from 'dayjs/locale/en-gb';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import utc from 'dayjs/plugin/utc';
-import en from 'dayjs/locale/en-gb';
-import Container from '../Container.vue';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { formatUSD } from '../../../_misc/helpers';
+import Container from '../Container.vue';
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -66,8 +67,13 @@ dayjs.locale({
   },
 })
 export default class extends Vue {
-  @State('currentPrize') prize!: Tracker.FormattedPrize | undefined;
+  @State prizes!: Prizes;
+  @Prop({ type: Object, required: true }) readonly current!: IntermissionSlides['current'];
   formatUSD = formatUSD;
+
+  get prize(): Tracker.FormattedPrize | undefined {
+    return this.prizes.find((p) => p.id === this.current?.prizeId);
+  }
 
   get etaUntil(): string | undefined {
     return this.prize?.endTime

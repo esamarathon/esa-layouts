@@ -38,6 +38,10 @@ export default class extends Vue {
         .find((a) => a.sum === this.current?.mediaUUID)?.name || '';
     } else if (this.current?.type === 'UpcomingRuns') {
       str = 'Upcoming Runs';
+    } else if (this.current?.type === 'RandomBid') {
+      str = 'Random Bid';
+    } else if (this.current?.type === 'RandomPrize') {
+      str = 'Random Prize';
     }
     return str || '?';
   }

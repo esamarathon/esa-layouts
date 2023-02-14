@@ -5,7 +5,7 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type Types = 'UpcomingRuns' | 'Media';
+export type Types = 'UpcomingRuns' | 'RandomBid' | 'RandomPrize' | 'Media';
 
 export interface IntermissionSlides {
 	rotation: {
@@ -17,5 +17,7 @@ export interface IntermissionSlides {
 		type: Types;
 		id: string;
 		mediaUUID: string;
+		bidId?: number;
+		prizeId?: number;
 	} | null;
 }

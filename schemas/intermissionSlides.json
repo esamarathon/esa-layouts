@@ -5,6 +5,8 @@
       "type": "string",
       "enum": [
         "UpcomingRuns",
+        "RandomBid",
+        "RandomPrize",
         "Media"
       ]
     }
@@ -50,6 +52,12 @@
             },
             "mediaUUID": {
               "type": "string"
+            },
+            "bidId": {
+              "type": "number"
+            },
+            "prizeId": {
+              "type": "number"
             }
           },
           "required": [

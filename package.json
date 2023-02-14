@@ -133,6 +133,14 @@
         "headerColor": "#c49215"
       },
       {
+        "name": "intermission-slide-control",
+        "title": "Intermission Slide Control",
+        "width": 3,
+        "file": "intermission-slide-control.html",
+        "workspace": "Z2 - ESA Advanced",
+        "headerColor": "#c49215"
+      },
+      {
         "name": "commentators",
         "title": "Commentators",
         "width": 2,

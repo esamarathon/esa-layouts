@@ -49,6 +49,7 @@ export = (nodecg: NodeCGTypes.ServerAPI<Configschema>): ExtensionReturn => {
   require('./player-hud');
   require('./server');
   require('./streamlabs-charity');
+  require('./intermission-slides');
 
   return {
     obs: require('./util/obs').default,

@@ -1,6 +1,6 @@
 <template>
   <div
-    v-show="media"
+    v-if="media"
     class="Flex"
   >
     <!-- Image -->
@@ -35,14 +35,20 @@
 
 <script lang="ts">
 import type NodeCGTypes from '@alvancamp/test-nodecg-types';
-import { Component, Ref, Vue } from 'vue-property-decorator';
+import { IntermissionSlides } from '@esa-layouts/types/schemas';
+import { Component, Prop, Ref, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 
 @Component
 export default class extends Vue {
+  @State assetsIntermissionSlides!: NodeCGTypes.AssetFile[];
   @Ref('VideoPlayer') player!: HTMLVideoElement;
   @Ref('VideoPlayerSrc') playerSrc!: HTMLSourceElement;
-  @State('currentMedia') media!: NodeCGTypes.AssetFile | undefined;
+  @Prop({ type: Object, required: true }) readonly current!: IntermissionSlides['current'];
+
+  get media(): NodeCGTypes.AssetFile | undefined {
+    return this.assetsIntermissionSlides.find((a) => a.sum === this.current?.mediaUUID);
+  }
 
   mounted(): void {
     // We should always have media, this is just a backup in case.

@@ -1,5 +1,5 @@
 import type NodeCGTypes from '@alvancamp/test-nodecg-types';
-import type { Bids, BigbuttonPlayerMap, Commentators, Countdown, CurrentRunDelay, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import type { Bids, BigbuttonPlayerMap, Commentators, Countdown, CurrentRunDelay, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, IntermissionSlides, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import { RunDataActiveRun, RunDataArray, Timer } from 'speedcontrol-util/types';
@@ -13,6 +13,7 @@ const sc = new SpeedcontrolUtilBrowser(nodecg);
 
 // Declaring replicants.
 export const reps: {
+  assetsIntermissionSlides: NodeCGTypes.ClientReplicant<NodeCGTypes.AssetFile[]>;
   assetsReaderIntroductionImages: NodeCGTypes.ClientReplicant<NodeCGTypes.AssetFile[]>;
   bids: NodeCGTypes.ClientReplicant<Bids>;
   bigbuttonPlayerMap: NodeCGTypes.ClientReplicant<BigbuttonPlayerMap>;
@@ -24,6 +25,7 @@ export const reps: {
   donationTotal: NodeCGTypes.ClientReplicant<DonationTotal>;
   donationTotalMilestones: NodeCGTypes.ClientReplicant<DonationTotalMilestones>;
   gameLayouts: NodeCGTypes.ClientReplicant<GameLayouts>;
+  intermissionSlides: NodeCGTypes.ClientReplicant<IntermissionSlides>;
   obsData: NodeCGTypes.ClientReplicant<ObsData>;
   omnibar: NodeCGTypes.ClientReplicant<Omnibar>;
   otherStreamData: NodeCGTypes.ClientReplicant<OtherStreamData>;
@@ -40,6 +42,7 @@ export const reps: {
   videoPlayer: NodeCGTypes.ClientReplicant<VideoPlayer>;
   [k: string]: NodeCGTypes.ClientReplicant<unknown>;
 } = {
+  assetsIntermissionSlides: nodecg.Replicant('assets:intermission-slides'),
   assetsReaderIntroductionImages: nodecg.Replicant('assets:reader-introduction-images'),
   bids: nodecg.Replicant('bids'),
   bigbuttonPlayerMap: nodecg.Replicant('bigbuttonPlayerMap'),
@@ -51,6 +54,7 @@ export const reps: {
   donationTotal: nodecg.Replicant('donationTotal'),
   donationTotalMilestones: nodecg.Replicant('donationTotalMilestones'),
   gameLayouts: nodecg.Replicant('gameLayouts'),
+  intermissionSlides: nodecg.Replicant('intermissionSlides'),
   obsData: nodecg.Replicant('obsData'),
   omnibar: nodecg.Replicant('omnibar'),
   otherStreamData: nodecg.Replicant('otherStreamData'),
@@ -69,6 +73,7 @@ export const reps: {
 
 // All the replicant types.
 export interface ReplicantTypes {
+  assetsIntermissionSlides: NodeCGTypes.AssetFile[];
   assetsReaderIntroductionImages: NodeCGTypes.AssetFile[];
   bids: Bids;
   bigbuttonPlayerMap: BigbuttonPlayerMap;
@@ -80,6 +85,7 @@ export interface ReplicantTypes {
   donationTotal: DonationTotal;
   donationTotalMilestones: DonationTotalMilestones;
   gameLayouts: GameLayouts;
+  intermissionSlides: IntermissionSlides;
   obsData: ObsData;
   omnibar: Omnibar;
   otherStreamData: OtherStreamData;

@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 
 import type NodeCGTypes from '@alvancamp/test-nodecg-types';
-import { Bids, BigbuttonPlayerMap, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, MusicData, NameCycle, NotableDonations, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import { Bids, BigbuttonPlayerMap, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, IntermissionSlides, MusicData, NameCycle, NotableDonations, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import { HoraroImportStatus, OengusImportStatus, TwitchAPIData, TwitchChannelInfo } from 'speedcontrol-util/types/schemas';
 import { get as nodecg } from './nodecg';
 
@@ -26,6 +26,7 @@ export const donationTotal = nodecg().Replicant<DonationTotal>('donationTotal');
 export const donationTotalMilestones = nodecg().Replicant<DonationTotalMilestones>('donationTotalMilestones');
 export const gameLayouts = nodecg().Replicant<GameLayouts>('gameLayouts');
 export const horaroImportStatus = nodecg().Replicant<HoraroImportStatus>('horaroImportStatus', 'nodecg-speedcontrol');
+export const intermissionSlides = nodecg().Replicant<IntermissionSlides>('intermissionSlides');
 export const musicData = nodecg().Replicant<MusicData>('musicData');
 export const nameCycle = nodecg().Replicant<NameCycle>('nameCycle', { persistent: false }) as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<NameCycle>;
 export const notableDonations = nodecg().Replicant<NotableDonations>('notableDonations');

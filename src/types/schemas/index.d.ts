@@ -11,6 +11,7 @@ export * from './donationsToRead';
 export * from './donationTotal';
 export * from './donationTotalMilestones';
 export * from './gameLayouts';
+export * from './intermissionSlides';
 export * from './mediaBox';
 export * from './musicData';
 export * from './nameCycle';

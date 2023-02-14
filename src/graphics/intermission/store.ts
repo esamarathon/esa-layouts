@@ -1,5 +1,5 @@
 import type NodeCGTypes from '@alvancamp/test-nodecg-types';
-import type { Bids, Commentators, DonationReader, MediaBox, MusicData, Prizes, UpcomingRunID } from '@esa-layouts/types/schemas'; // eslint-disable-line object-curly-newline, max-len
+import type { Bids, Commentators, DonationReader, IntermissionSlides, MediaBox, MusicData, Prizes, UpcomingRunID } from '@esa-layouts/types/schemas'; // eslint-disable-line object-curly-newline, max-len
 import type { Tracker } from '@shared/types';
 import clone from 'clone';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
@@ -21,9 +21,10 @@ const reps: {
   bids: NodeCGTypes.ClientReplicant<Bids>;
   prizes: NodeCGTypes.ClientReplicant<Prizes>;
   commentators: NodeCGTypes.ClientReplicant<Commentators>;
-  intermissionSlides: NodeCGTypes.ClientReplicant<NodeCGTypes.AssetFile[]>;
+  assetsIntermissionSlides: NodeCGTypes.ClientReplicant<NodeCGTypes.AssetFile[]>;
   runDataArray: NodeCGTypes.ClientReplicant<RunDataArray>;
   twitchCommercialTimer: NodeCGTypes.ClientReplicant<TwitchCommercialTimer>;
+  intermissionSlides: NodeCGTypes.ClientReplicant<IntermissionSlides>;
   [k: string]: NodeCGTypes.ClientReplicant<unknown>;
 } = {
   upcomingRunID: nodecg.Replicant('upcomingRunID'),
@@ -34,20 +35,20 @@ const reps: {
   bids: nodecg.Replicant('bids'),
   prizes: nodecg.Replicant('prizes'),
   commentators: nodecg.Replicant('commentators'),
-  intermissionSlides: nodecg.Replicant('assets:intermission-slides'),
+  assetsIntermissionSlides: nodecg.Replicant('assets:intermission-slides'),
   runDataArray: sc.runDataArray,
   twitchCommercialTimer: sc.twitchCommercialTimer,
+  intermissionSlides: nodecg.Replicant('intermissionSlides'),
 };
 
 interface StateTypes {
   nextRuns: RunData[];
   currentBid?: Tracker.FormattedBid;
   currentPrize?: Tracker.FormattedPrize;
-  currentMedia?: NodeCGTypes.AssetFile;
   upcomingRunID: UpcomingRunID;
   bids: Bids;
   prizes: Prizes;
-  intermissionSlides: NodeCGTypes.AssetFile[];
+  assetsIntermissionSlides: NodeCGTypes.AssetFile[];
 }
 
 export const store = new Vuex.Store({
@@ -56,7 +57,7 @@ export const store = new Vuex.Store({
     upcomingRunID: null,
     bids: [],
     prizes: [],
-    intermissionSlides: [],
+    assetsIntermissionSlides: [],
   } as StateTypes,
   mutations: {
     setState(state, { name, val }): void {
@@ -67,9 +68,6 @@ export const store = new Vuex.Store({
     },
     setCurrentPrize(state, prize?: Tracker.FormattedPrize): void {
       Vue.set(state, 'currentPrize', prize);
-    },
-    setCurrentMedia(state, media?: NodeCGTypes.AssetFile): void {
-      Vue.set(state, 'currentMedia', media);
     },
     setNextRuns(state, runs: RunData[]): void {
       Vue.set(state, 'nextRuns', runs);

@@ -11,6 +11,7 @@ export type Rotation = {
 	id: string;
 	mediaUUID: string;
 	seconds: number;
+	showOnIntermission: boolean;
 }[];
 
 export interface MediaBox1 {

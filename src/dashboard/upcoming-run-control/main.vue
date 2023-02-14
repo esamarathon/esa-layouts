@@ -64,7 +64,7 @@ import { RunDataActiveRunSurrounding, RunDataArray } from 'speedcontrol-util/typ
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component
-export default class IntermissionControl extends Vue {
+export default class UpcomingRunControl extends Vue {
   @replicantNS.State((s) => s.reps.runDataArray) readonly runDataArray!: RunDataArray;
   @replicantNS.State((s) => s.reps.runDataActiveRunSurrounding)
   readonly runDataActiveRunSurrounding!: RunDataActiveRunSurrounding;

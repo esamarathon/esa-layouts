@@ -11,7 +11,7 @@ import { assetsVideos, obsData, videoPlayer } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const config = nodecg().bundleConfig;
-const player = new Player(config.obs, obs);
+const player = new Player(nodecg(), config.obs, obs);
 
 // Reset replicant values on startup.
 videoPlayer.value.playing = false;

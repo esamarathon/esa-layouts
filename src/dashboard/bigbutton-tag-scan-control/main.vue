@@ -67,18 +67,20 @@
         </template>
         <div v-else>No button to player mapping to show.</div>
       </div>
-      <v-btn
-        class="mt-2"
-        color="red"
-        @click="force"
-        block
-        :disabled="disableChanges || !leftToScan.length"
-      >
-        <v-icon class="mr-2">mdi-alert</v-icon> Fill open slots
-      </v-btn>
       <v-btn class="mt-2" @click="reset" block :disabled="disableChanges">
         Reset all player tag scanning
       </v-btn>
+      <div
+        v-show="leftToScan.length"
+        v-for="btn of config.flagcarrier.availableButtons"
+        :key="btn.id"
+        class="mt-2"
+      >
+        Manually Assign to {{ btn.id }} ({{ btn.name }})<br>
+        <v-btn v-for="p of leftToScan" :key="p.id" @click="manualAssign(btn.id, p)">
+          {{ p.name }}
+        </v-btn>
+      </div>
     </div>
   </v-app>
 </template>
@@ -130,8 +132,8 @@ export default class extends Vue {
     return this.timer.state !== 'stopped';
   }
 
-  force(): void {
-    nodecg.sendMessage('bigbuttonForceFillPlayers');
+  manualAssign(btn: string, player: RunDataPlayer): void {
+    nodecg.sendMessage('bigButtonManualAssign', { btn, player });
   }
 
   reset(): void {

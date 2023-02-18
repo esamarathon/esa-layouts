@@ -1,8 +1,9 @@
 import { BigbuttonPlayerMap, Configschema } from '@esa-layouts/types/schemas';
+import { FlagCarrier } from '@esamarathon/mq-events/types';
 import clone from 'clone';
 import { differenceWith } from 'lodash';
 import { RunData, RunDataPlayer, RunDataTeam } from 'speedcontrol-util/types';
-import { DeepWritable } from 'ts-essentials';
+import type { DeepWritable } from 'ts-essentials';
 import { v4 as uuid } from 'uuid';
 import { lookupUserByID } from './server';
 import { logError } from './util/helpers';
@@ -80,98 +81,122 @@ function mapScannedPlayersToTeams(run: RunData): void {
   nodecg().log.debug('[FlagCarrier] All players from run scanned in and teams mapped');
 }
 
+async function onBigButtonTagScanned(data: FlagCarrier.TagScanned): Promise<void> {
+  // Stores a state for messages sent out at the bottom.
+  let scanState: 'success_comm' | 'success_player' | 'fail_player' | undefined;
+  // str = await searchSrcomPronouns(str);
+
+  // Get the original run from the array (before the teams were removed).
+  const currentRunInRunArray = sc.runDataArray.value
+    .find((r) => r.id === sc.runDataActiveRun.value?.id);
+
+  // Compile raw arrays of all players on the run for easy checking later.
+  const allPlayersRun = currentRunInRunArray?.teams
+    .reduce<RunDataPlayer[]>((prev, t) => prev.concat(...t.players), []);
+  const player = allPlayersRun
+    ?.find((p) => Number(p.customData.id) === Number(data.raw.user_id));
+
+  // Check if teams haven't been mapped yet and the user is a player in this run,
+  // and that the timer is stopped.
+  if (player && currentRunInRunArray && !sc.getCurrentRun()?.teams.length
+    && sc.timer.value.state === 'stopped') {
+    const playerTeam = currentRunInRunArray.teams.find((t) => t.id === player?.teamID);
+    const otherPlayersOnBtn = bigbuttonPlayerMap.value[data.flagcarrier.id] || [];
+    const otherTeamPlayersOnBtn = otherPlayersOnBtn.filter((u) => playerTeam
+      ?.players.find((p) => Number(p.customData.id) === Number(u.raw.user_id)));
+
+    if (otherPlayersOnBtn.length !== otherTeamPlayersOnBtn.length) {
+      // Error, player scanning into a button another team is already on.
+      nodecg().log.warn(
+        '[FlagCarrier] Scanned in user was player '
+          + 'but button already occupied by another team (ButtonID: %s, Name: %s)',
+        data.flagcarrier.id,
+        data.user.displayName,
+      );
+      scanState = 'fail_player';
+    } else {
+      const newMap = clone(bigbuttonPlayerMap.value);
+
+      // Delete scanned user from big button player map if already in a slot.
+      Object.entries(newMap).forEach(([key, value]) => {
+        const index = value.findIndex((p) => p.raw.user_id === data.raw.user_id);
+        if (index >= 0) {
+          newMap[key].splice(index, 1);
+        }
+      });
+
+      // Add the scanned user into the big button player map in the correct slot.
+      if (!newMap[data.flagcarrier.id]) {
+        newMap[data.flagcarrier.id] = [];
+      }
+      newMap[data.flagcarrier.id].push(data);
+      bigbuttonPlayerMap.value = clone(newMap);
+      nodecg().log.debug(
+        '[FlagCarrier] Player successfully scanned in (ButtonID: %s, Name: %s)',
+        data.flagcarrier.id,
+        data.user.displayName,
+      );
+      scanState = 'success_player';
+
+      // All players scanned in?
+      const allScannedPlayers = Object.values(bigbuttonPlayerMap.value)
+        .reduce<BigbuttonPlayerMap[0]>((prev, b) => prev.concat(...b), []);
+      const leftToScan = differenceWith(
+        allPlayersRun,
+        allScannedPlayers,
+        (x, y) => Number(x.customData.id) === Number(y.raw.user_id),
+      );
+      if (!leftToScan.length) {
+        mapScannedPlayersToTeams(currentRunInRunArray);
+      }
+    }
+  // If not a player in the run and not already a commentator, adds them as one.
+  } else if (!player) {
+    const user = await lookupUserByID(Number(data.raw.user_id));
+    const str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+    // We show a "success" message to users even if the tag was already scanned, for simplicity.
+    scanState = 'success_comm';
+    if (!commentators.value.includes(str)) {
+      commentators.value.push(str);
+      nodecg().log.debug(
+        '[FlagCarrier] Commentator successfully scanned in (ButtonID: %s, Name: %s)',
+        data.flagcarrier.id,
+        data.user.displayName,
+      );
+    }
+  }
+  nodecg().sendMessage('bigbuttonTagScanned', {
+    state: scanState,
+    data,
+  });
+}
+
+function generateUserTagMsg(btn: string, userName: string, userId: string): FlagCarrier.TagScanned {
+  return {
+    flagcarrier: {
+      id: btn,
+      group: config.flagcarrier.group,
+      time: {
+        iso: (new Date()).toISOString(),
+        unix: Date.now() / 1000,
+      },
+      uid: uuid(),
+    },
+    user: {
+      displayName: userName,
+    },
+    raw: {
+      user_id: userId,
+    },
+  };
+}
+
 function setup(): void {
   // RabbitMQ events from the "big red buttons", used for players/commentators.
   mq.evt.on('bigbuttonTagScanned', async (data) => {
     if (!config.event.online && config.event.thisEvent === 1
     && data.flagcarrier.group === 'stream1') {
-      // Stores a state for messages sent out at the bottom.
-      let scanState: 'success_comm' | 'success_player' | 'fail_player' | undefined;
-      // str = await searchSrcomPronouns(str);
-
-      // Get the original run from the array (before the teams were removed).
-      const currentRunInRunArray = sc.runDataArray.value
-        .find((r) => r.id === sc.runDataActiveRun.value?.id);
-
-      // Compile raw arrays of all players on the run for easy checking later.
-      const allPlayersRun = currentRunInRunArray?.teams
-        .reduce<RunDataPlayer[]>((prev, t) => prev.concat(...t.players), []);
-      const player = allPlayersRun
-        ?.find((p) => Number(p.customData.id) === Number(data.raw.user_id));
-
-      // Check if teams haven't been mapped yet and the user is a player in this run,
-      // and that the timer is stopped.
-      if (player && currentRunInRunArray && !sc.getCurrentRun()?.teams.length
-        && sc.timer.value.state === 'stopped') {
-        const playerTeam = currentRunInRunArray.teams.find((t) => t.id === player?.teamID);
-        const otherPlayersOnBtn = bigbuttonPlayerMap.value[data.flagcarrier.id] || [];
-        const otherTeamPlayersOnBtn = otherPlayersOnBtn.filter((u) => playerTeam
-          ?.players.find((p) => Number(p.customData.id) === Number(u.raw.user_id)));
-
-        if (otherPlayersOnBtn.length !== otherTeamPlayersOnBtn.length) {
-          // Error, player scanning into a button another team is already on.
-          nodecg().log.warn(
-            '[FlagCarrier] Scanned in user was player '
-              + 'but button already occupied by another team (ButtonID: %s, Name: %s)',
-            data.flagcarrier.id,
-            data.user.displayName,
-          );
-          scanState = 'fail_player';
-        } else {
-          const newMap = clone(bigbuttonPlayerMap.value);
-
-          // Delete scanned user from big button player map if already in a slot.
-          Object.entries(newMap).forEach(([key, value]) => {
-            const index = value.findIndex((p) => p.raw.user_id === data.raw.user_id);
-            if (index >= 0) {
-              newMap[key].splice(index, 1);
-            }
-          });
-
-          // Add the scanned user into the big button player map in the correct slot.
-          if (!newMap[data.flagcarrier.id]) {
-            newMap[data.flagcarrier.id] = [];
-          }
-          newMap[data.flagcarrier.id].push(data);
-          bigbuttonPlayerMap.value = clone(newMap);
-          nodecg().log.debug(
-            '[FlagCarrier] Player successfully scanned in (ButtonID: %s, Name: %s)',
-            data.flagcarrier.id,
-            data.user.displayName,
-          );
-          scanState = 'success_player';
-
-          // All players scanned in?
-          const allScannedPlayers = Object.values(bigbuttonPlayerMap.value)
-            .reduce<BigbuttonPlayerMap[0]>((prev, b) => prev.concat(...b), []);
-          const leftToScan = differenceWith(
-            allPlayersRun,
-            allScannedPlayers,
-            (x, y) => Number(x.customData.id) === Number(y.raw.user_id),
-          );
-          if (!leftToScan.length) {
-            mapScannedPlayersToTeams(currentRunInRunArray);
-          }
-        }
-      // If not a player in the run and not already a commentator, adds them as one.
-      } else if (!player) {
-        const user = await lookupUserByID(Number(data.raw.user_id));
-        const str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
-        // We show a "success" message to users even if the tag was already scanned, for simplicity.
-        scanState = 'success_comm';
-        if (!commentators.value.includes(str)) {
-          commentators.value.push(str);
-          nodecg().log.debug(
-            '[FlagCarrier] Commentator successfully scanned in (ButtonID: %s, Name: %s)',
-            data.flagcarrier.id,
-            data.user.displayName,
-          );
-        }
-      }
-      nodecg().sendMessage('bigbuttonTagScanned', {
-        state: scanState,
-        data,
-      });
+      await onBigButtonTagScanned(data);
     }
   });
 
@@ -184,6 +209,14 @@ function setup(): void {
       sc.runDataActiveRun.value.teams = [];
     }
   });
+
+  nodecg().listenFor(
+    'bigButtonManualAssign',
+    async ({ btn, player }: { btn: string, player: RunDataPlayer }) => {
+      const data = generateUserTagMsg(btn, player.name, player.customData.id);
+      await onBigButtonTagScanned(data);
+    },
+  );
 
   // Triggered via the dashboard to manually "finish" the scanning process,
   // which will fill in missing players/teams if needed.

@@ -100,6 +100,10 @@ export interface Configschema {
 		enabled: boolean;
 		allowedDevices?: string | [string, ...string[]] | null;
 		group: string;
+		availableButtons: {
+			id: string;
+			name: string;
+		}[];
 	};
 	offsite: {
 		enabled: boolean;

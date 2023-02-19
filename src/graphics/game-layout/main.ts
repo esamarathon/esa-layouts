@@ -80,6 +80,11 @@ const routes = [
     component: List.L_16x9_1p_2Cams,
   },
   {
+    name: '16:9 1 Player (2 Cameras, No Game)',
+    path: '/16x9-1p-2cams-nogame',
+    component: List.L_16x9_1p_2Cams_NoGame,
+  },
+  {
     name: '16:9 1 Player (Large Crowd Camera)',
     path: '/16x9-1p-largecrowdcam',
     component: List.L_16x9_1p_LargeCrowdCam,

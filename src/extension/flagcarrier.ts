@@ -5,7 +5,7 @@ import { differenceWith } from 'lodash';
 import { RunData, RunDataPlayer, RunDataTeam } from 'speedcontrol-util/types';
 import type { DeepWritable } from 'ts-essentials';
 import { v4 as uuid } from 'uuid';
-import { lookupUserByID } from './server';
+import { lookupUserByID, lookupUsersByStr } from './server';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import { mq } from './util/rabbitmq';
@@ -24,6 +24,12 @@ const buttonIds = [ // Hardcoded button names for now, used in some cases.
   '3',
   '4',
 ];
+
+async function lookupUser(data: any): Promise<any> {
+  let user = await lookupUserByID(Number(data.raw.user_id));
+  if (!user) user = await lookupUsersByStr(data.user.displayName);
+  return user;
+}
 
 // Function used if all player tags have been scanned, or a tech has forced this to run.
 function mapScannedPlayersToTeams(run: RunData): void {
@@ -152,8 +158,10 @@ async function onBigButtonTagScanned(data: FlagCarrier.TagScanned): Promise<void
     }
   // If not a player in the run and not already a commentator, adds them as one.
   } else if (!player) {
-    const user = await lookupUserByID(Number(data.raw.user_id));
-    const str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+    const user = await lookupUser(data);
+    let str = '';
+    if (user) str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+    else str = data.user.displayName;
     // We show a "success" message to users even if the tag was already scanned, for simplicity.
     scanState = 'success_comm';
     if (!commentators.value.includes(str)) {
@@ -261,8 +269,10 @@ function setup(): void {
     if (req.body.position === 'reader' && action.startsWith('login')) {
       try {
         const data = req.body.tag_data;
-        const user = await lookupUserByID(data.user_id);
-        const str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+        const user = await lookupUser(data);
+        let str = '';
+        if (user) str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+        else str = data.user.displayName;
         // donationReader.value = await searchSrcomPronouns(str);
         donationReader.value = str;
         nodecg().log.info(

@@ -25,9 +25,9 @@ const buttonIds = [ // Hardcoded button names for now, used in some cases.
   '4',
 ];
 
-async function lookupUser(data: any): Promise<any> {
-  let user = await lookupUserByID(Number(data.raw.user_id));
-  if (!user) [user] = await lookupUsersByStr(data.user.displayName);
+async function lookupUser(userId: string, displayName: string): Promise<any> {
+  let user = await lookupUserByID(Number(userId));
+  if (!user) [user] = await lookupUsersByStr(displayName);
   return user;
 }
 
@@ -158,7 +158,7 @@ async function onBigButtonTagScanned(data: FlagCarrier.TagScanned): Promise<void
     }
   // If not a player in the run and not already a commentator, adds them as one.
   } else if (!player) {
-    const user = await lookupUser(data);
+    const user = await lookupUser(data.raw.user_id, data.user.displayName);
     let str = '';
     if (user) {
       str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
@@ -272,7 +272,7 @@ function setup(): void {
     if (req.body.position === 'reader' && action.startsWith('login')) {
       try {
         const data = req.body.tag_data;
-        const user = await lookupUser(data);
+        const user = await lookupUser(data.user_id, data.display_name);
         let str = '';
         if (user) str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
         else str = data.user.displayName;

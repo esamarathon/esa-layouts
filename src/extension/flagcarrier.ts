@@ -27,7 +27,7 @@ const buttonIds = [ // Hardcoded button names for now, used in some cases.
 
 async function lookupUser(data: any): Promise<any> {
   let user = await lookupUserByID(Number(data.raw.user_id));
-  if (!user) user = await lookupUsersByStr(data.user.displayName);
+  if (!user) [user] = await lookupUsersByStr(data.user.displayName);
   return user;
 }
 
@@ -160,8 +160,11 @@ async function onBigButtonTagScanned(data: FlagCarrier.TagScanned): Promise<void
   } else if (!player) {
     const user = await lookupUser(data);
     let str = '';
-    if (user) str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
-    else str = data.user.displayName;
+    if (user) {
+      str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+    } else {
+      str = data.user.displayName;
+    }
     // We show a "success" message to users even if the tag was already scanned, for simplicity.
     scanState = 'success_comm';
     if (!commentators.value.includes(str)) {

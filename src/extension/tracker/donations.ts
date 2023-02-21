@@ -40,7 +40,16 @@ async function updateToReadDonations(): Promise<void> {
         cookies: getCookies(),
       },
     );
+    if (!resp.statusCode || resp.statusCode >= 300 || resp.statusCode < 200) {
+      throw new Error(`status code ${resp.statusCode ?? 'unknown'}`);
+    }
+    if (!Array.isArray(resp.body)) {
+      throw new Error('received non-array type');
+    }
     const currentDonations = processToReadDonations(resp.body);
+    if (!Array.isArray(currentDonations)) {
+      throw new Error('currentDonations result was non-array type');
+    }
     donationsToRead.value = currentDonations;
   } catch (err) {
     nodecg().log.warn('[Tracker] Error updating to read donations');

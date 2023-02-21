@@ -36,7 +36,16 @@ async function updatePrizes(): Promise<void> {
         cookies: getCookies(),
       },
     );
+    if (!resp.statusCode || resp.statusCode >= 300 || resp.statusCode < 200) {
+      throw new Error(`status code ${resp.statusCode ?? 'unknown'}`);
+    }
+    if (!Array.isArray(resp.body)) {
+      throw new Error('received non-array type');
+    }
     const currentPrizes = processRawPrizes(resp.body);
+    if (!Array.isArray(currentPrizes)) {
+      throw new Error('currentPrizes result was non-array type');
+    }
     prizes.value = currentPrizes;
   } catch (err) {
     nodecg().log.warn('[Tracker] Error updating prizes');

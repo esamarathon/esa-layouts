@@ -21,8 +21,12 @@
         'font-size': '15vh',
       }"
     >
+      <template v-if="therunggMessage">
+        <span :style="{ 'font-size': '0.6em' }">therun.gg Message:</span>
+        {{ therunggMessage }}
+      </template>
       <!-- Tag scanning messages. -->
-      <template v-if="tagScanned">
+      <template v-else-if="tagScanned">
         <template v-if="tagScanned === 'success_comm'">
           <div>✔</div>
           <div>
@@ -85,12 +89,12 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator';
-import { StreamDeckData, DonationsToRead } from '@esa-layouts/types/schemas';
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
+import { DonationsToRead, StreamDeckData } from '@esa-layouts/types/schemas';
 import { FlagCarrier } from '@esamarathon/mq-events/types';
-import { Timer } from 'speedcontrol-util/types';
 import clone from 'clone';
+import { Timer } from 'speedcontrol-util/types';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 
 @Component
 export default class extends Vue {
@@ -101,7 +105,8 @@ export default class extends Vue {
   donationsToReadTO = 0;
   tagScanned: 'success_comm' | 'success_player' | 'fail_player' | boolean = false;
   scannedData: FlagCarrier.TagScanned | null = null;
-  tagScanTimeout!: number;
+  messageTimeout!: number;
+  therunggMessage: string | null = null;
 
   // Add artificial delay to unread donations, unless it's emptied, then just empty ours too.
   @Watch('donationsToReadR')
@@ -165,15 +170,26 @@ export default class extends Vue {
         state?: 'success_comm' | 'success_player' | 'fail_player',
         data: FlagCarrier.TagScanned,
       }) => {
-        window.clearTimeout(this.tagScanTimeout);
+        window.clearTimeout(this.messageTimeout);
+        this.therunggMessage = null;
         this.tagScanned = state || true;
         this.scannedData = data;
-        this.tagScanTimeout = window.setTimeout(() => {
+        this.messageTimeout = window.setTimeout(() => {
           this.tagScanned = false;
           this.scannedData = null;
         }, 7000);
       },
     );
+
+    nodecg.listenFor('therunggMessage', (msg: string) => {
+      window.clearTimeout(this.messageTimeout);
+      this.tagScanned = false;
+      this.scannedData = null;
+      this.therunggMessage = msg;
+      this.messageTimeout = window.setTimeout(() => {
+        this.therunggMessage = null;
+      }, 10 * 1000);
+    });
   }
 }
 </script>

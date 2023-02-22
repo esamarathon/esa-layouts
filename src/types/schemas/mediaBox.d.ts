@@ -18,7 +18,7 @@ export interface MediaBox1 {
 	rotation: Rotation;
 	rotationApplicable: Rotation;
 	alertQueue: {
-		type: 'donation' | 'subscription' | 'cheer' | 'merch';
+		type: 'donation' | 'subscription' | 'cheer' | 'merch' | 'therungg';
 		id: string;
 		data:
 			| {
@@ -39,10 +39,13 @@ export interface MediaBox1 {
 					user: string;
 					productName: string;
 					imgURL: string;
+			  }
+			| {
+					msg: string;
 			  };
 	}[];
 	paused: {
-		type: 'image' | 'prize' | 'prize_generic' | 'donation' | 'subscription' | 'cheer' | 'merch';
+		type: 'image' | 'prize' | 'prize_generic' | 'donation' | 'subscription' | 'cheer' | 'merch' | 'therungg';
 		id: string;
 		mediaUUID: string;
 		index: number;
@@ -50,7 +53,7 @@ export interface MediaBox1 {
 		timeElapsed: number;
 	} | null;
 	current: {
-		type: 'image' | 'prize' | 'prize_generic' | 'donation' | 'subscription' | 'cheer' | 'merch';
+		type: 'image' | 'prize' | 'prize_generic' | 'donation' | 'subscription' | 'cheer' | 'merch' | 'therungg';
 		id: string;
 		mediaUUID: string;
 		index: number;

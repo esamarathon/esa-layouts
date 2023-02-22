@@ -42,7 +42,8 @@
     "socket.io-client": "^4.5.4",
     "speedcontrol-util": "github:speedcontrol/speedcontrol-util.git#build",
     "streamdeck-util": "^0.4.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "ws": "^8.12.1"
   },
   "devDependencies": {
     "@alvancamp/test-nodecg-types": "^1.9.31",
@@ -59,6 +60,7 @@
     "@types/sharp": "^0.31.1",
     "@types/uuid": "^9.0.0",
     "@types/webpack-env": "^1.18.0",
+    "@types/ws": "^8.5.4",
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
     "@vue/component-compiler-utils": "^3.3.0",

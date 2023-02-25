@@ -122,4 +122,6 @@ function connect(): void {
   });
 }
 
-connect();
+if (nodecg().bundleConfig.event.thisEvent === 1) {
+  connect();
+}

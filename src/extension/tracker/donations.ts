@@ -51,6 +51,10 @@ async function updateToReadDonations(): Promise<void> {
       throw new Error('currentDonations result was non-array type');
     }
     donationsToRead.value = currentDonations;
+    nodecg().log.debug(
+      '[Tracker] donationsToRead updated (IDs: %s)',
+      donationsToRead.value.map((d) => d.id).join(', '),
+    );
   } catch (err) {
     nodecg().log.warn('[Tracker] Error updating to read donations');
     nodecg().log.debug('[Tracker] Error updating to read donations:', err);

@@ -63,10 +63,7 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
       if (!config.event.online && config.flagcarrier.enabled) {
         bigbuttonPlayerMap.value = {};
         // TODO: Reselecting the current run would overwrite these, but not much I can do right now!
-        // TODO: Find the NodeCG fix to this "nextTick" workaround.
-        process.nextTick(() => {
-          if (sc.runDataActiveRun.value) sc.runDataActiveRun.value.teams = [];
-        });
+        sc.runDataActiveRun.value.teams = [];
         nodecg().log.debug('[Misc] Removed active run teams on run change');
       }
       nodecg().log.debug('[Misc] Cleared commentators and big button player mapping');

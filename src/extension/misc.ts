@@ -250,7 +250,13 @@ if (config.tracker.donationTotalInTitle) {
 async function formatScheduleImportedPronouns(): Promise<void> {
   nodecg().log.info('[Misc] Schedule reimported, formatting pronouns');
   const runs = sc.getRunDataArray();
+  const currentRunId = sc.getCurrentRun()?.id;
   for (const run of runs) {
+	// Do not modify the active run.
+	if (run.id === currentRunId) {
+      // eslint-disable-next-line no-continue
+      continue;
+    }
     const { teams } = run;
     teams.forEach((team, x) => {
       team.players.forEach((player, y) => {

@@ -26,9 +26,13 @@ const buttonIds = [ // Hardcoded button names for now, used in some cases.
 ];
 
 async function lookupUser(userId: string, displayName: string): Promise<any> {
-  let user = await lookupUserByID(Number(userId));
-  if (!user) [user] = await lookupUsersByStr(displayName);
-  return user;
+  try {
+    let user = await lookupUserByID(Number(userId));
+    if (!user) [user] = await lookupUsersByStr(displayName);
+    return user;
+  } catch (err) {
+    return undefined;
+  }
 }
 
 // Function used if all player tags have been scanned, or a tech has forced this to run.

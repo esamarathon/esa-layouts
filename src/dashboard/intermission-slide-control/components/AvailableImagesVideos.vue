@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import NodeCGTypes from '@alvancamp/test-nodecg-types';
+import NodeCGTypes from '@nodecg/types';
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
 import { IntermissionSlides } from '@esa-layouts/types/schemas';
 import MediaCard from '@esa-layouts/_misc/components/MediaCard.vue';

@@ -122,7 +122,7 @@
 </template>
 
 <script lang="ts">
-import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import type NodeCGTypes from '@nodecg/types';
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
 import { ReaderIntroduction } from '@esa-layouts/types/schemas';
 import MediaBox from '@shared/graphics/mediabox';

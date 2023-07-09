@@ -1,5 +1,5 @@
-import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import { Configschema } from '@esa-layouts/types/schemas';
+import type NodeCGTypes from '@nodecg/types';
 
 let nodecg: NodeCGTypes.ServerAPI<Configschema>;
 

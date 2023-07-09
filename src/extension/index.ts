@@ -5,9 +5,9 @@
 require('module-alias').addAlias('@esa-layouts', require('path').join(__dirname, '.'));
 require('module-alias').addAlias('@shared', require('path').join(__dirname, '../shared'));
 
-import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import { ExtensionReturn } from '@esa-layouts/types';
 import type { Configschema } from '@esa-layouts/types/schemas/configschema';
+import type NodeCGTypes from '@nodecg/types';
 import { set } from './util/nodecg';
 
 export = (nodecg: NodeCGTypes.ServerAPI<Configschema>): ExtensionReturn => {

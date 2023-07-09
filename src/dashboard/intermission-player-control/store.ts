@@ -1,5 +1,5 @@
-import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import type { VideoPlayer } from '@esa-layouts/types/schemas';
+import type NodeCGTypes from '@nodecg/types';
 import clone from 'clone';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';

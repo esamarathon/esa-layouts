@@ -1,4 +1,4 @@
-import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import type NodeCGTypes from '@nodecg/types';
 import clone from 'clone';
 import { writeFile } from 'fs/promises';
 import { orderBy } from 'lodash';

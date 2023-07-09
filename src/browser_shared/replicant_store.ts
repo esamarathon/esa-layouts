@@ -1,5 +1,5 @@
-import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import type { Bids, BigbuttonPlayerMap, Commentators, Countdown, CurrentRunDelay, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, IntermissionSlides, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import type NodeCGTypes from '@nodecg/types';
 import clone from 'clone';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import { RunDataActiveRun, RunDataArray, Timer } from 'speedcontrol-util/types';

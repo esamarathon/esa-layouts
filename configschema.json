@@ -576,11 +576,49 @@
         "group": {
           "type": "string",
           "default": "stream1"
+        },
+        "availableButtons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ]
+          },
+          "default": [
+            {
+              "id": "1",
+              "name": "PC 1"
+            },
+            {
+              "id": "2",
+              "name": "PC 2"
+            },
+            {
+              "id": "3",
+              "name": "Console 1"
+            },
+            {
+              "id": "4",
+              "name": "Console 2"
+            }
+          ]
         }
       },
       "required": [
         "enabled",
-        "group"
+        "group",
+        "availableButtons"
       ]
     },
     "offsite": {

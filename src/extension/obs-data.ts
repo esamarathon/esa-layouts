@@ -1,4 +1,3 @@
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import clone from 'clone';
 import sharp from 'sharp';
 import { startPlaylist } from './intermission-player';
@@ -10,8 +9,8 @@ import { obsData, readerIntroduction, videoPlayer } from './util/replicants';
 import { sc } from './util/speedcontrol';
 import sd from './util/streamdeck';
 
-const evtConfig = (nodecg().bundleConfig as Configschema).event;
-const config = (nodecg().bundleConfig as Configschema).obs;
+const evtConfig = nodecg().bundleConfig.event;
+const config = nodecg().bundleConfig.obs;
 
 /**
  * Generate the text needed to be displayed on the "Scene Cycle" button.

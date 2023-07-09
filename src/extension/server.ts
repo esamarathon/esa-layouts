@@ -1,10 +1,9 @@
-import { Configschema } from '@esa-layouts/types/schemas';
 import needle from 'needle';
 import { get as nodecg } from './util/nodecg';
 import { horaroImportStatus, oengusImportStatus } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
-const config = nodecg().bundleConfig as Configschema;
+const config = nodecg().bundleConfig;
 
 export async function lookupUserByID(id: number): Promise<any> {
   if (!config.server.enabled) throw new Error('server integration disabled');

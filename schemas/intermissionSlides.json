@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "definitions": {
+    "types": {
+      "type": "string",
+      "enum": [
+        "UpcomingRuns",
+        "RandomBid",
+        "RandomPrize",
+        "Media"
+      ]
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "rotation": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "$ref": "#/definitions/types"
+          },
+          "id": {
+            "type": "string"
+          },
+          "mediaUUID": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "mediaUUID"
+        ]
+      },
+      "default": []
+    },
+    "current": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "$ref": "#/definitions/types"
+            },
+            "id": {
+              "type": "string"
+            },
+            "mediaUUID": {
+              "type": "string"
+            },
+            "bidId": {
+              "type": "number"
+            },
+            "prizeId": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "type",
+            "id",
+            "mediaUUID"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "rotation",
+    "current"
+  ]
+}

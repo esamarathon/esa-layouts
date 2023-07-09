@@ -40,13 +40,15 @@
     "needle": "^3.2.0",
     "sharp": "^0.31.3",
     "socket.io-client": "^4.5.4",
-    "speedcontrol-util": "^0.6.0-RC7",
+    "speedcontrol-util": "github:speedcontrol/speedcontrol-util.git#build",
     "streamdeck-util": "^0.4.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "ws": "^8.12.1"
   },
   "devDependencies": {
+    "@alvancamp/test-nodecg-types": "1.9.31",
     "@fontsource/barlow-condensed": "^4.5.9",
-    "@fontsource/montserrat": "^4.5.13",
+    "@fontsource/montserrat": "^4.5.14",
     "@fontsource/roboto": "^4.5.8",
     "@mdi/font": "^7.1.96",
     "@types/async": "^3.2.16",
@@ -58,8 +60,9 @@
     "@types/sharp": "^0.31.1",
     "@types/uuid": "^9.0.0",
     "@types/webpack-env": "^1.18.0",
-    "@typescript-eslint/eslint-plugin": "^5.48.2",
-    "@typescript-eslint/parser": "^5.48.2",
+    "@types/ws": "^8.5.4",
+    "@typescript-eslint/eslint-plugin": "^5.49.0",
+    "@typescript-eslint/parser": "^5.49.0",
     "@vue/component-compiler-utils": "^3.3.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.3",
@@ -79,12 +82,13 @@
     "gsap": "^3.11.4",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.7.2",
-    "nodecg-cli": "^8.5.0",
+    "nodecg-cli": "^8.6.0",
     "npm-run-all": "^4.1.5",
     "sass": "~1.32",
     "sass-loader": "^12.6.0",
     "style-loader": "^3.3.1",
     "trash-cli": "^5.0.0",
+    "ts-essentials": "^9.3.0",
     "ts-loader": "^9.4.2",
     "tsconfig-paths-webpack-plugin": "^3.5.2",
     "typescript": "^4.9.4",
@@ -109,7 +113,7 @@
     "webpack-livereload-plugin": "^3.0.2"
   },
   "nodecg": {
-    "compatibleRange": "^1.9.0",
+    "compatibleRange": "^1.9.0||^2",
     "bundleDependencies": {
       "nodecg-speedcontrol": "^2.4.0"
     },
@@ -127,6 +131,14 @@
         "title": "Media Box Control",
         "width": 3,
         "file": "media-box-control.html",
+        "workspace": "Z2 - ESA Advanced",
+        "headerColor": "#c49215"
+      },
+      {
+        "name": "intermission-slide-control",
+        "title": "Intermission Slide Control",
+        "width": 3,
+        "file": "intermission-slide-control.html",
         "workspace": "Z2 - ESA Advanced",
         "headerColor": "#c49215"
       },

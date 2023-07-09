@@ -13,10 +13,10 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
-import { TwitchCommercialTimer } from 'speedcontrol-util/types/speedcontrol/schemas';
 import gsap from 'gsap';
+import { TwitchCommercialTimer } from 'speedcontrol-util/types/schemas';
+import { Component, Vue } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 
 // Makes sure the tween doesn't break when not visible.
 // Not the best option for this, but fine for now.

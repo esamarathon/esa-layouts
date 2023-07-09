@@ -14,7 +14,7 @@ import waitForReplicants from './store';
 Vue.use(VueRouter);
 
 const routes = [
-  {
+  /* {
     name: '(SWCF) 16:9 2 Feeds (Dance Pad)',
     path: '/swcf_16x9-2feeds-dancepad',
     component: List.L_SWCF_16x9_2Feeds_Dancepad,
@@ -28,7 +28,7 @@ const routes = [
     name: '(SWCF) 16:9 4 Player (Bingo)',
     path: '/swcf_16x9-4p-bingo',
     component: List.L_SWCF_16x9_4p_Bingo,
-  },
+  }, */
   {
     name: '4:3 1 Player',
     path: '/4x3-1p',
@@ -80,6 +80,11 @@ const routes = [
     component: List.L_16x9_1p_2Cams,
   },
   {
+    name: '16:9 1 Player (2 Cameras, No Game)',
+    path: '/16x9-1p-2cams-nogame',
+    component: List.L_16x9_1p_2Cams_NoGame,
+  },
+  {
     name: '16:9 1 Player (Large Crowd Camera)',
     path: '/16x9-1p-largecrowdcam',
     component: List.L_16x9_1p_LargeCrowdCam,
@@ -93,6 +98,11 @@ const routes = [
     name: '16:9 2 Player',
     path: '/16x9-2p',
     component: List.L_16x9_2p,
+  },
+  {
+    name: '16:9 2 Player (Bingo)',
+    path: '/16x9-2p-bingo',
+    component: List.L_16x9_2p_Bingo,
   },
   {
     name: '16:9 2 Player (HEK)',

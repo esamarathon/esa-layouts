@@ -1,4 +1,3 @@
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import AudioNormaliser from '@shared/extension/audio-normaliser';
 import type { RunData } from 'speedcontrol-util/types';
 import { lookupUsersByStr } from './server';
@@ -10,7 +9,7 @@ import { mq } from './util/rabbitmq';
 import { bigbuttonPlayerMap, commentators, donationReader, donationTotal, horaroImportStatus, oengusImportStatus, otherStreamData, serverTimestamp, twitchAPIData, twitchChannelInfo, upcomingRunID } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
-const config = (nodecg().bundleConfig as Configschema);
+const config = nodecg().bundleConfig;
 new AudioNormaliser(nodecg()); // eslint-disable-line no-new
 
 // Increase max listeners on the nodecg-speedcontrol timer a bit to stop errors.
@@ -185,7 +184,7 @@ async function changeTwitchMetadata(title?: string, gameId?: string): Promise<vo
         const run = sc.getCurrentRun()?.game;
         return `{{total}}/$50,000 - Souls Winter !Charity Fest${run ? ` - ${run}` : ''}`;
       }
-      return '🔴 ESA Summer 2022 - {{total}}/$115,000 in aid of Save the Children';
+      return '🔴 ESA Winter 2023 - {{total}}/$135,000 in aid of Alzheimer\'s Game Over';
     })();
     let t = title || fallback;
     if (t) {

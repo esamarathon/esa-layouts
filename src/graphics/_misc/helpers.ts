@@ -1,15 +1,15 @@
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
+import { Configschema } from '@esa-layouts/types/schemas';
+import { DeepWritable } from 'ts-essentials';
 
-const config = nodecg.bundleConfig as Configschema;
+const config = nodecg.bundleConfig;
 
 /**
  * Returns the current event short according to the configuration file.
  */
 export function getCurrentEventShort(): string {
-  if (!Array.isArray(config.event.shorts)) {
-    return config.event.shorts;
-  }
-  return config.event.shorts[config.event.thisEvent - 1];
+  const cfg = (config as DeepWritable<Configschema>).event.shorts;
+  if (!Array.isArray(cfg)) return cfg;
+  return cfg[config.event.thisEvent - 1];
 }
 
 /**

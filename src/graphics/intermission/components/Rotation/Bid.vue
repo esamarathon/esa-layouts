@@ -20,7 +20,7 @@
       </div>
       <div :style="{ 'font-size': '40px' }">
         <template v-if="!bid.war">
-          {{ formatUSD(bid.total) }}/{{ formatUSD(bid.goal) }}
+          {{ formatUSD(bid.total) }}/{{ bid.goal ? formatUSD(bid.goal) : '?' }}
         </template>
         <template v-else>
           <div v-if="bid.options.length">
@@ -44,9 +44,10 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { Bids, IntermissionSlides } from '@esa-layouts/types/schemas';
 import { Tracker } from '@shared/types';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 import { formatUSD } from '../../../_misc/helpers';
 import Container from '../Container.vue';
 
@@ -56,8 +57,13 @@ import Container from '../Container.vue';
   },
 })
 export default class extends Vue {
-  @State('currentBid') bid!: Tracker.FormattedBid | undefined;
+  @State bids!: Bids;
+  @Prop({ type: Object, required: true }) readonly current!: IntermissionSlides['current'];
   formatUSD = formatUSD;
+
+  get bid(): Tracker.FormattedBid | undefined {
+    return this.bids.find((b) => b.id === this.current?.bidId);
+  }
 
   get runTitle(): string {
     if (this.bid) {

@@ -1,7 +1,6 @@
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import type { Bids, Commentators, CurrentRunDelay, DelayedTimer, DonationReader, GameLayouts, MediaBox, NameCycle, NotableDonations, Prizes } from '@esa-layouts/types/schemas'; // eslint-disable-line object-curly-newline, max-len
-import type { Asset } from '@shared/types';
 import clone from 'clone';
-import type { ReplicantBrowser } from 'nodecg/types/browser';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import type { RunDataActiveRun, Timer } from 'speedcontrol-util/types';
 import Vue from 'vue';
@@ -12,20 +11,20 @@ Vue.use(Vuex);
 
 // Replicants and their types
 const reps: {
-  bids: ReplicantBrowser<Bids>;
-  commentators: ReplicantBrowser<Commentators>;
-  currentRunDelay: ReplicantBrowser<CurrentRunDelay>;
-  delayedTimer: ReplicantBrowser<DelayedTimer>;
-  donationReader: ReplicantBrowser<DonationReader>;
-  gameLayouts: ReplicantBrowser<GameLayouts>;
-  mediaBox: ReplicantBrowser<MediaBox>;
-  mediaBoxImages: ReplicantBrowser<Asset[]>;
-  nameCycle: ReplicantBrowser<NameCycle>;
-  notableDonations: ReplicantBrowser<NotableDonations>;
-  prizes: ReplicantBrowser<Prizes>;
-  runDataActiveRun: ReplicantBrowser<RunDataActiveRun>;
-  timer: ReplicantBrowser<Timer>;
-  [k: string]: ReplicantBrowser<unknown>;
+  bids: NodeCGTypes.ClientReplicant<Bids>;
+  commentators: NodeCGTypes.ClientReplicant<Commentators>;
+  currentRunDelay: NodeCGTypes.ClientReplicant<CurrentRunDelay>;
+  delayedTimer: NodeCGTypes.ClientReplicant<DelayedTimer>;
+  donationReader: NodeCGTypes.ClientReplicant<DonationReader>;
+  gameLayouts: NodeCGTypes.ClientReplicant<GameLayouts>;
+  mediaBox: NodeCGTypes.ClientReplicant<MediaBox>;
+  mediaBoxImages: NodeCGTypes.ClientReplicant<NodeCGTypes.AssetFile[]>;
+  nameCycle: NodeCGTypes.ClientReplicant<NameCycle>;
+  notableDonations: NodeCGTypes.ClientReplicant<NotableDonations>;
+  prizes: NodeCGTypes.ClientReplicant<Prizes>;
+  runDataActiveRun: NodeCGTypes.ClientReplicant<RunDataActiveRun>;
+  timer: NodeCGTypes.ClientReplicant<Timer>;
+  [k: string]: NodeCGTypes.ClientReplicant<unknown>;
 } = {
   bids: nodecg.Replicant('bids'),
   commentators: nodecg.Replicant('commentators'),

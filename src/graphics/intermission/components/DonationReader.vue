@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import { Commentators, Configschema, DonationReader } from '@esa-layouts/types/schemas';
+import { Commentators, DonationReader } from '@esa-layouts/types/schemas';
 import { Component, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 
@@ -55,7 +55,7 @@ import { State } from 'vuex-class';
 export default class extends Vue {
   @State readonly commentators!: Commentators;
   @State donationReader!: DonationReader;
-  theme = (nodecg.bundleConfig as Configschema).event.theme;
+  theme = nodecg.bundleConfig.event.theme;
 
   // For SWCF
   get comms(): { name: string, pronouns?: string }[] {

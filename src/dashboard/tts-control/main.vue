@@ -39,16 +39,15 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator';
-import { TtsVoices } from '@esa-layouts/types/schemas';
-import { Configschema } from '@esa-layouts/types/schemas/configschema';
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
+import { TtsVoices } from '@esa-layouts/types/schemas';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { storeModule } from './store';
 
 @Component
 export default class extends Vue {
   @replicantNS.State((s) => s.reps.ttsVoices) readonly voices!: TtsVoices;
-  config = (nodecg.bundleConfig as Configschema).tts;
+  config = nodecg.bundleConfig.tts;
 
   get selected(): TtsVoices['selected'] {
     return this.voices.selected;

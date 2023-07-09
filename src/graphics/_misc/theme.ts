@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-import { Configschema } from '@esa-layouts/types/schemas/configschema';
-
-const { theme } = (nodecg.bundleConfig as Configschema).event;
+const { theme } = nodecg.bundleConfig.event;
 const { default: defaultTheme } = require('./themes/default.theme.css');
 const { default: together } = require('./themes/together.theme.css');
 const { default: coronarelief } = require('./themes/coronarelief.theme.css');
@@ -12,6 +10,7 @@ const { default: uksgsu } = require('./themes/uksgsu.theme.css');
 const { default: uksga } = require('./themes/uksga.theme.css');
 const { default: uksgw } = require('./themes/uksgw.theme.css');
 const { default: uksgred } = require('./themes/uksgred.theme.css');
+const { default: uksggreen } = require('./themes/uksggreen.theme.css');
 const { default: summer } = require('./themes/summer.theme.css');
 const { default: winter } = require('./themes/winter.theme.css');
 const { default: swcf } = require('./themes/swcf.theme.css');
@@ -44,6 +43,10 @@ switch (theme) {
   case 'uksgred':
     uksg.use();
     uksgred.use();
+    break;
+  case 'uksggreen':
+    uksg.use();
+    uksggreen.use();
     break;
   case 'summer':
     summer.use();

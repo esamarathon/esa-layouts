@@ -11,7 +11,11 @@
   </v-app>
   <v-app v-else>
     <!-- Big button tag scanning alerts. -->
-    <v-alert v-if="['success_player', 'success_comm'].includes(tagScanned)" type="success">
+    <v-alert
+      v-if="typeof tagScanned !== 'boolean'
+        && ['success_player', 'success_comm'].includes(tagScanned)"
+      type="success"
+    >
       <template v-if="tagScanned === 'success_player'">
         {{ scannedData.user.displayName }} scanned in as player on button
         {{ scannedData.flagcarrier.id }}
@@ -63,25 +67,27 @@
         </template>
         <div v-else>No button to player mapping to show.</div>
       </div>
-      <v-btn
-        class="mt-2"
-        color="red"
-        @click="force"
-        block
-        :disabled="disableChanges || !leftToScan.length"
-      >
-        <v-icon class="mr-2">mdi-alert</v-icon> Fill open slots
-      </v-btn>
       <v-btn class="mt-2" @click="reset" block :disabled="disableChanges">
         Reset all player tag scanning
       </v-btn>
+      <div
+        v-show="leftToScan.length"
+        v-for="btn of config.flagcarrier.availableButtons"
+        :key="btn.id"
+        class="mt-2"
+      >
+        Manually Assign to {{ btn.id }} ({{ btn.name }})<br>
+        <v-btn v-for="p of leftToScan" :key="p.id" @click="manualAssign(btn.id, p)">
+          {{ p.name }}
+        </v-btn>
+      </div>
     </div>
   </v-app>
 </template>
 
 <script lang="ts">
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
-import { BigbuttonPlayerMap, Configschema } from '@esa-layouts/types/schemas';
+import { BigbuttonPlayerMap } from '@esa-layouts/types/schemas';
 import { FlagCarrier } from '@esamarathon/mq-events/types';
 import { differenceWith } from 'lodash';
 import { RunData, RunDataActiveRun, RunDataArray, RunDataPlayer, Timer } from 'speedcontrol-util/types';
@@ -93,7 +99,7 @@ export default class extends Vue {
   @replicantNS.State((s) => s.reps.runDataArray) readonly runArray!: RunDataArray;
   @replicantNS.State((s) => s.reps.runDataActiveRun) readonly activeRun!: RunDataActiveRun;
   @replicantNS.State((s) => s.reps.bigbuttonPlayerMap) readonly bbpMap!: BigbuttonPlayerMap;
-  config = nodecg.bundleConfig as Configschema;
+  config = nodecg.bundleConfig;
   tagScanned: 'success_comm' | 'success_player' | 'fail_player' | boolean = false;
   scannedData: FlagCarrier.TagScanned | null = null;
   tagScanTimeout!: number;
@@ -126,8 +132,8 @@ export default class extends Vue {
     return this.timer.state !== 'stopped';
   }
 
-  force(): void {
-    nodecg.sendMessage('bigbuttonForceFillPlayers');
+  manualAssign(btn: string, player: RunDataPlayer): void {
+    nodecg.sendMessage('bigButtonManualAssign', { btn, player });
   }
 
   reset(): void {

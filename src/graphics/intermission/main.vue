@@ -106,7 +106,6 @@ import { RunData } from 'speedcontrol-util/types';
 import { Component, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 // import { generateClipPath } from '../_misc/cut-background';
-import { Configschema } from '@esa-layouts/types/schemas';
 import MediaBox from '@shared/graphics/mediabox';
 import { getZoomAmountCSS } from '../_misc/helpers';
 import CommercialTimer from './components/CommercialTimer.vue';
@@ -129,7 +128,7 @@ export default class extends Vue {
   @State nextRuns!: RunData[];
   clipPath = 'unset';
   zoom = getZoomAmountCSS();
-  theme = (nodecg.bundleConfig as Configschema).event.theme;
+  theme = nodecg.bundleConfig.event.theme;
 
   mounted(): void {
     // Bring this back if we actually gain some cameras on this layout.

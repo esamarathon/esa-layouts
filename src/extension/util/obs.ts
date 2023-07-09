@@ -1,10 +1,9 @@
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import OBS from '@shared/extension/obs';
 import { logError } from './helpers';
 import { get as nodecg } from './nodecg';
 import { currentRunDelay, obsData } from './replicants';
 
-const config = (nodecg().bundleConfig as Configschema).obs;
+const config = nodecg().bundleConfig.obs;
 const obs = new OBS(nodecg(), config);
 let sceneChangeCodeTriggered = 0;
 

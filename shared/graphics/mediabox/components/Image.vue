@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import type NodeCGTypes from '@nodecg/types';
 import { Component, Vue } from 'vue-property-decorator';
 import { replicantNS } from '../../../browser_shared/replicant_store';
 import { MediaBox } from '../../../types/schemas';

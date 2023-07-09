@@ -1,4 +1,4 @@
-import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import type NodeCGTypes from '@nodecg/types';
 import osc from 'osc';
 import { TypedEmitter } from 'tiny-typed-emitter';
 import { X32 as X32Types } from '../../../types';

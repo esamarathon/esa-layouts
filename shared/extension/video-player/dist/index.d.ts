@@ -1,4 +1,4 @@
-import NodeCGTypes from '@alvancamp/test-nodecg-types';
+import NodeCGTypes from '@nodecg/types';
 import { TypedEmitter } from 'tiny-typed-emitter';
 import { OBS as OBSTypes, VideoPlaylist } from '../../../types';
 import OBS from '../../obs';

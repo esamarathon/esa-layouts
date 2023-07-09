@@ -1,4 +1,4 @@
-import NodeCGTypes from '@alvancamp/test-nodecg-types';
+import NodeCGTypes from '@nodecg/types';
 import { EventEmitter } from 'events';
 import { XKeys, XKeysWatcher } from 'xkeys';
 import { XKeys as XKeysTypes } from '../../../types';

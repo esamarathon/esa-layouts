@@ -1,4 +1,4 @@
-import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import type NodeCGTypes from '@nodecg/types';
 import type { RabbitMQ } from '../../../types';
 import { OBS as OBSTypes } from '../../../types';
 import type { MediaBox as MediaBoxRep, Prizes } from '../../../types/schemas';

@@ -1,5 +1,5 @@
-import type NodeCGTypes from '@alvancamp/test-nodecg-types';
-import NodeCG from '@alvancamp/test-nodecg-types';
+import type NodeCGTypes from '@nodecg/types';
+import NodeCG from '@nodecg/types';
 import { exec as execCb } from 'child_process';
 import clone from 'clone';
 import { copyFile, ensureDir } from 'fs-extra';

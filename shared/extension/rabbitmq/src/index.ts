@@ -1,5 +1,5 @@
-import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import type { BigButton, FlagCarrier, OmnibarModeration, Tracker } from '@esamarathon/mq-events/types';
+import type NodeCGTypes from '@nodecg/types';
 import type { ChannelWrapper } from 'amqp-connection-manager';
 import amqpConnectionManager from 'amqp-connection-manager';
 import type { ConfirmChannel, Message } from 'amqplib';

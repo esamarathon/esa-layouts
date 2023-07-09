@@ -1,4 +1,4 @@
-import NodeCGTypes from '@alvancamp/test-nodecg-types';
+import NodeCGTypes from '@nodecg/types';
 import { getVideoDurationInSeconds } from 'get-video-duration';
 import { join } from 'path';
 import { cwd } from 'process';

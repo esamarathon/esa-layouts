@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import type NodeCGTypes from '@nodecg/types';
 import { EventEmitter } from 'events';
 import ObsWebsocketJs from 'obs-websocket-js';
 import { OBS as OBSTypes } from '../../../types';

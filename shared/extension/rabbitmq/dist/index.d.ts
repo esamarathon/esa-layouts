@@ -1,4 +1,4 @@
-import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import type NodeCGTypes from '@nodecg/types';
 import { RabbitMQ as RabbitMQTypes } from '../../../types';
 declare class RabbitMQ {
     private nodecg;

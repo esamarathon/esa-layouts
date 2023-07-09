@@ -1,5 +1,5 @@
-import type NodeCGTypes from '@alvancamp/test-nodecg-types';
-import NodeCG from '@alvancamp/test-nodecg-types';
+import type NodeCGTypes from '@nodecg/types';
+import NodeCG from '@nodecg/types';
 declare class AudioNormaliser {
     nodecg: NodeCGTypes.ServerAPI;
     assets: NodeCGTypes.ServerReplicantWithSchemaDefault<NodeCG.AssetFile[]>;

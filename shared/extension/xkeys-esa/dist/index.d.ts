@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import NodeCGTypes from '@alvancamp/test-nodecg-types';
+import NodeCGTypes from '@nodecg/types';
 import { EventEmitter } from 'events';
 import { XKeys } from 'xkeys';
 import { XKeys as XKeysTypes } from '../../../types';

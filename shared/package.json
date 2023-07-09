@@ -20,15 +20,15 @@
     "schema-types": "nodecg schema-types -o types/schemas --no-config-schema"
   },
   "dependencies": {
-    "amqp-connection-manager": "^4.1.10",
+    "amqp-connection-manager": "^4.1.13",
     "amqplib": "^0.10.3",
     "clone": "^2.1.2",
-    "fs-extra": "^11.1.0",
+    "fs-extra": "^11.1.1",
     "get-video-duration": "3.0.2",
     "lodash": "^4.17.21",
-    "node-fetch": "^2.6.8",
+    "node-fetch": "^2.6.12",
     "obs-websocket-js": "^4.0.3",
-    "osc": "^2.4.3",
+    "osc": "^2.4.4",
     "string-similarity": "^4.0.4",
     "tiny-typed-emitter": "^2.1.0",
     "uuid": "^9.0.0",
@@ -40,10 +40,10 @@
     "@types/amqplib": "^0.10.1",
     "@types/clone": "^2.1.1",
     "@types/fs-extra": "^11.0.1",
-    "@types/node-fetch": "^2.6.2",
+    "@types/node-fetch": "^2.6.4",
     "@types/string-similarity": "^4.0.0",
-    "@types/uuid": "^9.0.0",
-    "nodecg-cli": "^8.6.0",
+    "@types/uuid": "^9.0.2",
+    "nodecg-cli": "^8.6.8",
     "vuedraggable": "^2.24.3",
     "vuex-class-state2way": "^1.0.1"
   }

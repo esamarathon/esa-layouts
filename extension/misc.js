@@ -94,6 +94,8 @@ speedcontrol_1.sc.runDataActiveRun.on('change', (newVal, oldVal) => {
         }
     }
     // This will also be triggered on server start up.
+    // TODO: Move this to the start,
+    //       so changes are not taken into account (if that is actually happening)?
     mqLogging.logRunChange(newVal);
     init = true;
 });

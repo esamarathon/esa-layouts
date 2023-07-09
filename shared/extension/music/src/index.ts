@@ -1,4 +1,4 @@
-import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import type NodeCGTypes from '@nodecg/types';
 import type { HeadersInit, Response } from 'node-fetch';
 import fetch from 'node-fetch';
 import path from 'path';

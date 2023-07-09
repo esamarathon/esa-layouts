@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import type NodeCGTypes from '@nodecg/types';
 import { Component, Vue } from 'vue-property-decorator';
 import Draggable from 'vuedraggable';
 import { State } from 'vuex-class';

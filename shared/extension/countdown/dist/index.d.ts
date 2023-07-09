@@ -1,4 +1,4 @@
-import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import type NodeCGTypes from '@nodecg/types';
 import type { Countdown } from '../../../types/schemas';
 declare class CountdownClass {
     private countdownTimeout;

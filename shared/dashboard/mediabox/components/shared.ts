@@ -1,4 +1,4 @@
-import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import type NodeCGTypes from '@nodecg/types';
 import { v4 as uuid } from 'uuid';
 import { MediaBox, Tracker } from '../../../types';
 import { store } from '../store';

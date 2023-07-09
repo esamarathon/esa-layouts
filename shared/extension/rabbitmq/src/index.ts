@@ -1,10 +1,10 @@
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import type { BigButton, FlagCarrier, OmnibarModeration, Tracker } from '@esamarathon/mq-events/types';
 import type { ChannelWrapper } from 'amqp-connection-manager';
 import amqpConnectionManager from 'amqp-connection-manager';
 import type { ConfirmChannel, Message } from 'amqplib';
 import amqplib from 'amqplib';
 import { EventEmitter } from 'events';
-import type { NodeCG } from 'nodecg/types/server';
 import { v4 as uuid } from 'uuid';
 import { RabbitMQ as RabbitMQTypes } from '../../../types';
 
@@ -160,7 +160,7 @@ const testData: {
 };
 
 class RabbitMQ {
-  private nodecg: NodeCG;
+  private nodecg: NodeCGTypes.ServerAPI;
   private config: RabbitMQTypes.Config;
   private chan: ChannelWrapper | undefined;
   private exchange: string;
@@ -170,7 +170,7 @@ class RabbitMQ {
   evt = new EventEmitter() as RabbitMQTypes.Events;
 
   constructor(
-    nodecg: NodeCG,
+    nodecg: NodeCGTypes.ServerAPI,
     useTestData: boolean,
     opts: {
       config: RabbitMQTypes.Config,

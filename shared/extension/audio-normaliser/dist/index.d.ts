@@ -1,10 +1,10 @@
-import type { NodeCG, Replicant } from 'nodecg/types/server';
-import { Asset } from '../../../types';
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import NodeCG from '@alvancamp/test-nodecg-types';
 declare class AudioNormaliser {
-    nodecg: NodeCG;
-    assets: Replicant<Asset[]>;
-    assetsNormalised: Replicant<Asset[]>;
-    constructor(nodecg: NodeCG, assetName?: string);
+    nodecg: NodeCGTypes.ServerAPI;
+    assets: NodeCGTypes.ServerReplicantWithSchemaDefault<NodeCG.AssetFile[]>;
+    assetsNormalised: NodeCGTypes.ServerReplicantWithSchemaDefault<NodeCG.AssetFile[]>;
+    constructor(nodecg: NodeCGTypes.ServerAPI, assetName?: string);
     private setup;
     private getAssetDir;
     private getAssetLocation;

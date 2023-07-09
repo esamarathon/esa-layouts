@@ -1,9 +1,9 @@
 
-.Msg > span + span[data-v-24cfa16e]::before {
+.Msg > span + span[data-v-3124c81c]::before {
   content: '';
   margin: 0 10px 0 7px;
 }
-.Title[data-v-24cfa16e] {
+.Title[data-v-3124c81c] {
   font-weight: 600;
 }
 
@@ -56,12 +56,12 @@
 
 
 /* Each character in the total is in a span; setting width so the numbers appear monospaced. */
-#Total > span[data-v-1c1a8a3d] {
+#Total > span[data-v-0813cd78] {
   display: inline-block;
   width: 0.45em;
   text-align: center;
 }
-#Total > .Comma[data-v-1c1a8a3d] {
+#Total > .Comma[data-v-0813cd78] {
   width: 0.22em;
 }
 

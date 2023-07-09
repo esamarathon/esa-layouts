@@ -11,14 +11,16 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-import { MediaBox } from '../../../types/schemas';
-import { Asset } from '../../../types';
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import { Component, Vue } from 'vue-property-decorator';
 import { replicantNS } from '../../../browser_shared/replicant_store';
+import { MediaBox } from '../../../types/schemas';
 
 @Component
 export default class extends Vue {
-  @replicantNS.State((s) => s.reps.assetsMediaBoxImages) readonly mediaBoxImages!: Asset[];
+  @replicantNS.State(
+    (s) => s.reps.assetsMediaBoxImages,
+  ) readonly mediaBoxImages!: NodeCGTypes.AssetFile[];
   @replicantNS.State((s) => s.reps.mediaBox) readonly mediaBox!: MediaBox;
 
   get url(): string | undefined {

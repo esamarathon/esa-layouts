@@ -30,11 +30,21 @@ function processRawPrizes(rawPrizes) {
 // Get the prizes from the API.
 // We always get these from the first listed event, in the case of multiple tracker events.
 async function updatePrizes() {
+    var _a;
     try {
         const resp = await (0, needle_1.default)('get', `https://${config.address}/search/?event=${_1.eventInfo[0].id}&type=prize&feed=current`, {
             cookies: (0, _1.getCookies)(),
         });
+        if (!resp.statusCode || resp.statusCode >= 300 || resp.statusCode < 200) {
+            throw new Error(`status code ${(_a = resp.statusCode) !== null && _a !== void 0 ? _a : 'unknown'}`);
+        }
+        if (!Array.isArray(resp.body)) {
+            throw new Error('received non-array type');
+        }
         const currentPrizes = processRawPrizes(resp.body);
+        if (!Array.isArray(currentPrizes)) {
+            throw new Error('currentPrizes result was non-array type');
+        }
         replicants_1.prizes.value = currentPrizes;
     }
     catch (err) {

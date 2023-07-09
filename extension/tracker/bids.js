@@ -86,12 +86,22 @@ function processRawBids(rawBids) {
 }
 // Get the open bids from the API.
 async function updateBids() {
+    var _a;
     try {
         const resp = await (0, needle_1.default)('get', `https://${config.address}/search/?event=${_1.eventInfo[eventConfig.thisEvent - 1].id}`
             + '&type=allbids&state=OPENED', {
             cookies: (0, _1.getCookies)(),
         });
+        if (!resp.statusCode || resp.statusCode >= 300 || resp.statusCode < 200) {
+            throw new Error(`status code ${(_a = resp.statusCode) !== null && _a !== void 0 ? _a : 'unknown'}`);
+        }
+        if (!Array.isArray(resp.body)) {
+            throw new Error('received non-array type');
+        }
         const currentBids = processRawBids(resp.body);
+        if (!Array.isArray(currentBids)) {
+            throw new Error('currentBids result was non-array type');
+        }
         replicants_1.bids.value = currentBids;
     }
     catch (err) {

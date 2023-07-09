@@ -1,8 +1,10 @@
+import NodeCGTypes from '@alvancamp/test-nodecg-types';
 import { getVideoDurationInSeconds } from 'get-video-duration';
 import { join } from 'path';
 import { cwd } from 'process';
+import { setTimeout } from 'timers/promises';
 import { TypedEmitter } from 'tiny-typed-emitter';
-import { Asset, OBS as OBSTypes, VideoPlaylist } from '../../../types';
+import { OBS as OBSTypes, VideoPlaylist } from '../../../types';
 import OBS from '../../obs';
 
 interface VideoPlayerEvents {
@@ -13,14 +15,17 @@ interface VideoPlayerEvents {
 }
 
 class VideoPlayer extends TypedEmitter<VideoPlayerEvents> {
+  private nodecg: NodeCGTypes.ServerAPI;
   private obsConfig: OBSTypes.Config;
   private obs: OBS;
+  private delayAC: AbortController | undefined;
   playlist: VideoPlaylist.PlaylistItem[] = [];
   playing = false;
   index = -1;
 
-  constructor(obsConfig: OBSTypes.Config, obs: OBS) {
+  constructor(nodecg: NodeCGTypes.ServerAPI, obsConfig: OBSTypes.Config, obs: OBS) {
     super();
+    this.nodecg = nodecg;
     this.obsConfig = obsConfig;
     this.obs = obs;
 
@@ -42,9 +47,9 @@ class VideoPlayer extends TypedEmitter<VideoPlayerEvents> {
     }
     if (this.playing) throw new Error('another playlist currently playing');
     if (!playlist.length) throw new Error('playlist must have at least 1 video');
-    const invalidItems = playlist.filter((i) => !i.commercial && !i.video);
+    const invalidItems = playlist.filter((i) => !i.length && !i.video);
     if (invalidItems.length) {
-      throw new Error('all playlist items must have either video or commercial');
+      throw new Error('all playlist items must have either video or length');
     }
     this.playlist = playlist;
   }
@@ -62,11 +67,29 @@ class VideoPlayer extends TypedEmitter<VideoPlayerEvents> {
       this.index += 1;
       const item = this.playlist[this.index];
       this.emit('videoStarted', item); // Emitted even if no video is added.
-      if (item.commercial) this.emit('playCommercial', item);
-      if (item.video) await this.playVideo(item.video);
-      else {
-        await new Promise((res) => { setTimeout(res, 5000); });
-        this.emit('videoEnded', item); // "Pretend" video ended in this case.
+      let waitLength = 5;
+      if (item.length && item.commercial) this.emit('playCommercial', item);
+      if (item.video) {
+        waitLength = 0;
+        await this.playVideo(item.video);
+        // "videoEnded" event sent out from elsewhere.
+      } else if (item.length && !item.commercial) waitLength = item.length;
+      this.nodecg.log.debug('[Video Player] waitLength has been set to %s', waitLength);
+      if (waitLength) {
+        // Wrapped function here so we can await without blocking the other stuff
+        (async () => {
+          this.nodecg.log.debug('[Video Player] waitLength is %s, will start waiting', waitLength);
+          // This setTimeout is wrapped so if it's cancelled, nothing breaks.
+          try {
+            this.delayAC = new AbortController();
+            await setTimeout(waitLength * 1000, undefined, { signal: this.delayAC.signal });
+            this.emit('videoEnded', item); // "Pretend" video ended in this case
+          } catch (err) {
+            this.nodecg.log.warn('[Video Player] Error with waitLength waiting:', err);
+          }
+          this.delayAC = undefined; // Hopefully this makes the previous AC garbage collected
+          this.nodecg.log.debug('[Video Player] waitLength waiting is finished');
+        })();
       }
     } else {
       this.playing = false;
@@ -85,6 +108,7 @@ class VideoPlayer extends TypedEmitter<VideoPlayerEvents> {
       this.playing = false;
       this.index = -1;
       this.playlist.length = 0;
+      this.delayAC?.abort();
       try {
         await this.obs.conn.send(
           'StopMedia',
@@ -99,7 +123,7 @@ class VideoPlayer extends TypedEmitter<VideoPlayerEvents> {
    * Play the supplied asset via the OBS source.
    * @param video NodeCG asset of the video.
    */
-  async playVideo(video: Asset): Promise<void> {
+  async playVideo(video: NodeCGTypes.AssetFile): Promise<void> {
     if (!this.obs.connected || !this.obsConfig.enabled) {
       throw new Error('no OBS connection available');
     }
@@ -154,11 +178,11 @@ class VideoPlayer extends TypedEmitter<VideoPlayerEvents> {
           ));
         } catch (err) { /* err */ }
 
-        // If item has a commercial longer than the video, use that instead.
-        if (item.commercial && item.commercial > length) totalLength += item.commercial;
+        // If item has a commercial/length longer than the video, use that instead.
+        if (item.length && item.length > length) totalLength += item.length;
         else totalLength += length;
-      } else if (item.commercial) {
-        totalLength += item.commercial;
+      } else if (item.length) {
+        totalLength += item.length;
       }
     }
     return totalLength;

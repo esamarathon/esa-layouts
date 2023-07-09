@@ -1,4 +1,4 @@
-import type { NodeCG } from 'nodecg/types/server';
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import { RabbitMQ as RabbitMQTypes } from '../../../types';
 declare class RabbitMQ {
     private nodecg;
@@ -9,7 +9,7 @@ declare class RabbitMQ {
     private listenTopics;
     private useTestData;
     evt: RabbitMQTypes.Events;
-    constructor(nodecg: NodeCG, useTestData: boolean, opts: {
+    constructor(nodecg: NodeCGTypes.ServerAPI, useTestData: boolean, opts: {
         config: RabbitMQTypes.Config;
         exchange: string;
         event: string;

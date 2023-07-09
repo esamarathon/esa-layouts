@@ -1,5 +1,5 @@
+import NodeCGTypes from '@alvancamp/test-nodecg-types';
 import { EventEmitter } from 'events';
-import type { NodeCG } from 'nodecg/types/server';
 import { XKeys, XKeysWatcher } from 'xkeys';
 import { XKeys as XKeysTypes } from '../../../types';
 
@@ -11,7 +11,7 @@ interface XKeysClass {
 }
 
 class XKeysClass extends EventEmitter {
-  private nodecg: NodeCG;
+  private nodecg: NodeCGTypes.ServerAPI;
   private config: XKeysTypes.Config;
   panel: XKeys | undefined;
 
@@ -55,7 +55,7 @@ class XKeysClass extends EventEmitter {
     });
   }
 
-  constructor(nodecg: NodeCG, config: XKeysTypes.Config) {
+  constructor(nodecg: NodeCGTypes.ServerAPI, config: XKeysTypes.Config) {
     super();
     this.nodecg = nodecg;
     this.config = config;

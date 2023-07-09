@@ -37,10 +37,10 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import { MediaBox as MediaBoxRep } from '../../../types/schemas';
 import { MediaBox } from '../../../types';
+import { MediaBox as MediaBoxRep } from '../../../types/schemas';
 import { getMediaDetails, isAlertType } from './shared';
 
 @Component

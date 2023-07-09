@@ -38,12 +38,13 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import { Component, Vue } from 'vue-property-decorator';
 import Draggable from 'vuedraggable';
-import { Asset, MediaBox } from '../../../types';
-import { clone } from './shared';
+import { State } from 'vuex-class';
+import { MediaBox } from '../../../types';
 import MediaCard from './MediaCard.vue';
+import { clone } from './shared';
 
 @Component({
   components: {
@@ -52,10 +53,10 @@ import MediaCard from './MediaCard.vue';
   },
 })
 export default class extends Vue {
-  @State images!: Asset[];
+  @State images!: NodeCGTypes.AssetFile[];
   bundleName = nodecg.bundleName;
 
-  clone(original: Asset): MediaBox.RotationElem {
+  clone(original: NodeCGTypes.AssetFile): MediaBox.RotationElem {
     return clone('image', original.sum);
   }
 }

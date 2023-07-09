@@ -1,6 +1,6 @@
 /// <reference types="node" />
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import { EventEmitter } from 'events';
-import type { NodeCG } from 'nodecg/types/server';
 import ObsWebsocketJs from 'obs-websocket-js';
 import { OBS as OBSTypes } from '../../../types';
 interface OBS {
@@ -17,7 +17,7 @@ declare class OBS extends EventEmitter {
     sceneList: string[];
     connected: boolean;
     streaming: boolean | undefined;
-    constructor(nodecg: NodeCG, config: OBSTypes.Config);
+    constructor(nodecg: NodeCGTypes.ServerAPI, config: OBSTypes.Config);
     connect(): Promise<void>;
     /**
      * Find scene based on string; at least the start of the name should be supplied.

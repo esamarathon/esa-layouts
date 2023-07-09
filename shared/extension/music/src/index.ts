@@ -1,6 +1,6 @@
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import type { HeadersInit, Response } from 'node-fetch';
 import fetch from 'node-fetch';
-import type { NodeCG, Replicant } from 'nodecg/types/server';
 import path from 'path';
 import { Readable } from 'stream';
 import { Foobar2000, Music as MusicTypes } from '../../../types';
@@ -16,7 +16,7 @@ function buildSchemaPath(schemaName: string) {
 }
 
 class Music {
-  private nodecg: NodeCG;
+  private nodecg: NodeCGTypes.ServerAPI;
   private config: MusicTypes.Config;
   private obs: OBS;
   private auth: string | undefined;
@@ -24,9 +24,9 @@ class Music {
   private positionTimestamp = 0;
   private positionInitial = 0;
   private positionInterval: NodeJS.Timeout | undefined;
-  musicData: Replicant<MusicData>;
+  musicData: NodeCGTypes.ServerReplicantWithSchemaDefault<MusicData>;
 
-  constructor(nodecg: NodeCG, config: MusicTypes.Config, obs: OBS) {
+  constructor(nodecg: NodeCGTypes.ServerAPI, config: MusicTypes.Config, obs: OBS) {
     this.nodecg = nodecg;
     this.config = config;
     this.obs = obs;
@@ -34,7 +34,10 @@ class Music {
       ? `Basic ${Buffer.from(`${config.username}:${config.password}`).toString('base64')}`
       : undefined;
     this.headers = this.auth ? { Authorization: this.auth } : undefined;
-    this.musicData = nodecg.Replicant('musicData', { schemaPath: buildSchemaPath('musicData') });
+    this.musicData = nodecg.Replicant<MusicData>(
+      'musicData',
+      { schemaPath: buildSchemaPath('musicData') },
+    ) as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<MusicData>;
 
     this.musicData.value.connected = false;
     if (config.enabled) {

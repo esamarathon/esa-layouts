@@ -4,7 +4,7 @@ const socket_io_client_1 = require("socket.io-client");
 const helpers_1 = require("./helpers");
 const nodecg_1 = require("./nodecg");
 const config = (0, nodecg_1.get)().bundleConfig;
-const address = new URL(config.offsite.address);
+const address = new URL(`${config.offsite.address}${!config.offsite.address.endsWith('/') ? '/' : ''}`);
 const socket = (0, socket_io_client_1.io)(address.origin, { path: `${address.pathname}socket.io`, autoConnect: false });
 socket.on('connect', () => {
     socket.emit('authenticate', { key: 'esalayouts', pw: config.offsite.key });

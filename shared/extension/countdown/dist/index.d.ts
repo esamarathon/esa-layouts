@@ -1,9 +1,9 @@
-import type { NodeCG, Replicant } from 'nodecg/types/server';
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import type { Countdown } from '../../../types/schemas';
 declare class CountdownClass {
     private countdownTimeout;
-    countdown: Replicant<Countdown>;
-    constructor(nodecg: NodeCG);
+    countdown: NodeCGTypes.ServerReplicantWithSchemaDefault<Countdown>;
+    constructor(nodecg: NodeCGTypes.ServerAPI);
     updateCountdownTimer(): void;
 }
 export = CountdownClass;

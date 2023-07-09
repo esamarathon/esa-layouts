@@ -1,13 +1,13 @@
 
-.Slide[data-v-35f8c604] {
+.Slide[data-v-bccf3a56] {
   position: absolute;
   width: 100%;
   height: 100%;
 }
-.fade-enter-active[data-v-35f8c604], .fade-leave-active[data-v-35f8c604] {
+.fade-enter-active[data-v-bccf3a56], .fade-leave-active[data-v-bccf3a56] {
   transition: opacity 1s;
 }
-.fade-enter[data-v-35f8c604], .fade-leave-to[data-v-35f8c604] {
+.fade-enter[data-v-bccf3a56], .fade-leave-to[data-v-bccf3a56] {
   opacity: 0;
 }
 

@@ -51,24 +51,31 @@
           class="Slide"
           :vertical="vertical"
         />
+        <therungg-msg
+          v-else-if="type === 7"
+          :key="mediaBox.current.id"
+          class="Slide"
+          :vertical="vertical"
+        />
       </transition>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { replicantNS } from '../../browser_shared/replicant_store';
 import { MediaBox, Prizes } from '../../types/schemas';
-import { Asset } from '../../types';
+import Cheer from './components/Cheer.vue';
+import Donation from './components/Donation.vue';
 import ImageComp from './components/Image.vue';
+import Merch from './components/Merch.vue';
 import Prize from './components/Prize.vue';
 import PrizeGeneric from './components/PrizeGeneric.vue';
-import Donation from './components/Donation.vue';
 import Subscription from './components/Subscription.vue';
-import Cheer from './components/Cheer.vue';
-import Merch from './components/Merch.vue';
+import TherunggMsg from './components/TherunggMsg.vue';
 import store from './store';
-import { replicantNS } from '../../browser_shared/replicant_store';
 
 @Component({
   store,
@@ -80,10 +87,13 @@ import { replicantNS } from '../../browser_shared/replicant_store';
     Subscription,
     Cheer,
     Merch,
+    TherunggMsg,
   },
 })
 export default class extends Vue {
-  @replicantNS.State((s) => s.reps.assetsMediaBoxImages) readonly mediaBoxImages!: Asset[];
+  @replicantNS.State(
+    (s) => s.reps.assetsMediaBoxImages,
+  ) readonly mediaBoxImages!: NodeCGTypes.AssetFile[];
   @replicantNS.State((s) => s.reps.mediaBox) readonly mediaBox!: MediaBox;
   @replicantNS.State((s) => s.reps.prizes) readonly prizes!: Prizes;
   @Prop({ type: Number, default: 50 }) fontSize!: number;
@@ -105,6 +115,8 @@ export default class extends Vue {
         return 5;
       case 'merch':
         return 6;
+      case 'therungg':
+        return 7;
       default:
         return -1;
     }

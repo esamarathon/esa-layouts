@@ -144,7 +144,10 @@ async function setup() {
         if (!useTestData)
             await loginToTracker();
         // Go through all events and compile the important info for them.
-        const events = (Array.isArray(eventConfig.shorts)) ? eventConfig.shorts : [eventConfig.shorts];
+        const events = (() => {
+            const cfg = eventConfig.shorts;
+            return (Array.isArray(cfg)) ? cfg : [cfg];
+        })();
         for (const [index, short] of events.entries()) {
             const id = !useTestData ? await getEventIDFromShort(short) : index + 1;
             exports.eventInfo.push({

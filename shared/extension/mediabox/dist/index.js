@@ -13,9 +13,11 @@ function buildSchemaPath(schemaName) {
     return path_1.default.resolve(__dirname, '../../../schemas', "".concat(encodeURIComponent(schemaName), ".json"));
 }
 var MediaBox = /** @class */ (function () {
-    function MediaBox(nodecg, evt) {
+    function MediaBox(nodecg, evt, obs, obsCfg) {
         var _this = this;
         this.nodecg = nodecg;
+        this.obs = obs;
+        this.obsCfg = obsCfg;
         this.mediaBox = nodecg.Replicant('mediaBox', { schemaPath: buildSchemaPath('mediaBox') });
         this.prizes = nodecg.Replicant('prizes', {
             schemaPath: buildSchemaPath('prizes'),
@@ -61,6 +63,16 @@ var MediaBox = /** @class */ (function () {
                 },
             });
         });
+        nodecg.listenFor('therunggMessage', function (msg) {
+            _this.nodecg.log.debug('[Media Box] Received new therun.gg message');
+            _this.mediaBox.value.alertQueue.push({
+                type: 'therungg',
+                id: (0, uuid_1.v4)(),
+                data: {
+                    msg: msg,
+                },
+            });
+        });
         this.update();
         setInterval(function () { return _this.update(); }, 1000);
     }
@@ -78,7 +90,7 @@ var MediaBox = /** @class */ (function () {
      * @param type Type of alert
      */
     MediaBox.prototype.isAlertType = function (type) {
-        return ['donation', 'subscription', 'cheer', 'merch'].includes(type);
+        return ['donation', 'subscription', 'cheer', 'merch', 'therungg'].includes(type);
     };
     /**
      * Get the length in milliseconds a piece of media should remain,
@@ -182,6 +194,16 @@ var MediaBox = /** @class */ (function () {
         // Filters rotation for items only applicable/available at this moment.
         var rotationApplicableLengthOld = this.mediaBox.value.rotationApplicable.length;
         this.mediaBox.value.rotationApplicable = this.mediaBox.value.rotation.filter(function (m) {
+            // If the item is set to *not* appear on the intermission,
+            // exclude it if we're on an intermission scene.
+            var scenes = _this.obsCfg.names.scenes;
+            var intermissionScenes = [
+                (scenes === null || scenes === void 0 ? void 0 : scenes.commercials) ? _this.obs.findScene(scenes.commercials) : undefined,
+                (scenes === null || scenes === void 0 ? void 0 : scenes.intermission) ? _this.obs.findScene(scenes.intermission) : undefined,
+            ].filter(Boolean);
+            if (!m.showOnIntermission && intermissionScenes.includes(_this.obs.currentScene)) {
+                return false;
+            }
             // Only rotate to image if the asset actually exists.
             if (m.type === 'image') {
                 return !!_this.assetsMediaBoxImages.value.find(function (i) { return i.sum === m.mediaUUID; });

@@ -1,19 +1,18 @@
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import clone from 'clone';
-import type { ReplicantBrowser } from 'nodecg/types/browser';
 import Vue from 'vue';
 import type { Store } from 'vuex';
 import { namespace } from 'vuex-class';
 import { getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators';
-import type { Asset } from '../types';
 import type { Countdown, MediaBox, Prizes } from '../types/schemas';
 
 // Declaring replicants.
 export const reps: {
-  assetsMediaBoxImages: ReplicantBrowser<Asset[]>;
-  countdown: ReplicantBrowser<Countdown>;
-  mediaBox: ReplicantBrowser<MediaBox>;
-  prizes: ReplicantBrowser<Prizes>;
-  [k: string]: ReplicantBrowser<unknown>;
+  assetsMediaBoxImages: NodeCGTypes.ClientReplicant<NodeCGTypes.AssetFile[]>;
+  countdown: NodeCGTypes.ClientReplicant<Countdown>;
+  mediaBox: NodeCGTypes.ClientReplicant<MediaBox>;
+  prizes: NodeCGTypes.ClientReplicant<Prizes>;
+  [k: string]: NodeCGTypes.ClientReplicant<unknown>;
 } = {
   assetsMediaBoxImages: nodecg.Replicant('assets:media-box-images'),
   countdown: nodecg.Replicant('countdown'),
@@ -23,7 +22,7 @@ export const reps: {
 
 // All the replicant types.
 export interface ReplicantTypes {
-  assetsMediaBoxImages: Asset[];
+  assetsMediaBoxImages: NodeCGTypes.AssetFile[];
   countdown: Countdown;
   mediaBox: MediaBox;
   prizes: Prizes;

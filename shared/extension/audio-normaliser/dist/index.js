@@ -25,8 +25,8 @@ class AudioNormaliser {
     constructor(nodecg, assetName = 'videos') {
         this.nodecg = nodecg;
         this.assets = nodecg.Replicant(`assets:${assetName}`);
-        this.assetsNormalised = nodecg // Stores assets already normalised for reference
-            .Replicant(`assets:${assetName}-normalised`, { defaultValue: [] });
+        this.assetsNormalised = nodecg.Replicant(`assets:${assetName}-normalised`, // Stores assets already normalised for reference
+        { defaultValue: [] });
         this.setup();
     }
     setup() {

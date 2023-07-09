@@ -1,6 +1,6 @@
 <template>
   <v-tooltip
-    v-if="isApplicable"
+    v-if="isApplicable === true"
     right
   >
     <template v-slot:activator="{ on }">
@@ -11,7 +11,7 @@
     <span>Applicable</span>
   </v-tooltip>
   <v-tooltip
-    v-else
+    v-else-if="isApplicable === false"
     right
   >
     <template v-slot:activator="{ on }">
@@ -21,13 +21,24 @@
     </template>
     <span>Not Currently Applicable</span>
   </v-tooltip>
+  <v-tooltip
+    v-else
+    right
+  >
+    <template v-slot:activator="{ on }">
+      <v-icon v-on="on">
+        mdi-help
+      </v-icon>
+    </template>
+    <span>Unknown</span>
+  </v-tooltip>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class extends Vue {
-  @Prop(Boolean) isApplicable!: boolean;
+  @Prop({ type: Boolean, required: false }) isApplicable!: boolean | undefined;
 }
 </script>

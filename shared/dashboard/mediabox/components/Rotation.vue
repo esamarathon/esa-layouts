@@ -37,6 +37,20 @@
             {{ getMediaDetails(media).name || 'Could not find media name.' }}
           </div>
           <div class="d-flex">
+            <v-tooltip left>
+              <template v-slot:activator="{ on }">
+                <div v-on="on">
+                  <v-checkbox
+                    v-on="on"
+                    v-model="media.showOnIntermission"
+                    dense
+                    class="ma-0 pa-0"
+                    hide-details
+                  />
+                </div>
+              </template>
+              <span>Show On Intermission</span>
+            </v-tooltip>
             <v-text-field
               v-model="media.seconds"
               class="pa-0 ma-0"
@@ -57,15 +71,16 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import clone from 'clone';
+import { Component, Vue } from 'vue-property-decorator';
+import Draggable from 'vuedraggable';
 import { State } from 'vuex-class';
 import { State2Way } from 'vuex-class-state2way';
-import Draggable from 'vuedraggable';
-import clone from 'clone';
-import { Prizes, MediaBox as MediaBoxRep } from '../../../types/schemas';
-import { Asset, MediaBox } from '../../../types';
-import MediaCard from './MediaCard.vue';
+import { MediaBox } from '../../../types';
+import { MediaBox as MediaBoxRep, Prizes } from '../../../types/schemas';
 import ApplicableIcon from './ApplicableIcon.vue';
+import MediaCard from './MediaCard.vue';
 import { getMediaDetails, isPrizeApplicable } from './shared';
 
 @Component({
@@ -76,7 +91,7 @@ import { getMediaDetails, isPrizeApplicable } from './shared';
   },
 })
 export default class extends Vue {
-  @State images!: Asset[];
+  @State images!: NodeCGTypes.AssetFile[];
   @State prizes!: Prizes;
   @State settings!: MediaBoxRep;
   @State2Way('updateNewRotation', 'newRotation') newRotation!: MediaBox.RotationElem[];
@@ -87,7 +102,12 @@ export default class extends Vue {
     this.newRotation = clone(this.settings.rotation);
   }
 
-  isApplicable(media: MediaBox.RotationElem): boolean {
+  isApplicable(media: MediaBox.RotationElem): boolean | undefined {
+    // TODO: Check if on intermission on the dashboard size.
+    // We should probably just be loading in the server applicable rotation here.
+    if (!media.showOnIntermission) {
+      return undefined;
+    }
     // Only applicable if the asset actually exists.
     if (media.type === 'image') {
       return !!this.images.find((i) => i.sum === media.mediaUUID);

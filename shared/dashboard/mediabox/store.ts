@@ -1,18 +1,18 @@
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import clone from 'clone';
-import type { ReplicantBrowser } from 'nodecg/types/browser';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
-import type { Asset, MediaBox } from '../../types';
+import type { MediaBox } from '../../types';
 import type { MediaBox as MediaBoxRep, Prizes } from '../../types/schemas';
 
 Vue.use(Vuex);
 
 // Replicants and their types
 const reps: {
-  images: ReplicantBrowser<Asset[]>;
-  prizes: ReplicantBrowser<Prizes>;
-  settings: ReplicantBrowser<MediaBoxRep>;
-  [k: string]: ReplicantBrowser<unknown>;
+  images: NodeCGTypes.ClientReplicant<NodeCGTypes.AssetFile[]>;
+  prizes: NodeCGTypes.ClientReplicant<Prizes>;
+  settings: NodeCGTypes.ClientReplicant<MediaBoxRep>;
+  [k: string]: NodeCGTypes.ClientReplicant<unknown>;
 } = {
   images: nodecg.Replicant('assets:media-box-images'),
   prizes: nodecg.Replicant('prizes'),
@@ -20,7 +20,7 @@ const reps: {
 };
 
 interface StateTypes {
-  images: Asset[];
+  images: NodeCGTypes.AssetFile[];
   prizes: Prizes;
   disableSave: boolean;
   newRotation: MediaBox.RotationElem[];

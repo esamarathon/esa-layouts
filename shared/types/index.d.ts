@@ -1,4 +1,3 @@
-export * from './Asset';
 export * from './Foobar2000';
 export * from './MediaBox';
 export * from './Music';

@@ -1,27 +1,31 @@
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import NodeCG from '@alvancamp/test-nodecg-types';
 import { exec as execCb } from 'child_process';
 import clone from 'clone';
 import { copyFile, ensureDir } from 'fs-extra';
 import { unlink } from 'fs/promises';
 import { differenceBy } from 'lodash';
-import type { NodeCG, Replicant } from 'nodecg/types/server';
 import { join } from 'path';
 import { cwd } from 'process';
 import { promisify } from 'util';
-import { Asset } from '../../../types';
 import findExecutable from './find-exe';
 
 const exec = promisify(execCb);
 
 class AudioNormaliser {
-  nodecg!: NodeCG;
-  assets!: Replicant<Asset[]>;
-  assetsNormalised!: Replicant<Asset[]>;
+  nodecg!: NodeCGTypes.ServerAPI;
+  assets!: NodeCGTypes.ServerReplicantWithSchemaDefault<NodeCG.AssetFile[]>;
+  assetsNormalised!: NodeCGTypes.ServerReplicantWithSchemaDefault<NodeCG.AssetFile[]>;
 
-  constructor(nodecg: NodeCG, assetName = 'videos') {
+  constructor(nodecg: NodeCGTypes.ServerAPI, assetName = 'videos') {
     this.nodecg = nodecg;
-    this.assets = nodecg.Replicant(`assets:${assetName}`);
-    this.assetsNormalised = nodecg // Stores assets already normalised for reference
-      .Replicant(`assets:${assetName}-normalised`, { defaultValue: [] });
+    this.assets = nodecg.Replicant<NodeCG.AssetFile[]>(
+      `assets:${assetName}`,
+    ) as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<NodeCG.AssetFile[]>;
+    this.assetsNormalised = nodecg.Replicant<NodeCG.AssetFile[]>(
+      `assets:${assetName}-normalised`, // Stores assets already normalised for reference
+      { defaultValue: [] },
+    ) as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<NodeCG.AssetFile[]>;
     this.setup();
   }
 
@@ -113,11 +117,11 @@ class AudioNormaliser {
     });
   }
 
-  private getAssetDir(asset: Asset): string {
+  private getAssetDir(asset: NodeCGTypes.AssetFile): string {
     return join(cwd(), `assets/${asset.namespace}/${asset.category}`);
   }
 
-  private getAssetLocation(asset: Asset, lowercaseExt = false): string {
+  private getAssetLocation(asset: NodeCGTypes.AssetFile, lowercaseExt = false): string {
     const ext = lowercaseExt ? asset.ext.toLowerCase() : asset.ext;
     return join(cwd(), `assets/${asset.namespace}/${asset.category}/${asset.name}${ext}`);
   }

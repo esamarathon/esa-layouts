@@ -1,6 +1,6 @@
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import clone from 'clone';
 import { EventEmitter } from 'events';
-import type { NodeCG } from 'nodecg/types/server';
 import ObsWebsocketJs from 'obs-websocket-js';
 import { findBestMatch } from 'string-similarity';
 import { OBS as OBSTypes } from '../../../types';
@@ -13,7 +13,7 @@ interface OBS {
 }
 
 class OBS extends EventEmitter {
-  private nodecg: NodeCG;
+  private nodecg: NodeCGTypes.ServerAPI;
   private config: OBSTypes.Config;
   conn = new ObsWebsocketJs();
   currentScene: string | undefined;
@@ -21,7 +21,7 @@ class OBS extends EventEmitter {
   connected = false;
   streaming: boolean | undefined;
 
-  constructor(nodecg: NodeCG, config: OBSTypes.Config) {
+  constructor(nodecg: NodeCGTypes.ServerAPI, config: OBSTypes.Config) {
     super();
     this.nodecg = nodecg;
     this.config = config;

@@ -1,7 +1,7 @@
 "use strict";
 /* eslint-disable max-len */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.videoPlayer = exports.upcomingRunID = exports.twitchChannelInfo = exports.twitchAPIData = exports.ttsVoices = exports.streamDeckData = exports.serverTimestamp = exports.readerIntroduction = exports.prizes = exports.otherStreamData = exports.omnibar = exports.oengusImportStatus = exports.obsData = exports.notableDonations = exports.nameCycle = exports.musicData = exports.horaroImportStatus = exports.gameLayouts = exports.donationTotalMilestones = exports.donationTotal = exports.donationsToRead = exports.donationReader = exports.delayedTimer = exports.currentRunDelay = exports.countdown = exports.commentators = exports.capturePositions = exports.bigbuttonPlayerMap = exports.bids = exports.assetsVideos = exports.assetsReaderIntroductionImages = exports.assetsMediaBoxImages = exports.assetsIntermissionSlides = void 0;
+exports.videoPlayer = exports.upcomingRunID = exports.twitchChannelInfo = exports.twitchAPIData = exports.ttsVoices = exports.streamDeckData = exports.serverTimestamp = exports.readerIntroduction = exports.prizes = exports.otherStreamData = exports.omnibar = exports.oengusImportStatus = exports.obsData = exports.notableDonations = exports.nameCycle = exports.musicData = exports.intermissionSlides = exports.horaroImportStatus = exports.gameLayouts = exports.donationTotalMilestones = exports.donationTotal = exports.donationsToRead = exports.donationReader = exports.delayedTimer = exports.currentRunDelay = exports.countdown = exports.commentators = exports.capturePositions = exports.bigbuttonPlayerMap = exports.bids = exports.assetsVideos = exports.assetsReaderIntroductionImages = exports.assetsMediaBoxImages = exports.assetsIntermissionSlides = void 0;
 const nodecg_1 = require("./nodecg");
 /**
  * This is where you can declare all your replicant to import easily into other files,
@@ -24,6 +24,7 @@ exports.donationTotal = (0, nodecg_1.get)().Replicant('donationTotal');
 exports.donationTotalMilestones = (0, nodecg_1.get)().Replicant('donationTotalMilestones');
 exports.gameLayouts = (0, nodecg_1.get)().Replicant('gameLayouts');
 exports.horaroImportStatus = (0, nodecg_1.get)().Replicant('horaroImportStatus', 'nodecg-speedcontrol');
+exports.intermissionSlides = (0, nodecg_1.get)().Replicant('intermissionSlides');
 exports.musicData = (0, nodecg_1.get)().Replicant('musicData');
 exports.nameCycle = (0, nodecg_1.get)().Replicant('nameCycle', { persistent: false });
 exports.notableDonations = (0, nodecg_1.get)().Replicant('notableDonations');

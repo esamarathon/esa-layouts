@@ -1,4 +1,4 @@
-import type { NodeCG, Replicant } from 'nodecg/types/server';
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import path from 'path';
 import type { Countdown } from '../../../types/schemas';
 
@@ -12,10 +12,13 @@ function buildSchemaPath(schemaName: string) {
 
 class CountdownClass {
   private countdownTimeout: NodeJS.Timeout | undefined;
-  countdown: Replicant<Countdown>;
+  countdown: NodeCGTypes.ServerReplicantWithSchemaDefault<Countdown>;
 
-  constructor(nodecg: NodeCG) {
-    this.countdown = nodecg.Replicant('countdown', { schemaPath: buildSchemaPath('countdown') });
+  constructor(nodecg: NodeCGTypes.ServerAPI) {
+    this.countdown = nodecg.Replicant<Countdown>(
+      'countdown',
+      { schemaPath: buildSchemaPath('countdown') },
+    ) as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<Countdown>;
 
     nodecg.listenFor('startCountdown', (time: string) => {
       if (!/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(time)) {

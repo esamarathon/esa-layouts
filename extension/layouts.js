@@ -13,18 +13,19 @@ const speedcontrol_1 = require("./util/speedcontrol");
 const xkeys_1 = __importDefault(require("./util/xkeys"));
 const config = (0, nodecg_1.get)().bundleConfig;
 new countdown_1.default((0, nodecg_1.get)()); // eslint-disable-line no-new
-const gameCaptures = Array.isArray(config.obs.names.groups.gameCaptures)
-    ? config.obs.names.groups.gameCaptures
-    : [config.obs.names.groups.gameCaptures];
-const cameraCaptures = Array.isArray(config.obs.names.groups.cameraCaptures)
-    ? config.obs.names.groups.cameraCaptures
-    : [config.obs.names.groups.cameraCaptures];
-const gameSources = Array.isArray(config.obs.names.sources.gameSources)
-    ? config.obs.names.sources.gameSources
-    : [config.obs.names.sources.gameSources];
-const cameraSources = Array.isArray(config.obs.names.sources.cameraSources)
-    ? config.obs.names.sources.cameraSources
-    : [config.obs.names.sources.cameraSources];
+const obsNamesCfg = config.obs.names;
+const gameCaptures = Array.isArray(obsNamesCfg.groups.gameCaptures)
+    ? obsNamesCfg.groups.gameCaptures
+    : [obsNamesCfg.groups.gameCaptures];
+const cameraCaptures = Array.isArray(obsNamesCfg.groups.cameraCaptures)
+    ? obsNamesCfg.groups.cameraCaptures
+    : [obsNamesCfg.groups.cameraCaptures];
+const gameSources = Array.isArray(obsNamesCfg.sources.gameSources)
+    ? obsNamesCfg.sources.gameSources
+    : [obsNamesCfg.sources.gameSources];
+const cameraSources = Array.isArray(obsNamesCfg.sources.cameraSources)
+    ? obsNamesCfg.sources.cameraSources
+    : [obsNamesCfg.sources.cameraSources];
 // CSS ID -> OBS source name mapping
 const obsSourceKeys = {
     GameCapture1: gameCaptures[0],

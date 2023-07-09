@@ -1,5 +1,6 @@
+import NodeCGTypes from '@alvancamp/test-nodecg-types';
 import { TypedEmitter } from 'tiny-typed-emitter';
-import { Asset, OBS as OBSTypes, VideoPlaylist } from '../../../types';
+import { OBS as OBSTypes, VideoPlaylist } from '../../../types';
 import OBS from '../../obs';
 interface VideoPlayerEvents {
     'playCommercial': (playlistItem: VideoPlaylist.PlaylistItem) => void;
@@ -8,12 +9,14 @@ interface VideoPlayerEvents {
     'playlistEnded': (early: boolean) => void;
 }
 declare class VideoPlayer extends TypedEmitter<VideoPlayerEvents> {
+    private nodecg;
     private obsConfig;
     private obs;
+    private delayAC;
     playlist: VideoPlaylist.PlaylistItem[];
     playing: boolean;
     index: number;
-    constructor(obsConfig: OBSTypes.Config, obs: OBS);
+    constructor(nodecg: NodeCGTypes.ServerAPI, obsConfig: OBSTypes.Config, obs: OBS);
     /**
      * Validate and load in a supplied playlist.
      */
@@ -32,7 +35,7 @@ declare class VideoPlayer extends TypedEmitter<VideoPlayerEvents> {
      * Play the supplied asset via the OBS source.
      * @param video NodeCG asset of the video.
      */
-    playVideo(video: Asset): Promise<void>;
+    playVideo(video: NodeCGTypes.AssetFile): Promise<void>;
     /**
      * Calculates how long the playlist will last (estimated).
      * @returns Length in seconds.

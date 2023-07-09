@@ -4,6 +4,10 @@ export namespace OBS {
     address: string;
     password: string;
     names: {
+      scenes?: {
+        commercials?: string;
+        intermission?: string;
+      };
       sources: {
         videoPlayer: string;
       };

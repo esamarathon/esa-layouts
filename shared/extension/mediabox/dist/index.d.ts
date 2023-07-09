@@ -1,12 +1,16 @@
-import type { NodeCG, Replicant } from 'nodecg/types/server';
-import type { Asset, RabbitMQ } from '../../../types';
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
+import type { RabbitMQ } from '../../../types';
+import { OBS as OBSTypes } from '../../../types';
 import type { MediaBox as MediaBoxRep, Prizes } from '../../../types/schemas';
+import OBS from '../../obs';
 declare class MediaBox {
     private nodecg;
-    mediaBox: Replicant<MediaBoxRep>;
-    prizes: Replicant<Prizes>;
-    assetsMediaBoxImages: Replicant<Asset[]>;
-    constructor(nodecg: NodeCG, evt: RabbitMQ.Events);
+    private obs;
+    private obsCfg;
+    mediaBox: NodeCGTypes.ServerReplicantWithSchemaDefault<MediaBoxRep>;
+    prizes: NodeCGTypes.ServerReplicantWithSchemaDefault<Prizes>;
+    assetsMediaBoxImages: NodeCGTypes.ServerReplicantWithSchemaDefault<NodeCGTypes.AssetFile[]>;
+    constructor(nodecg: NodeCGTypes.ServerAPI, evt: RabbitMQ.Events, obs: OBS, obsCfg: OBSTypes.Config);
     pushMerchPurchase({ user, productName, imgURL }: {
         user: string;
         productName: string;

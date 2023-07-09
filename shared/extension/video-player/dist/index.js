@@ -53,14 +53,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var get_video_duration_1 = require("get-video-duration");
 var path_1 = require("path");
 var process_1 = require("process");
+var promises_1 = require("timers/promises");
 var tiny_typed_emitter_1 = require("tiny-typed-emitter");
 var VideoPlayer = /** @class */ (function (_super) {
     __extends(VideoPlayer, _super);
-    function VideoPlayer(obsConfig, obs) {
+    function VideoPlayer(nodecg, obsConfig, obs) {
         var _this = _super.call(this) || this;
         _this.playlist = [];
         _this.playing = false;
         _this.index = -1;
+        _this.nodecg = nodecg;
         _this.obsConfig = obsConfig;
         _this.obs = obs;
         // Listens for when videos finish playing in OBS.
@@ -83,9 +85,9 @@ var VideoPlayer = /** @class */ (function (_super) {
             throw new Error('another playlist currently playing');
         if (!playlist.length)
             throw new Error('playlist must have at least 1 video');
-        var invalidItems = playlist.filter(function (i) { return !i.commercial && !i.video; });
+        var invalidItems = playlist.filter(function (i) { return !i.length && !i.video; });
         if (invalidItems.length) {
-            throw new Error('all playlist items must have either video or commercial');
+            throw new Error('all playlist items must have either video or length');
         }
         this.playlist = playlist;
     };
@@ -95,38 +97,71 @@ var VideoPlayer = /** @class */ (function (_super) {
      */
     VideoPlayer.prototype.playNext = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var item;
+            var item_1, waitLength_1;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (!this.obs.connected || !this.obsConfig.enabled) {
                             throw new Error('no OBS connection available');
                         }
-                        if (!(this.playlist.length - 1 > this.index)) return [3 /*break*/, 5];
+                        if (!(this.playlist.length - 1 > this.index)) return [3 /*break*/, 4];
                         this.playing = true;
                         this.index += 1;
-                        item = this.playlist[this.index];
-                        this.emit('videoStarted', item); // Emitted even if no video is added.
-                        if (item.commercial)
-                            this.emit('playCommercial', item);
-                        if (!item.video) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.playVideo(item.video)];
+                        item_1 = this.playlist[this.index];
+                        this.emit('videoStarted', item_1); // Emitted even if no video is added.
+                        waitLength_1 = 5;
+                        if (item_1.length && item_1.commercial)
+                            this.emit('playCommercial', item_1);
+                        if (!item_1.video) return [3 /*break*/, 2];
+                        waitLength_1 = 0;
+                        return [4 /*yield*/, this.playVideo(item_1.video)];
                     case 1:
                         _a.sent();
-                        return [3 /*break*/, 4];
-                    case 2: return [4 /*yield*/, new Promise(function (res) { setTimeout(res, 5000); })];
+                        return [3 /*break*/, 3];
+                    case 2:
+                        if (item_1.length && !item_1.commercial)
+                            waitLength_1 = item_1.length;
+                        _a.label = 3;
                     case 3:
-                        _a.sent();
-                        this.emit('videoEnded', item); // "Pretend" video ended in this case.
-                        _a.label = 4;
-                    case 4: return [3 /*break*/, 6];
-                    case 5:
+                        this.nodecg.log.debug('[Video Player] waitLength has been set to %s', waitLength_1);
+                        if (waitLength_1) {
+                            // Wrapped function here so we can await without blocking the other stuff
+                            (function () { return __awaiter(_this, void 0, void 0, function () {
+                                var err_1;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            this.nodecg.log.debug('[Video Player] waitLength is %s, will start waiting', waitLength_1);
+                                            _a.label = 1;
+                                        case 1:
+                                            _a.trys.push([1, 3, , 4]);
+                                            this.delayAC = new AbortController();
+                                            return [4 /*yield*/, (0, promises_1.setTimeout)(waitLength_1 * 1000, undefined, { signal: this.delayAC.signal })];
+                                        case 2:
+                                            _a.sent();
+                                            this.emit('videoEnded', item_1); // "Pretend" video ended in this case
+                                            return [3 /*break*/, 4];
+                                        case 3:
+                                            err_1 = _a.sent();
+                                            this.nodecg.log.warn('[Video Player] Error with waitLength waiting:', err_1);
+                                            return [3 /*break*/, 4];
+                                        case 4:
+                                            this.delayAC = undefined; // Hopefully this makes the previous AC garbage collected
+                                            this.nodecg.log.debug('[Video Player] waitLength waiting is finished');
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); })();
+                        }
+                        return [3 /*break*/, 5];
+                    case 4:
                         this.playing = false;
                         this.index = -1;
                         this.playlist.length = 0;
                         this.emit('playlistEnded', false);
-                        _a.label = 6;
-                    case 6: return [2 /*return*/];
+                        _a.label = 5;
+                    case 5: return [2 /*return*/];
                 }
             });
         });
@@ -136,28 +171,30 @@ var VideoPlayer = /** @class */ (function (_super) {
      * and emit "playlistEnded".
      */
     VideoPlayer.prototype.endPlaylistEarly = function () {
+        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var err_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var err_2;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         if (!(this.playing && this.index >= 0)) return [3 /*break*/, 5];
                         this.playing = false;
                         this.index = -1;
                         this.playlist.length = 0;
-                        _a.label = 1;
+                        (_a = this.delayAC) === null || _a === void 0 ? void 0 : _a.abort();
+                        _b.label = 1;
                     case 1:
-                        _a.trys.push([1, 3, , 4]);
+                        _b.trys.push([1, 3, , 4]);
                         return [4 /*yield*/, this.obs.conn.send('StopMedia', { sourceName: this.obsConfig.names.sources.videoPlayer })];
                     case 2:
-                        _a.sent();
+                        _b.sent();
                         return [3 /*break*/, 4];
                     case 3:
-                        err_1 = _a.sent();
+                        err_2 = _b.sent();
                         return [3 /*break*/, 4];
                     case 4:
                         this.emit('playlistEnded', true);
-                        _a.label = 5;
+                        _b.label = 5;
                     case 5: return [2 /*return*/];
                 }
             });
@@ -227,7 +264,7 @@ var VideoPlayer = /** @class */ (function (_super) {
      */
     VideoPlayer.prototype.calculatePlaylistLength = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var totalLength, _i, _a, item, length_1, err_2;
+            var totalLength, _i, _a, item, length_1, err_3;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -247,18 +284,18 @@ var VideoPlayer = /** @class */ (function (_super) {
                         length_1 = _b.sent();
                         return [3 /*break*/, 5];
                     case 4:
-                        err_2 = _b.sent();
+                        err_3 = _b.sent();
                         return [3 /*break*/, 5];
                     case 5:
-                        // If item has a commercial longer than the video, use that instead.
-                        if (item.commercial && item.commercial > length_1)
-                            totalLength += item.commercial;
+                        // If item has a commercial/length longer than the video, use that instead.
+                        if (item.length && item.length > length_1)
+                            totalLength += item.length;
                         else
                             totalLength += length_1;
                         return [3 /*break*/, 7];
                     case 6:
-                        if (item.commercial) {
-                            totalLength += item.commercial;
+                        if (item.length) {
+                            totalLength += item.length;
                         }
                         _b.label = 7;
                     case 7:

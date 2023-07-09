@@ -32,14 +32,25 @@ function processToReadDonations(donations) {
 }
 // Get the donations still to be read from the API.
 async function updateToReadDonations() {
+    var _a;
     clearTimeout(updateTimeout); // Clear timeout in case this is triggered from a message.
     try {
         const resp = await (0, needle_1.default)('get', `https://${config.address}/search/?event=${index_1.eventInfo[eventConfig.thisEvent - 1].id}`
             + '&type=donation&feed=toread', {
             cookies: (0, index_1.getCookies)(),
         });
+        if (!resp.statusCode || resp.statusCode >= 300 || resp.statusCode < 200) {
+            throw new Error(`status code ${(_a = resp.statusCode) !== null && _a !== void 0 ? _a : 'unknown'}`);
+        }
+        if (!Array.isArray(resp.body)) {
+            throw new Error('received non-array type');
+        }
         const currentDonations = processToReadDonations(resp.body);
+        if (!Array.isArray(currentDonations)) {
+            throw new Error('currentDonations result was non-array type');
+        }
         replicants_1.donationsToRead.value = currentDonations;
+        (0, nodecg_1.get)().log.debug('[Tracker] donationsToRead updated (IDs: %s)', replicants_1.donationsToRead.value.map((d) => d.id).join(', '));
     }
     catch (err) {
         (0, nodecg_1.get)().log.warn('[Tracker] Error updating to read donations');

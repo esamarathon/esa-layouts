@@ -1,5 +1,6 @@
+import type NodeCGTypes from '@alvancamp/test-nodecg-types';
 import { v4 as uuid } from 'uuid';
-import { Asset, MediaBox, Tracker } from '../../../types';
+import { MediaBox, Tracker } from '../../../types';
 import { store } from '../store';
 
 /**
@@ -7,15 +8,17 @@ import { store } from '../store';
  * @param type Type of alert
  */
 export function isAlertType(type: MediaBox.Types): boolean {
-  return ['donation', 'subscription', 'cheer', 'merch'].includes(type);
+  return ['donation', 'subscription', 'cheer', 'merch', 'therungg'].includes(type);
 }
 
 /**
  * Returns details about a piece of media from rotation if found.
  * @param media Media from rotation you wish to query information on.
  */
-export function getMediaDetails(media: MediaBox.RotationElem): { name?: string } {
-  let details: Asset | Tracker.FormattedPrize | undefined;
+export function getMediaDetails(
+  media: MediaBox.RotationElem | NonNullable<MediaBox.ActiveElem>,
+): { name?: string } {
+  let details: NodeCGTypes.AssetFile | Tracker.FormattedPrize | undefined;
   if (media.type === 'prize_generic') {
     return {
       name: 'Generic Prize Slide',
@@ -45,6 +48,7 @@ export function clone(
     id: uuid(),
     mediaUUID: mediaUUID || '-1',
     seconds: 60,
+    showOnIntermission: true,
   };
 }
 

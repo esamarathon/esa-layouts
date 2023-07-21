@@ -18,12 +18,7 @@ const allowedDevices = (() => {
   const cfg = (config as DeepWritable<Configschema>).flagcarrier.allowedDevices;
   return !Array.isArray(cfg) && typeof cfg === 'string' ? [cfg] : cfg || [];
 })();
-const buttonIds = [ // Hardcoded button names for now, used in some cases.
-  '1',
-  '2',
-  '3',
-  '4',
-];
+const buttonIds = config.flagcarrier.availableButtons.map((b) => b.id);
 
 async function lookupUser(userId: string, displayName: string): Promise<any> {
   try {
@@ -65,7 +60,7 @@ function mapScannedPlayersToTeams(run: RunData): void {
           newMap[id] = team.players.map((p) => ({
             flagcarrier: {
               id,
-              group: 'stream1',
+              group: config.flagcarrier.group,
               time: {
                 iso: (new Date()).toISOString(),
                 unix: Date.now() / 1000,
@@ -209,8 +204,7 @@ function generateUserTagMsg(btn: string, userName: string, userId: string): Flag
 function setup(): void {
   // RabbitMQ events from the "big red buttons", used for players/commentators.
   mq.evt.on('bigbuttonTagScanned', async (data) => {
-    if (!config.event.online && config.event.thisEvent === 1
-    && data.flagcarrier.group === 'stream1') {
+    if (!config.event.online && data.flagcarrier.group === config.flagcarrier.group) {
       await onBigButtonTagScanned(data);
     }
   });

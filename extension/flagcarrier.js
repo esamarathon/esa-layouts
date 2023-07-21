@@ -19,12 +19,7 @@ const allowedDevices = (() => {
     const cfg = config.flagcarrier.allowedDevices;
     return !Array.isArray(cfg) && typeof cfg === 'string' ? [cfg] : cfg || [];
 })();
-const buttonIds = [
-    '1',
-    '2',
-    '3',
-    '4',
-];
+const buttonIds = config.flagcarrier.availableButtons.map((b) => b.id);
 async function lookupUser(userId, displayName) {
     try {
         let user = await (0, server_1.lookupUserByID)(Number(userId));
@@ -67,7 +62,7 @@ function mapScannedPlayersToTeams(run) {
                     newMap[id] = team.players.map((p) => ({
                         flagcarrier: {
                             id,
-                            group: 'stream1',
+                            group: config.flagcarrier.group,
                             time: {
                                 iso: (new Date()).toISOString(),
                                 unix: Date.now() / 1000,
@@ -187,8 +182,7 @@ function generateUserTagMsg(btn, userName, userId) {
 function setup() {
     // RabbitMQ events from the "big red buttons", used for players/commentators.
     rabbitmq_1.mq.evt.on('bigbuttonTagScanned', async (data) => {
-        if (!config.event.online && config.event.thisEvent === 1
-            && data.flagcarrier.group === 'stream1') {
+        if (!config.event.online && data.flagcarrier.group === config.flagcarrier.group) {
             await onBigButtonTagScanned(data);
         }
     });

@@ -49,8 +49,11 @@ sc.timer.on('change', (val) => {
 
 // Controls the nodecg-speedcontrol timer when the big buttons are pressed.
 mq.evt.on('bigbuttonPressed', async (data) => {
-  // Only listen to this event on stream 1.
-  if (config.event.thisEvent !== 1) return;
+  // For stream 2, the buttons are offset by 4.
+  const buttonId = config.event.thisEvent === 2
+    ? data.button_id - 4
+    : data.button_id;
+  if (buttonId < 1 || (config.event.thisEvent === 1 && buttonId > 4)) return;
 
   // If the button was pressed more than 10s ago, ignore it.
   if (data.time.unix < (Date.now() / 1000) - 10) return;
@@ -66,7 +69,7 @@ mq.evt.on('bigbuttonPressed', async (data) => {
 
   // If more than 1 team, uses the big button player mapping to find out what team to stop.
   if (run && run.teams.length > 1) {
-    const userTag = bigbuttonPlayerMap.value[data.button_id] as BigbuttonPlayerMap[0] | undefined;
+    const userTag = bigbuttonPlayerMap.value[buttonId] as BigbuttonPlayerMap[0] | undefined;
     const teamIndex = run.teams.findIndex((t) => t.players.find((p) => userTag
       ?.find((u) => u.user.displayName.toLowerCase() === p.name.toLowerCase())));
     if (teamIndex >= 0) id = teamIndex;

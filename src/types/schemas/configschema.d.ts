@@ -12,6 +12,7 @@ export interface Configschema {
 		shorts: string | [string] | [string, string];
 		thisEvent: number;
 		online: boolean | ('partial' | 'full');
+		fallbackTwitchTitle: string;
 	};
 	omnibar: {
 		miniCredits: {

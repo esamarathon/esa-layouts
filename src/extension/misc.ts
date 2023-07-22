@@ -179,18 +179,12 @@ nodecg().listenFor('readerModify', async (val: string | null | undefined, ack) =
 
 async function changeTwitchMetadata(title?: string, gameId?: string): Promise<void> {
   try {
-    // Hardcoded fallback title for now!
-    // TODO: Unhardcode!
-    const fallback = (() => {
-      if (config.event.shorts === 'swcf') {
-        const run = sc.getCurrentRun()?.game;
-        return `{{total}}/$50,000 - Souls Winter !Charity Fest${run ? ` - ${run}` : ''}`;
-      }
-      return '🔴 ESA Legends 2023 - {{total}} in aid of Make a Wish';
-    })();
-    let t = title || fallback;
+    let t = title || config.event.fallbackTwitchTitle;
     if (t) {
-      t = (t as string).replace(/{{total}}/g, formatUSD(donationTotal.value, true));
+      const run = sc.getCurrentRun()?.game;
+      t = (t as string)
+        .replace(/{{total}}/g, formatUSD(donationTotal.value, true))
+        .replace(/{{run}}/g, run ? ` - ${run}` : '');
     }
     nodecg().log.debug('[Misc] Decided Twitch title is: %s - Decided game ID is %s', t, gameId);
     if (config.event.shorts === 'swcf') {

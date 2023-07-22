@@ -90,12 +90,18 @@
             }
           ],
           "default": false
+        },
+        "fallbackTwitchTitle": {
+          "$comment": "Set the fallback twitch title for this event.",
+          "type": "string",
+          "default": "\uD83D\uDD34 ESA Summer 2023 - {{total}} in aid of Alzheimer's Game Over{{run}}"
         }
       },
       "required": [
         "shorts",
         "thisEvent",
-        "online"
+        "online",
+        "fallbackTwitchTitle"
       ]
     },
     "omnibar": {

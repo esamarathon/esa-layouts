@@ -20,7 +20,7 @@
       }"
     >
     <div :style="{ 'margin-left': vertical ? 0 : '20px' }">
-      <div
+      <!--<div
         :style="{
           'font-size': '0.7em',
           color: 'white', // move to theme!
@@ -30,14 +30,14 @@
       </div>
       <div :style="{ 'font-size': '1em' }">
         {{ prize.name }}?
-      </div>
+      </div>-->
       <div
         :style="{
           'font-size': '1em',
           color: 'lightgrey', // move to theme!
         }"
       >
-        See all prizes available<br>@ {{ prizesUrl }}
+        Find more @ {{ prizesUrl }}
       </div>
     </div>
   </div>

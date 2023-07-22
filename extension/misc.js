@@ -213,7 +213,7 @@ async function changeTwitchMetadata(title, gameId) {
                 const run = (_a = speedcontrol_1.sc.getCurrentRun()) === null || _a === void 0 ? void 0 : _a.game;
                 return `{{total}}/$50,000 - Souls Winter !Charity Fest${run ? ` - ${run}` : ''}`;
             }
-            return '🔴 ESA Winter 2023 - {{total}}/$135,000 in aid of Alzheimer\'s Game Over';
+            return '🔴 ESA Summer 2023 - {{total}} in aid of Alzheimer\'s Game Over';
         })();
         let t = title || fallback;
         if (t) {

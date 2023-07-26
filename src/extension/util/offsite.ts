@@ -12,7 +12,10 @@ const socket: typeof Socket = io(
 );
 
 socket.on('connect', () => {
-  socket.emit('authenticate', { key: 'esalayouts', pw: config.offsite.key });
+  const key = config.event.thisEvent === 2
+    ? 'esalayouts2'
+    : 'esalayouts';
+  socket.emit('authenticate', { key, pw: config.offsite.key });
   nodecg().log.info('[Offsite] Socket.IO client connected');
 });
 socket.on('authenticated', () => {

@@ -45,7 +45,7 @@ const gameSourceKeys = [69, 70, 71, 72];
 const gameCropKeys = [77, 78, 79, 80];
 const gameCropResetKeys = { selected: 76, all: 68 };
 const cameraCaptureKeys = [5, 6, 7, 8];
-const cameraSourceKeys = [13, 14, 15, 16];
+const cameraSourceKeys = [13, 14, 15, 16, 12];
 const cameraPositionResetKey = 24;
 
 // Stores current cropping values.
@@ -346,7 +346,10 @@ function clearAllKeys(): void {
 let captureTO: NodeJS.Timeout | undefined;
 function setupIdleTimeout(): void {
   if (captureTO) clearTimeout(captureTO);
-  captureTO = setTimeout(() => { clearAllKeys(); }, 30 * 1000);
+  // "Taskmaster" disables the timeouts so they stay on all the time.
+  if (sc.getCurrentRun()?.game?.toLowerCase() !== 'taskmaster') {
+    captureTO = setTimeout(() => { clearAllKeys(); }, 30 * 1000);
+  }
 }
 
 /**

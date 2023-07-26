@@ -4,7 +4,7 @@ import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
-import { bigbuttonPlayerMap, currentRunDelay, delayedTimer } from './util/replicants';
+import { bigbuttonPlayerMap, currentRunDelay, delayedTimer, taskmasterTimestamps } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const config = nodecg().bundleConfig;
@@ -65,6 +65,19 @@ mq.evt.on('bigbuttonPressed', async (data) => {
   }
 
   const run = sc.getCurrentRun();
+
+  // Hardcoded different timer for Taskmaster.
+  if (run?.game?.toLowerCase() === 'taskmaster') {
+    if (taskmasterTimestamps.value.start === null) { // Start
+      taskmasterTimestamps.value.start = Date.now();
+    } else if (taskmasterTimestamps.value.end === null) { // End
+      taskmasterTimestamps.value.end = Date.now();
+    } else {
+      taskmasterTimestamps.value = { start: null, end: null }; // Reset
+    }
+    return;
+  }
+
   let id = 0;
 
   // If more than 1 team, uses the big button player mapping to find out what team to stop.

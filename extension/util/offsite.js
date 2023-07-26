@@ -7,7 +7,10 @@ const config = (0, nodecg_1.get)().bundleConfig;
 const address = new URL(`${config.offsite.address}${!config.offsite.address.endsWith('/') ? '/' : ''}`);
 const socket = (0, socket_io_client_1.io)(address.origin, { path: `${address.pathname}socket.io`, autoConnect: false });
 socket.on('connect', () => {
-    socket.emit('authenticate', { key: 'esalayouts', pw: config.offsite.key });
+    const key = config.event.thisEvent === 2
+        ? 'esalayouts2'
+        : 'esalayouts';
+    socket.emit('authenticate', { key, pw: config.offsite.key });
     (0, nodecg_1.get)().log.info('[Offsite] Socket.IO client connected');
 });
 socket.on('authenticated', () => {

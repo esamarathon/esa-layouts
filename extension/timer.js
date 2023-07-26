@@ -72,6 +72,7 @@ speedcontrol_1.sc.timer.on('change', (val) => {
 });
 // Controls the nodecg-speedcontrol timer when the big buttons are pressed.
 rabbitmq_1.mq.evt.on('bigbuttonPressed', async (data) => {
+    var _a;
     // For stream 2, the buttons are offset by 4.
     const buttonId = config.event.thisEvent === 2
         ? data.button_id - 4
@@ -87,6 +88,19 @@ rabbitmq_1.mq.evt.on('bigbuttonPressed', async (data) => {
         return;
     }
     const run = speedcontrol_1.sc.getCurrentRun();
+    // Hardcoded different timer for Taskmaster.
+    if (((_a = run === null || run === void 0 ? void 0 : run.game) === null || _a === void 0 ? void 0 : _a.toLowerCase()) === 'taskmaster') {
+        if (replicants_1.taskmasterTimestamps.value.start === null) { // Start
+            replicants_1.taskmasterTimestamps.value.start = Date.now();
+        }
+        else if (replicants_1.taskmasterTimestamps.value.end === null) { // End
+            replicants_1.taskmasterTimestamps.value.end = Date.now();
+        }
+        else {
+            replicants_1.taskmasterTimestamps.value = { start: null, end: null }; // Reset
+        }
+        return;
+    }
     let id = 0;
     // If more than 1 team, uses the big button player mapping to find out what team to stop.
     if (run && run.teams.length > 1) {

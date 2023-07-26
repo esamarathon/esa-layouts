@@ -44,7 +44,7 @@ const gameSourceKeys = [69, 70, 71, 72];
 const gameCropKeys = [77, 78, 79, 80];
 const gameCropResetKeys = { selected: 76, all: 68 };
 const cameraCaptureKeys = [5, 6, 7, 8];
-const cameraSourceKeys = [13, 14, 15, 16];
+const cameraSourceKeys = [13, 14, 15, 16, 12];
 const cameraPositionResetKey = 24;
 // Stores current cropping values.
 const gameCropValues = Array(gameCaptures.length)
@@ -323,9 +323,13 @@ function clearAllKeys() {
  */
 let captureTO;
 function setupIdleTimeout() {
+    var _a, _b;
     if (captureTO)
         clearTimeout(captureTO);
-    captureTO = setTimeout(() => { clearAllKeys(); }, 30 * 1000);
+    // "Taskmaster" disables the timeouts so they stay on all the time.
+    if (((_b = (_a = speedcontrol_1.sc.getCurrentRun()) === null || _a === void 0 ? void 0 : _a.game) === null || _b === void 0 ? void 0 : _b.toLowerCase()) !== 'taskmaster') {
+        captureTO = setTimeout(() => { clearAllKeys(); }, 30 * 1000);
+    }
 }
 /**
  * Helper function to calculate game crop used below to calculate overall crop value for a source.

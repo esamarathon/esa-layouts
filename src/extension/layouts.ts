@@ -346,7 +346,10 @@ function clearAllKeys(): void {
 let captureTO: NodeJS.Timeout | undefined;
 function setupIdleTimeout(): void {
   if (captureTO) clearTimeout(captureTO);
-  captureTO = setTimeout(() => { clearAllKeys(); }, 30 * 1000);
+  // "Taskmaster" disables the timeouts so they stay on all the time.
+  if (sc.getCurrentRun()?.game?.toLowerCase() !== 'taskmaster') {
+    captureTO = setTimeout(() => { clearAllKeys(); }, 30 * 1000);
+  }
 }
 
 /**

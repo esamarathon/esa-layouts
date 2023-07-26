@@ -175,6 +175,11 @@ const routes = [
     component: List.L_FullCrowdCam,
   },
   {
+    name: 'Taskmaster Timer',
+    path: '/taskmaster-timer',
+    component: List.L_Taskmaster_Timer,
+  },
+  {
     path: '*',
     redirect: '/4x3-1p',
   },

@@ -180,6 +180,11 @@ const routes = [
     component: List.L_Taskmaster_Timer,
   },
   {
+    name: 'Pokemon Emerald Map Randomizer',
+    path: '/pokemonemerald-maprando',
+    component: List.L_PokemonEmerald_MapRando,
+  },
+  {
     path: '*',
     redirect: '/4x3-1p',
   },

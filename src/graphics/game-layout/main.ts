@@ -170,9 +170,9 @@ const routes = [
     component: List.L_2CamsOnly,
   },
   {
-    name: 'Full Crowd Camera',
-    path: '/full-crowd-cam',
-    component: List.L_FullCrowdCam,
+    name: 'Full Camera',
+    path: '/full-cam',
+    component: List.L_FullCam,
   },
   {
     name: 'Taskmaster Timer',

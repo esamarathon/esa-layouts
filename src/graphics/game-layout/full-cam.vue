@@ -2,8 +2,8 @@
   <div>
     <!-- Crowd Camera Capture -->
     <div
-      id="CameraCaptureCrowd"
-      class="Capture BorderBottom"
+      id="CameraCapture1"
+      class="Capture"
       :style="{
         left: '0px',
         top: '0px',
@@ -13,7 +13,7 @@
     />
 
     <!-- Players -->
-    <div
+    <!--<div
       class="Fixed Flex"
       :style="{
         left: '0px',
@@ -29,12 +29,12 @@
       <player :slotNo="1" />
       <player :slotNo="2" />
       <player :slotNo="3" />
-    </div>
+    </div>-->
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import Player from './components/Player.vue';
 
 @Component({

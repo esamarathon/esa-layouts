@@ -28,12 +28,12 @@
 
 <script lang="ts">
 import { wait } from '@esa-layouts/graphics/_misc/helpers';
-import { Vue, Component, Prop } from 'vue-property-decorator';
-import { RunData } from 'speedcontrol-util/types';
-import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import utc from 'dayjs/plugin/utc';
+import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
+import { RunData } from 'speedcontrol-util/types';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -45,12 +45,17 @@ export default class extends Vue {
   @Prop({ type: Number, default: 25 }) readonly seconds!: number;
   @Prop({ type: Object, required: true }) readonly run!: RunData;
   getRunTotalPlayers = SpeedcontrolUtilBrowser.getRunTotalPlayers;
-  formPlayerNamesStr = SpeedcontrolUtilBrowser.formPlayerNamesStr;
 
   get when(): string {
     return this.run.scheduledS
       ? `in about ${dayjs.utc().to(dayjs.unix(this.run.scheduledS), true)}`
       : 'soon';
+  }
+
+  formPlayerNamesStr(runData: RunData): string {
+    return runData.teams.map((team) => (
+      team.name || team.players.map((player) => player.name).join(', ')
+    )).join(' vs. ') || 'N/A';
   }
 
   async created(): Promise<void> {

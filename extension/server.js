@@ -20,6 +20,8 @@ async function lookupUserByID(id) {
     return resp.body.data;
 }
 exports.lookupUserByID = lookupUserByID;
+// TODO: The API used to do this kinda sucks, either needs improving here
+//       or improving on the server-side.
 async function lookupUsersByStr(str) {
     if (!config.server.enabled)
         throw new Error('server integration disabled');
@@ -82,7 +84,11 @@ async function lookupScheduleUserInfo() {
                     teams[x].players[y].name = userData.name;
                     teams[x].players[y].country = country || undefined;
                     teams[x].players[y].pronouns = userData.pronouns || undefined;
-                    teams[x].players[y].social.twitch = ((_a = userData.twitch) === null || _a === void 0 ? void 0 : _a.displayName) || undefined;
+                    const twitch = userData.twitch
+                        && userData.twitch.displayName.toLowerCase() === userData.twitch.login
+                        ? userData.twitch.displayName
+                        : (_a = userData.twitch) === null || _a === void 0 ? void 0 : _a.login;
+                    teams[x].players[y].social.twitch = twitch || undefined;
                 }
                 i += 1;
             }

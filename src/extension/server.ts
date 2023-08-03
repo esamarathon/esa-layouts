@@ -19,6 +19,8 @@ export async function lookupUserByID(id: number): Promise<any> {
   return resp.body.data;
 }
 
+// TODO: The API used to do this kinda sucks, either needs improving here
+//       or improving on the server-side.
 export async function lookupUsersByStr(str: string): Promise<any[]> {
   if (!config.server.enabled) throw new Error('server integration disabled');
   const resp = await needle(
@@ -79,7 +81,11 @@ async function lookupScheduleUserInfo(): Promise<void> {
           teams[x].players[y].name = userData.name;
           teams[x].players[y].country = country || undefined;
           teams[x].players[y].pronouns = userData.pronouns || undefined;
-          teams[x].players[y].social.twitch = userData.twitch?.displayName || undefined;
+          const twitch = userData.twitch
+            && userData.twitch.displayName.toLowerCase() === userData.twitch.login
+            ? userData.twitch.displayName
+            : userData.twitch?.login;
+          teams[x].players[y].social.twitch = twitch || undefined;
         }
         i += 1;
       }

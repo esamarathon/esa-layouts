@@ -124,6 +124,10 @@ export interface Configschema {
 		enabled: boolean;
 		apiUrl: string;
 	};
+	therungg: {
+		enabled: boolean;
+		[k: string]: unknown;
+	};
 }
 export interface BidwarBias {
 	bidId: number;

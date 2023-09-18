@@ -51,7 +51,7 @@ switch (theme) {
     break;
   case 'uksgblue':
     uksg.use();
-    uksggreen.use();
+    uksgblue.use();
     break;
   case 'summer':
     summer.use();

@@ -1,6 +1,35 @@
 /* eslint-disable max-len */
 
-import { Bids, BigbuttonPlayerMap, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, IntermissionSlides, MusicData, NameCycle, NotableDonations, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TaskmasterTimestamps, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import {
+  Bids,
+  BigbuttonPlayerMap,
+  CapturePositions,
+  Commentators,
+  Countdown,
+  CurrentRunDelay,
+  DelayedTimer,
+  DonationReader,
+  DonationsToRead,
+  DonationTotal,
+  DonationTotalMilestones,
+  GameLayouts,
+  IntermissionSlides,
+  MusicData,
+  NameCycle,
+  NotableDonations,
+  ObsData,
+  Omnibar,
+  OtherStreamData,
+  Prizes,
+  ReaderIntroduction,
+  ServerTimestamp,
+  StreamDeckData,
+  TaskMasterContestantList,
+  TaskmasterTimestamps,
+  TtsVoices,
+  UpcomingRunID,
+  VideoPlayer,
+} from '@esa-layouts/types/schemas';
 import type NodeCGTypes from '@nodecg/types';
 import { HoraroImportStatus, OengusImportStatus, TwitchAPIData, TwitchChannelInfo } from 'speedcontrol-util/types/schemas';
 import { get as nodecg } from './nodecg';
@@ -38,6 +67,7 @@ export const prizes = nodecg().Replicant<Prizes>('prizes', { persistent: false }
 export const readerIntroduction = nodecg().Replicant<ReaderIntroduction>('readerIntroduction') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<ReaderIntroduction>;
 export const serverTimestamp = nodecg().Replicant<ServerTimestamp>('serverTimestamp') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<ServerTimestamp>;
 export const streamDeckData = nodecg().Replicant<StreamDeckData>('streamDeckData') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<StreamDeckData>;
+export const taskmasterContestantList = nodecg().Replicant<TaskMasterContestantList>('taskmasterContestantList') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<TaskMasterContestantList>;
 export const taskmasterTimestamps = nodecg().Replicant<TaskmasterTimestamps>('taskmasterTimestamps') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<TaskmasterTimestamps>;
 export const ttsVoices = nodecg().Replicant<TtsVoices>('ttsVoices') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<TtsVoices>;
 export const twitchAPIData = nodecg().Replicant<TwitchAPIData>('twitchAPIData', 'nodecg-speedcontrol') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<TwitchAPIData>;

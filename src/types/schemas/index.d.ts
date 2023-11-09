@@ -18,11 +18,11 @@ export * from './delayedTimer';
 // @ts-ignore
 export * from './donationReader';
 // @ts-ignore
-export * from './donationsToRead';
-// @ts-ignore
 export * from './donationTotal';
 // @ts-ignore
 export * from './donationTotalMilestones';
+// @ts-ignore
+export * from './donationsToRead';
 // @ts-ignore
 export * from './gameLayouts';
 // @ts-ignore
@@ -49,6 +49,10 @@ export * from './readerIntroduction';
 export * from './serverTimestamp';
 // @ts-ignore
 export * from './streamDeckData';
+// @ts-ignore
+export * from './taskMasterContestantList';
+// @ts-ignore
+export * from './taskmasterContestant';
 // @ts-ignore
 export * from './taskmasterTimestamps';
 // @ts-ignore

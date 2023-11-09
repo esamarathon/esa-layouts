@@ -3,9 +3,6 @@
     <div class="contestant"
          v-for="(contestant, i) in contestantsSorted"
          :key="contestant.uuid"
-         :style="{
-           // '--position-in-frame': `${(275 * i + 30)}px`,
-         }"
     >
       <div class="frame-scaler"
            :class="{

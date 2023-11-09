@@ -16,7 +16,6 @@ class OurModule extends VuexModule {
 
   @Mutation
   addParticipant(name: string): void {
-    // TODO: store contestants with their id as a key instead?.
     const contestants = replicantModule.repsTyped.taskmasterContestantList;
 
     contestants.push({

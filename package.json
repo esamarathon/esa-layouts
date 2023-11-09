@@ -233,6 +233,14 @@
         "file": "rabbitmq-test.html",
         "workspace": "Z9 - Debug",
         "headerColor": "#c49215"
+      },
+      {
+        "name": "taskmaster-scoreboard",
+        "title": "Taskmaster Scoreboard",
+        "width": 5,
+        "file": "taskmaster-scoreboard.html",
+        "headerColor": "#33cbcb",
+        "workspace": "Taskmaster"
       }
     ],
     "graphics": [
@@ -296,6 +304,11 @@
         "file": "media-box-only.html",
         "width": 1920,
         "height": 1080
+      },
+      {
+        "file": "taskmaster-scoreboard.html",
+        "width": 1920,
+        "height": 1000
       }
     ],
     "mount": [
@@ -348,6 +361,18 @@
       {
         "name": "reader-introduction-images",
         "title": "Reader Introduction Images",
+        "allowedTypes": [
+          "jpg",
+          "jpeg",
+          "png",
+          "svg",
+          "webp",
+          "gif"
+        ]
+      },
+      {
+        "name": "taskmaster-participant-headshots",
+        "title": "Taskmaster Participant Headshots",
         "allowedTypes": [
           "jpg",
           "jpeg",

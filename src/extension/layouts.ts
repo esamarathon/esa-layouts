@@ -1,7 +1,7 @@
-import { Configschema } from '@esa-layouts/types/schemas';
+import { CapturePositions, Configschema } from '@esa-layouts/types/schemas';
 import Countdown from '@shared/extension/countdown';
 import clone from 'clone';
-import { DeepWritable } from 'ts-essentials';
+import type { DeepWritable } from 'ts-essentials';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
@@ -19,14 +19,20 @@ const gameCaptures = Array.isArray(obsNamesCfg.groups.gameCaptures)
 const cameraCaptures = Array.isArray(obsNamesCfg.groups.cameraCaptures)
   ? obsNamesCfg.groups.cameraCaptures
   : [obsNamesCfg.groups.cameraCaptures];
+const allCaptures = gameCaptures.concat(cameraCaptures);
 const gameSources = Array.isArray(obsNamesCfg.sources.gameSources)
   ? obsNamesCfg.sources.gameSources
   : [obsNamesCfg.sources.gameSources];
 const cameraSources = Array.isArray(obsNamesCfg.sources.cameraSources)
   ? obsNamesCfg.sources.cameraSources
   : [obsNamesCfg.sources.cameraSources];
+// For ease of use, we attach the type of the source to each name as well.
+const allSources = (gameSources.map((v) => ({ name: v, type: 'game' }))
+  .concat(cameraSources.map((v) => ({ name: v, type: 'camera' })))
+) as { name: string, type: 'game' | 'camera' }[];
 
 // CSS ID -> OBS source name mapping
+// TODO: Make this be generated programatically.
 const obsSourceKeys: { [key: string]: string | undefined } = {
   GameCapture1: gameCaptures[0],
   GameCapture2: gameCaptures[1],
@@ -36,33 +42,37 @@ const obsSourceKeys: { [key: string]: string | undefined } = {
   CameraCapture2: cameraCaptures[1],
   CameraCapture3: cameraCaptures[2],
   CameraCapture4: cameraCaptures[3],
-  CameraCaptureCrowd: config.obs.names.sources.cameraSourceCrowd || undefined,
+  // CameraCaptureCrowd: config.obs.names.sources.cameraSourceCrowd || undefined,
 };
 
-// Hardcoded (for now) sets of keys to use for sources/groups/cropping for XKeys panel.
-const gameCaptureKeys = [61, 62, 63, 64];
-const gameSourceKeys = [69, 70, 71, 72];
-const gameCropKeys = [77, 78, 79, 80];
-const gameCropResetKeys = { selected: 76, all: 68 };
-const cameraCaptureKeys = [5, 6, 7, 8];
-const cameraSourceKeys = [13, 14, 15, 16, 12];
-const cameraPositionResetKey = 24;
+// Hardcoded (for now) sets of keys to use for groups/sources/etc for XKeys panel.
+// slice removes any that won't be applicable because of the current configuration.
+const gameCaptureKeys = [1, 2, 3, 4].slice(0, gameCaptures.length);
+const cameraCaptureKeys = [5, 6, 7, 8].slice(0, cameraCaptures.length);
+const allCaptureKeys = gameCaptureKeys.concat(cameraCaptureKeys);
+const gameSourceKeys = [9, 10, 11, 12].slice(0, gameSources.length);
+const cameraSourceKeys = [13, 14, 15, 16].slice(0, cameraSources.length); // TODO: 5th?
+const allSourceKeys = gameSourceKeys.concat(cameraSourceKeys);
+const gameCropKeys = [70, 79, 72, 63]; // order: top, right, bottom, left
+const gameCropResetKeys = { selected: 78, all: 62 };
+const cameraPositionResetKey = 80;
+const noIdleTimeoutKey = 25;
 
-// Stores current cropping values.
-const gameCropValues = Array(gameCaptures.length)
+// Stores current cropping values for each mode.
+// We fill up slots here for both "types" of capture as they are actually interchangable.
+const gameCropValues = Array(gameCaptures.length + cameraCaptures.length)
   .fill({ top: 0, right: 0, bottom: 0, left: 0 });
-const cameraCropValues = Array(cameraCaptures.length)
+const cameraCropValues = Array(gameCaptures.length + cameraCaptures.length)
   .fill({ top: 0, right: 0, bottom: 0, left: 0 });
-let currShuttlePos = 0; // Stores current shuttle position for use by other functions
 
 // Things that are currently "selected", mostly used by XKeys for backlights.
+// We fill up slots here for both "types" of capture as they are actually interchangable.
 const selected = {
-  gameCapture: -1,
-  gameSource: Array(gameCaptures.length).fill(-1),
+  captureIndex: -1,
+  sourceIndex: Array(gameCaptures.length + cameraCaptures.length).fill(-1),
   gameCrop: -1,
-  cameraCapture: -1,
-  cameraSource: Array(cameraCaptures.length).fill(-1),
 };
+let idleTimeout = true;
 
 // Controls the name cycling ticks for user information.
 function cycleNames(reset = false): void {
@@ -109,10 +119,66 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
   layoutInit = true;
 });
 
+/**
+ * Used to retrieve the stored crop and area values for a capture depending on the source mode
+ * and the area on the game layout.
+ * @param mode What mode we are operating in for the relevant capture.
+ * @param areaName CSS ID for the capture (e.g. "GameCapture1")
+ * @param groupSourceName OBS source name for the capture (e.g. "Game Capture 1")
+ * @returns Both the crop values and the area values if possible.
+ */
+async function getStoredCropAndAreaVals(
+  mode: 'game' | 'camera',
+  areaName: string,
+  groupSourceName: string,
+  recall = false,
+) {
+  const area = capturePositions.value['game-layout'][areaName] as
+    CapturePositions[0][0] | undefined;
+  let crop = { top: 0, right: 0, bottom: 0, left: 0 }; // Default crop values
+  // If this a game source, use cropping we have stored for those.
+  if (mode === 'game') crop = gameCropValues[allCaptures.indexOf(groupSourceName)];
+  // If this is a camera source, cropping is a little more complicated.
+  if (mode === 'camera' && area) {
+    const storedCrop = cameraCropValues[allCaptures.indexOf(groupSourceName)];
+    // If "recall" is specified and we have a stored crop,
+    // just return stored values and don't fully calculate them again.
+    if (recall && storedCrop) crop = clone(storedCrop);
+    else {
+      try {
+        // Cameras need cropping if not exactly 16:9.
+        // Wider need top/bottom cropping.
+        // Thinner need left/right cropping.
+        const sceneItemProperties = await obs.conn.send('GetSceneItemProperties', {
+          'scene-name': config.obs.names.scenes.gameLayout,
+          item: { name: groupSourceName },
+        });
+        const cameraAR = sceneItemProperties.sourceWidth / sceneItemProperties.sourceHeight;
+        const areaAR = area.width / area.height;
+        if (areaAR > cameraAR) {
+          const newHeight = sceneItemProperties.sourceWidth / areaAR;
+          const cropAmount = Math.floor((sceneItemProperties.sourceHeight - newHeight) / 2);
+          crop.top = cropAmount;
+          crop.bottom = cropAmount;
+        } else if (areaAR < cameraAR) {
+          const newWidth = sceneItemProperties.sourceHeight * areaAR;
+          const cropAmount = Math.floor((sceneItemProperties.sourceWidth - newWidth) / 2);
+          crop.left = cropAmount;
+          crop.right = cropAmount;
+        }
+        cameraCropValues[allCaptures.indexOf(groupSourceName)] = clone(crop);
+      } catch (err) {
+        logError('[Layouts] Could not find camera source to crop [%s]', err, areaName);
+      }
+    }
+  }
+  return { crop, area };
+}
+
 // Listens to the replicant that stores the "capture positions" for various graphics
 // sent by the browser (as of writing, only game-layout), to know where to move OBS items.
 let positionsInit = false;
-let crowdCamPrevious = gameLayouts.value.crowdCamera;
+// let crowdCamPrevious = gameLayouts.value.crowdCamera;
 capturePositions.on('change', async (val) => {
   // Ignore first emitted event on start up.
   if (!positionsInit) {
@@ -128,77 +194,54 @@ capturePositions.on('change', async (val) => {
   if (config.event.online === 'partial' || !val['game-layout']) return;
 
   // Loops through all possible sources to move and does the work.
-  for (const [key, value] of Object.entries(obsSourceKeys)) {
-    if (value) { // Only continue if key -> value pair is set
-      let crop = { top: 0, right: 0, bottom: 0, left: 0 }; // Default crop values
+  // areaName: CSS ID (e.g. "GameCapture1")
+  // groupSourceName: name of group source in OBS (e.g. "Game Capture 1")
+  for (const [areaName, groupSourceName] of Object.entries(obsSourceKeys)) {
+    if (groupSourceName) { // Only continue if key -> value pair is set
+      // Check for mode of currently selected source for this capture.
+      const mode = allSources[selected.sourceIndex[allCaptures.indexOf(groupSourceName)]]?.type;
 
-      // If this a game capture, use cropping we have stored.
-      if (key.includes('Game')) crop = gameCropValues[gameCaptures.indexOf(value)];
-
-      // If this is a camera, it may need cropping.
-      if (key.includes('Camera') && val['game-layout'][key]) {
-        try {
-          // Cameras need cropping if not exactly 16:9.
-          // Widerneed top/bottom cropping.
-          // Thinner need left/right cropping.
-          const sceneItemProperties = await obs.conn.send('GetSceneItemProperties', {
-            'scene-name': config.obs.names.scenes.gameLayout,
-            item: { name: value },
-          });
-          const cameraAR = sceneItemProperties.sourceWidth / sceneItemProperties.sourceHeight;
-          const areaAR = val['game-layout'][key].width / val['game-layout'][key].height;
-          if (areaAR > cameraAR) {
-            const newHeight = sceneItemProperties.sourceWidth / areaAR;
-            const cropAmount = Math.floor((sceneItemProperties.sourceHeight - newHeight) / 2);
-            crop.top = cropAmount;
-            crop.bottom = cropAmount;
-          } else if (areaAR < cameraAR) {
-            const newWidth = sceneItemProperties.sourceHeight * areaAR;
-            const cropAmount = Math.floor((sceneItemProperties.sourceWidth - newWidth) / 2);
-            crop.left = cropAmount;
-            crop.right = cropAmount;
-          }
-          cameraCropValues[cameraCaptures.indexOf(value)] = clone(crop);
-        } catch (err) {
-          logError('[Layouts] Could not find camera source to crop [%s]', err, key);
-        }
-      }
+      // Get relevant crop values for this capture for the specific mode it's in.
+      const { crop, area } = await getStoredCropAndAreaVals(mode, areaName, groupSourceName);
 
       try {
         // Special game capture source cropping for sm64-psp-2p game layout.
-        if (['GameCapture1', 'GameCapture2'].includes(key)
+        // TODO: IF THIS GETS IN THE WAY OF CHANGES, JUST REMOVE IT!
+        /* if (['GameCapture1', 'GameCapture2'].includes(areaName)
         && gameLayouts.value.selected === 'sm64-psp-2p') {
           const sceneItemProperties = await obs.conn.send('GetSceneItemProperties', {
             'scene-name': config.obs.names.scenes.gameLayout,
-            item: { name: value },
+            item: { name: groupSourceName },
           });
           crop = {
             top: 0,
-            right: key === 'GameCapture1' ? sceneItemProperties.sourceWidth / 2 : 0,
+            right: areaName === 'GameCapture1' ? sceneItemProperties.sourceWidth / 2 : 0,
             bottom: 0,
-            left: key === 'GameCapture2' ? sceneItemProperties.sourceWidth / 2 : 0,
+            left: areaName === 'GameCapture2' ? sceneItemProperties.sourceWidth / 2 : 0,
           };
-        }
+        } */
 
         await obs.configureSceneItem(
           config.obs.names.scenes.gameLayout, // Scene
-          value, // Item
+          groupSourceName, // Item
+          // eslint-disable-next-line arrow-body-style
           (() => { // Area
             // Special game capture settings for DS-1p, 3DS-1p and sm64-psp-2p when online.
-            if (config.event.online && key.startsWith('GameCapture')
+            // TODO: IF THIS GETS IN THE WAY OF CHANGES, JUST REMOVE IT!
+            /* if (config.event.online && areaName.startsWith('GameCapture')
             && ['DS-1p', '3DS-1p', 'sm64-psp-2p'].includes(gameLayouts.value.selected || '')) {
               // sm64-psp-2p.
               if (gameLayouts.value.selected === 'sm64-psp-2p'
-              && ['GameCapture1', 'GameCapture2'].includes(key)) {
+              && ['GameCapture1', 'GameCapture2'].includes(areaName)) {
                 return {
-                  x: key === 'GameCapture2' ? config.obs.canvasResolution.width / 2 : 0,
+                  x: areaName === 'GameCapture2' ? config.obs.canvasResolution.width / 2 : 0,
                   y: 0,
                   width: config.obs.canvasResolution.width / 2,
                   height: config.obs.canvasResolution.height,
                 };
               }
               // All others.
-              if (key === 'GameCapture1') {
+              if (areaName === 'GameCapture1') {
                 return {
                   x: 0,
                   y: 0,
@@ -207,31 +250,34 @@ capturePositions.on('change', async (val) => {
                 };
               }
               return undefined;
-            }
-            return val['game-layout'][key];
+            } */
+            return area;
           })(),
           crop, // Crop
+          // eslint-disable-next-line arrow-body-style
           (() => { // Visible
             // Special game capture settings for DS-1p, 3DS-1p and sm64-psp-2p when online.
-            if (config.event.online && key.startsWith('GameCapture')
+            // TODO: IF THIS GETS IN THE WAY OF CHANGES, JUST REMOVE IT!
+            /* if (config.event.online && areaName.startsWith('GameCapture')
             && ['DS-1p', '3DS-1p', 'sm64-psp-2p'].includes(gameLayouts.value.selected || '')) {
-              if (key === 'GameCapture1') return true;
-              if (key === 'GameCapture2' && gameLayouts.value.selected === 'sm64-psp-2p') {
+              if (areaName === 'GameCapture1') return true;
+              if (areaName === 'GameCapture2' && gameLayouts.value.selected === 'sm64-psp-2p') {
                 return true;
               }
               return false;
-            }
-            return !!val['game-layout'][key];
+            } */
+            return !!area;
           })(),
         );
       } catch (err) {
-        logError('[Layouts] Could not successfully configure capture position [%s]', err, key);
+        logError('[Layouts] Could not successfully configure capture position [%s]', err, areaName);
       }
     }
   }
 
   // If crowd camera has changed since last time and we're on the game layout, transition.
-  try {
+  // TODO: IF THIS GETS IN THE WAY OF CHANGES, JUST REMOVE IT!
+  /* try {
     if (crowdCamPrevious !== gameLayouts.value.crowdCamera) {
       if (obs.isCurrentScene(config.obs.names.scenes.gameLayout)) {
         // eslint-disable-next-line import/no-named-as-default-member
@@ -241,102 +287,76 @@ capturePositions.on('change', async (val) => {
     }
   } catch (err) {
     logError('[Layouts] Could not successfully update live Game Layout', err);
-  }
+  } */
 });
 
 // Things to do on OBS initial connection/authentication.
 // This should also trigger even if authentication is turned off, after initial connection.
+// TODO: Any checks needed for "online" marathons? Some were removed; we don't care about
+// them anymore anyway so not too much of an issue, not sure why the check was there
+// in the first place.
 obs.conn.on('AuthenticationSuccess', async () => {
-  // Game
-  for (const capName of gameCaptures) {
-    // Gets cropping values and stores them on initial connection.
-    try {
-      const itemProperties = await obs.conn.send('GetSceneItemProperties', {
-        'scene-name': config.obs.names.scenes.gameLayout,
-        item: { name: capName },
-      });
-      gameCropValues[gameCaptures.indexOf(capName)] = itemProperties.crop;
-    } catch (err) {
-      logError('[Layouts] Could not get initial game capture cropping values [%s]', err, capName);
-    }
-
-    // Gets source visibility value and stores it on initial connection.
-    if (!config.event.online) {
-      for (const sourceName of gameSources) {
-        try {
-          const itemProperties = await obs.conn.send('GetSceneItemProperties', {
-            'scene-name': capName,
-            item: { name: sourceName },
-          });
-          if (itemProperties.visible) {
-            selected.gameSource[gameCaptures.indexOf(capName)] = gameSources.indexOf(sourceName);
-          }
-        } catch (err) {
-          logError(
-            '[Layouts] Could not get initial game source visibility values [%s: %s]',
-            err,
-            capName,
-            sourceName,
-          );
+  // Loop through all capture scenes.
+  for (const [captureIndex, captureName] of allCaptures.entries()) {
+    let mode: 'game' | 'camera' | undefined;
+    // Loop through all sources inside of this capture scene, and get properties from OBS.
+    for (const [sourceIndex, { name: sourceName }] of allSources.entries()) {
+      try {
+        const itemProperties = await obs.conn.send('GetSceneItemProperties', {
+          'scene-name': captureName,
+          item: { name: sourceName },
+        });
+        // If this source in the capture scene is toggled as being visible, assume this is the
+        // one that should be marked on the xkeys.
+        if (itemProperties.visible) {
+          selected.sourceIndex[captureIndex] = sourceIndex;
+          // We check here if the current source selected is game or camera so we can fill in the
+          // current cropping information in the correct spot.
+          if (gameSources.indexOf(sourceName) >= 0) mode = 'game';
+          else if (cameraSources.indexOf(sourceName) >= 0) mode = 'camera';
+          break; // We no longer need to check any more sources.
         }
+      } catch (err) {
+        logError(
+          '[Layouts] Could not get initial source visibility values [%s: %s]',
+          err,
+          captureName,
+          sourceName,
+        );
       }
     }
-  }
-
-  // Camera
-  for (const camName of cameraCaptures) {
-    // Gets cropping values and stores them on initial connection.
     try {
+      // Get properties of capture source in game layout scene.
       const itemProperties = await obs.conn.send('GetSceneItemProperties', {
         'scene-name': config.obs.names.scenes.gameLayout,
-        item: { name: camName },
+        item: { name: captureName },
       });
-      cameraCropValues[cameraCaptures.indexOf(camName)] = itemProperties.crop;
-    } catch (err) {
-      logError('[Layouts] Could not get initial camera capture cropping values [%s]', err, camName);
-    }
-
-    // Gets source visibility value and stores it on initial connection.
-    if (!config.event.online) {
-      for (const sourceName of cameraSources) {
-        try {
-          const itemProperties = await obs.conn.send('GetSceneItemProperties', {
-            'scene-name': camName,
-            item: { name: sourceName },
-          });
-          if (itemProperties.visible) {
-            selected.cameraSource[cameraCaptures.indexOf(camName)] = cameraSources
-              .indexOf(sourceName);
-          }
-        } catch (err) {
-          logError(
-            '[Layouts] Could not get initial camera source visibility values [%s: %s]',
-            err,
-            camName,
-            sourceName,
-          );
-        }
+      // Fill in cropping information based on the type of source selected in the capture scene.
+      if (mode === 'game') {
+        gameCropValues[captureIndex] = itemProperties.crop;
+      } else if (mode === 'camera') {
+        cameraCropValues[captureIndex] = itemProperties.crop;
       }
+    } catch (err) {
+      logError('[Layouts] Could not get initial capture cropping values [%s]', err, captureName);
     }
   }
 });
 
 /**
- * Turns of all button lights and functionality.
+ * Turns off all button lights and functionality.
  */
 function clearAllKeys(): void {
   // Turn off capture keys.
-  xkeys.setBacklight(gameCaptureKeys[selected.gameCapture], false);
-  xkeys.setBacklight(cameraCaptureKeys[selected.cameraCapture], false);
+  xkeys.setBacklight(allCaptureKeys[selected.captureIndex], false);
 
   // Turn off all other keys.
-  gameSourceKeys.concat(gameCropKeys, cameraSourceKeys).forEach((key) => {
+  allSourceKeys.concat(gameCropKeys).forEach((key) => {
     xkeys.setBacklight(key, false);
   });
 
-  selected.gameCapture = -1;
+  selected.captureIndex = -1;
   selected.gameCrop = -1;
-  selected.cameraCapture = -1;
 }
 
 /**
@@ -346,9 +366,8 @@ function clearAllKeys(): void {
 let captureTO: NodeJS.Timeout | undefined;
 function setupIdleTimeout(): void {
   if (captureTO) clearTimeout(captureTO);
-  // "Taskmaster" disables the timeouts so they stay on all the time.
-  if (sc.getCurrentRun()?.game?.toLowerCase() !== 'taskmaster') {
-    captureTO = setTimeout(() => { clearAllKeys(); }, 30 * 1000);
+  if (idleTimeout) {
+    captureTO = setTimeout(() => { clearAllKeys(); }, 5 * 1000);
   }
 }
 
@@ -359,9 +378,7 @@ function setupIdleTimeout(): void {
  * @returns Calculated value.
  */
 function calculateGameCrop(side: number, value: number) {
-  let amount = side + value;
-  if (amount < 0) amount = 0;
-  return amount;
+  return Math.max(side + value, 0);
 }
 
 /**
@@ -395,153 +412,137 @@ function calculateCameraCrop(
  * Calculates and applies the cropping for a group when ran.
  * @param value Amount to crop from the selected slide.
  * @param cap Override the capture that is cropped.
- * @patam mode Override the mode this function will run with.
+ * @param mode Specify the mode this function will run with.
  */
-async function changeCrop(value?: number, cap?: number, mode?: 'game' | 'camera'): Promise<void> {
-  const m = (() => {
-    if (mode) return mode;
-    if (selected.gameCapture >= 0) return 'game';
-    if (selected.cameraCapture >= 0) return 'camera';
-    return undefined;
-  })();
-  if (!m) return;
-  let capture: number | undefined;
-  if (m === 'game') {
-    capture = cap ?? selected.gameCapture;
-    if (typeof capture === 'undefined' || capture < 0) return;
+async function changeCrop(
+  value: number | undefined,
+  cap: number | undefined,
+  mode: 'game' | 'camera',
+): Promise<void> {
+  const capI = cap ?? selected.captureIndex;
+  if (typeof capI === 'undefined' || capI < 0) return;
+  if (mode === 'game') {
     if (value && selected.gameCrop >= 0) {
       switch (selected.gameCrop) {
         case 0:
-          gameCropValues[capture].top = calculateGameCrop(gameCropValues[capture].top, value);
+          gameCropValues[capI].top = calculateGameCrop(gameCropValues[capI].top, value);
           break;
         case 1:
-          gameCropValues[capture].right = calculateGameCrop(gameCropValues[capture].right, value);
+          gameCropValues[capI].right = calculateGameCrop(gameCropValues[capI].right, value);
           break;
         case 2:
-          gameCropValues[capture].bottom = calculateGameCrop(gameCropValues[capture].bottom, value);
+          gameCropValues[capI].bottom = calculateGameCrop(gameCropValues[capI].bottom, value);
           break;
         case 3:
-          gameCropValues[capture].left = calculateGameCrop(gameCropValues[capture].left, value);
+          gameCropValues[capI].left = calculateGameCrop(gameCropValues[capI].left, value);
           break;
         default:
           // nothing
       }
     // If no value is supplied, reset the cropping instead.
     } else {
-      gameCropValues[capture] = { top: 0, right: 0, bottom: 0, left: 0 };
+      gameCropValues[capI] = { top: 0, right: 0, bottom: 0, left: 0 };
     }
-  } else if (m === 'camera') {
-    capture = cap ?? selected.cameraCapture;
-    if (value && typeof capture !== 'undefined' && capture >= 0) {
-      const crop = cameraCropValues[selected.cameraCapture];
+  } else if (mode === 'camera') {
+    if (value && capI >= 0) {
+      const crop = cameraCropValues[capI];
 
       // Top/bottom cropping.
       if (crop.top > 0 || crop.bottom > 0) {
         const croppingValues = calculateCameraCrop(crop.top, crop.bottom, value);
         [
-          cameraCropValues[selected.cameraCapture].top,
-          cameraCropValues[selected.cameraCapture].bottom,
+          cameraCropValues[capI].top,
+          cameraCropValues[capI].bottom,
         ] = croppingValues;
       }
       // Left/right cropping.
       if (crop.left > 0 || crop.right > 0) {
         const croppingValues = calculateCameraCrop(crop.left, crop.right, value);
         [
-          cameraCropValues[selected.cameraCapture].left,
-          cameraCropValues[selected.cameraCapture].right,
+          cameraCropValues[capI].left,
+          cameraCropValues[capI].right,
         ] = croppingValues;
       }
     }
   }
-  if (typeof capture === 'undefined' || capture < 0) return;
-  const captures = m === 'game' ? gameCaptures : cameraCaptures;
-  const cropValues = m === 'game' ? gameCropValues : cameraCropValues;
-  try {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore: Typings say we need to specify more than we actually do.
-    await obs.conn.send('SetSceneItemProperties', {
-      'scene-name': config.obs.names.scenes.gameLayout,
-      item: { name: captures[capture] },
-      crop: cropValues[capture],
-    });
-  } catch (err) {
-    logError(
-      '[Layouts] Could not change capture crop values [%s]',
-      err,
-      captures[capture],
-    );
+  if (typeof capI === 'undefined' || capI < 0) return;
+  const cropValues = mode === 'game' ? gameCropValues : cameraCropValues;
+  // If the currently selected source for this capture is in the mode that has been supplied,
+  // we also want to push those new values to the capture item in the OBS game layout.
+  const currentCaptureMode = allSources[selected.sourceIndex[capI]]?.type as
+    typeof allSources[0]['type'] | undefined;
+  if (currentCaptureMode === mode) {
+    try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore: Typings say we need to specify more than we actually do.
+      await obs.conn.send('SetSceneItemProperties', {
+        'scene-name': config.obs.names.scenes.gameLayout,
+        item: { name: allCaptures[capI] },
+        crop: cropValues[capI],
+      });
+    } catch (err) {
+      logError(
+        '[Layouts] Could not change capture crop values [%s]',
+        err,
+        allCaptures[capI],
+      );
+    }
   }
 }
 
 let resetAllGameCropConfirm = false;
 let resetAllGameCropTO: NodeJS.Timeout | undefined;
 xkeys.on('down', async (keyIndex) => {
-  // Lots of stuff to determine if this is a "game" key or a "camera" key.
-  // Most of the functionality is identical between each, so they share big parts of code.
-  const mode = (() => {
-    if (gameCaptureKeys
-      .concat(gameSourceKeys, gameCropKeys, Object.values(gameCropResetKeys))
-      .includes(keyIndex)) {
-      return 'game';
-    }
-    if (cameraCaptureKeys.concat(cameraSourceKeys, cameraPositionResetKey).includes(keyIndex)) {
-      return 'camera';
-    }
-    return undefined;
-  })();
-  if (!mode) return;
-  const captureKeys = mode === 'game' ? gameCaptureKeys : cameraCaptureKeys;
-  const sourceKeys = mode === 'game' ? gameSourceKeys : cameraSourceKeys;
-  const captures = mode === 'game' ? gameCaptures : cameraCaptures;
-  const sources = mode === 'game' ? gameSources : cameraSources;
-
-  // If changing from one "mode" to another, clear all key functionality.
-  if ((gameCaptureKeys.includes(keyIndex) && selected.cameraCapture >= 0)
-  || (cameraCaptureKeys.includes(keyIndex) && selected.gameCapture >= 0)) {
-    clearAllKeys();
-  }
-
   // A Capture key was pressed.
-  if (captureKeys.includes(keyIndex)) {
-    const capture = captureKeys.indexOf(keyIndex);
+  if (allCaptureKeys.includes(keyIndex)) {
+    const captureIndex = allCaptureKeys.indexOf(keyIndex);
+    // Check for mode of currently selected source for this capture.
+    const mode = allSources[selected.sourceIndex[captureIndex]]?.type;
 
     // If capture has been changed.
-    if (capture !== selected[`${mode}Capture`]) {
+    if (captureIndex !== selected.captureIndex) {
       // Turn old key off, turn new key on.
-      xkeys.setBacklight(captureKeys[selected[`${mode}Capture`]], false);
-      xkeys.setBacklight(captureKeys[capture], true, true);
+      xkeys.setBacklight(allCaptureKeys[selected.captureIndex], false);
+      xkeys.setBacklight(allCaptureKeys[captureIndex], true, true);
 
       // Make relevant source keys blink, except the currently selected one.
-      sourceKeys.forEach((key) => {
-        if (key === sourceKeys[selected[`${mode}Source`][capture]]) {
+      allSourceKeys.forEach((key) => {
+        if (key === allSourceKeys[selected.sourceIndex[captureIndex]]) {
           xkeys.setBacklight(key, true, true);
         } else {
           xkeys.setBacklight(key, true, false, true);
         }
       });
 
-      // Make cropping keys blink.
+      // Make cropping keys blink if "game" mode should be active.
+      // If not, turn them off in case they're on.
+      // TODO: ONLY TURN OFF IF THEY NEED TO BE!
       if (mode === 'game') {
         gameCropKeys.forEach((key) => {
           xkeys.setBacklight(key, true, false, true);
         });
         selected.gameCrop = -1;
+      } else {
+        gameCropKeys.forEach((key) => {
+          xkeys.setBacklight(key, false);
+        });
+        selected.gameCrop = -1;
       }
 
       // Set new key as current.
-      selected[`${mode}Capture`] = capture;
+      selected.captureIndex = captureIndex;
 
       setupIdleTimeout();
     } else {
       // Turn off capture key.
-      xkeys.setBacklight(captureKeys[capture], false);
+      xkeys.setBacklight(allCaptureKeys[captureIndex], false);
 
       // Turn off source keys.
-      sourceKeys.forEach((key) => {
+      allSourceKeys.forEach((key) => {
         xkeys.setBacklight(key, false);
       });
 
-      // Turn off crop keys.
+      // Turn off crop keys if in "game" mode.
       if (mode === 'game') {
         gameCropKeys.forEach((key) => {
           xkeys.setBacklight(key, false);
@@ -550,118 +551,194 @@ xkeys.on('down', async (keyIndex) => {
 
       // Unset capture/cropping.
       // Source values not removed; kept in memory for future use.
-      selected[`${mode}Capture`] = -1;
+      selected.captureIndex = -1;
       if (mode === 'game') selected.gameCrop = -1;
     }
   // A Source key was pressed and a Capture is selected.
-  } else if (sourceKeys.includes(keyIndex) && selected[`${mode}Capture`] >= 0) {
-    const source = sourceKeys.indexOf(keyIndex);
+  } else if (allSourceKeys.includes(keyIndex) && selected.captureIndex >= 0) {
+    const sourceIndex = allSourceKeys.indexOf(keyIndex);
+    // Check for mode of what source button was pressed.
+    const mode = allSources[sourceIndex]?.type;
 
     // If source has been changed.
-    if (source !== selected[`${mode}Source`][selected[`${mode}Capture`]]) {
+    if (sourceIndex !== selected.sourceIndex[selected.captureIndex]) {
       // Make relevant source keys blink, except the newly selected one.
-      sourceKeys.forEach((key) => {
-        if (key === sourceKeys[source]) {
+      allSourceKeys.forEach((key) => {
+        if (key === allSourceKeys[sourceIndex]) {
           xkeys.setBacklight(key, true, true);
         } else {
           xkeys.setBacklight(key, true, false, true);
         }
       });
 
-      // Loops through the sources and toggles their visibility for the selected capture.
-      for (const name of sources) {
+      // Make cropping keys blink if "game" mode should be active.
+      // If not, turn them off.
+      if (mode === 'game') {
+        gameCropKeys.forEach((key) => {
+          xkeys.setBacklight(key, true, false, true);
+        });
+        selected.gameCrop = -1;
+      } else {
+        gameCropKeys.forEach((key) => {
+          xkeys.setBacklight(key, false);
+        });
+        selected.gameCrop = -1;
+      }
+
+      // Configures the capture group item in the game layout scene to the correct cropping,
+      // depending on if you switch to a game capture or a camera capture.
+      const groupSourceName = allCaptures[selected.captureIndex] as
+        typeof allCaptures[0] | undefined;
+      const areaName = Object.entries(obsSourceKeys)
+        .find(([,v]) => groupSourceName && v === groupSourceName)?.[0];
+      if (areaName && groupSourceName) {
+        const { crop, area } = await getStoredCropAndAreaVals(
+          mode,
+          areaName,
+          groupSourceName,
+          true,
+        );
+        await obs.configureSceneItem(
+          config.obs.names.scenes.gameLayout, // Scene
+          groupSourceName, // Item
+          area, // Area
+          crop, // Crop
+          !!area, // Visible
+        );
+      }
+
+      // Loops through the sources and toggles their visibility for the selected source.
+      for (const [index, { name }] of allSources.entries()) {
         try {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore: Typings say we need to specify more than we actually do.
           await obs.conn.send('SetSceneItemProperties', {
-            'scene-name': captures[selected[`${mode}Capture`]],
+            'scene-name': allCaptures[selected.captureIndex],
             item: { name },
-            visible: sources.indexOf(name) === source,
+            visible: index === sourceIndex,
           });
         } catch (err) {
           logError(
             '[Layouts] Could not change source visibility [%s: %s]',
             err,
-            captures[selected[`${mode}Capture`]],
+            allCaptures[selected.captureIndex],
             name,
           );
         }
       }
 
       // Set new as current.
-      selected[`${mode}Source`][selected[`${mode}Capture`]] = source;
+      selected.sourceIndex[selected.captureIndex] = sourceIndex;
 
       setupIdleTimeout();
     }
   // A Game Cropping key was pressed and a Capture is selected.
-  } else if (mode === 'game' && gameCropKeys.includes(keyIndex) && selected.gameCapture >= 0) {
-    const side = gameCropKeys.indexOf(keyIndex);
+  } else if (gameCropKeys.includes(keyIndex) && selected.captureIndex >= 0) {
+    // Check for mode of currently selected source for currently selected capture.
+    const mode = allSources[selected.sourceIndex[selected.captureIndex]]?.type;
 
-    // If side has been changed.
-    if (side !== selected.gameCrop) {
-      // Make relevant crop keys blink, except the newly selected one.
-      gameCropKeys.forEach((key) => {
-        if (key === gameCropKeys[side]) {
-          xkeys.setBacklight(key, true, true);
-        } else {
-          xkeys.setBacklight(key, true, false, true);
-        }
-      });
+    // Only run this if applicable.
+    if (mode === 'game') {
+      const side = gameCropKeys.indexOf(keyIndex); // order: top, right, bottom, left
 
-      // Set new crop side as current.
-      selected.gameCrop = side;
-    } else {
-      // Make this key go back to just blinking.
-      xkeys.setBacklight(gameCropKeys[side], true, false, true);
+      // If side has been changed.
+      if (side !== selected.gameCrop) {
+        // Make relevant crop keys blink, except the newly selected one.
+        gameCropKeys.forEach((key) => {
+          if (key === gameCropKeys[side]) {
+            xkeys.setBacklight(key, true, true);
+          } else {
+            xkeys.setBacklight(key, true, false, true);
+          }
+        });
 
-      // Unset game cropping.
-      selected.gameCrop = -1;
+        // Set new crop side as current.
+        selected.gameCrop = side;
+      } else {
+        // Make this key go back to just blinking.
+        xkeys.setBacklight(gameCropKeys[side], true, false, true);
+
+        // Unset game cropping.
+        selected.gameCrop = -1;
+      }
+
+      setupIdleTimeout();
     }
-
-    setupIdleTimeout();
   // The button to reset cropping on selected game capture was pressed and a Capture is selected.
-  } else if (mode === 'game' && gameCropResetKeys.selected === keyIndex
-  && selected.gameCapture >= 0) {
-    // Turn on backlight while key is held down.
-    xkeys.setBacklight(keyIndex, true, true);
+  } else if (gameCropResetKeys.selected === keyIndex && selected.captureIndex >= 0) {
+    // Check for mode of currently selected source for currently selected capture.
+    const mode = allSources[selected.sourceIndex[selected.captureIndex]]?.type;
 
-    await changeCrop();
+    // Only run this if applicable.
+    if (mode === 'game') {
+      // Turn on backlight while key is held down.
+      xkeys.setBacklight(keyIndex, true, true);
+
+      await changeCrop(undefined, undefined, 'game');
+    }
   // The "reset all game cropping" key was pressed.
   // This has a double check so you can't accidentally press it.
-  } else if (mode === 'game' && gameCropResetKeys.all === keyIndex) {
-    if (!resetAllGameCropConfirm) {
-      // Make the key blink red.
-      xkeys.setBacklight(gameCropResetKeys.all, true, true, true);
+  } else if (gameCropResetKeys.all === keyIndex) {
+    // Check for mode of currently selected source for currently selected capture.
+    const mode = allSources[selected.sourceIndex[selected.captureIndex]]?.type;
 
-      resetAllGameCropTO = setTimeout(() => {
-        // Turn off key and reset confirm value.
-        xkeys.setBacklight(gameCropResetKeys.all, false);
+    // Only run this if applicable.
+    if (mode === 'game') {
+      if (!resetAllGameCropConfirm) {
+        // Make the key blink red.
+        xkeys.setBacklight(gameCropResetKeys.all, true, true, true);
+
+        resetAllGameCropTO = setTimeout(() => {
+          // Turn off key and reset confirm value.
+          xkeys.setBacklight(gameCropResetKeys.all, false);
+          resetAllGameCropConfirm = false;
+        }, 10 * 1000);
+
+        resetAllGameCropConfirm = true;
+      } else {
+        // Turn off key, clear timeout, reset crop on all captures that we have.
+        xkeys.setBacklight(keyIndex, false);
+        if (resetAllGameCropTO) clearTimeout(resetAllGameCropTO);
+        for (let i = 0; i < allCaptures.length; i += 1) {
+          await changeCrop(undefined, i, 'game');
+        }
         resetAllGameCropConfirm = false;
-      }, 10 * 1000);
-
-      resetAllGameCropConfirm = true;
-    } else {
-      // Turn off key, clear timeout, reset crop on all captures that we have.
-      xkeys.setBacklight(keyIndex, false);
-      if (resetAllGameCropTO) clearTimeout(resetAllGameCropTO);
-      for (let i = 0; i < gameCaptures.length; i += 1) {
-        await changeCrop(undefined, i, 'game');
       }
-      resetAllGameCropConfirm = false;
     }
-  } else if (mode === 'camera') {
-    // The button to reset camera "crop" if we have a camera capture selected.
-    // TODO: Store value generated when game-layout changes and use that instead if possible!
-    if (cameraPositionResetKey === keyIndex && selected.cameraCapture >= 0) {
+  // The button to reset camera "crop" if we have a camera capture selected.
+  } else if (cameraPositionResetKey === keyIndex && selected.captureIndex >= 0) {
+    // Check for mode of currently selected source for currently selected capture.
+    const mode = allSources[selected.sourceIndex[selected.captureIndex]]?.type;
+
+    // Only run this if applicable.
+    if (mode === 'camera') {
       xkeys.setBacklight(keyIndex, true, true);
 
       // Calculate the centre to the cropping.
-      const crop = cameraCropValues[selected.cameraCapture];
-      const cropH = (crop.left + crop.right) / 2;
-      const cropV = (crop.top + crop.bottom) / 2;
-      const newCrop = { top: cropV, right: cropH, bottom: cropV, left: cropH };
-      cameraCropValues[selected.cameraCapture] = newCrop; // Update local cropping values.
-      await changeCrop();
+      // TODO: Store value generated when game-layout changes and use that instead if possible!
+
+      // Configures the capture group item in the game layout scene to the correct cropping,
+      // depending on if you switch to a game capture or a camera capture.
+      const groupSourceName = allCaptures[selected.captureIndex] as
+        typeof allCaptures[0] | undefined;
+      const areaName = Object.entries(obsSourceKeys)
+        .find(([,v]) => groupSourceName && v === groupSourceName)?.[0];
+      if (areaName && groupSourceName) {
+        // Updates the stored value for the camera, no need to use returned values.
+        await getStoredCropAndAreaVals('camera', areaName, groupSourceName);
+        await changeCrop(undefined, undefined, 'camera');
+      }
+    }
+  // The button to toggle the idle timeout functionality.
+  } else if (noIdleTimeoutKey === keyIndex) {
+    if (idleTimeout) {
+      idleTimeout = false;
+      if (captureTO) clearTimeout(captureTO);
+      xkeys.setBacklight(keyIndex, true);
+    } else {
+      idleTimeout = true;
+      setupIdleTimeout();
+      xkeys.setBacklight(keyIndex, false);
     }
   }
 });
@@ -674,13 +751,17 @@ xkeys.on('up', (keyIndex) => {
 });
 
 xkeys.on('jog', async (index, position) => {
-  if (selected.gameCrop >= 0 || selected.cameraCapture >= 0) {
+  // Check for mode of currently selected source for currently selected capture.
+  const mode = allSources[selected.sourceIndex[selected.captureIndex]]?.type;
+  if ((mode === 'game' && selected.gameCrop >= 0)
+  || (mode === 'camera' && selected.captureIndex >= 0)) {
     setupIdleTimeout();
-    await changeCrop(position);
+    await changeCrop(position, undefined, mode);
   }
 });
 
 let shuttleInterval: NodeJS.Timeout | undefined;
+let currShuttlePos = 0;
 xkeys.on('shuttle', (index, position) => {
   // If returned to 0, clear interval.
   if (position === 0 && shuttleInterval) {
@@ -690,9 +771,12 @@ xkeys.on('shuttle', (index, position) => {
   // at that time until the shuttle is returned to 0.
   } else if (currShuttlePos === 0 && position !== 0) {
     shuttleInterval = setInterval(async () => {
-      if (selected.gameCrop >= 0 || selected.cameraCapture >= 0) {
+      // Check for mode of currently selected source for currently selected capture.
+      const mode = allSources[selected.sourceIndex[selected.captureIndex]]?.type;
+      if ((mode === 'game' && selected.gameCrop >= 0)
+      || (mode === 'camera' && selected.captureIndex >= 0)) {
         setupIdleTimeout();
-        await changeCrop(currShuttlePos);
+        await changeCrop(currShuttlePos, undefined, mode);
       }
     }, 100);
   }

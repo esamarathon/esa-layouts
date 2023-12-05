@@ -14,6 +14,7 @@ const { default: uksggreen } = require('./themes/uksggreen.theme.css');
 const { default: uksgblue } = require('./themes/uksgblue.theme.css');
 const { default: summer } = require('./themes/summer.theme.css');
 const { default: winter } = require('./themes/winter.theme.css');
+const { default: legends } = require('./themes/legends.theme.css');
 const { default: swcf } = require('./themes/swcf.theme.css');
 
 defaultTheme.use();
@@ -61,6 +62,9 @@ switch (theme) {
     break;
   case 'swcf':
     swcf.use();
+    break;
+  case 'legends':
+    legends.use();
     break;
   default:
     // do nothing

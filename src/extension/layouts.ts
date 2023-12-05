@@ -56,6 +56,7 @@ const allSourceKeys = gameSourceKeys.concat(cameraSourceKeys);
 const gameCropKeys = [70, 79, 72, 63]; // order: top, right, bottom, left
 const gameCropResetKeys = { selected: 78, all: 62 };
 const cameraPositionResetKey = 80;
+const noIdleTimeoutKey = 25;
 
 // Stores current cropping values for each mode.
 // We fill up slots here for both "types" of capture as they are actually interchangable.
@@ -71,6 +72,7 @@ const selected = {
   sourceIndex: Array(gameCaptures.length + cameraCaptures.length).fill(-1),
   gameCrop: -1,
 };
+let idleTimeout = true;
 
 // Controls the name cycling ticks for user information.
 function cycleNames(reset = false): void {
@@ -364,9 +366,8 @@ function clearAllKeys(): void {
 let captureTO: NodeJS.Timeout | undefined;
 function setupIdleTimeout(): void {
   if (captureTO) clearTimeout(captureTO);
-  // "Taskmaster" disables the timeouts so they stay on all the time.
-  if (sc.getCurrentRun()?.game?.toLowerCase() !== 'taskmaster') {
-    captureTO = setTimeout(() => { clearAllKeys(); }, 30 * 1000);
+  if (idleTimeout) {
+    captureTO = setTimeout(() => { clearAllKeys(); }, 5 * 1000);
   }
 }
 
@@ -727,6 +728,17 @@ xkeys.on('down', async (keyIndex) => {
         await getStoredCropAndAreaVals('camera', areaName, groupSourceName);
         await changeCrop(undefined, undefined, 'camera');
       }
+    }
+  // The button to toggle the idle timeout functionality.
+  } else if (noIdleTimeoutKey === keyIndex) {
+    if (idleTimeout) {
+      idleTimeout = false;
+      if (captureTO) clearTimeout(captureTO);
+      xkeys.setBacklight(keyIndex, true);
+    } else {
+      idleTimeout = true;
+      setupIdleTimeout();
+      xkeys.setBacklight(keyIndex, false);
     }
   }
 });

@@ -33,7 +33,7 @@
         left: '0px',
         top: !online && crowdCam ? '142px' : '0px',
         width: '512px',
-        height: !online && crowdCam ? '323px' : '465px',
+        height: !online && crowdCam ? '181px' : '288px',
       }"
     />
 
@@ -42,9 +42,9 @@
       class="Fixed FlexColumn BorderBottom"
       :style="{
         left: '0px',
-        top: '465px',
+        top: '288px',
         width: '512px',
-        height: '351px',
+        height: '528px',
       }"
     >
       <player />

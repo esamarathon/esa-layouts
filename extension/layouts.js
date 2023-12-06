@@ -49,7 +49,7 @@ const gameCaptureKeys = [1, 2, 3, 4].slice(0, gameCaptures.length);
 const cameraCaptureKeys = [5, 6, 7, 8].slice(0, cameraCaptures.length);
 const allCaptureKeys = gameCaptureKeys.concat(cameraCaptureKeys);
 const gameSourceKeys = [9, 10, 11, 12].slice(0, gameSources.length);
-const cameraSourceKeys = [13, 14, 15, 16].slice(0, cameraSources.length); // TODO: 5th?
+const cameraSourceKeys = [13, 14, 15, 16, 21].slice(0, cameraSources.length);
 const allSourceKeys = gameSourceKeys.concat(cameraSourceKeys);
 const gameCropKeys = [70, 79, 72, 63]; // order: top, right, bottom, left
 const gameCropResetKeys = { selected: 78, all: 62 };
@@ -661,10 +661,7 @@ xkeys_1.default.on('down', async (keyIndex) => {
         // Only run this if applicable.
         if (mode === 'camera') {
             xkeys_1.default.setBacklight(keyIndex, true, true);
-            // Calculate the centre to the cropping.
-            // TODO: Store value generated when game-layout changes and use that instead if possible!
-            // Configures the capture group item in the game layout scene to the correct cropping,
-            // depending on if you switch to a game capture or a camera capture.
+            // Configures the capture group item in the game layout scene to the correct cropping.
             const groupSourceName = allCaptures[selected.captureIndex];
             const areaName = (_h = Object.entries(obsSourceKeys)
                 .find(([, v]) => groupSourceName && v === groupSourceName)) === null || _h === void 0 ? void 0 : _h[0];

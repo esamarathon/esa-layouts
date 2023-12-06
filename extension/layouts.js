@@ -348,7 +348,7 @@ function setupIdleTimeout() {
     if (captureTO)
         clearTimeout(captureTO);
     if (idleTimeout) {
-        captureTO = setTimeout(() => { clearAllKeys(); }, 5 * 1000);
+        captureTO = setTimeout(() => { clearAllKeys(); }, 30 * 1000);
     }
 }
 /**
@@ -459,8 +459,12 @@ async function changeCrop(value, cap, mode) {
         }
     }
 }
+let resetOneGameCropConfirm = false;
+let resetOneGameCropTO;
 let resetAllGameCropConfirm = false;
 let resetAllGameCropTO;
+let resetCameraPositionConfirm = false;
+let resetCameraPositionTO;
 xkeys_1.default.on('down', async (keyIndex) => {
     var _a, _b, _c, _d, _e, _f, _g, _h;
     // A Capture key was pressed.
@@ -620,9 +624,24 @@ xkeys_1.default.on('down', async (keyIndex) => {
         const mode = (_e = allSources[selected.sourceIndex[selected.captureIndex]]) === null || _e === void 0 ? void 0 : _e.type;
         // Only run this if applicable.
         if (mode === 'game') {
-            // Turn on backlight while key is held down.
-            xkeys_1.default.setBacklight(keyIndex, true, true);
-            await changeCrop(undefined, undefined, 'game');
+            if (!resetOneGameCropConfirm) {
+                // Make the key blink red.
+                xkeys_1.default.setBacklight(gameCropResetKeys.selected, true, true, true);
+                resetOneGameCropTO = setTimeout(() => {
+                    // Turn off key and reset confirm value.
+                    xkeys_1.default.setBacklight(gameCropResetKeys.selected, false);
+                    resetOneGameCropConfirm = false;
+                }, 10 * 1000);
+                resetOneGameCropConfirm = true;
+            }
+            else {
+                // Turn off key, clear timeout, reset crop on the selected capture.
+                xkeys_1.default.setBacklight(keyIndex, false);
+                if (resetOneGameCropTO)
+                    clearTimeout(resetOneGameCropTO);
+                await changeCrop(undefined, undefined, 'game');
+                resetOneGameCropConfirm = false;
+            }
         }
         // The "reset all game cropping" key was pressed.
         // This has a double check so you can't accidentally press it.
@@ -660,15 +679,31 @@ xkeys_1.default.on('down', async (keyIndex) => {
         const mode = (_g = allSources[selected.sourceIndex[selected.captureIndex]]) === null || _g === void 0 ? void 0 : _g.type;
         // Only run this if applicable.
         if (mode === 'camera') {
-            xkeys_1.default.setBacklight(keyIndex, true, true);
-            // Configures the capture group item in the game layout scene to the correct cropping.
-            const groupSourceName = allCaptures[selected.captureIndex];
-            const areaName = (_h = Object.entries(obsSourceKeys)
-                .find(([, v]) => groupSourceName && v === groupSourceName)) === null || _h === void 0 ? void 0 : _h[0];
-            if (areaName && groupSourceName) {
-                // Updates the stored value for the camera, no need to use returned values.
-                await getStoredCropAndAreaVals('camera', areaName, groupSourceName);
-                await changeCrop(undefined, undefined, 'camera');
+            if (!resetCameraPositionConfirm) {
+                // Make the key blink red.
+                xkeys_1.default.setBacklight(cameraPositionResetKey, true, true, true);
+                resetCameraPositionTO = setTimeout(() => {
+                    // Turn off key and reset confirm value.
+                    xkeys_1.default.setBacklight(cameraPositionResetKey, false);
+                    resetCameraPositionConfirm = false;
+                }, 10 * 1000);
+                resetCameraPositionConfirm = true;
+            }
+            else {
+                // Turn off key, clear timeout, reset camera position.
+                xkeys_1.default.setBacklight(keyIndex, false);
+                if (resetCameraPositionTO)
+                    clearTimeout(resetCameraPositionTO);
+                // Configures the capture group item in the game layout scene to the correct cropping.
+                const groupSourceName = allCaptures[selected.captureIndex];
+                const areaName = (_h = Object.entries(obsSourceKeys)
+                    .find(([, v]) => groupSourceName && v === groupSourceName)) === null || _h === void 0 ? void 0 : _h[0];
+                if (areaName && groupSourceName) {
+                    // Updates the stored value for the camera, no need to use returned values.
+                    await getStoredCropAndAreaVals('camera', areaName, groupSourceName);
+                    await changeCrop(undefined, undefined, 'camera');
+                }
+                resetCameraPositionConfirm = false;
             }
         }
         // The button to toggle the idle timeout functionality.
@@ -685,12 +720,6 @@ xkeys_1.default.on('down', async (keyIndex) => {
             setupIdleTimeout();
             xkeys_1.default.setBacklight(keyIndex, false);
         }
-    }
-});
-xkeys_1.default.on('up', (keyIndex) => {
-    // Turns off "reset selected capture cropping" and "reset camera position" button.
-    if (keyIndex === gameCropResetKeys.selected || keyIndex === cameraPositionResetKey) {
-        xkeys_1.default.setBacklight(keyIndex, false);
     }
 });
 xkeys_1.default.on('jog', async (index, position) => {

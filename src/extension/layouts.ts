@@ -490,8 +490,12 @@ async function changeCrop(
   }
 }
 
+let resetOneGameCropConfirm = false;
+let resetOneGameCropTO: NodeJS.Timeout | undefined;
 let resetAllGameCropConfirm = false;
 let resetAllGameCropTO: NodeJS.Timeout | undefined;
+let resetCameraPositionConfirm = false;
+let resetCameraPositionTO: NodeJS.Timeout | undefined;
 xkeys.on('down', async (keyIndex) => {
   // A Capture key was pressed.
   if (allCaptureKeys.includes(keyIndex)) {
@@ -671,10 +675,24 @@ xkeys.on('down', async (keyIndex) => {
 
     // Only run this if applicable.
     if (mode === 'game') {
-      // Turn on backlight while key is held down.
-      xkeys.setBacklight(keyIndex, true, true);
+      if (!resetOneGameCropConfirm) {
+        // Make the key blink red.
+        xkeys.setBacklight(gameCropResetKeys.selected, true, true, true);
 
-      await changeCrop(undefined, undefined, 'game');
+        resetOneGameCropTO = setTimeout(() => {
+          // Turn off key and reset confirm value.
+          xkeys.setBacklight(gameCropResetKeys.selected, false);
+          resetOneGameCropConfirm = false;
+        }, 10 * 1000);
+
+        resetOneGameCropConfirm = true;
+      } else {
+        // Turn off key, clear timeout, reset crop on the selected capture.
+        xkeys.setBacklight(keyIndex, false);
+        if (resetOneGameCropTO) clearTimeout(resetOneGameCropTO);
+        await changeCrop(undefined, undefined, 'game');
+        resetOneGameCropConfirm = false;
+      }
     }
   // The "reset all game cropping" key was pressed.
   // This has a double check so you can't accidentally press it.
@@ -712,17 +730,32 @@ xkeys.on('down', async (keyIndex) => {
 
     // Only run this if applicable.
     if (mode === 'camera') {
-      xkeys.setBacklight(keyIndex, true, true);
+      if (!resetCameraPositionConfirm) {
+        // Make the key blink red.
+        xkeys.setBacklight(cameraPositionResetKey, true, true, true);
 
-      // Configures the capture group item in the game layout scene to the correct cropping.
-      const groupSourceName = allCaptures[selected.captureIndex] as
-        typeof allCaptures[0] | undefined;
-      const areaName = Object.entries(obsSourceKeys)
-        .find(([,v]) => groupSourceName && v === groupSourceName)?.[0];
-      if (areaName && groupSourceName) {
-        // Updates the stored value for the camera, no need to use returned values.
-        await getStoredCropAndAreaVals('camera', areaName, groupSourceName);
-        await changeCrop(undefined, undefined, 'camera');
+        resetCameraPositionTO = setTimeout(() => {
+          // Turn off key and reset confirm value.
+          xkeys.setBacklight(cameraPositionResetKey, false);
+          resetCameraPositionConfirm = false;
+        }, 10 * 1000);
+
+        resetCameraPositionConfirm = true;
+      } else {
+        // Turn off key, clear timeout, reset camera position.
+        xkeys.setBacklight(keyIndex, false);
+        if (resetCameraPositionTO) clearTimeout(resetCameraPositionTO);
+        // Configures the capture group item in the game layout scene to the correct cropping.
+        const groupSourceName = allCaptures[selected.captureIndex] as
+          typeof allCaptures[0] | undefined;
+        const areaName = Object.entries(obsSourceKeys)
+          .find(([,v]) => groupSourceName && v === groupSourceName)?.[0];
+        if (areaName && groupSourceName) {
+          // Updates the stored value for the camera, no need to use returned values.
+          await getStoredCropAndAreaVals('camera', areaName, groupSourceName);
+          await changeCrop(undefined, undefined, 'camera');
+        }
+        resetCameraPositionConfirm = false;
       }
     }
   // The button to toggle the idle timeout functionality.
@@ -736,13 +769,6 @@ xkeys.on('down', async (keyIndex) => {
       setupIdleTimeout();
       xkeys.setBacklight(keyIndex, false);
     }
-  }
-});
-
-xkeys.on('up', (keyIndex) => {
-  // Turns off "reset selected capture cropping" and "reset camera position" button.
-  if (keyIndex === gameCropResetKeys.selected || keyIndex === cameraPositionResetKey) {
-    xkeys.setBacklight(keyIndex, false);
   }
 });
 

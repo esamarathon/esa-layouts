@@ -186,7 +186,7 @@ async function changeTwitchMetadata(title?: string, gameId?: string): Promise<vo
         const run = sc.getCurrentRun()?.game;
         return `{{total}}/$50,000 - Souls Winter !Charity Fest${run ? ` - ${run}` : ''}`;
       }
-      return '🔴 ESA Summer 2023 - {{total}} in aid of Alzheimer\'s Game Over';
+      return '🔴 ESA Legends 2023 - {{total}} in aid of Make a Wish';
     })();
     let t = title || fallback;
     if (t) {

@@ -367,7 +367,7 @@ let captureTO: NodeJS.Timeout | undefined;
 function setupIdleTimeout(): void {
   if (captureTO) clearTimeout(captureTO);
   if (idleTimeout) {
-    captureTO = setTimeout(() => { clearAllKeys(); }, 5 * 1000);
+    captureTO = setTimeout(() => { clearAllKeys(); }, 30 * 1000);
   }
 }
 

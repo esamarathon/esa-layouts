@@ -33,7 +33,7 @@
         left: '0px',
         top: !online && crowdCam ? '150px' : '0px',
         width: '533px',
-        height: !online && crowdCam ? '400px' : '550px',
+        height: !online && crowdCam ? '250px' : '300px',
       }"
     />
 
@@ -69,7 +69,7 @@
       class="Fixed"
       :style="{
         left: '0px',
-        top: '550px',
+        top: '300px',
         width: '533px',
       }"
     >

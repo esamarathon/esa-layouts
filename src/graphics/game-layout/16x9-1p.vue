@@ -84,9 +84,9 @@
       :font-size="36"
       :style="{
         left: '0px',
-        top: '684px',
+        top: '450px',
         width: '533px',
-        height: '256px',
+        height: '490px',
       }"
     />
 

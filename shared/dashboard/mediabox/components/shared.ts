@@ -33,7 +33,7 @@ export function getMediaDetails(
       // This cast type is technically wrong but works OK in this context.
       name: (media as MediaBox.RotationElem).text
         ? (media as MediaBox.RotationElem).text
-        : 'Custom Text 222',
+        : 'Custom Text',
     };
   }
   return details ? {

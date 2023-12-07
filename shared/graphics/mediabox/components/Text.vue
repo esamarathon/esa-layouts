@@ -24,6 +24,7 @@ export default class extends Vue {
   @Ref('Fit') toFit!: HTMLElement;
   defaultFontSize = 40;
   fontSize = this.defaultFontSize;
+  oldLineCount = -1;
 
   get text(): string {
     const str = this.mediaBox.rotation.find((a) => a.id === this.mediaBox.current?.id)?.text ?? '';
@@ -32,20 +33,33 @@ export default class extends Vue {
   }
 
   async fitText() {
+    await Vue.nextTick(); // Wait for the renderer to actually change the text.
     this.fontSize = this.defaultFontSize; // Reset to default.
     let tooBig = this.toFit.scrollHeight > this.toFit.clientHeight;
+    let wasTooBig = false;
     while (tooBig) {
+      wasTooBig = true;
       this.fontSize -= 1;
       await Vue.nextTick(); // eslint-disable-line no-await-in-loop
       tooBig = this.toFit.scrollHeight > this.toFit.clientHeight;
     }
-    this.fontSize -= 7; // Make a few points smaller for good measure.
+    // Make a few points smaller for good measure.
+    if (wasTooBig) {
+      this.fontSize -= 5;
+    } else {
+      this.fontSize -= 3;
+    }
+    this.oldLineCount = this.text.split('\n').length;
   }
 
   @Watch('text')
   async onTextChange(): Promise<void> {
-    await Vue.nextTick(); // Wait for the renderer to actually change the text.
-    this.fitText();
+    // Only recalcuate if the line count has changed.
+    // Workaround because I had issues with scrollHeight not being correct on change.
+    // This can probably break in some instances, like on word wrapping.
+    if (this.text.split('\n').length !== this.oldLineCount) {
+      this.fitText();
+    }
   }
 
   async mounted(): Promise<void> {

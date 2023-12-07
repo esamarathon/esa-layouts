@@ -241,6 +241,10 @@ class MediaBox {
         return this.isPrizeApplicable(this.prizes.value
           .find((p) => p.id.toString() === m.mediaUUID));
       }
+      // Always show text.
+      if (m.type === 'text') {
+        return true;
+      }
       return false;
     });
     if (this.mediaBox.value.rotationApplicable.length !== rotationApplicableLengthOld) {

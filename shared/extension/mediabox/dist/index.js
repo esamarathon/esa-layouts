@@ -217,6 +217,10 @@ var MediaBox = /** @class */ (function () {
                 return _this.isPrizeApplicable(_this.prizes.value
                     .find(function (p) { return p.id.toString() === m.mediaUUID; }));
             }
+            // Always show text.
+            if (m.type === 'text') {
+                return true;
+            }
             return false;
         });
         if (this.mediaBox.value.rotationApplicable.length !== rotationApplicableLengthOld) {

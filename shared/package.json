@@ -39,10 +39,13 @@
     "@types/amqp-connection-manager": "^2.0.12",
     "@types/amqplib": "^0.10.4",
     "@types/clone": "^2.1.4",
+    "@types/dompurify": "^3.0.5",
     "@types/fs-extra": "^11.0.4",
     "@types/node-fetch": "^2.6.9",
     "@types/string-similarity": "^4.0.2",
     "@types/uuid": "^9.0.7",
+    "dompurify": "^3.0.6",
+    "marked": "^11.0.0",
     "nodecg-cli": "^8.6.8",
     "vuedraggable": "^2.24.3",
     "vuex-class-state2way": "^1.0.1"

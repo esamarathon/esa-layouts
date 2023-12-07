@@ -6,10 +6,11 @@
  */
 
 export type Rotation = {
-	type: 'image' | 'prize' | 'prize_generic';
+	type: 'image' | 'prize' | 'prize_generic' | 'text';
 	id: string;
 	mediaUUID: string;
 	seconds: number;
+	text?: string;
 	showOnIntermission: boolean;
 }[];
 export type MediaActive = {
@@ -24,6 +25,7 @@ export type TypesAll =
 	| 'image'
 	| 'prize'
 	| 'prize_generic'
+	| 'text'
 	| 'donation'
 	| 'subscription'
 	| 'cheer'

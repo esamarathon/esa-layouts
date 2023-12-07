@@ -1,5 +1,29 @@
 <template>
   <div>
+    <!-- Dialog for editing custom text -->
+    <v-dialog class="Dialog" v-model="dialog" persistent>
+      <v-card>
+        <div class="pa-4 pb-0">
+          Text entered here can include Markdown for styling purposes.
+        </div>
+        <v-card-text class="pa-4 pb-0">
+          <v-form>
+            <v-textarea
+              v-model="editedText"
+              label="Text"
+              autocomplete="off"
+              filled
+              dense
+            />
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+        <v-spacer />
+        <v-btn @click="save">Save</v-btn>
+        <v-btn @click="dialog = false; editedText = ''; editingElem = ''">Cancel</v-btn>
+      </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-toolbar-title>
       Rotation
     </v-toolbar-title>
@@ -60,6 +84,12 @@
               :style="{ 'width': '40px !important' }"
               @input="parseSeconds(i)"
             />
+            <v-icon
+              v-if="media.type === 'text'"
+              @click="editingElem = media.id; editedText = media.text || ''; dialog = true"
+            >
+              mdi-pencil
+            </v-icon>
             <v-icon @click="remove(i)">
               mdi-delete
             </v-icon>
@@ -97,6 +127,9 @@ export default class extends Vue {
   @State2Way('updateNewRotation', 'newRotation') newRotation!: MediaBox.RotationElem[];
   getMediaDetails = getMediaDetails;
   isPrizeApplicable = isPrizeApplicable;
+  dialog = false;
+  editingElem = '';
+  editedText = '';
 
   created(): void {
     this.newRotation = clone(this.settings.rotation);
@@ -120,11 +153,25 @@ export default class extends Vue {
     if (media.type === 'prize') {
       return isPrizeApplicable(this.prizes.find((p) => p.id.toString() === media.mediaUUID));
     }
+    // Text is always applicable.
+    if (media.type === 'text') {
+      return true;
+    }
     return false;
   }
 
   parseSeconds(i: number): void {
     this.newRotation[i].seconds = Number(this.newRotation[i].seconds);
+  }
+
+  save(): void {
+    const index = this.newRotation.findIndex((v) => v.id === this.editingElem);
+    if (index >= 0) {
+      this.newRotation[index].text = this.editedText;
+    }
+    this.editedText = '';
+    this.editingElem = '';
+    this.dialog = false;
   }
 
   remove(i: number): void {

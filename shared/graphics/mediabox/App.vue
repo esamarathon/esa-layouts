@@ -27,32 +27,37 @@
           class="Slide"
           :vertical="vertical"
         />
-        <donation
+        <text-elem
           v-else-if="type === 3"
           :key="mediaBox.current.id"
           class="Slide"
-          :vertical="vertical"
         />
-        <subscription
+        <donation
           v-else-if="type === 4"
           :key="mediaBox.current.id"
           class="Slide"
           :vertical="vertical"
         />
-        <cheer
+        <subscription
           v-else-if="type === 5"
           :key="mediaBox.current.id"
           class="Slide"
           :vertical="vertical"
         />
-        <merch
+        <cheer
           v-else-if="type === 6"
           :key="mediaBox.current.id"
           class="Slide"
           :vertical="vertical"
         />
-        <therungg-msg
+        <merch
           v-else-if="type === 7"
+          :key="mediaBox.current.id"
+          class="Slide"
+          :vertical="vertical"
+        />
+        <therungg-msg
+          v-else-if="type === 8"
           :key="mediaBox.current.id"
           class="Slide"
           :vertical="vertical"
@@ -74,6 +79,7 @@ import Merch from './components/Merch.vue';
 import Prize from './components/Prize.vue';
 import PrizeGeneric from './components/PrizeGeneric.vue';
 import Subscription from './components/Subscription.vue';
+import TextElem from './components/Text.vue';
 import TherunggMsg from './components/TherunggMsg.vue';
 import store from './store';
 
@@ -83,6 +89,7 @@ import store from './store';
     ImageComp,
     Prize,
     PrizeGeneric,
+    TextElem,
     Donation,
     Subscription,
     Cheer,
@@ -107,16 +114,18 @@ export default class extends Vue {
         return 1;
       case 'prize_generic':
         return 2;
-      case 'donation':
+      case 'text':
         return 3;
-      case 'subscription':
+      case 'donation':
         return 4;
-      case 'cheer':
+      case 'subscription':
         return 5;
-      case 'merch':
+      case 'cheer':
         return 6;
-      case 'therungg':
+      case 'merch':
         return 7;
+      case 'therungg':
+        return 8;
       default:
         return -1;
     }

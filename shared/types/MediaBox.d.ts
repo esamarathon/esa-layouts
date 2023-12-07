@@ -1,5 +1,5 @@
 export namespace MediaBox {
-  type Types = 'image' | 'prize' | 'prize_generic' | 'donation' | 'subscription' | 'cheer' | 'merch' | 'therungg';
+  type Types = 'image' | 'prize' | 'prize_generic' | 'text' | 'donation' | 'subscription' | 'cheer' | 'merch' | 'therungg';
 
   type ActiveElem = {
     type: Types;
@@ -11,9 +11,10 @@ export namespace MediaBox {
   } | null;
 
   interface RotationElem {
-    type: 'image' | 'prize' | 'prize_generic';
+    type: 'image' | 'prize' | 'prize_generic' | 'text';
     id: string;
     mediaUUID: string;
+    text?: string;
     seconds: number;
     showOnIntermission: boolean;
   }

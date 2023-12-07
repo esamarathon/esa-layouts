@@ -28,6 +28,13 @@ export function getMediaDetails(
     details = store.state.images.find((l) => l.sum === media.mediaUUID);
   } else if (media.type === 'prize') {
     details = store.state.prizes.find((p) => p.id.toString() === media.mediaUUID);
+  } else if (media.type === 'text') {
+    return {
+      // This cast type is technically wrong but works OK in this context.
+      name: (media as MediaBox.RotationElem).text
+        ? (media as MediaBox.RotationElem).text
+        : 'Custom Text 222',
+    };
   }
   return details ? {
     name: details.name,
@@ -40,13 +47,15 @@ export function getMediaDetails(
  * @param mediaUUID UUID of media, sum of image, ID of prize etc.
  */
 export function clone(
-  type: 'image' | 'prize' | 'prize_generic',
+  type: 'image' | 'prize' | 'prize_generic' | 'text',
   mediaUUID?: string,
+  text?: string,
 ): MediaBox.RotationElem {
   return {
     type,
     id: uuid(),
     mediaUUID: mediaUUID || '-1',
+    text,
     seconds: 60,
     showOnIntermission: true,
   };

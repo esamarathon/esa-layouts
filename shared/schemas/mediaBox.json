@@ -7,6 +7,7 @@
         "image",
         "prize",
         "prize_generic",
+        "text",
         "donation",
         "subscription",
         "cheer",
@@ -25,7 +26,8 @@
             "enum": [
               "image",
               "prize",
-              "prize_generic"
+              "prize_generic",
+              "text"
             ]
           },
           "id": {
@@ -36,6 +38,10 @@
           },
           "seconds": {
             "type": "number"
+          },
+          "text": {
+            "$comment": "Used specifically for the 'text' type.",
+            "type": "string"
           },
           "showOnIntermission": {
             "type": "boolean"

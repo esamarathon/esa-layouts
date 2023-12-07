@@ -1,18 +1,14 @@
 <template>
-  <div :style="{ padding: '10px', 'box-sizing': 'border-box' }">
-    <div
-      class="CustomText FlexColumn"
-      v-html="text"
-      ref="Fit"
-      :style="{
-        'text-align': 'center',
-        'font-size': `${fontSize}px`,
-        color: 'white',
-        width: '100%',
-        height: '100%',
-      }"
-    />
-  </div>
+  <div
+    class="CustomText FlexColumn"
+    v-html="text"
+    ref="Fit"
+    :style="{
+      'text-align': 'center',
+      'font-size': `${fontSize}px`,
+      color: 'white',
+    }"
+  />
 </template>
 
 <script lang="ts">
@@ -43,7 +39,7 @@ export default class extends Vue {
       await Vue.nextTick(); // eslint-disable-line no-await-in-loop
       tooBig = this.toFit.scrollHeight > this.toFit.clientHeight;
     }
-    this.fontSize -= 2; // Make a few points smaller for good measure.
+    this.fontSize -= 7; // Make a few points smaller for good measure.
   }
 
   @Watch('text')

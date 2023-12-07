@@ -44,7 +44,7 @@
         left: '0px',
         top: '376px',
         width: '668px',
-        height: '394px',
+        height: '340px',
       }"
     >
       <player />
@@ -69,9 +69,9 @@
       :font-size="40"
       :style="{
         left: '0px',
-        top: '770px',
+        top: '716px',
         width: '668px',
-        height: '230px',
+        height: '284px',
       }"
     />
 

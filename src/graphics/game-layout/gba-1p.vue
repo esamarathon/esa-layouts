@@ -44,7 +44,7 @@
         left: '0px',
         top: '288px',
         width: '512px',
-        height: '528px',
+        height: '340px',
       }"
     >
       <player />
@@ -70,9 +70,9 @@
       :font-size="28"
       :style="{
         left: '0px',
-        top: '816px',
+        top: '628px',
         width: '512px',
-        height: '184px',
+        height: '372px',
       }"
     />
 

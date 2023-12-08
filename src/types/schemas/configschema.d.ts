@@ -126,7 +126,6 @@ export interface Configschema {
 	};
 	therungg: {
 		enabled: boolean;
-		[k: string]: unknown;
 	};
 }
 export interface BidwarBias {

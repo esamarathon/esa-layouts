@@ -711,6 +711,19 @@
         "enabled",
         "apiUrl"
       ]
+    },
+    "therungg": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "required": [
+        "enabled"
+      ]
     }
   },
   "required": [
@@ -729,6 +742,7 @@
     "offsite",
     "server",
     "discord",
-    "streamlabsCharity"
+    "streamlabsCharity",
+    "therungg"
   ]
 }

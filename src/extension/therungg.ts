@@ -122,6 +122,6 @@ function connect(): void {
   });
 }
 
-if (nodecg().bundleConfig.event.thisEvent === 1) {
+if (nodecg().bundleConfig.event.thisEvent === 1 && nodecg().bundleConfig.therungg.enabled) {
   connect();
 }

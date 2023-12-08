@@ -90,6 +90,10 @@
             }
           ],
           "default": false
+        },
+        "fallbackTwitchTitle": {
+          "$comment": "Set the fallback Twitch title for this event; {{total}} and {{run}} can be used as placeholders (see source code).",
+          "type": "string"
         }
       },
       "required": [

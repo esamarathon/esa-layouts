@@ -129,6 +129,6 @@ function connect() {
         (0, nodecg_1.get)().sendMessage('therunggMessage', str);
     });
 }
-if ((0, nodecg_1.get)().bundleConfig.event.thisEvent === 1) {
+if ((0, nodecg_1.get)().bundleConfig.event.thisEvent === 1 && (0, nodecg_1.get)().bundleConfig.therungg.enabled) {
     connect();
 }

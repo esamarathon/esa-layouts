@@ -18,11 +18,11 @@ export * from './delayedTimer';
 // @ts-ignore
 export * from './donationReader';
 // @ts-ignore
+export * from './donationsToRead';
+// @ts-ignore
 export * from './donationTotal';
 // @ts-ignore
 export * from './donationTotalMilestones';
-// @ts-ignore
-export * from './donationsToRead';
 // @ts-ignore
 export * from './gameLayouts';
 // @ts-ignore

@@ -182,9 +182,11 @@ async function changeTwitchMetadata(title?: string, gameId?: string): Promise<vo
     let t = title || config.event.fallbackTwitchTitle;
     if (t) {
       const run = sc.getCurrentRun()?.game;
-      t = (t as string)
+      t = t
         .replace(/{{total}}/g, formatUSD(donationTotal.value, true))
         .replace(/{{run}}/g, run ? ` - ${run}` : '');
+    } else {
+      throw new Error('no title found to update to');
     }
     nodecg().log.debug('[Misc] Decided Twitch title is: %s - Decided game ID is %s', t, gameId);
     if (config.event.shorts === 'swcf') {

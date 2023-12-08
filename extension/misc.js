@@ -204,20 +204,17 @@ exports.searchSrcomPronouns = searchSrcomPronouns;
     }
 });
 async function changeTwitchMetadata(title, gameId) {
+    var _a;
     try {
-        // Hardcoded fallback title for now!
-        // TODO: Unhardcode!
-        const fallback = (() => {
-            var _a;
-            if (config.event.shorts === 'swcf') {
-                const run = (_a = speedcontrol_1.sc.getCurrentRun()) === null || _a === void 0 ? void 0 : _a.game;
-                return `{{total}}/$50,000 - Souls Winter !Charity Fest${run ? ` - ${run}` : ''}`;
-            }
-            return '🔴 ESA Legends 2023 - {{total}} in aid of Make a Wish';
-        })();
-        let t = title || fallback;
+        let t = title || config.event.fallbackTwitchTitle;
         if (t) {
-            t = t.replace(/{{total}}/g, (0, helpers_1.formatUSD)(replicants_1.donationTotal.value, true));
+            const run = (_a = speedcontrol_1.sc.getCurrentRun()) === null || _a === void 0 ? void 0 : _a.game;
+            t = t
+                .replace(/{{total}}/g, (0, helpers_1.formatUSD)(replicants_1.donationTotal.value, true))
+                .replace(/{{run}}/g, run ? ` - ${run}` : '');
+        }
+        else {
+            throw new Error('no title found to update to');
         }
         (0, nodecg_1.get)().log.debug('[Misc] Decided Twitch title is: %s - Decided game ID is %s', t, gameId);
         if (config.event.shorts === 'swcf') {

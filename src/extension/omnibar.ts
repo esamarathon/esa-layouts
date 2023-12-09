@@ -216,29 +216,42 @@ nodecg().listenFor('omnibarShowNext', (data, ack) => {
 });
 
 // Listens for messages from the graphic to play the "donation" SFX via OBS source.
-nodecg().listenFor('omnibarPlaySound', async (data: { amount?: number }, ack) => {
+nodecg().listenFor('omnibarPlaySound', async (data: { amount?: number } | undefined, ack) => {
   if (config.obs.enabled && obs.connected) {
     try {
+      nodecg().log.debug('omnibarPlaySound called with amount %s', data?.amount || 'none');
       const alert = orderBy(donationAlerts.value, (v) => v.threshold, 'desc')
-        .find((v) => v.threshold <= (data.amount ?? 0));
+        .find((v) => v.threshold <= (data?.amount ?? 0));
       const asset = assetsDonationAlertAssets.value.find((a) => alert && a.name === alert?.sound);
+      nodecg().log.debug(
+        '[Omnibar] omnibarPlaySound called, alert %s, asset %s',
+        alert?.sound || 'not found',
+        asset?.name || 'not found',
+      );
       if (alert && asset) {
         const source = await obs.conn.send('GetSourceSettings', {
           sourceName: config.obs.names.sources.donationSound,
         });
+        nodecg().log.debug('[Omnibar] omnibarPlaySound OBS source found');
         const location = join(cwd(), `assets/${asset.namespace}/${asset.category}/${asset.base}`);
+        nodecg().log.debug('[Omnibar] omnibarPlaySound location of sound:', location);
         // Set volume of source.
         await obs.conn.send('SetVolume', {
           source: config.obs.names.sources.donationSound,
           volume: Math.min(alert.volume, 0),
           useDecibel: true,
         });
+        nodecg().log.debug(
+          '[Omnibar] omnibarPlaySound volume set to %s',
+          Math.min(alert.volume, 0),
+        );
         // File is the same as before, just restart it.
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if ((source.sourceSettings as any).local_file === location) {
           await obs.conn.send('RestartMedia', {
             sourceName: config.obs.names.sources.donationSound,
           });
+          nodecg().log.debug('[Omnibar] omnibarPlaySound media restarted');
         // If different, explicitily set it. This also starts the playback.
         } else {
           await obs.conn.send('SetSourceSettings', {
@@ -250,9 +263,12 @@ nodecg().listenFor('omnibarPlaySound', async (data: { amount?: number }, ack) =>
               restart_on_active: false,
             },
           });
+          nodecg().log.debug('[Omnibar] omnibarPlaySound source settings set');
         }
       }
-    } catch (err) { /* catch */ }
+    } catch (err) {
+      nodecg().log.error('[Omnibar] omnibarPlaySound error:', err);
+    }
   }
   if (ack && !ack?.handled) ack();
 });

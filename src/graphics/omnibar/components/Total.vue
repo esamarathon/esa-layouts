@@ -161,7 +161,7 @@ export default class extends Vue {
     this.playingAlerts = true;
     if (!start) await new Promise((res) => { setTimeout(res, 500); });
     if (this.alertList[0].amount > 0) { // Only show alerts for positive values
-      nodecg.sendMessage('omnibarPlaySound');
+      nodecg.sendMessage('omnibarPlaySound', { amount: this.alertList[0].amount });
       // await this.sfx.play();
       await new Promise((res) => { setTimeout(res, 500); });
       this.showAlert = true;

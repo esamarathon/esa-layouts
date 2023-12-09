@@ -1,12 +1,14 @@
 import { Bids, DonationTotalMilestones, Omnibar, Prizes } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import { orderBy } from 'lodash';
+import { join } from 'path';
+import { cwd } from 'process';
 import { RunData } from 'speedcontrol-util/types';
 import { v4 as uuid } from 'uuid';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
-import { bids, commentators, donationReader, donationTotalMilestones, omnibar, prizes } from './util/replicants';
+import { assetsDonationAlertAssets, bids, commentators, donationAlerts, donationReader, donationTotalMilestones, omnibar, prizes } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const config = nodecg().bundleConfig;
@@ -214,10 +216,42 @@ nodecg().listenFor('omnibarShowNext', (data, ack) => {
 });
 
 // Listens for messages from the graphic to play the "donation" SFX via OBS source.
-nodecg().listenFor('omnibarPlaySound', async (data, ack) => {
+nodecg().listenFor('omnibarPlaySound', async (data: { amount?: number }, ack) => {
   if (config.obs.enabled && obs.connected) {
     try {
-      await obs.conn.send('RestartMedia', { sourceName: config.obs.names.sources.donationSound });
+      const alert = orderBy(donationAlerts.value, (v) => v.threshold, 'desc')
+        .find((v) => v.threshold <= (data.amount ?? 0));
+      const asset = assetsDonationAlertAssets.value.find((a) => alert && a.name === alert?.sound);
+      if (alert && asset) {
+        const source = await obs.conn.send('GetSourceSettings', {
+          sourceName: config.obs.names.sources.donationSound,
+        });
+        const location = join(cwd(), `assets/${asset.namespace}/${asset.category}/${asset.base}`);
+        // Set volume of source.
+        await obs.conn.send('SetVolume', {
+          source: config.obs.names.sources.donationSound,
+          volume: Math.min(alert.volume, 0),
+          useDecibel: true,
+        });
+        // File is the same as before, just restart it.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if ((source.sourceSettings as any).local_file === location) {
+          await obs.conn.send('RestartMedia', {
+            sourceName: config.obs.names.sources.donationSound,
+          });
+        // If different, explicitily set it. This also starts the playback.
+        } else {
+          await obs.conn.send('SetSourceSettings', {
+            sourceName: config.obs.names.sources.donationSound,
+            sourceSettings: {
+              is_local_file: true,
+              local_file: location,
+              looping: false,
+              restart_on_active: false,
+            },
+          });
+        }
+      }
     } catch (err) { /* catch */ }
   }
   if (ack && !ack?.handled) ack();

@@ -204,6 +204,14 @@
         "headerColor": "#c49215"
       },
       {
+        "name": "donation-alert-control",
+        "title": "Donation Alert Control",
+        "width": 3,
+        "file": "donation-alert-control.html",
+        "workspace": "Z2 - ESA Advanced",
+        "headerColor": "#c49215"
+      },
+      {
         "name": "donation-total-milestones",
         "title": "Donation Total Milestones",
         "width": 4,
@@ -355,6 +363,20 @@
           "svg",
           "webp",
           "gif"
+        ]
+      },
+      {
+        "name": "donation-alert-assets",
+        "title": "Donation Alert Assets",
+        "allowedTypes": [
+          "jpg",
+          "jpeg",
+          "png",
+          "svg",
+          "webp",
+          "gif",
+          "mp3",
+          "wav"
         ]
       }
     ]

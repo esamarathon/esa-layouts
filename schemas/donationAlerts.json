@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "threshold": {
+        "type": "number"
+      },
+      "sound": {
+        "description": "This stores a reference based on the 'name' of the asset.",
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "volume": {
+        "type": "number"
+      },
+      "graphic": {
+        "description": "This stores a reference based on the 'name' of the asset.",
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "graphicDisplayTime": {
+        "type": "number"
+      }
+    },
+    "required": [
+      "id",
+      "threshold",
+      "sound",
+      "volume",
+      "graphic",
+      "graphicDisplayTime"
+    ]
+  },
+  "default": []
+}

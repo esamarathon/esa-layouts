@@ -16,6 +16,8 @@ export * from './currentRunDelay';
 // @ts-ignore
 export * from './delayedTimer';
 // @ts-ignore
+export * from './donationAlerts';
+// @ts-ignore
 export * from './donationReader';
 // @ts-ignore
 export * from './donationsToRead';

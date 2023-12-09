@@ -5,6 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const clone_1 = __importDefault(require("clone"));
 const lodash_1 = require("lodash");
+const path_1 = require("path");
+const process_1 = require("process");
 const uuid_1 = require("uuid");
 const nodecg_1 = require("./util/nodecg");
 const obs_1 = __importDefault(require("./util/obs"));
@@ -242,7 +244,40 @@ replicants_1.omnibar.on('change', (newVal, oldVal) => {
 (0, nodecg_1.get)().listenFor('omnibarPlaySound', async (data, ack) => {
     if (config.obs.enabled && obs_1.default.connected) {
         try {
-            await obs_1.default.conn.send('RestartMedia', { sourceName: config.obs.names.sources.donationSound });
+            const alert = (0, lodash_1.orderBy)(replicants_1.donationAlerts.value, (v) => v.threshold, 'desc')
+                .find((v) => { var _a; return v.threshold <= ((_a = data.amount) !== null && _a !== void 0 ? _a : 0); });
+            const asset = replicants_1.assetsDonationAlertAssets.value.find((a) => alert && a.name === (alert === null || alert === void 0 ? void 0 : alert.sound));
+            if (alert && asset) {
+                const source = await obs_1.default.conn.send('GetSourceSettings', {
+                    sourceName: config.obs.names.sources.donationSound,
+                });
+                const location = (0, path_1.join)((0, process_1.cwd)(), `assets/${asset.namespace}/${asset.category}/${asset.base}`);
+                // Set volume of source.
+                await obs_1.default.conn.send('SetVolume', {
+                    source: config.obs.names.sources.donationSound,
+                    volume: Math.min(alert.volume, 0),
+                    useDecibel: true,
+                });
+                // File is the same as before, just restart it.
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                if (source.sourceSettings.local_file === location) {
+                    await obs_1.default.conn.send('RestartMedia', {
+                        sourceName: config.obs.names.sources.donationSound,
+                    });
+                    // If different, explicitily set it. This also starts the playback.
+                }
+                else {
+                    await obs_1.default.conn.send('SetSourceSettings', {
+                        sourceName: config.obs.names.sources.donationSound,
+                        sourceSettings: {
+                            is_local_file: true,
+                            local_file: location,
+                            looping: false,
+                            restart_on_active: false,
+                        },
+                    });
+                }
+            }
         }
         catch (err) { /* catch */ }
     }

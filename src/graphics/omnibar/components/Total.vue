@@ -154,7 +154,10 @@ export default class extends Vue {
   }
 
   get totalStr(): string {
-    return `$${Math.floor(this.total).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+    let val = this.total;
+    // "Reset" value every 10k, specific to ESA Legends 2023.
+    if (nodecg.bundleConfig.event.shorts === 'esal23') val = this.total % 10000;
+    return `$${Math.floor(val).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
   }
 
   async playNextAlert(start = false): Promise<void> {

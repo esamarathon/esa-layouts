@@ -56,12 +56,12 @@
 
 
 /* Each character in the total is in a span; setting width so the numbers appear monospaced. */
-#Total > span[data-v-34b81756] {
+#Total > span[data-v-f6d80f5e] {
   display: inline-block;
   width: 0.45em;
   text-align: center;
 }
-#Total > .Comma[data-v-34b81756] {
+#Total > .Comma[data-v-f6d80f5e] {
   width: 0.22em;
 }
 

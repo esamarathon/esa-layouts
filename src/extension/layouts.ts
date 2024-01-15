@@ -149,20 +149,24 @@ async function getStoredCropAndAreaVals(
         // Cameras need cropping if not exactly 16:9.
         // Wider need top/bottom cropping.
         // Thinner need left/right cropping.
-        const sceneItemProperties = await obs.conn.send('GetSceneItemProperties', {
-          'scene-name': config.obs.names.scenes.gameLayout,
-          item: { name: groupSourceName },
-        });
-        const cameraAR = sceneItemProperties.sourceWidth / sceneItemProperties.sourceHeight;
+        const { sceneItemTransform } = await obs.getItemTransform(
+          config.obs.names.scenes.gameLayout,
+          groupSourceName,
+        );
+        const sceneItemProperties = sceneItemTransform;
+        const cameraAR = sceneItemProperties.sourceWidth as number
+            / (sceneItemProperties.sourceHeight as number);
         const areaAR = area.width / area.height;
         if (areaAR > cameraAR) {
-          const newHeight = sceneItemProperties.sourceWidth / areaAR;
-          const cropAmount = Math.floor((sceneItemProperties.sourceHeight - newHeight) / 2);
+          const newHeight = sceneItemProperties.sourceWidth as number / areaAR;
+          const cropAmount = Math.floor(
+            (sceneItemProperties.sourceHeight as number - newHeight) / 2,
+          );
           crop.top = cropAmount;
           crop.bottom = cropAmount;
         } else if (areaAR < cameraAR) {
-          const newWidth = sceneItemProperties.sourceHeight * areaAR;
-          const cropAmount = Math.floor((sceneItemProperties.sourceWidth - newWidth) / 2);
+          const newWidth = sceneItemProperties.sourceHeight as number * areaAR;
+          const cropAmount = Math.floor((sceneItemProperties.sourceWidth as number - newWidth) / 2);
           crop.left = cropAmount;
           crop.right = cropAmount;
         }
@@ -295,17 +299,14 @@ capturePositions.on('change', async (val) => {
 // TODO: Any checks needed for "online" marathons? Some were removed; we don't care about
 // them anymore anyway so not too much of an issue, not sure why the check was there
 // in the first place.
-obs.conn.on('AuthenticationSuccess', async () => {
+obs.conn.on('Identified', async () => {
   // Loop through all capture scenes.
   for (const [captureIndex, captureName] of allCaptures.entries()) {
     let mode: 'game' | 'camera' | undefined;
     // Loop through all sources inside of this capture scene, and get properties from OBS.
     for (const [sourceIndex, { name: sourceName }] of allSources.entries()) {
       try {
-        const itemProperties = await obs.conn.send('GetSceneItemProperties', {
-          'scene-name': captureName,
-          item: { name: sourceName },
-        });
+        const itemProperties = await obs.getItemTransform(captureName, sourceName);
         // If this source in the capture scene is toggled as being visible, assume this is the
         // one that should be marked on the xkeys.
         if (itemProperties.visible) {
@@ -327,15 +328,15 @@ obs.conn.on('AuthenticationSuccess', async () => {
     }
     try {
       // Get properties of capture source in game layout scene.
-      const itemProperties = await obs.conn.send('GetSceneItemProperties', {
-        'scene-name': config.obs.names.scenes.gameLayout,
-        item: { name: captureName },
-      });
+      const itemProperties = await obs.getItemTransform(
+        config.obs.names.scenes.gameLayout,
+        captureName,
+      );
       // Fill in cropping information based on the type of source selected in the capture scene.
       if (mode === 'game') {
-        gameCropValues[captureIndex] = itemProperties.crop;
+        gameCropValues[captureIndex] = itemProperties.sceneItemTransform.crop;
       } else if (mode === 'camera') {
-        cameraCropValues[captureIndex] = itemProperties.crop;
+        cameraCropValues[captureIndex] = itemProperties.sceneItemTransform.crop;
       }
     } catch (err) {
       logError('[Layouts] Could not get initial capture cropping values [%s]', err, captureName);

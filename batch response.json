@@ -1,0 +1,51 @@
+[
+  {
+    "requestStatus": {
+      "code": 100,
+      "result": true
+    },
+    "requestType": "GetSceneItemId",
+    "responseData": {
+      "sceneItemId": 2
+    }
+  },
+  {
+    "requestStatus": {
+      "code": 100,
+      "result": true
+    },
+    "requestType": "GetSceneItemTransform",
+    "responseData": {
+      "sceneItemTransform": {
+        "alignment": 5,
+        "boundsAlignment": 0,
+        "boundsHeight": 810,
+        "boundsType": "OBS_BOUNDS_STRETCH",
+        "boundsWidth": 1440,
+        "cropBottom": 0,
+        "cropLeft": 0,
+        "cropRight": 0,
+        "cropTop": 0,
+        "height": 1080,
+        "positionX": 482,
+        "positionY": 0,
+        "rotation": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "sourceHeight": 1080,
+        "sourceWidth": 1920,
+        "width": 1920
+      }
+    }
+  },
+  {
+    "requestStatus": {
+      "code": 100,
+      "result": true
+    },
+    "requestType": "GetSceneItemEnabled",
+    "responseData": {
+      "sceneItemEnabled": true
+    }
+  }
+]

@@ -4,7 +4,7 @@ import clone from 'clone';
 import type { DeepWritable } from 'ts-essentials';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
-import obs from './util/obs';
+import obs, { getCropFromData } from './util/obs';
 import { capturePositions, gameLayouts, nameCycle } from './util/replicants';
 import { sc } from './util/speedcontrol';
 import xkeys from './util/xkeys';
@@ -154,19 +154,16 @@ async function getStoredCropAndAreaVals(
           groupSourceName,
         );
         const sceneItemProperties = sceneItemTransform;
-        const cameraAR = sceneItemProperties.sourceWidth as number
-            / (sceneItemProperties.sourceHeight as number);
+        const cameraAR = sceneItemProperties.sourceWidth / sceneItemProperties.sourceHeight;
         const areaAR = area.width / area.height;
         if (areaAR > cameraAR) {
-          const newHeight = sceneItemProperties.sourceWidth as number / areaAR;
-          const cropAmount = Math.floor(
-            (sceneItemProperties.sourceHeight as number - newHeight) / 2,
-          );
+          const newHeight = sceneItemProperties.sourceWidth / areaAR;
+          const cropAmount = Math.floor((sceneItemProperties.sourceHeight - newHeight) / 2);
           crop.top = cropAmount;
           crop.bottom = cropAmount;
         } else if (areaAR < cameraAR) {
-          const newWidth = sceneItemProperties.sourceHeight as number * areaAR;
-          const cropAmount = Math.floor((sceneItemProperties.sourceWidth as number - newWidth) / 2);
+          const newWidth = sceneItemProperties.sourceHeight * areaAR;
+          const cropAmount = Math.floor((sceneItemProperties.sourceWidth - newWidth) / 2);
           crop.left = cropAmount;
           crop.right = cropAmount;
         }
@@ -328,15 +325,15 @@ obs.conn.on('Identified', async () => {
     }
     try {
       // Get properties of capture source in game layout scene.
-      const itemProperties = await obs.getItemTransform(
+      const { sceneItemTransform } = await obs.getItemTransform(
         config.obs.names.scenes.gameLayout,
         captureName,
       );
       // Fill in cropping information based on the type of source selected in the capture scene.
       if (mode === 'game') {
-        gameCropValues[captureIndex] = itemProperties.sceneItemTransform.crop;
+        gameCropValues[captureIndex] = getCropFromData(sceneItemTransform);
       } else if (mode === 'camera') {
-        cameraCropValues[captureIndex] = itemProperties.sceneItemTransform.crop;
+        cameraCropValues[captureIndex] = getCropFromData(sceneItemTransform);
       }
     } catch (err) {
       logError('[Layouts] Could not get initial capture cropping values [%s]', err, captureName);

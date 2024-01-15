@@ -229,17 +229,14 @@ nodecg().listenFor('omnibarPlaySound', async (data: { amount?: number } | undefi
         asset?.name || 'not found',
       );
       if (alert && asset) {
-        const source = await obs.conn.send('GetSourceSettings', {
-          sourceName: config.obs.names.sources.donationSound,
-        });
+        const source = await obs.getSourceSettings(config.obs.names.sources.donationSound);
         nodecg().log.debug('[Omnibar] omnibarPlaySound OBS source found');
         const location = join(cwd(), `assets/${asset.namespace}/${asset.category}/${asset.base}`);
         nodecg().log.debug('[Omnibar] omnibarPlaySound location of sound:', location);
         // Set volume of source.
-        await obs.conn.send('SetVolume', {
-          source: config.obs.names.sources.donationSound,
-          volume: Math.min(alert.volume, 0),
-          useDecibel: true,
+        await obs.conn.call('SetInputVolume', {
+          inputName: config.obs.names.sources.donationSound,
+          inputVolumeDb: Math.min(alert.volume, 0),
         });
         nodecg().log.debug(
           '[Omnibar] omnibarPlaySound volume set to %s',

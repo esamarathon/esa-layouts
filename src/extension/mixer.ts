@@ -114,6 +114,8 @@ obs.on('ready', async () => {
   await setInitialFaders();
 });
 
+// In OBS WS v4, we were listening to "TransitionBegin" but not sure why.
+// Maybe it was the only way to get to *and* from scenes at some point?
 obs.on('currentSceneChanged', async (current, last) => {
   if (config.x32.enabled) {
     const data = {

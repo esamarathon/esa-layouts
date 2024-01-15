@@ -138,6 +138,8 @@ obs.conn.on('SceneTransitionStarted', (data) => {
   obsData.value.transitioning = true;
   if (data.transitionName === 'Stinger') nodecg().sendMessage('showTransition');
 });
+// NOTE: This is apparently called even if the transition is not a video,
+// which is very useful in case it's not, but could be sometimes.
 obs.conn.on('SceneTransitionVideoEnded', () => {
   obsData.value.transitioning = false;
 });

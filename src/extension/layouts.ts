@@ -292,7 +292,6 @@ capturePositions.on('change', async (val) => {
 });
 
 // Things to do on OBS initial connection/authentication.
-// This should also trigger even if authentication is turned off, after initial connection.
 // TODO: Any checks needed for "online" marathons? Some were removed; we don't care about
 // them anymore anyway so not too much of an issue, not sure why the check was there
 // in the first place.

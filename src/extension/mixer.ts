@@ -110,12 +110,17 @@ async function setInitialFaders(): Promise<void> {
 x32.on('ready', async () => {
   await setInitialFaders();
 });
-obs.conn.on('AuthenticationSuccess', async () => {
+obs.on('ready', async () => {
   await setInitialFaders();
 });
 
-obs.conn.on('TransitionBegin', async (data) => {
+obs.on('currentSceneChanged', async (current, last) => {
   if (config.x32.enabled) {
+    const data = {
+      'to-scene': current as string,
+      'from-scene': last,
+    };
+
     // On-Site
     if (!config.event.online) {
       // These scenes will have the reader audible.

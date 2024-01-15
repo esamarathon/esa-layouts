@@ -149,7 +149,7 @@ async function getStoredCropAndAreaVals(
         // Cameras need cropping if not exactly 16:9.
         // Wider need top/bottom cropping.
         // Thinner need left/right cropping.
-        const { sceneItemTransform } = await obs.getItemTransform(
+        const { sceneItemTransform } = await obs.getSceneItemSettings(
           config.obs.names.scenes.gameLayout,
           groupSourceName,
         );
@@ -296,17 +296,17 @@ capturePositions.on('change', async (val) => {
 // TODO: Any checks needed for "online" marathons? Some were removed; we don't care about
 // them anymore anyway so not too much of an issue, not sure why the check was there
 // in the first place.
-obs.conn.on('Identified', async () => {
+obs.on('ready', async () => {
   // Loop through all capture scenes.
   for (const [captureIndex, captureName] of allCaptures.entries()) {
     let mode: 'game' | 'camera' | undefined;
     // Loop through all sources inside of this capture scene, and get properties from OBS.
     for (const [sourceIndex, { name: sourceName }] of allSources.entries()) {
       try {
-        const itemProperties = await obs.getItemTransform(captureName, sourceName);
+        const itemProperties = await obs.getSceneItemSettings(captureName, sourceName);
         // If this source in the capture scene is toggled as being visible, assume this is the
         // one that should be marked on the xkeys.
-        if (itemProperties.visible) {
+        if (itemProperties.sceneItemEnabled) {
           selected.sourceIndex[captureIndex] = sourceIndex;
           // We check here if the current source selected is game or camera so we can fill in the
           // current cropping information in the correct spot.
@@ -325,7 +325,7 @@ obs.conn.on('Identified', async () => {
     }
     try {
       // Get properties of capture source in game layout scene.
-      const { sceneItemTransform } = await obs.getItemTransform(
+      const { sceneItemTransform } = await obs.getSceneItemSettings(
         config.obs.names.scenes.gameLayout,
         captureName,
       );

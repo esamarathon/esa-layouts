@@ -245,21 +245,22 @@ nodecg().listenFor('omnibarPlaySound', async (data: { amount?: number } | undefi
         // File is the same as before, just restart it.
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if ((source.sourceSettings as any).local_file === location) {
-          await obs.conn.send('RestartMedia', {
-            sourceName: config.obs.names.sources.donationSound,
+          await obs.conn.call('TriggerMediaInputAction', {
+            inputName: config.obs.names.sources.donationSound,
+            mediaAction: 'OBS_WEBSOCKET_MEDIA_INPUT_ACTION_RESTART',
           });
           nodecg().log.debug('[Omnibar] omnibarPlaySound media restarted');
         // If different, explicitily set it. This also starts the playback.
         } else {
-          await obs.conn.send('SetSourceSettings', {
-            sourceName: config.obs.names.sources.donationSound,
-            sourceSettings: {
+          await obs.setSourceSettings(
+            config.obs.names.sources.donationSound,
+            {
               is_local_file: true,
               local_file: location,
               looping: false,
               restart_on_active: false,
             },
-          });
+          );
           nodecg().log.debug('[Omnibar] omnibarPlaySound source settings set');
         }
       }

@@ -116,7 +116,7 @@ obs.on('ready', async () => {
 
 // In OBS WS v4, we were listening to "TransitionBegin" but not sure why.
 // Maybe it was the only way to get to *and* from scenes at some point?
-obs.on('currentSceneChanged', async (current, last) => {
+obs.on('transitionStarted', async (current, last) => {
   if (config.x32.enabled) {
     const data = {
       'to-scene': current as string,

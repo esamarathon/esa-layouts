@@ -1,4 +1,5 @@
-import OBS, { OBSTransform } from '@shared/extension/obs';
+import OBS from '@shared/extension/obs';
+import { OBS as OBSTypes } from '@shared/types';
 import { logError } from './helpers';
 import { get as nodecg } from './nodecg';
 import { currentRunDelay, obsData } from './replicants';
@@ -7,7 +8,7 @@ const config = nodecg().bundleConfig.obs;
 const obs = new OBS(nodecg(), config);
 let sceneChangeCodeTriggered = 0;
 
-export function getCropFromData(data: OBSTransform) {
+export function getCropFromData(data: OBSTypes.Transform) {
   return {
     top: data.cropTop,
     right: data.cropRight,

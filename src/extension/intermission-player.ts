@@ -144,9 +144,10 @@ videoPlayer.on('change', (newVal, oldVal) => {
 });
 
 // Used if a user manually switches to the intermission player scene in OBS.
-obs.conn.on('TransitionBegin', (data) => {
-  if (obs.findScene(config.obs.names.scenes.intermissionPlayer) === data['to-scene']
-  && !videoPlayer.value.playing) {
+// In OBS WS v4, we were listening to "TransitionBegin" but not sure why.
+obs.on('currentSceneChanged', (current) => {
+  if (obs.findScene(config.obs.names.scenes.intermissionPlayer) === current
+      && !videoPlayer.value.playing) {
     startPlaylist();
   }
 });

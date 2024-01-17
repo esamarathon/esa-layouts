@@ -4,7 +4,7 @@ import clone from 'clone';
 import type { DeepWritable } from 'ts-essentials';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
-import obs from './util/obs';
+import obs, { getCropFromData } from './util/obs';
 import { capturePositions, gameLayouts, nameCycle } from './util/replicants';
 import { sc } from './util/speedcontrol';
 import xkeys from './util/xkeys';
@@ -149,10 +149,11 @@ async function getStoredCropAndAreaVals(
         // Cameras need cropping if not exactly 16:9.
         // Wider need top/bottom cropping.
         // Thinner need left/right cropping.
-        const sceneItemProperties = await obs.conn.send('GetSceneItemProperties', {
-          'scene-name': config.obs.names.scenes.gameLayout,
-          item: { name: groupSourceName },
-        });
+        const { sceneItemTransform } = await obs.getSceneItemSettings(
+          config.obs.names.scenes.gameLayout,
+          groupSourceName,
+        );
+        const sceneItemProperties = sceneItemTransform;
         const cameraAR = sceneItemProperties.sourceWidth / sceneItemProperties.sourceHeight;
         const areaAR = area.width / area.height;
         if (areaAR > cameraAR) {
@@ -291,24 +292,20 @@ capturePositions.on('change', async (val) => {
 });
 
 // Things to do on OBS initial connection/authentication.
-// This should also trigger even if authentication is turned off, after initial connection.
 // TODO: Any checks needed for "online" marathons? Some were removed; we don't care about
 // them anymore anyway so not too much of an issue, not sure why the check was there
 // in the first place.
-obs.conn.on('AuthenticationSuccess', async () => {
+obs.on('ready', async () => {
   // Loop through all capture scenes.
   for (const [captureIndex, captureName] of allCaptures.entries()) {
     let mode: 'game' | 'camera' | undefined;
     // Loop through all sources inside of this capture scene, and get properties from OBS.
     for (const [sourceIndex, { name: sourceName }] of allSources.entries()) {
       try {
-        const itemProperties = await obs.conn.send('GetSceneItemProperties', {
-          'scene-name': captureName,
-          item: { name: sourceName },
-        });
+        const itemProperties = await obs.getSceneItemSettings(captureName, sourceName);
         // If this source in the capture scene is toggled as being visible, assume this is the
         // one that should be marked on the xkeys.
-        if (itemProperties.visible) {
+        if (itemProperties.sceneItemEnabled) {
           selected.sourceIndex[captureIndex] = sourceIndex;
           // We check here if the current source selected is game or camera so we can fill in the
           // current cropping information in the correct spot.
@@ -327,15 +324,15 @@ obs.conn.on('AuthenticationSuccess', async () => {
     }
     try {
       // Get properties of capture source in game layout scene.
-      const itemProperties = await obs.conn.send('GetSceneItemProperties', {
-        'scene-name': config.obs.names.scenes.gameLayout,
-        item: { name: captureName },
-      });
+      const { sceneItemTransform } = await obs.getSceneItemSettings(
+        config.obs.names.scenes.gameLayout,
+        captureName,
+      );
       // Fill in cropping information based on the type of source selected in the capture scene.
       if (mode === 'game') {
-        gameCropValues[captureIndex] = itemProperties.crop;
+        gameCropValues[captureIndex] = getCropFromData(sceneItemTransform);
       } else if (mode === 'camera') {
-        cameraCropValues[captureIndex] = itemProperties.crop;
+        cameraCropValues[captureIndex] = getCropFromData(sceneItemTransform);
       }
     } catch (err) {
       logError('[Layouts] Could not get initial capture cropping values [%s]', err, captureName);

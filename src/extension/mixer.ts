@@ -110,12 +110,19 @@ async function setInitialFaders(): Promise<void> {
 x32.on('ready', async () => {
   await setInitialFaders();
 });
-obs.conn.on('AuthenticationSuccess', async () => {
+obs.on('ready', async () => {
   await setInitialFaders();
 });
 
-obs.conn.on('TransitionBegin', async (data) => {
+// In OBS WS v4, we were listening to "TransitionBegin" but not sure why.
+// Maybe it was the only way to get to *and* from scenes at some point?
+obs.on('transitionStarted', async (current, last) => {
   if (config.x32.enabled) {
+    const data = {
+      'to-scene': current as string,
+      'from-scene': last,
+    };
+
     // On-Site
     if (!config.event.online) {
       // These scenes will have the reader audible.

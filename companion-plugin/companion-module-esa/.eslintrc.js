@@ -25,5 +25,6 @@ module.exports = {
 	rules: {
 		'max-len': ['error', { code: 100, ignorePattern: '^import\\s.+\\sfrom\\s.+;' }],
 		'object-curly-newline': 'off',
+		'@typescript-eslint/lines-between-class-members': 'off',
 	},
 }

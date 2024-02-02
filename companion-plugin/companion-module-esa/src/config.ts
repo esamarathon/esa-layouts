@@ -8,7 +8,8 @@ import { SomeCompanionConfigField } from '@companion-module/base';
  * Interface of the configuration types.
  */
 export interface Config {
-  // add configuration types here
+  address?: string;
+  key?: string;
 }
 
 /**
@@ -17,6 +18,19 @@ export interface Config {
  */
 export function getConfigFields(): SomeCompanionConfigField[] {
   return [
-    // set up configuration fields here
+    {
+      type: 'textinput',
+      id: 'address',
+      label: 'Address',
+      width: 6,
+      default: 'localhost:9092',
+    },
+    {
+      type: 'textinput',
+      id: 'key',
+      label: 'Key',
+      width: 6,
+      default: 'DEFAULT_KEY',
+    },
   ];
 }

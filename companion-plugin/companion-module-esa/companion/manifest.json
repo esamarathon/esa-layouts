@@ -2,15 +2,15 @@
 	"id": "esa",
 	"name": "esa",
 	"shortname": "esa",
-	"description": "A short one line description of your module",
+	"description": "Custom module for ESA use.",
 	"version": "0.1.0",
 	"license": "MIT",
-	"repository": "git+https://github.com/bitfocus/companion-module-your-module-name.git",
-	"bugs": "https://github.com/bitfocus/companion-module-your-module-name/issues",
+	"repository": "git+https://github.com/esamarathon/esa-layouts.git",
+	"bugs": "https://github.com/esamarathon/esa-layouts/issues",
 	"maintainers": [
 		{
-			"name": "Your name",
-			"email": "Your email"
+			"name": "zoton2",
+			"email": "zoton2@crew.esamarathon.com"
 		}
 	],
 	"runtime": {

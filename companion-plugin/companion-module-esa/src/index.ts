@@ -3,6 +3,7 @@ import { WebSocket } from 'ws';
 import initActions from './actions';
 import { Config, getConfigFields } from './config';
 import initFeedbacks from './feedbacks';
+import initPresets from './presets';
 import upgradeScripts from './upgrades';
 import initVariables from './variables';
 
@@ -71,6 +72,7 @@ class ModuleInstance extends InstanceBase<Config> {
     initVariables(this);
     initFeedbacks(this);
     initActions(this);
+    initPresets(this);
     this.connect();
   }
 

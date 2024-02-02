@@ -51,7 +51,7 @@ class ModuleInstance extends InstanceBase<Config> {
       this.updateStatus(InstanceStatus.Disconnected);
       this.log('debug', `Closed (${code} - ${reason})`);
       if (!this.wsReconnectionTimeout) {
-        this.wsReconnectionTimeout = setTimeout(this.connect, 5000);
+        this.wsReconnectionTimeout = setTimeout(() => this.connect(), 5000);
       }
     });
     this.ws.on('message', (data, isBinary) => {

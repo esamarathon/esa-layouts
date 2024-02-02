@@ -92,6 +92,7 @@ import GenericMsg from './components/GenericMsg.vue';
 import Milestone from './components/Milestone.vue';
 import Prize from './components/Prize.vue';
 import UpcomingRun from './components/UpcomingRun.vue';
+import MusicTrack from './components/MusicTrack.vue';
 import { storeModule } from './store';
 
 @Component({
@@ -103,6 +104,7 @@ import { storeModule } from './store';
     Milestone,
     Prize,
     UpcomingRun,
+    MusicTrack,
   },
 })
 export default class OmnibarTickerControl extends Vue {
@@ -111,6 +113,10 @@ export default class OmnibarTickerControl extends Vue {
     {
       key: 'GenericMsg',
       name: 'Generic Message',
+    },
+    {
+      key: 'MusicTrack',
+      name: 'Current song',
     },
     {
       key: 'Bid',

@@ -18,7 +18,8 @@
           "UpcomingRun",
           "Prize",
           "Bid",
-          "Milestone"
+          "Milestone",
+          "MusicTrack"
         ]
       },
       "alerts": {

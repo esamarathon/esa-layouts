@@ -1,57 +1,64 @@
-import type { Bids, BigbuttonPlayerMap, Commentators, Countdown, CurrentRunDelay, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
-import { Asset } from '@shared/types';
+import type { Bids, BigbuttonPlayerMap, Commentators, Countdown, CurrentRunDelay, DonationAlerts, DonationReader, DonationTotal, DonationTotalMilestones, DonationsToRead, GameLayouts, IntermissionSlides, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import type NodeCGTypes from '@nodecg/types';
 import clone from 'clone';
-import type { ReplicantBrowser } from 'nodecg/types/browser';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
 import { RunDataActiveRun, RunDataArray, Timer } from 'speedcontrol-util/types';
-import { RunDataActiveRunSurrounding } from 'speedcontrol-util/types/speedcontrol/schemas';
+import { RunDataActiveRunSurrounding } from 'speedcontrol-util/types/schemas';
 import Vue from 'vue';
 import type { Store } from 'vuex';
 import { namespace } from 'vuex-class';
-import { getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators';
+import { Module, Mutation, VuexModule, getModule } from 'vuex-module-decorators';
 
 const sc = new SpeedcontrolUtilBrowser(nodecg);
 
 // Declaring replicants.
 export const reps: {
-  assetsReaderIntroductionImages: ReplicantBrowser<Asset[]>;
-  bids: ReplicantBrowser<Bids>;
-  bigbuttonPlayerMap: ReplicantBrowser<BigbuttonPlayerMap>;
-  commentators: ReplicantBrowser<Commentators>;
-  countdown: ReplicantBrowser<Countdown>;
-  currentRunDelay: ReplicantBrowser<CurrentRunDelay>;
-  donationReader: ReplicantBrowser<DonationReader>;
-  donationsToRead: ReplicantBrowser<DonationsToRead>;
-  donationTotal: ReplicantBrowser<DonationTotal>;
-  donationTotalMilestones: ReplicantBrowser<DonationTotalMilestones>;
-  gameLayouts: ReplicantBrowser<GameLayouts>;
-  obsData: ReplicantBrowser<ObsData>;
-  omnibar: ReplicantBrowser<Omnibar>;
-  otherStreamData: ReplicantBrowser<OtherStreamData>;
-  prizes: ReplicantBrowser<Prizes>;
-  readerIntroduction: ReplicantBrowser<ReaderIntroduction>;
-  runDataActiveRun: ReplicantBrowser<RunDataActiveRun>;
-  runDataActiveRunSurrounding: ReplicantBrowser<RunDataActiveRunSurrounding>;
-  runDataArray: ReplicantBrowser<RunDataArray>;
-  serverTimestamp: ReplicantBrowser<ServerTimestamp>;
-  streamDeckData: ReplicantBrowser<StreamDeckData>;
-  timer: ReplicantBrowser<Timer>;
-  ttsVoices: ReplicantBrowser<TtsVoices>;
-  upcomingRunID: ReplicantBrowser<UpcomingRunID>;
-  videoPlayer: ReplicantBrowser<VideoPlayer>;
-  [k: string]: ReplicantBrowser<unknown>;
+  assetsDonationAlertAssets: NodeCGTypes.ClientReplicant<NodeCGTypes.AssetFile[]>;
+  assetsIntermissionSlides: NodeCGTypes.ClientReplicant<NodeCGTypes.AssetFile[]>;
+  assetsReaderIntroductionImages: NodeCGTypes.ClientReplicant<NodeCGTypes.AssetFile[]>;
+  bids: NodeCGTypes.ClientReplicant<Bids>;
+  bigbuttonPlayerMap: NodeCGTypes.ClientReplicant<BigbuttonPlayerMap>;
+  commentators: NodeCGTypes.ClientReplicant<Commentators>;
+  countdown: NodeCGTypes.ClientReplicant<Countdown>;
+  currentRunDelay: NodeCGTypes.ClientReplicant<CurrentRunDelay>;
+  donationAlerts: NodeCGTypes.ClientReplicant<DonationAlerts>;
+  donationReader: NodeCGTypes.ClientReplicant<DonationReader>;
+  donationsToRead: NodeCGTypes.ClientReplicant<DonationsToRead>;
+  donationTotal: NodeCGTypes.ClientReplicant<DonationTotal>;
+  donationTotalMilestones: NodeCGTypes.ClientReplicant<DonationTotalMilestones>;
+  gameLayouts: NodeCGTypes.ClientReplicant<GameLayouts>;
+  intermissionSlides: NodeCGTypes.ClientReplicant<IntermissionSlides>;
+  obsData: NodeCGTypes.ClientReplicant<ObsData>;
+  omnibar: NodeCGTypes.ClientReplicant<Omnibar>;
+  otherStreamData: NodeCGTypes.ClientReplicant<OtherStreamData>;
+  prizes: NodeCGTypes.ClientReplicant<Prizes>;
+  readerIntroduction: NodeCGTypes.ClientReplicant<ReaderIntroduction>;
+  runDataActiveRun: NodeCGTypes.ClientReplicant<RunDataActiveRun>;
+  runDataActiveRunSurrounding: NodeCGTypes.ClientReplicant<RunDataActiveRunSurrounding>;
+  runDataArray: NodeCGTypes.ClientReplicant<RunDataArray>;
+  serverTimestamp: NodeCGTypes.ClientReplicant<ServerTimestamp>;
+  streamDeckData: NodeCGTypes.ClientReplicant<StreamDeckData>;
+  timer: NodeCGTypes.ClientReplicant<Timer>;
+  ttsVoices: NodeCGTypes.ClientReplicant<TtsVoices>;
+  upcomingRunID: NodeCGTypes.ClientReplicant<UpcomingRunID>;
+  videoPlayer: NodeCGTypes.ClientReplicant<VideoPlayer>;
+  [k: string]: NodeCGTypes.ClientReplicant<unknown>;
 } = {
+  assetsDonationAlertAssets: nodecg.Replicant('assets:donation-alert-assets'),
+  assetsIntermissionSlides: nodecg.Replicant('assets:intermission-slides'),
   assetsReaderIntroductionImages: nodecg.Replicant('assets:reader-introduction-images'),
   bids: nodecg.Replicant('bids'),
   bigbuttonPlayerMap: nodecg.Replicant('bigbuttonPlayerMap'),
   commentators: nodecg.Replicant('commentators'),
   countdown: nodecg.Replicant('countdown'),
   currentRunDelay: nodecg.Replicant('currentRunDelay'),
+  donationAlerts: nodecg.Replicant('donationAlerts'),
   donationReader: nodecg.Replicant('donationReader'),
   donationsToRead: nodecg.Replicant('donationsToRead'),
   donationTotal: nodecg.Replicant('donationTotal'),
   donationTotalMilestones: nodecg.Replicant('donationTotalMilestones'),
   gameLayouts: nodecg.Replicant('gameLayouts'),
+  intermissionSlides: nodecg.Replicant('intermissionSlides'),
   obsData: nodecg.Replicant('obsData'),
   omnibar: nodecg.Replicant('omnibar'),
   otherStreamData: nodecg.Replicant('otherStreamData'),
@@ -70,17 +77,21 @@ export const reps: {
 
 // All the replicant types.
 export interface ReplicantTypes {
-  assetsReaderIntroductionImages: Asset[];
+  assetsDonationAlertAssets: NodeCGTypes.AssetFile[];
+  assetsIntermissionSlides: NodeCGTypes.AssetFile[];
+  assetsReaderIntroductionImages: NodeCGTypes.AssetFile[];
   bids: Bids;
   bigbuttonPlayerMap: BigbuttonPlayerMap;
   commentators: Commentators;
   countdown: Countdown;
   currentRunDelay: CurrentRunDelay;
+  donationAlerts: DonationAlerts;
   donationReader: DonationReader;
   donationsToRead: DonationsToRead;
   donationTotal: DonationTotal;
   donationTotalMilestones: DonationTotalMilestones;
   gameLayouts: GameLayouts;
+  intermissionSlides: IntermissionSlides;
   obsData: ObsData;
   omnibar: Omnibar;
   otherStreamData: OtherStreamData;

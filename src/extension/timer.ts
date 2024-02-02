@@ -1,14 +1,13 @@
 import { BigbuttonPlayerMap } from '@esa-layouts/types/schemas';
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import clone from 'clone';
 import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
-import { bigbuttonPlayerMap, currentRunDelay, delayedTimer } from './util/replicants';
+import { bigbuttonPlayerMap, currentRunDelay, delayedTimer, taskmasterTimestamps } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
-const config = nodecg().bundleConfig as Configschema;
+const config = nodecg().bundleConfig;
 
 // This code keeps a delayed copy of the timer synced to a delay value from external sources.
 // If no delay is present (if not an online marathon), we just make a straight copy.
@@ -50,8 +49,11 @@ sc.timer.on('change', (val) => {
 
 // Controls the nodecg-speedcontrol timer when the big buttons are pressed.
 mq.evt.on('bigbuttonPressed', async (data) => {
-  // Only listen to this event on stream 1.
-  if (config.event.thisEvent !== 1) return;
+  // For stream 2, the buttons are offset by 4.
+  const buttonId = config.event.thisEvent === 2
+    ? data.button_id - 4
+    : data.button_id;
+  if (buttonId < 1 || (config.event.thisEvent === 1 && buttonId > 4)) return;
 
   // If the button was pressed more than 10s ago, ignore it.
   if (data.time.unix < (Date.now() / 1000) - 10) return;
@@ -63,11 +65,24 @@ mq.evt.on('bigbuttonPressed', async (data) => {
   }
 
   const run = sc.getCurrentRun();
+
+  // Hardcoded different timer for Taskmaster.
+  if (run?.game?.toLowerCase() === 'taskmaster') {
+    if (taskmasterTimestamps.value.start === null) { // Start
+      taskmasterTimestamps.value.start = Date.now();
+    } else if (taskmasterTimestamps.value.end === null) { // End
+      taskmasterTimestamps.value.end = Date.now();
+    } else {
+      taskmasterTimestamps.value = { start: null, end: null }; // Reset
+    }
+    return;
+  }
+
   let id = 0;
 
   // If more than 1 team, uses the big button player mapping to find out what team to stop.
   if (run && run.teams.length > 1) {
-    const userTag = bigbuttonPlayerMap.value[data.button_id] as BigbuttonPlayerMap[0] | undefined;
+    const userTag = bigbuttonPlayerMap.value[buttonId] as BigbuttonPlayerMap[0] | undefined;
     const teamIndex = run.teams.findIndex((t) => t.players.find((p) => userTag
       ?.find((u) => u.user.displayName.toLowerCase() === p.name.toLowerCase())));
     if (teamIndex >= 0) id = teamIndex;

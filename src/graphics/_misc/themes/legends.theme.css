@@ -1,0 +1,20 @@
+#Intermission .Logo > img {
+  content: url('./legends/Logo.png');
+}
+
+#Countdown .Logo {
+  content: url('./legends/Logo.png');
+  height: 500px;
+}
+
+#Omnibar > #Logo {
+  content: url('./legends/Logo.png');
+  height: 72px;
+  padding: 0 10px;
+}
+
+#Omnibar #CharityLogo {
+  content: url('./legends/OmnibarCharityLogo.png');
+  height: 58px;
+  margin: 0 15px;
+}

@@ -19,12 +19,12 @@
     </media-card>
     <draggable v-model="newPlaylist">
       <media-card
-        v-for="({ sum, commercial }, i) in newPlaylist"
+        v-for="({ sum, length, commercial }, i) in newPlaylist"
         :key="`${sum}_${i}`"
         class="d-flex align-center"
       >
         <v-text-field
-          :value="commercial"
+          :value="length"
           type="number"
           hide-details
           outlined
@@ -32,9 +32,9 @@
           spellcheck="false"
           autocomplete="off"
           :style="{ 'max-width': '75px' }"
-          step="30"
+          :step="`${commercial ? '30' : '1'}`"
           min="0"
-          @input="playlistUpdateCommercial({ i, length: $event })"
+          @input="playlistUpdateLength({ i, length: $event })"
         />
         <div
           class="d-flex justify-center flex-grow-1"
@@ -46,8 +46,11 @@
           <template v-if="sum">
             {{ getName(sum) || 'Could not find video name.' }}
           </template>
-          <template v-else>
+          <template v-else-if="commercial">
             Commercial w/o Video
+          </template>
+          <template v-else>
+            Wait Block
           </template>
         </div>
         <v-icon @click="playlistRemove(i)" class="mr-1">
@@ -55,19 +58,24 @@
         </v-icon>
       </media-card>
     </draggable>
-    <v-btn block class="mt-3" @click="playlistAdd()">Add Commercial w/o Video to Playlist</v-btn>
+    <v-btn block class="mt-3" @click="playlistAdd({ commercial: true })">
+      Add Commercial w/o Video to Playlist
+    </v-btn>
+    <v-btn block class="mt-3" @click="playlistAdd({ commercial: false })">
+      Add Wait Block to Playlist
+    </v-btn>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator';
-import { State, Mutation } from 'vuex-class';
-import { State2Way } from 'vuex-class-state2way';
-import Draggable from 'vuedraggable';
+import type NodeCGTypes from '@nodecg/types';
 import { VideoPlayer } from '@esa-layouts/types/schemas';
-import { Asset } from '@shared/types';
-import { PlaylistAdd, PlaylistRefresh, PlaylistRemove, PlaylistUpdateCommercial } from '../store';
+import { Component, Vue, Watch } from 'vue-property-decorator';
+import Draggable from 'vuedraggable';
+import { Mutation, State } from 'vuex-class';
+import { State2Way } from 'vuex-class-state2way';
 import MediaCard from '../../_misc/components/MediaCard.vue';
+import { PlaylistAdd, PlaylistRefresh, PlaylistRemove, PlaylistUpdateLength } from '../store';
 
 @Component({
   components: {
@@ -76,16 +84,16 @@ import MediaCard from '../../_misc/components/MediaCard.vue';
   },
 })
 export default class extends Vue {
-  @State videos!: Asset[];
+  @State videos!: NodeCGTypes.AssetFile[];
   @State videoPlayer!: VideoPlayer;
   @State2Way('updateNewPlaylist', 'newPlaylist') newPlaylist!: VideoPlayer['playlist'];
   @State localEdits!: boolean;
   @Mutation playlistAdd!: PlaylistAdd;
-  @Mutation playlistUpdateCommercial!: PlaylistUpdateCommercial;
+  @Mutation playlistUpdateLength!: PlaylistUpdateLength;
   @Mutation playlistRemove!: PlaylistRemove;
   @Mutation playlistRefresh!: PlaylistRefresh;
 
-  getName(sum: string): string | undefined {
+  getName(sum?: string): string | undefined {
     return this.videos.find((a) => a.sum === sum)?.name;
   }
 

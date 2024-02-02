@@ -1,15 +1,17 @@
-import { Bids, Configschema, DonationTotalMilestones, Omnibar, Prizes } from '@esa-layouts/types/schemas';
+import { Bids, DonationTotalMilestones, Omnibar, Prizes } from '@esa-layouts/types/schemas';
 import clone from 'clone';
 import { orderBy } from 'lodash';
+import { join } from 'path';
+import { cwd } from 'process';
 import { RunData } from 'speedcontrol-util/types';
 import { v4 as uuid } from 'uuid';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
-import { bids, commentators, donationReader, donationTotalMilestones, omnibar, prizes } from './util/replicants';
+import { assetsDonationAlertAssets, bids, commentators, donationAlerts, donationReader, donationTotalMilestones, omnibar, prizes } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
-const config = nodecg().bundleConfig as Configschema;
+const config = nodecg().bundleConfig;
 
 // Temporary storage used for mini credits subscriptions/cheers/alerts while they are playing.
 let tempMiniCreditsStorage: Omnibar['miniCredits'] = {
@@ -214,11 +216,59 @@ nodecg().listenFor('omnibarShowNext', (data, ack) => {
 });
 
 // Listens for messages from the graphic to play the "donation" SFX via OBS source.
-nodecg().listenFor('omnibarPlaySound', async (data, ack) => {
+nodecg().listenFor('omnibarPlaySound', async (data: { amount?: number } | undefined, ack) => {
   if (config.obs.enabled && obs.connected) {
     try {
-      await obs.conn.send('RestartMedia', { sourceName: config.obs.names.sources.donationSound });
-    } catch (err) { /* catch */ }
+      nodecg().log.debug('omnibarPlaySound called with amount %s', data?.amount || 'none');
+      const alert = orderBy(donationAlerts.value, (v) => v.threshold, 'desc')
+        .find((v) => v.threshold <= (data?.amount ?? 0));
+      const asset = assetsDonationAlertAssets.value.find((a) => alert && a.name === alert?.sound);
+      nodecg().log.debug(
+        '[Omnibar] omnibarPlaySound called, alert %s, asset %s',
+        alert?.sound || 'not found',
+        asset?.name || 'not found',
+      );
+      if (alert && asset) {
+        const source = await obs.conn.send('GetSourceSettings', {
+          sourceName: config.obs.names.sources.donationSound,
+        });
+        nodecg().log.debug('[Omnibar] omnibarPlaySound OBS source found');
+        const location = join(cwd(), `assets/${asset.namespace}/${asset.category}/${asset.base}`);
+        nodecg().log.debug('[Omnibar] omnibarPlaySound location of sound:', location);
+        // Set volume of source.
+        await obs.conn.send('SetVolume', {
+          source: config.obs.names.sources.donationSound,
+          volume: Math.min(alert.volume, 0),
+          useDecibel: true,
+        });
+        nodecg().log.debug(
+          '[Omnibar] omnibarPlaySound volume set to %s',
+          Math.min(alert.volume, 0),
+        );
+        // File is the same as before, just restart it.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if ((source.sourceSettings as any).local_file === location) {
+          await obs.conn.send('RestartMedia', {
+            sourceName: config.obs.names.sources.donationSound,
+          });
+          nodecg().log.debug('[Omnibar] omnibarPlaySound media restarted');
+        // If different, explicitily set it. This also starts the playback.
+        } else {
+          await obs.conn.send('SetSourceSettings', {
+            sourceName: config.obs.names.sources.donationSound,
+            sourceSettings: {
+              is_local_file: true,
+              local_file: location,
+              looping: false,
+              restart_on_active: false,
+            },
+          });
+          nodecg().log.debug('[Omnibar] omnibarPlaySound source settings set');
+        }
+      }
+    } catch (err) {
+      nodecg().log.error('[Omnibar] omnibarPlaySound error:', err);
+    }
   }
   if (ack && !ack?.handled) ack();
 });

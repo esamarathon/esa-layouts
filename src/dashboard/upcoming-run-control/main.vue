@@ -58,13 +58,13 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-import { RunDataActiveRunSurrounding, RunDataArray } from 'speedcontrol-util/types/speedcontrol/schemas';
-import { UpcomingRunID } from '@esa-layouts/types/schemas';
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
+import { UpcomingRunID } from '@esa-layouts/types/schemas';
+import { RunDataActiveRunSurrounding, RunDataArray } from 'speedcontrol-util/types/schemas';
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component
-export default class IntermissionControl extends Vue {
+export default class UpcomingRunControl extends Vue {
   @replicantNS.State((s) => s.reps.runDataArray) readonly runDataArray!: RunDataArray;
   @replicantNS.State((s) => s.reps.runDataActiveRunSurrounding)
   readonly runDataActiveRunSurrounding!: RunDataActiveRunSurrounding;

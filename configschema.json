@@ -90,6 +90,10 @@
             }
           ],
           "default": false
+        },
+        "fallbackTwitchTitle": {
+          "$comment": "Set the fallback Twitch title for this event; {{total}} and {{run}} can be used as placeholders (see source code).",
+          "type": "string"
         }
       },
       "required": [
@@ -576,11 +580,49 @@
         "group": {
           "type": "string",
           "default": "stream1"
+        },
+        "availableButtons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ]
+          },
+          "default": [
+            {
+              "id": "1",
+              "name": "PC 1"
+            },
+            {
+              "id": "2",
+              "name": "PC 2"
+            },
+            {
+              "id": "3",
+              "name": "Console 1"
+            },
+            {
+              "id": "4",
+              "name": "Console 2"
+            }
+          ]
         }
       },
       "required": [
         "enabled",
-        "group"
+        "group",
+        "availableButtons"
       ]
     },
     "offsite": {
@@ -669,6 +711,19 @@
         "enabled",
         "apiUrl"
       ]
+    },
+    "therungg": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "required": [
+        "enabled"
+      ]
     }
   },
   "required": [
@@ -687,6 +742,7 @@
     "offsite",
     "server",
     "discord",
-    "streamlabsCharity"
+    "streamlabsCharity",
+    "therungg"
   ]
 }

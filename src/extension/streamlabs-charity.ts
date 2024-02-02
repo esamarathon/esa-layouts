@@ -1,9 +1,8 @@
-import { Configschema } from '@esa-layouts/types/schemas';
 import needle from 'needle';
 import { get as nodecg } from './util/nodecg';
 import { donationTotal } from './util/replicants';
 
-const config = nodecg().bundleConfig as Configschema;
+const config = nodecg().bundleConfig;
 
 async function updateDonationTotalFromAPI(init = false): Promise<void> {
   try {

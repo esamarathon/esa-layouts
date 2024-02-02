@@ -31,10 +31,10 @@
       id="CameraCapture1"
       class="Capture BorderTop BorderRight BorderLeft"
       :style="{
-        left: '660px',
+        left: '605px',
         top: '540px',
-        width: '600px',
-          height: crowdCam ? '260px' : '400px',
+        width: '710px',
+        height: crowdCam ? '260px' : '400px',
       }"
     />
     <template v-else>
@@ -79,7 +79,7 @@
       :style="{
         left: '0px',
         top: '540px',
-        width: '660px',
+        width: '605px',
       }"
     >
       <player :slot-no="0" />
@@ -91,9 +91,9 @@
     <div
       class="Fixed FlexColumn"
       :style="{
-        left: '1260px',
+        left: '1315px',
         top: '540px',
-        width: '660px',
+        width: '605px',
         height: '400px',
       }"
     >
@@ -155,7 +155,7 @@
       :style="{
         left: '0px',
         top: '674px',
-        width: '660px',
+        width: '605px',
         height: '266px',
       }"
     />
@@ -173,7 +173,6 @@
 </template>
 
 <script lang="ts">
-import { Configschema } from '@esa-layouts/types/schemas/configschema';
 import MediaBox from '@shared/graphics/mediabox';
 import { RunDataActiveRun } from 'speedcontrol-util/types';
 import { Component, Vue } from 'vue-property-decorator';
@@ -198,7 +197,7 @@ import Timer from './components/Timer.vue';
 })
 export default class extends Vue {
   @State((s) => s.gameLayouts.crowdCamera) readonly crowdCam!: boolean;
-  online = (nodecg.bundleConfig as Configschema).event.online;
+  online = nodecg.bundleConfig.event.online;
   @State('runDataActiveRun') runData!: RunDataActiveRun;
 
   get extraPlayers(): { name: string, pronouns?: string }[] {

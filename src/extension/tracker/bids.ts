@@ -1,13 +1,12 @@
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import type { Tracker } from '@shared/types';
 import needle from 'needle';
 import { eventInfo, getCookies } from '.';
 import { get as nodecg } from '../util/nodecg';
 import { bids } from '../util/replicants';
 
-const eventConfig = (nodecg().bundleConfig as Configschema).event;
-const config = (nodecg().bundleConfig as Configschema).tracker;
-const { useTestData } = nodecg().bundleConfig as Configschema;
+const eventConfig = nodecg().bundleConfig.event;
+const config = nodecg().bundleConfig.tracker;
+const { useTestData } = nodecg().bundleConfig;
 const refreshTime = 30 * 1000; // Get bids every 30s.
 
 // Processes the response from the API.
@@ -102,7 +101,16 @@ async function updateBids(): Promise<void> {
         cookies: getCookies(),
       },
     );
+    if (!resp.statusCode || resp.statusCode >= 300 || resp.statusCode < 200) {
+      throw new Error(`status code ${resp.statusCode ?? 'unknown'}`);
+    }
+    if (!Array.isArray(resp.body)) {
+      throw new Error('received non-array type');
+    }
     const currentBids = processRawBids(resp.body);
+    if (!Array.isArray(currentBids)) {
+      throw new Error('currentBids result was non-array type');
+    }
     bids.value = currentBids;
   } catch (err) {
     nodecg().log.warn('[Tracker] Error updating bids');

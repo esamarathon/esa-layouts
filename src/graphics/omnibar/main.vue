@@ -34,7 +34,6 @@
 </template>
 
 <script lang="ts">
-import { Configschema } from '@esa-layouts/types/schemas';
 import { Component, Vue } from 'vue-property-decorator';
 import { getZoomAmountCSS } from '../_misc/helpers';
 import Clock from './components/Clock.vue';
@@ -51,7 +50,7 @@ import Total from './components/Total.vue';
   },
 })
 export default class extends Vue {
-  theme = (nodecg.bundleConfig as Configschema).event.theme;
+  theme = nodecg.bundleConfig.event.theme;
   zoom = getZoomAmountCSS();
 }
 </script>

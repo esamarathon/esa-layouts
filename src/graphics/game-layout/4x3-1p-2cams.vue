@@ -20,17 +20,17 @@
         left: '0px',
         top: '0px',
         width: '858px',
-        height: '500px',
+        height: '483px',
       }"
     />
     <game-capture
       id="CameraCapture2"
-      class="BorderTop BorderLeft"
+      class="BorderTop BorderLeft BorderBottom"
       :style="{
         left: '373px',
-        top: '636px',
+        top: '648px',
         width: '485px',
-        height: '364px',
+        height: '323px',
       }"
     />
 
@@ -65,7 +65,7 @@
       class="Fixed"
       :style="{
         left: '0px',
-        top: '500px',
+        top: '483px',
         width: '858px',
       }"
     >
@@ -80,9 +80,9 @@
       :font-size="30"
       :style="{
         left: '0px',
-        top: '636px',
+        top: '619px',
         width: '373px',
-        height: '364px',
+        height: '381px',
       }"
     />
 

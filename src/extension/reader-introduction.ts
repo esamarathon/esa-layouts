@@ -1,5 +1,4 @@
-import { Configschema } from '@esa-layouts/types/schemas';
-import { Asset } from '@shared/types';
+import type NodeCGTypes from '@nodecg/types';
 import clone from 'clone';
 import { writeFile } from 'fs/promises';
 import { orderBy } from 'lodash';
@@ -12,8 +11,8 @@ import { assetsReaderIntroductionImages, obsData, readerIntroduction } from './u
 import { sc } from './util/speedcontrol';
 import sd from './util/streamdeck';
 
-const config = (nodecg().bundleConfig as Configschema);
-let assetsTemp: Asset[] = [];
+const config = nodecg().bundleConfig;
+let assetsTemp: NodeCGTypes.AssetFile[] = [];
 const sdButtonUUIDMap = {
   advanceSlide: 'com.esamarathon.streamdeck.readerintroduction-advanceslide',
   resetSlides: 'com.esamarathon.streamdeck.readerintroduction-resetslides',
@@ -23,7 +22,7 @@ const sdButtonUUIDMap = {
  * Returns images sorted by name ascending.
  * Name should start with a number to get these in the correct order!
  */
-function assetsSorted(): Asset[] {
+function assetsSorted(): NodeCGTypes.AssetFile[] {
   return orderBy(clone(assetsReaderIntroductionImages.value), 'name', 'asc');
 }
 

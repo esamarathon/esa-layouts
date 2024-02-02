@@ -1,8 +1,7 @@
-import { Configschema } from '@esa-layouts/types/schemas';
 import type { BoxCoor } from './clip';
 import { makeCoors, outputCss, sortBoxCoor } from './clip';
 
-const config = nodecg.bundleConfig as Configschema;
+const config = nodecg.bundleConfig;
 
 // eslint-disable-next-line import/prefer-default-export
 export function generateClipPath(): string {

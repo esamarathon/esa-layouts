@@ -1,0 +1,13 @@
+#Intermission .Logo > img {
+  content: url('./uksggreen/IntermissionLogo.png');
+}
+
+#Countdown .Logo {
+  content: url('./uksggreen/CountdownLogo.png');
+  height: 400px;
+}
+
+#Omnibar > #Logo {
+  content: url('./uksggreen/OmnibarLogo.png');
+  padding: 0 10px;
+}

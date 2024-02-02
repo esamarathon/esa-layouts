@@ -136,14 +136,13 @@
 <script lang="ts">
 import { replicantModule } from '@esa-layouts/browser_shared/replicant_store';
 import { formatUSD } from '@esa-layouts/graphics/_misc/helpers';
-import { Configschema } from '@esa-layouts/types/schemas';
 import gsap from 'gsap';
 import { Component, Vue, Watch } from 'vue-property-decorator';
 
 @Component
 export default class extends Vue {
   // @Ref('SFX') sfx!: HTMLAudioElement;
-  theme = (nodecg.bundleConfig as Configschema).event.theme;
+  theme = nodecg.bundleConfig.event.theme;
   total = 0;
   playingAlerts = false;
   showAlert = false;
@@ -155,14 +154,19 @@ export default class extends Vue {
   }
 
   get totalStr(): string {
-    return `$${Math.floor(this.total).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+    // "Reset" value every 10k, specific to ESA Legends 2023.
+    const esal23 = nodecg.bundleConfig.event.shorts === 'esal23';
+    return `$${Math.floor(esal23 ? this.total % 10000 : this.total).toLocaleString('en-US', {
+      maximumFractionDigits: 0,
+      minimumIntegerDigits: esal23 && this.total >= 10000 ? 4 : undefined,
+    })}`;
   }
 
   async playNextAlert(start = false): Promise<void> {
     this.playingAlerts = true;
     if (!start) await new Promise((res) => { setTimeout(res, 500); });
     if (this.alertList[0].amount > 0) { // Only show alerts for positive values
-      nodecg.sendMessage('omnibarPlaySound');
+      nodecg.sendMessage('omnibarPlaySound', { amount: this.alertList[0].amount });
       // await this.sfx.play();
       await new Promise((res) => { setTimeout(res, 500); });
       this.showAlert = true;

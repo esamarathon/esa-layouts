@@ -14,7 +14,7 @@ import waitForReplicants from './store';
 Vue.use(VueRouter);
 
 const routes = [
-  {
+  /* {
     name: '(SWCF) 16:9 2 Feeds (Dance Pad)',
     path: '/swcf_16x9-2feeds-dancepad',
     component: List.L_SWCF_16x9_2Feeds_Dancepad,
@@ -28,7 +28,7 @@ const routes = [
     name: '(SWCF) 16:9 4 Player (Bingo)',
     path: '/swcf_16x9-4p-bingo',
     component: List.L_SWCF_16x9_4p_Bingo,
-  },
+  }, */
   {
     name: '4:3 1 Player',
     path: '/4x3-1p',
@@ -80,6 +80,11 @@ const routes = [
     component: List.L_16x9_1p_2Cams,
   },
   {
+    name: '16:9 1 Player (2 Cameras, No Game)',
+    path: '/16x9-1p-2cams-nogame',
+    component: List.L_16x9_1p_2Cams_NoGame,
+  },
+  {
     name: '16:9 1 Player (Large Crowd Camera)',
     path: '/16x9-1p-largecrowdcam',
     component: List.L_16x9_1p_LargeCrowdCam,
@@ -95,6 +100,11 @@ const routes = [
     component: List.L_16x9_2p,
   },
   {
+    name: '16:9 2 Player (Bingo)',
+    path: '/16x9-2p-bingo',
+    component: List.L_16x9_2p_Bingo,
+  },
+  {
     name: '16:9 2 Player (HEK)',
     path: '/16x9-2p-hek',
     component: List.L_16x9_2p_HEK,
@@ -108,6 +118,11 @@ const routes = [
     name: '9:16 1 Player',
     path: '/9x16-1p',
     component: List.L_9x16_1p,
+  },
+  {
+    name: '9:16 1 Player (2 Cameras)',
+    path: '/9x16-1p-2cams',
+    component: List.L_9x16_1p_2Cams,
   },
   {
     name: 'GameBoy 1 Player',
@@ -155,9 +170,19 @@ const routes = [
     component: List.L_2CamsOnly,
   },
   {
-    name: 'Full Crowd Camera',
-    path: '/full-crowd-cam',
-    component: List.L_FullCrowdCam,
+    name: 'Full Camera',
+    path: '/full-cam',
+    component: List.L_FullCam,
+  },
+  {
+    name: 'Taskmaster Timer',
+    path: '/taskmaster-timer',
+    component: List.L_Taskmaster_Timer,
+  },
+  {
+    name: 'Pokemon Emerald Map Randomizer',
+    path: '/pokemonemerald-maprando',
+    component: List.L_PokemonEmerald_MapRando,
   },
   {
     path: '*',

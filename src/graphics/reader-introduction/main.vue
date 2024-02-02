@@ -122,16 +122,16 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator';
-import MediaBox from '@shared/graphics/mediabox';
+import type NodeCGTypes from '@nodecg/types';
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
-import { Asset } from '@shared/types';
 import { ReaderIntroduction } from '@esa-layouts/types/schemas';
-import { RunData } from 'speedcontrol-util/types';
-import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
+import MediaBox from '@shared/graphics/mediabox';
 import clone from 'clone';
-import Container from './components/Container.vue';
+import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
+import { RunData } from 'speedcontrol-util/types';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { getZoomAmountCSS } from '../_misc/helpers';
+import Container from './components/Container.vue';
 
 @Component({
   components: {
@@ -141,7 +141,9 @@ import { getZoomAmountCSS } from '../_misc/helpers';
 })
 export default class extends Vue {
   @replicantNS.State((s) => s.reps.readerIntroduction) readonly readerIntro!: ReaderIntroduction;
-  @replicantNS.State((s) => s.reps.assetsReaderIntroductionImages) readonly assets!: Asset[];
+  @replicantNS.State(
+    (s) => s.reps.assetsReaderIntroductionImages,
+  ) readonly assets!: NodeCGTypes.AssetFile[];
   @replicantNS.State((s) => s.reps.runDataActiveRun) readonly activeRun!: RunData | undefined;
   @replicantNS.State((s) => s.reps.runDataArray) readonly runDataArray!: RunData[];
   @replicantNS.State((s) => s.reps.commentators) readonly commentators!: string[];
@@ -150,9 +152,9 @@ export default class extends Vue {
   boxartImgSuccess = false;
 
   // Keep a temporary copy of the image assets so things don't break when NodeCG restarts.
-  assetsTemp: Asset[] = [];
+  assetsTemp: NodeCGTypes.AssetFile[] = [];
   @Watch('assets', { immediate: true })
-  onAssetsChanged(val: Asset[]): void {
+  onAssetsChanged(val: NodeCGTypes.AssetFile[]): void {
     if (val.length && val.length !== this.assetsTemp.length) {
       this.assetsTemp = clone(val);
     }

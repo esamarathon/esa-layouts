@@ -1,5 +1,5 @@
+import type NodeCGTypes from '@nodecg/types';
 import clone from 'clone';
-import type { ReplicantBrowser } from 'nodecg/types/browser';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
@@ -16,8 +16,8 @@ export interface Users {
 
 // Replicants and their types
 const reps: {
-  users: ReplicantBrowser<Users>;
-  [k: string]: ReplicantBrowser<unknown>;
+  users: NodeCGTypes.ClientReplicant<Users>;
+  [k: string]: NodeCGTypes.ClientReplicant<unknown>;
 } = {
   users: nodecg.Replicant('users', 'speedcontrol-flagcarrier'),
 };

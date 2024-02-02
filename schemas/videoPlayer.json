@@ -12,11 +12,15 @@
           "sum": {
             "type": "string"
           },
-          "commercial": {
+          "length": {
             "type": "number"
+          },
+          "commercial": {
+            "type": "boolean"
           }
         },
         "required": [
+          "length",
           "commercial"
         ]
       },

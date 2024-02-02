@@ -5,90 +5,80 @@ on:
     branches: [ master ]
 
   workflow_dispatch:
+    inputs:
+      base_branch:
+        description: 'Name of branch to base build on'
+        type: string
+        required: false
+        default: 'master'
+      build_branch:
+        description: 'Name of branch to commit build to'
+        type: string
+        required: false
+        default: 'build'
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    # Checkout NodeCG
-    - name: Checkout nodecg/nodecg
-      uses: actions/checkout@v2
-      with:
-        token: ${{ secrets['GITHUB_TOKEN'] }}
-        repository: nodecg/nodecg
-        ref: 'v1.9.0'
-        path: ./nodecg-temp
-
-    # Copies checked out NodeCG into permanent folder.
-    # If I didn't do this, some bundles seemed to not actually checkout successfully later
-    - name: Copy ./nodecg-temp > ./nodecg
-      run: cp -r ./nodecg-temp ./nodecg
-
-    # Checkout the main branch of this repository with full depth
+    # Checkout the base branch of this repository with full depth
     - name: Checkout this repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         token: ${{ secrets['GITHUB_TOKEN'] }}
-        ref: master
+        ref: ${{ inputs.base_branch || 'master' }}
         fetch-depth: 0
-        path: ./nodecg/bundles/esa-layouts
 
     # Set the local git user config to use the GitHub Actions bot account
     - name: Set local git config user details
-      working-directory: ./nodecg/bundles/esa-layouts
       run: |
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
 
-    # Recheckout both the main and build branches.
+    # Recheckout both the base and build branches.
     # This can "fail" if the build branch doesn't exist, but we should continue anyway.
     - name: (Re)checkout both branches
       id: checkout
       continue-on-error: true
-      working-directory: ./nodecg/bundles/esa-layouts
       run: |
-        git checkout master
-        git checkout build
+        git checkout ${{ inputs.base_branch || 'master' }}
+        git checkout ${{ inputs.build_branch || 'build' }}
 
-    # Attempt to start to merge the main branch into build.
+    # Attempt to start to merge the base branch into build.
     # This can "error" but we want to continue regardless.
     # Will only run if the checkout step was successful.
-    - name: Merge main into build (1)
+    - name: Merge base into build (1)
       if: ${{ steps.checkout.outcome == 'success' }}
       continue-on-error: true
-      working-directory: ./nodecg/bundles/esa-layouts
       run: |
-        git merge --no-commit master
+        git merge --no-commit ${{ inputs.base_branch || 'master' }}
 
-    # Do the 2nd part of the merge. This will ignore the main's "shared" submodule stuff.
+    # Do the 2nd part of the merge. This will ignore the branch's "shared" submodule stuff.
     # This can "error" if the merge commit is empty but we want to continue regardless.
     # Will only run if the checkout step was successful.
-    - name: Merge main into build (2)
+    - name: Merge base into build (2)
       if: ${{ steps.checkout.outcome == 'success' }}
       continue-on-error: true
-      working-directory: ./nodecg/bundles/esa-layouts
       run: |
-        rm -rf shared~master
-        git rm --ignore-unmatch --cached -r shared~master
+        rm -rf shared~${{ inputs.base_branch || 'master' }}
+        git rm --ignore-unmatch --cached -r shared~${{ inputs.base_branch || 'master' }}
         git reset HEAD shared
-        git commit -m "Merge branch 'master' into build"
+        git commit -m "Merge branch '${{ inputs.base_branch || 'master' }}' into ${{ inputs.build_branch || 'build' }}"
 
     # Returns the submodule back so we can get the latest files to build from that.
     # Will only run if the checkout step was successful.
     - name: Re-add esa-layouts-shared submodule
       if: ${{ steps.checkout.outcome == 'success' }}
-      working-directory: ./nodecg/bundles/esa-layouts
       run: |
         rm -rf shared
         git rm --ignore-unmatch --cached -r shared
-        git checkout master shared
+        git checkout ${{ inputs.base_branch || 'master' }} shared
         git commit -m "Re-add submodule" -a --allow-empty
 
     # Converts the esa-layouts-shared submodule into a normal directory of files.
     # This is done as we want to freeze the build at a point in time and this works well.
     - name: Convert esa-layouts-shared submodule to regular directory
-      working-directory: ./nodecg/bundles/esa-layouts
       run: |
         git submodule update --init
         git rm --cached shared
@@ -98,13 +88,13 @@ jobs:
 
     # Setup some Node stuff
     - name: Node.js setup
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
-        node-version: '16'
+        node-version: '18'
 
     # Set NPM cache options
     - name: Set NPM cache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.npm
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -115,26 +105,18 @@ jobs:
     - name: Update NPM installation
       run: npm install -g npm@latest
 
-    # Install NodeCG NPM dependencies
-    - name: Install NodeCG NPM dependencies
-      working-directory: ./nodecg
-      run: npm install --production
-
     # Install NPM dependencies
     - name: Install NPM dependencies
-      working-directory: ./nodecg/bundles/esa-layouts
       run: npm ci
 
     # Actually build everything
     - name: Build
-      working-directory: ./nodecg/bundles/esa-layouts
       run: |
         npm run clean
         npm run build
 
     # Start committing newly built files into a temporary commit.
     - name: Commit built files (1)
-      working-directory: ./nodecg/bundles/esa-layouts
       run: |
         git add -f dashboard graphics extension
         git add -f ':(glob)./shared/extension/*/dist/**'
@@ -146,15 +128,13 @@ jobs:
     - name: Commit built files (2)
       continue-on-error: true
       if: ${{ steps.checkout.outcome == 'success' }}
-      working-directory: ./nodecg/bundles/esa-layouts
       run: |
         git reset --soft HEAD~2
         git commit -m "Built files" -a
 
     # Pushes the built files to a specific branch
-    - name: Push built files to "build" branch
+    - name: Push built files to build branch
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets['GITHUB_TOKEN'] }}
-        branch: build
-        directory: ./nodecg/bundles/esa-layouts
+        branch: ${{ inputs.build_branch || 'build' }}

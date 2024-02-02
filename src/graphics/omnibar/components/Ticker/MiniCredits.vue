@@ -67,10 +67,9 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Ref } from 'vue-property-decorator';
-import gsap from 'gsap';
-import { Configschema } from '@esa-layouts/types/schemas';
 import { formatUSD } from '@esa-layouts/graphics/_misc/helpers';
+import gsap from 'gsap';
+import { Component, Prop, Ref, Vue } from 'vue-property-decorator';
 
 @Component({
   name: 'MiniCredits',
@@ -87,7 +86,7 @@ export default class extends Vue {
   @Prop(Array) readonly cheers!: [string, number][] | undefined;
   @Ref('MiniCredits') elem!: HTMLDivElement;
   @Ref('Msg') msgElem!: HTMLDivElement;
-  config = nodecg.bundleConfig as Configschema;
+  config = nodecg.bundleConfig;
   timeline: gsap.core.Timeline | undefined;
   timeout = 0;
 

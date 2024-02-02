@@ -45,14 +45,14 @@
 
 <script lang="ts">
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
-import { Configschema, GameLayouts } from '@esa-layouts/types/schemas';
+import { GameLayouts } from '@esa-layouts/types/schemas';
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { storeModule } from './store';
 
 @Component
 export default class extends Vue {
   @replicantNS.State((s) => s.reps.gameLayouts) readonly gameLayouts!: GameLayouts;
-  online = (nodecg.bundleConfig as Configschema).event.online;
+  online = nodecg.bundleConfig.event.online;
 
   get selected(): GameLayouts['selected'] {
     return this.gameLayouts.selected;

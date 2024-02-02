@@ -1,3 +1,8 @@
 {
-  "$ref": "../shared/schemas/mediaBox.json"
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "allOf": [
+    {
+      "$ref": "../shared/schemas/mediaBox.json"
+    }
+  ]
 }

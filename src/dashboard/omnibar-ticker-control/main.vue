@@ -80,15 +80,15 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator';
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
 import { Omnibar } from '@esa-layouts/types/schemas';
 import clone from 'clone';
-import Draggable from 'vuedraggable';
 import { v4 as uuid } from 'uuid';
+import { Component, Vue, Watch } from 'vue-property-decorator';
+import Draggable from 'vuedraggable';
+import Bid from './components/Bid.vue';
 import EditDialog from './components/EditDialog.vue';
 import GenericMsg from './components/GenericMsg.vue';
-import Bid from './components/Bid.vue';
 import Milestone from './components/Milestone.vue';
 import Prize from './components/Prize.vue';
 import UpcomingRun from './components/UpcomingRun.vue';
@@ -105,7 +105,7 @@ import { storeModule } from './store';
     UpcomingRun,
   },
 })
-export default class IntermissionControl extends Vue {
+export default class OmnibarTickerControl extends Vue {
   @replicantNS.State((s) => s.reps.omnibar) readonly omnibar!: Omnibar;
   availableTypes: { key: Omnibar['rotation'][0]['type'], name: string }[] = [
     {

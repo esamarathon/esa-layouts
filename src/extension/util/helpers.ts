@@ -1,8 +1,9 @@
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
+import { Configschema } from '@esa-layouts/types/schemas';
+import { DeepWritable } from 'ts-essentials';
 import util from 'util';
 import { get as nodecg } from './nodecg';
 
-const config = nodecg().bundleConfig as Configschema;
+const config = nodecg().bundleConfig;
 
 /**
  * Checks if number needs a 0 adding to the start and does so if needed.
@@ -25,19 +26,21 @@ export async function wait(length: number): Promise<void> {
  * Returns the current event short according to the configuration file.
  */
 export function getCurrentEventShort(): string {
-  if (!Array.isArray(config.event.shorts)) return config.event.shorts;
-  return config.event.shorts[config.event.thisEvent - 1];
+  const cfg = (config as DeepWritable<Configschema>).event.shorts;
+  if (!Array.isArray(cfg)) return cfg;
+  return cfg[config.event.thisEvent - 1];
 }
 
 /**
  * Returns the other stream's event short according to the configuration file, if applicable.
  */
 export function getOtherStreamEventShort(): string | undefined {
-  if (!Array.isArray(config.event.shorts) || config.event.shorts.length === 1) {
+  const cfg = (config as DeepWritable<Configschema>).event.shorts;
+  if (!Array.isArray(cfg) || cfg.length === 1) {
     return undefined;
   }
   const eventNumber = config.event.thisEvent === 1 ? 2 : 1;
-  return config.event.shorts[eventNumber - 1];
+  return cfg[eventNumber - 1];
 }
 
 /**

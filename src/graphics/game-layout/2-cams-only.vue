@@ -49,8 +49,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-import { Configschema } from '@esa-layouts/types/schemas/configschema';
+import { Component, Vue } from 'vue-property-decorator';
 import Player from './components/Player.vue';
 
 @Component({
@@ -59,7 +58,7 @@ import Player from './components/Player.vue';
   },
 })
 export default class extends Vue {
-  online = (nodecg.bundleConfig as Configschema).event.online;
+  online = nodecg.bundleConfig.event.online;
 
   mounted(): void {
     const bg = document.getElementById('Background');

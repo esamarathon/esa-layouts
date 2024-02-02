@@ -1,8 +1,7 @@
 import { VideoPlayer } from '@esa-layouts/types/schemas';
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
+import type NodeCGTypes from '@nodecg/types';
 import Player from '@shared/extension/video-player';
-import { Asset } from '@shared/types';
-import { TwitchCommercialTimer } from 'speedcontrol-util/types/speedcontrol/schemas';
+import { TwitchCommercialTimer } from 'speedcontrol-util/types/schemas';
 import { v4 as uuid } from 'uuid';
 import { logError } from './util/helpers';
 import * as mqLogging from './util/mq-logging';
@@ -11,8 +10,8 @@ import obs, { changeScene } from './util/obs';
 import { assetsVideos, obsData, videoPlayer } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
-const config = (nodecg().bundleConfig as Configschema);
-const player = new Player(config.obs, obs);
+const config = nodecg().bundleConfig;
+const player = new Player(nodecg(), config.obs, obs);
 
 // Reset replicant values on startup.
 videoPlayer.value.playing = false;
@@ -40,10 +39,16 @@ async function waitForCommercialEnd(): Promise<void> {
 }
 
 // Converts our current playlist to shared format.
-function generatePlaylist(): { id: string, video?: Asset, commercial: number }[] {
-  return videoPlayer.value.playlist.map(({ sum, commercial }) => ({
+function generatePlaylist(): {
+  id: string,
+  video?: NodeCGTypes.AssetFile,
+  length?: number,
+  commercial?: boolean,
+}[] {
+  return videoPlayer.value.playlist.map(({ sum, length, commercial }) => ({
     id: uuid(),
     video: assetsVideos.value.find((v) => v.sum === sum),
+    length,
     commercial,
   }));
 }
@@ -60,6 +65,8 @@ export async function startPlaylist(): Promise<void> {
     } else {
       // Does not work if first element is not a video and we're already on the
       // intermission player scene, but waitForCommercialEnd handles that.
+      // TODO: Support this? We don't use "force" here for some reason, but as of
+      //       writing this comment, not sure why.
       await changeScene({ scene: config.obs.names.scenes.intermission });
     }
     obsData.value.disableTransitioning = true;
@@ -84,7 +91,7 @@ sc.on('timerStopped', () => {
     // Creates a compiled list of what videos should be played and
     // where commercials should be played if needed.
     const splitList = run.customData.intermission.split(',').filter(Boolean);
-    const formattedList: { name?: string, commercial: number }[] = [];
+    const formattedList: { name?: string, length: number, commercial: boolean }[] = [];
     for (let i = 0; i < splitList.length;) {
       if (splitList[i].startsWith('ad')) {
         const replaceStr = splitList[i].startsWith('adwait') ? 'adwait' : 'ad';
@@ -93,23 +100,27 @@ sc.on('timerStopped', () => {
           let name: string | undefined;
           if (!splitList[i].startsWith('adwait')) {
             name = splitList[i + 1];
-            i += 2;
-          } else {
-            i += 1;
+            i += 1; // Adds an extra 1 if this is present
           }
-          formattedList.push({ name, commercial });
+          formattedList.push({ name, length: commercial, commercial: !!commercial });
         }
+        i += 1;
+      // There is also a special entry, "wait", which plays no videos or commercials.
+      } else if (splitList[i].startsWith('wait')) {
+        const waitLength = Number(splitList[i].replace('wait', ''));
+        if (waitLength) formattedList.push({ length: waitLength, commercial: false });
+        i += 1;
       } else {
-        formattedList.push({ name: splitList[i], commercial: 0 });
+        formattedList.push({ name: splitList[i], length: 0, commercial: false });
         i += 1;
       }
     }
     // This filters out any items that have no asset *and* no commercial, which are useless.
     videoPlayer.value.playlist = formattedList.reduce<VideoPlayer['playlist']>(
-      (prev, { name, commercial }) => {
+      (prev, { name, length, commercial }) => {
         const asset = assetsVideos.value.find((v) => v.name === name?.trim());
-        if (asset || commercial) {
-          prev.push({ sum: asset?.sum, commercial });
+        if (asset || length) {
+          prev.push({ sum: asset?.sum, length, commercial });
         } else if (!asset) {
           nodecg().log.warn(
             '[Intermission Player] Asset named "%s" was not found, so skipping in playlist',
@@ -183,13 +194,11 @@ player.on('playlistEnded', async (early) => {
   if (!early) videoPlayer.value.playlist.length = 0;
   videoPlayer.value.estimatedFinishTimestamp = 0;
   obsData.value.disableTransitioning = false;
-  // Simple server-to-server message we need; currently used for esa-commercials only.
-  if (!early) nodecg().sendMessage('intermissionPlayerFinished');
   await changeScene({ scene: config.obs.names.scenes.intermission, force: true });
 });
 
 player.on('playCommercial', async (item) => {
   try {
-    await sc.sendMessage('twitchStartCommercial', { duration: item.commercial });
+    await sc.sendMessage('twitchStartCommercial', { duration: item.length });
   } catch (err) { /* catch */ }
 });

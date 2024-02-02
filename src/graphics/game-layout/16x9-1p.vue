@@ -33,7 +33,7 @@
         left: '0px',
         top: !online && crowdCam ? '150px' : '0px',
         width: '533px',
-        height: !online && crowdCam ? '400px' : '550px',
+        height: !online && crowdCam ? '250px' : '300px',
       }"
     />
 
@@ -69,7 +69,7 @@
       class="Fixed"
       :style="{
         left: '0px',
-        top: '550px',
+        top: '300px',
         width: '533px',
       }"
     >
@@ -84,9 +84,9 @@
       :font-size="36"
       :style="{
         left: '0px',
-        top: '684px',
+        top: '450px',
         width: '533px',
-        height: '256px',
+        height: '490px',
       }"
     />
 
@@ -103,16 +103,15 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-import { State } from 'vuex-class';
 import MediaBox from '@shared/graphics/mediabox';
-import { Configschema } from '@esa-layouts/types/schemas';
+import { Component, Vue } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import CommentatorsReader from './components/CommentatorsReader.vue';
+import DonationBar from './components/DonationBar.vue';
 import GameCapture from './components/GameCapture.vue';
 import Player from './components/Player.vue';
-import CommentatorsReader from './components/CommentatorsReader.vue';
 import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
-import DonationBar from './components/DonationBar.vue';
 
 @Component({
   components: {
@@ -127,6 +126,6 @@ import DonationBar from './components/DonationBar.vue';
 })
 export default class extends Vue {
   @State((s) => s.gameLayouts.crowdCamera) readonly crowdCam!: boolean;
-  online = (nodecg.bundleConfig as Configschema).event.online;
+  online = nodecg.bundleConfig.event.online;
 }
 </script>

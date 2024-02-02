@@ -1,13 +1,12 @@
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import type { Tracker } from '@shared/types';
 import needle from 'needle';
 import { get as nodecg } from '../util/nodecg';
 import { donationsToRead } from '../util/replicants';
 import { eventInfo, getCookies } from './index';
 
-const eventConfig = (nodecg().bundleConfig as Configschema).event;
-const config = (nodecg().bundleConfig as Configschema).tracker;
-const { useTestData } = nodecg().bundleConfig as Configschema;
+const eventConfig = nodecg().bundleConfig.event;
+const config = nodecg().bundleConfig.tracker;
+const { useTestData } = nodecg().bundleConfig;
 const refreshTime = 10 * 1000; // Get donations every 10s.
 let updateTimeout: NodeJS.Timeout;
 
@@ -41,8 +40,21 @@ async function updateToReadDonations(): Promise<void> {
         cookies: getCookies(),
       },
     );
+    if (!resp.statusCode || resp.statusCode >= 300 || resp.statusCode < 200) {
+      throw new Error(`status code ${resp.statusCode ?? 'unknown'}`);
+    }
+    if (!Array.isArray(resp.body)) {
+      throw new Error('received non-array type');
+    }
     const currentDonations = processToReadDonations(resp.body);
+    if (!Array.isArray(currentDonations)) {
+      throw new Error('currentDonations result was non-array type');
+    }
     donationsToRead.value = currentDonations;
+    nodecg().log.debug(
+      '[Tracker] donationsToRead updated (IDs: %s)',
+      donationsToRead.value.map((d) => d.id).join(', '),
+    );
   } catch (err) {
     nodecg().log.warn('[Tracker] Error updating to read donations');
     nodecg().log.debug('[Tracker] Error updating to read donations:', err);

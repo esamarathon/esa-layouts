@@ -1,4 +1,3 @@
-import type { Configschema } from '@esa-layouts/types/schemas/configschema';
 import AudioNormaliser from '@shared/extension/audio-normaliser';
 import type { RunData } from 'speedcontrol-util/types';
 import { lookupUsersByStr } from './server';
@@ -10,7 +9,7 @@ import { mq } from './util/rabbitmq';
 import { bigbuttonPlayerMap, commentators, donationReader, donationTotal, horaroImportStatus, oengusImportStatus, otherStreamData, serverTimestamp, twitchAPIData, twitchChannelInfo, upcomingRunID } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
-const config = (nodecg().bundleConfig as Configschema);
+const config = nodecg().bundleConfig;
 new AudioNormaliser(nodecg()); // eslint-disable-line no-new
 
 // Increase max listeners on the nodecg-speedcontrol timer a bit to stop errors.
@@ -72,6 +71,8 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
   }
 
   // This will also be triggered on server start up.
+  // TODO: Move this to the start,
+  //       so changes are not taken into account (if that is actually happening)?
   mqLogging.logRunChange(newVal);
 
   init = true;
@@ -178,18 +179,14 @@ nodecg().listenFor('readerModify', async (val: string | null | undefined, ack) =
 
 async function changeTwitchMetadata(title?: string, gameId?: string): Promise<void> {
   try {
-    // Hardcoded fallback title for now!
-    // TODO: Unhardcode!
-    const fallback = (() => {
-      if (config.event.shorts === 'swcf') {
-        const run = sc.getCurrentRun()?.game;
-        return `{{total}}/$50,000 - Souls Winter !Charity Fest${run ? ` - ${run}` : ''}`;
-      }
-      return '🔴 ESA Summer 2022 - {{total}}/$115,000 in aid of Save the Children';
-    })();
-    let t = title || fallback;
+    let t = title || config.event.fallbackTwitchTitle;
     if (t) {
-      t = (t as string).replace(/{{total}}/g, formatUSD(donationTotal.value, true));
+      const run = sc.getCurrentRun()?.game;
+      t = t
+        .replace(/{{total}}/g, formatUSD(donationTotal.value, true))
+        .replace(/{{run}}/g, run ? ` - ${run}` : '');
+    } else {
+      throw new Error('no title found to update to');
     }
     nodecg().log.debug('[Misc] Decided Twitch title is: %s - Decided game ID is %s', t, gameId);
     if (config.event.shorts === 'swcf') {

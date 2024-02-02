@@ -49,7 +49,7 @@
                 outlined
                 small
                 :style="{ 'margin-right': '10px' }"
-                @click="playlistAdd(video.sum)"
+                @click="playlistAdd({ sum: video.sum, commercial: true })"
               >
                 <v-icon small>
                   mdi-playlist-plus
@@ -73,20 +73,20 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-import { State, Mutation } from 'vuex-class';
+import type NodeCGTypes from '@nodecg/types';
 import { VideoPlayer } from '@esa-layouts/types/schemas';
-import { Asset } from '@shared/types';
+import { Component, Vue } from 'vue-property-decorator';
+import { Mutation, State } from 'vuex-class';
 import { PlaylistAdd } from '../store';
 
 @Component
 export default class extends Vue {
-  @State videos!: Asset[];
+  @State videos!: NodeCGTypes.AssetFile[];
   @State videoPlayer!: VideoPlayer;
   @Mutation playlistAdd!: PlaylistAdd;
   searchTerm: string | null = null;
 
-  get filteredVideos(): Asset[] {
+  get filteredVideos(): NodeCGTypes.AssetFile[] {
     return this.videos
       .filter((v) => {
         const str = (this.searchTerm) ? this.searchTerm.toLowerCase() : '';
@@ -94,7 +94,7 @@ export default class extends Vue {
       })
       .map((video) => [this.playCount(video.sum), video])
       .sort()
-      .map((video) => video[1] as Asset);
+      .map((video) => video[1] as NodeCGTypes.AssetFile);
   }
 
   playCount(sum: string): number {

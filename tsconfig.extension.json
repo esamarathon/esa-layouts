@@ -40,9 +40,6 @@
       ],
       "@shared/*": [
         "shared/*"
-      ],
-      "nodecg/*": [
-        "../../*"
       ]
     },                                                   /* Specify a set of entries that re-map imports to additional lookup locations. */
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
@@ -117,11 +114,11 @@
   "include": [
     "src/extension/**/*.ts",
     "src/types/**/*.d.ts",
-    "../../types/server.d.ts",
     "shared/types/**/*.d.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "src/types/augment-window.d.ts"
   ],
   "references": [
     { "path": "./shared/extension/audio-normaliser" },

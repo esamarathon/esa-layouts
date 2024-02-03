@@ -1,0 +1,26 @@
+{
+	"id": "esa",
+	"name": "esa",
+	"shortname": "esa",
+	"description": "Custom module for ESA use.",
+	"version": "0.1.0",
+	"license": "MIT",
+	"repository": "git+https://github.com/esamarathon/esa-layouts.git",
+	"bugs": "https://github.com/esamarathon/esa-layouts/issues",
+	"maintainers": [
+		{
+			"name": "zoton2",
+			"email": "zoton2@crew.esamarathon.com"
+		}
+	],
+	"runtime": {
+		"type": "node18",
+		"api": "nodejs-ipc",
+		"apiVersion": "0.0.0",
+		"entrypoint": "../dist/index.js"
+	},
+	"legacyIds": [],
+	"manufacturer": "esa",
+	"products": ["esa"],
+	"keywords": []
+}

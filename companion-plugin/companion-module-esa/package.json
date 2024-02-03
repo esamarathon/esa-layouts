@@ -1,0 +1,32 @@
+{
+	"name": "companion-module-esa",
+	"version": "0.1.0",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/esamarathon/esa-layouts.git"
+	},
+	"license": "MIT",
+	"main": "dist/index.js",
+	"scripts": {
+		"autofix": "eslint --fix --ext .ts src",
+		"build": "tsc -b tsconfig.json",
+		"format": "prettier -w .",
+		"lint": "eslint --ext .ts src",
+		"watch": "tsc -b tsconfig.json -w"
+	},
+	"prettier": "@companion-module/tools/.prettierrc.json",
+	"dependencies": {
+		"@companion-module/base": "~1.7.0",
+		"ws": "^8.16.0"
+	},
+	"devDependencies": {
+		"@companion-module/tools": "^1.4.2",
+		"@types/ws": "^8.5.10",
+		"@typescript-eslint/eslint-plugin": "^6.20.0",
+		"@typescript-eslint/parser": "^6.20.0",
+		"eslint": "^8.56.0",
+		"eslint-config-airbnb-base": "^15.0.0",
+		"eslint-config-airbnb-typescript": "^17.1.0",
+		"typescript": "^5.3.3"
+	}
+}

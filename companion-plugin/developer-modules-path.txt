@@ -1,0 +1,1 @@
+This extra folder is provided as a entry point for the "Developer modules path" option in Companion.

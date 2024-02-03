@@ -37,6 +37,7 @@ export = (nodecg: NodeCGTypes.ServerAPI<Configschema>): ExtensionReturn => {
   require('./misc');
   require('./mixer');
   require('./streamdeck-buttons');
+  require('./companion');
   require('./timer');
   require('./media-box');
   require('./text-to-speech');

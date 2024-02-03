@@ -158,6 +158,29 @@
         "debug"
       ]
     },
+    "companion": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "port": {
+          "type": "number",
+          "default": 9092
+        },
+        "key": {
+          "type": "string",
+          "default": "DEFAULT_KEY"
+        }
+      },
+      "required": [
+        "enabled",
+        "port",
+        "key"
+      ]
+    },
     "rabbitmq": {
       "type": "object",
       "additionalProperties": false,
@@ -731,6 +754,7 @@
     "event",
     "omnibar",
     "streamdeck",
+    "companion",
     "rabbitmq",
     "obs",
     "music",

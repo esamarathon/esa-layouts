@@ -74,6 +74,7 @@ class ModuleInstance extends InstanceBase<Config> {
         const timer = msg.value as {
           time: string;
           state: 'stopped' | 'running' | 'paused' | 'finished';
+          // Other unimportant (at the moment) types omitted.
         };
         // TODO: Setup debounce to not hammer the function.
         this.setVariableValues({
@@ -93,6 +94,22 @@ class ModuleInstance extends InstanceBase<Config> {
         };
         this.setVariableValues({
           player_hud_trigger_type: value.playerHUDTriggerType,
+        });
+      } else if (msg.name === 'twitchCommercialTimer') {
+        // TODO: Reference type from another location?
+        const value = msg.value as {
+          secondsRemaining: number;
+          originalDuration: number;
+          timestamp: number;
+        };
+        this.setVariableValues({
+          twitch_commercial_timer_seconds_remaining: value.secondsRemaining,
+        });
+      } else if (msg.name === 'twitchCommercialsDisabled') {
+        // TODO: Reference type from another location?
+        const value = msg.value as boolean;
+        this.setVariableValues({
+          twitch_commercials_disabled: value,
         });
       }
     });

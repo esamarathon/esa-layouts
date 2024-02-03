@@ -53,6 +53,15 @@ function initActions(instance: ModuleInstance) {
         instance.wsSend({ name: 'player_hud_trigger_toggle', value: action.options.type });
       },
     },
+    twitch_commercials_disable: {
+      name: 'Twitch Commercials Disable (esa-commercials)',
+      description: 'Disables Twitch commercials for the remainder of a run, if applicable.',
+      options: [],
+      callback: () => {
+        // We don't do any checks here in regards to if action is valid.
+        instance.wsSend({ name: 'twitch_commercials_disable' });
+      },
+    },
   });
 }
 export default initActions;

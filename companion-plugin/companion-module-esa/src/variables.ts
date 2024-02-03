@@ -23,6 +23,14 @@ function initVariables(instance: InstanceBase<Config>) {
       variableId: 'player_hud_trigger_type',
       name: 'Player HUD Trigger Type',
     },
+    {
+      variableId: 'twitch_commercial_timer_seconds_remaining',
+      name: 'Twitch Commercial Timer (nodecg-speedcontrol): Seconds Remaining',
+    },
+    {
+      variableId: 'twitch_commercials_disabled',
+      name: 'Twitch Commercials Disabled (esa-commercials)',
+    },
   ]);
 }
 export default initVariables;

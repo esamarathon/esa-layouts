@@ -7,7 +7,14 @@ import { Config } from './config';
  */
 function initVariables(instance: InstanceBase<Config>) {
   instance.setVariableDefinitions([
-    // set up variables here
+    {
+      variableId: 'timer_time',
+      name: 'Timer (nodecg-speedcontrol): Time',
+    },
+    {
+      variableId: 'timer_state',
+      name: 'Timer (nodecg-speedcontrol): State',
+    },
   ]);
 }
 export default initVariables;

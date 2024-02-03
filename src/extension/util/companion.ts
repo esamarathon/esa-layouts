@@ -1,9 +1,14 @@
+import { Emitter } from 'strict-event-emitter';
 import url from 'url';
-import { WebSocketServer } from 'ws';
+import WebSocket, { WebSocketServer } from 'ws';
 import { get as nodecg } from './nodecg';
 
 const config = nodecg().bundleConfig.companion;
 let wss: WebSocketServer | undefined;
+const evt = new Emitter<{
+  open: [socket: WebSocket];
+  action: [name: string];
+}>();
 
 if (config.enabled) {
   wss = new WebSocketServer({ port: config.port });
@@ -20,8 +25,7 @@ if (config.enabled) {
       return;
     }
 
-    // TODO: SEND THINGS ON CONNECTION!
-
+    evt.emit('open', socket);
     nodecg().log.debug('[Companion] Client fully connected');
 
     socket.on('error', (err) => {
@@ -35,9 +39,35 @@ if (config.enabled) {
       );
       socket.removeAllListeners();
     });
-    socket.on('message', (data, isBinary) => {
-      // const msg: { /* types */ } = JSON.parse(data.toString());
-      // do thing with message
+    socket.on('message', (data) => {
+      const msg: { name: string } = JSON.parse(data.toString());
+      evt.emit('action', msg.name);
     });
   });
 }
+
+/**
+ * Send data over the WebSocket connections to client(s).
+ * @param data.name Name of the data to send.
+ * @param data.value Value of the data to send.
+ * @param socket If specified, only sends to that client, otherwise sends to all.
+ */
+function send(data: { name: string, value: unknown }, socket?: WebSocket) {
+  if (socket) {
+    if (socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify(data));
+    }
+  } else {
+    if (!wss) return;
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(data));
+      }
+    });
+  }
+}
+
+export default {
+  evt,
+  send,
+};

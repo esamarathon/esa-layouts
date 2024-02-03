@@ -23,18 +23,24 @@ class ModuleInstance extends InstanceBase<Config> {
     this.wsReconnectionTimeout = undefined;
   }
 
+  wsCleanup() {
+    // Clean up current connection if one is active.
+    if (this.ws) {
+      this.ws.close();
+      this.ws.removeAllListeners();
+      this.ws = undefined;
+    }
+    // Clean up reconnection timeout if one is active.
+    clearTimeout(this.wsReconnectionTimeout);
+    this.wsReconnectionTimeout = undefined;
+  }
+
   /**
    * Function to (re)connect to the WebSocket server in the NodeCG bundle.
    */
-  connect() {
+  wsConnect() {
     this.updateStatus(InstanceStatus.Connecting);
-    if (this.ws) {
-      this.ws.close(); // Close current connection if one is active.
-      this.ws.removeAllListeners();
-    }
-    clearTimeout(this.wsReconnectionTimeout);
-    this.wsReconnectionTimeout = undefined;
-
+    this.wsCleanup();
     const address = this.config.address || 'localhost:9092'; // Default
     const key = this.config.key || 'DEFAULT_KEY'; // Default
     this.ws = new WebSocket(`ws://${address}/?key=${key}`);
@@ -52,11 +58,25 @@ class ModuleInstance extends InstanceBase<Config> {
       this.updateStatus(InstanceStatus.Disconnected);
       this.log('debug', `Closed (${code} - ${reason})`);
       if (!this.wsReconnectionTimeout) {
-        this.wsReconnectionTimeout = setTimeout(() => this.connect(), 5000);
+        this.wsReconnectionTimeout = setTimeout(() => this.wsConnect(), 5000);
       }
     });
     this.ws.on('message', (data, isBinary) => {
-      // do things with messages
+      this.log('debug', `Message: "${data.toString()}", isBinary: ${isBinary}`);
+
+      const msg: { name: string, value: unknown } = JSON.parse(data.toString());
+      if (msg.name === 'timer') {
+        // TODO: Reference type from another location?
+        const timer = msg.value as {
+          time: string;
+          state: 'stopped' | 'running' | 'paused' | 'finished';
+        };
+        // TODO: Setup debounce to not hammer the function.
+        this.setVariableValues({
+          timer_time: timer.time,
+          timer_state: timer.state,
+        });
+      }
     });
   }
 
@@ -66,14 +86,14 @@ class ModuleInstance extends InstanceBase<Config> {
    * @param isFirstInit ??? Unsure when this changes
    */
   async init(config: Config, isFirstInit: boolean) {
-    this.log('debug', 'Init');
+    this.log('debug', `Init (isFirstInit: ${isFirstInit})`);
     this.config = config;
     this.updateStatus(InstanceStatus.Connecting);
     initVariables(this);
     initFeedbacks(this);
     initActions(this);
     initPresets(this);
-    this.connect();
+    this.wsConnect();
   }
 
   /**
@@ -81,12 +101,7 @@ class ModuleInstance extends InstanceBase<Config> {
    */
   async destroy() {
     this.log('debug', 'Destroy');
-    if (this.ws) {
-      this.ws.close(); // Close current connection if one is active.
-      this.ws.removeAllListeners();
-    }
-    clearTimeout(this.wsReconnectionTimeout);
-    this.wsReconnectionTimeout = undefined;
+    this.wsCleanup();
   }
 
   /**
@@ -96,7 +111,7 @@ class ModuleInstance extends InstanceBase<Config> {
   async configUpdated(config: Config) {
     this.log('debug', 'Config updated');
     this.config = config;
-    this.connect();
+    this.wsConnect();
   }
 
   /**
@@ -106,6 +121,17 @@ class ModuleInstance extends InstanceBase<Config> {
   // eslint-disable-next-line class-methods-use-this
   getConfigFields(): SomeCompanionConfigField[] {
     return getConfigFields();
+  }
+
+  /**
+   * Send data over the WebSocket connection to the NodeCG bundle's server.
+   * @param data.name Name of the action to send.
+   */
+  wsSend(data: { name: string }) {
+    if (!this.ws) return;
+    const str = JSON.stringify(data);
+    this.log('debug', `Send: "${str}"`);
+    this.ws.send(str);
   }
 }
 

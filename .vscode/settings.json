@@ -1,7 +1,8 @@
 {
   "eslint.workingDirectories": [
     "shared",
-    "streamdeck-plugin"
+    "streamdeck-plugin",
+    "companion-plugin\\companion-module-esa"
   ],
   "typescript.tsdk": "node_modules\\typescript\\lib"
 }

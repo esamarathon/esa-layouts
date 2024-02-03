@@ -1,24 +1,15 @@
-import { Timer } from 'speedcontrol-util/types';
-import WebSocket from 'ws';
 import companion from './util/companion';
 import { sc } from './util/speedcontrol';
 
-/**
- * Helper function to send over updated nodecg-speedcontrol timer data.
- */
-function sendTimerData({ data, socket }: { data?: Timer, socket?: WebSocket }) {
-  companion.send({
-    name: 'timer',
-    value: data || sc.timer.value,
-  }, socket);
-}
-
 // Sending replicant data on any changes.
-sc.timer.on('change', (data) => sendTimerData({ data }));
+sc.timer.on('change', (value) => companion.send({ name: 'timer', value }));
+sc.timerChangesDisabled.on('change', (value) => (
+  companion.send({ name: 'timerChangesDisabled', value })));
 
 // Sending things on connection.
 companion.evt.on('open', (socket) => {
-  sendTimerData({ socket });
+  companion.send({ name: 'timer', value: sc.timer.value }, socket);
+  companion.send({ name: 'timerChangesDisabled', value: sc.timerChangesDisabled.value }, socket);
 });
 
 // Listening for any actions triggered from Companion.

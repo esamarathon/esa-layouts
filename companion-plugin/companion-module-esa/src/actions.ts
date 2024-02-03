@@ -21,11 +21,11 @@ function initActions(instance: ModuleInstance) {
       description: 'Can start/resume/stop/reset the nodecg-speedcontrol timer, '
         + 'depending on it\'s current state.',
       options: [
+        // TODO: This does not show the value, and I don't know why.
         {
           type: 'static-text',
           id: 'warning',
           label: 'Warning',
-          // not showing, why?
           value: 'Currently this does not work fully with runs with multiple teams, '
             + 'and will only stop the first team (all other functionality works).',
         },

@@ -15,6 +15,10 @@ function initVariables(instance: InstanceBase<Config>) {
       variableId: 'timer_state',
       name: 'Timer (nodecg-speedcontrol): State',
     },
+    {
+      variableId: 'timer_changes_disabled',
+      name: 'Timer (nodecg-speedcontrol): Changes Disabled',
+    },
   ]);
 }
 export default initVariables;

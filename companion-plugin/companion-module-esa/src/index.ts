@@ -76,6 +76,12 @@ class ModuleInstance extends InstanceBase<Config> {
           timer_time: timer.time,
           timer_state: timer.state,
         });
+      } else if (msg.name === 'timerChangesDisabled') {
+        // TODO: Reference type from another location?
+        const { value } = msg as { value: boolean };
+        this.setVariableValues({
+          timer_changes_disabled: value,
+        });
       }
     });
   }

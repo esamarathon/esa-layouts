@@ -7,7 +7,7 @@ const config = nodecg().bundleConfig.companion;
 let wss: WebSocketServer | undefined;
 const evt = new Emitter<{
   open: [socket: WebSocket];
-  action: [name: string];
+  action: [name: string, value: unknown];
 }>();
 
 if (config.enabled) {
@@ -40,8 +40,8 @@ if (config.enabled) {
       socket.removeAllListeners();
     });
     socket.on('message', (data) => {
-      const msg: { name: string } = JSON.parse(data.toString());
-      evt.emit('action', msg.name);
+      const { name, value }: { name: string, value: unknown } = JSON.parse(data.toString());
+      evt.emit('action', name, value);
     });
   });
 }

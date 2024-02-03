@@ -78,9 +78,17 @@ class ModuleInstance extends InstanceBase<Config> {
         });
       } else if (msg.name === 'timerChangesDisabled') {
         // TODO: Reference type from another location?
-        const { value } = msg as { value: boolean };
+        const value = msg.value as boolean;
         this.setVariableValues({
           timer_changes_disabled: value,
+        });
+      } else if (msg.name === 'streamDeckData') {
+        // TODO: Reference type from another location?
+        const value = msg.value as {
+          playerHUDTriggerType?: string;
+        };
+        this.setVariableValues({
+          player_hud_trigger_type: value.playerHUDTriggerType,
         });
       }
     });
@@ -133,7 +141,7 @@ class ModuleInstance extends InstanceBase<Config> {
    * Send data over the WebSocket connection to the NodeCG bundle's server.
    * @param data.name Name of the action to send.
    */
-  wsSend(data: { name: string }) {
+  wsSend(data: { name: string, value?: unknown }) {
     if (!this.ws) return;
     const str = JSON.stringify(data);
     this.log('debug', `Send: "${str}"`);

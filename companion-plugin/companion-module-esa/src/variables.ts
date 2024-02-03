@@ -19,6 +19,10 @@ function initVariables(instance: InstanceBase<Config>) {
       variableId: 'timer_changes_disabled',
       name: 'Timer (nodecg-speedcontrol): Changes Disabled',
     },
+    {
+      variableId: 'player_hud_trigger_type',
+      name: 'Player HUD Trigger Type',
+    },
   ]);
 }
 export default initVariables;

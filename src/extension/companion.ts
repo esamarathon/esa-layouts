@@ -1,20 +1,23 @@
 import companion from './util/companion';
+import { streamDeckData } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 // Sending replicant data on any changes.
 sc.timer.on('change', (value) => companion.send({ name: 'timer', value }));
 sc.timerChangesDisabled.on('change', (value) => (
   companion.send({ name: 'timerChangesDisabled', value })));
+streamDeckData.on('change', (value) => companion.send({ name: 'streamDeckData', value }));
 
 // Sending things on connection.
 companion.evt.on('open', (socket) => {
   companion.send({ name: 'timer', value: sc.timer.value }, socket);
   companion.send({ name: 'timerChangesDisabled', value: sc.timerChangesDisabled.value }, socket);
+  companion.send({ name: 'streamDeckData', value: streamDeckData.value });
 });
 
 // Listening for any actions triggered from Companion.
-companion.evt.on('action', async (name) => {
-  // Controls the nodecg-speedcontrol timer when the action is called.
+companion.evt.on('action', async (name, value) => {
+  // Controls the nodecg-speedcontrol timer.
   // Currently the "Stop Timer" state works if there's only 1 team.
   // TODO: Add team support.
   if (name === 'timer_toggle') {
@@ -38,6 +41,14 @@ companion.evt.on('action', async (name) => {
       }
     } catch (err) {
       // Drop for now
+    }
+  // Used to toggle the "Player HUD Trigger" type.
+  } else if (name === 'player_hud_trigger_toggle') {
+    const val = value as string;
+    if (streamDeckData.value.playerHUDTriggerType === val) {
+      delete streamDeckData.value.playerHUDTriggerType;
+    } else {
+      streamDeckData.value.playerHUDTriggerType = val;
     }
   }
 });

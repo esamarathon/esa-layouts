@@ -14,9 +14,9 @@ function initActions(instance: ModuleInstance) {
       options: [],
       callback: () => {},
     },
-    // Timer
+    // Timer Toggle
     // TODO: Add team support.
-    timer: {
+    timer_toggle: {
       name: 'Timer Toggle (nodecg-speedcontrol)',
       description: 'Can start/resume/stop/reset the nodecg-speedcontrol timer, '
         + 'depending on it\'s current state.',
@@ -32,6 +32,25 @@ function initActions(instance: ModuleInstance) {
       ],
       callback: () => {
         instance.wsSend({ name: 'timer_toggle' });
+      },
+    },
+    player_hud_trigger_toggle: {
+      name: 'Player HUD Trigger Toggle',
+      description: 'Toggles on/off the specified type, '
+        + 'used for displaying things on the player HUD graphic.',
+      options: [
+        {
+          id: 'type',
+          type: 'dropdown',
+          label: 'Type',
+          choices: [
+            { id: 'message', label: 'Message' },
+          ],
+          default: 'message',
+        },
+      ],
+      callback: (action) => {
+        instance.wsSend({ name: 'player_hud_trigger_toggle', value: action.options.type });
       },
     },
   });

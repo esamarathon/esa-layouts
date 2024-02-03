@@ -26,9 +26,13 @@ class ModuleInstance extends InstanceBase<Config> {
   wsCleanup() {
     // Clean up current connection if one is active.
     if (this.ws) {
-      this.ws.close();
-      this.ws.removeAllListeners();
-      this.ws = undefined;
+      try {
+        if (this.ws.readyState === WebSocket.OPEN) this.ws.close();
+        this.ws.removeAllListeners();
+        this.ws = undefined;
+      } catch (err) {
+        // Ignore for now.
+      }
     }
     // Clean up reconnection timeout if one is active.
     clearTimeout(this.wsReconnectionTimeout);

@@ -7,7 +7,7 @@
 
 export interface Omnibar {
 	rotation: {
-		type: 'GenericMsg' | 'UpcomingRun' | 'Prize' | 'Bid' | 'Milestone';
+		type: 'GenericMsg' | 'UpcomingRun' | 'Prize' | 'Bid' | 'Milestone' | 'MusicTrack';
 		id: string;
 		props?: Props;
 	}[];
@@ -19,7 +19,9 @@ export interface Omnibar {
 		};
 	}[];
 	current: {
-		type: ('GenericMsg' | 'UpcomingRun' | 'Prize' | 'Bid' | 'Milestone') | ('Tweet' | 'CrowdControl' | 'MiniCredits');
+		type:
+			| ('GenericMsg' | 'UpcomingRun' | 'Prize' | 'Bid' | 'Milestone' | 'MusicTrack')
+			| ('Tweet' | 'CrowdControl' | 'MiniCredits');
 		id: string;
 		props?: Props;
 	} | null;

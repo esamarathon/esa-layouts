@@ -134,3 +134,4 @@ streamdeck-plugin/com.esamarathon.streamdeck.sdPlugin
 streamdeck-plugin/DistributionTool.exe
 *.psd
 /boxart/
+.idea/

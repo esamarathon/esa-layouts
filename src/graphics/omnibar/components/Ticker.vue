@@ -34,6 +34,7 @@ import UpcomingRun from './Ticker/UpcomingRun.vue';
 import Prize from './Ticker/Prize.vue';
 import Bid from './Ticker/Bid.vue';
 import Milestone from './Ticker/Milestone.vue';
+import MusicTrack from './Ticker/MusicTrack.vue';
 
 @Component({
   components: {
@@ -44,6 +45,7 @@ import Milestone from './Ticker/Milestone.vue';
     UpcomingRun,
     Prize,
     Milestone,
+    MusicTrack,
     Bid,
   },
 })

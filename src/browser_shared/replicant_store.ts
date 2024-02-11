@@ -1,4 +1,4 @@
-import type { Bids, BigbuttonPlayerMap, Commentators, Countdown, CurrentRunDelay, DonationAlerts, DonationReader, DonationTotal, DonationTotalMilestones, DonationsToRead, GameLayouts, IntermissionSlides, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import type { Bids, BigbuttonPlayerMap, Commentators, Countdown, CurrentRunDelay, DonationAlerts, DonationReader, DonationTotal, DonationTotalMilestones, DonationsToRead, GameLayouts, IntermissionSlides, MusicData, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import type NodeCGTypes from '@nodecg/types';
 import clone from 'clone';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
@@ -28,6 +28,7 @@ export const reps: {
   donationTotalMilestones: NodeCGTypes.ClientReplicant<DonationTotalMilestones>;
   gameLayouts: NodeCGTypes.ClientReplicant<GameLayouts>;
   intermissionSlides: NodeCGTypes.ClientReplicant<IntermissionSlides>;
+  musicData: NodeCGTypes.ClientReplicant<MusicData>;
   obsData: NodeCGTypes.ClientReplicant<ObsData>;
   omnibar: NodeCGTypes.ClientReplicant<Omnibar>;
   otherStreamData: NodeCGTypes.ClientReplicant<OtherStreamData>;
@@ -59,6 +60,7 @@ export const reps: {
   donationTotalMilestones: nodecg.Replicant('donationTotalMilestones'),
   gameLayouts: nodecg.Replicant('gameLayouts'),
   intermissionSlides: nodecg.Replicant('intermissionSlides'),
+  musicData: nodecg.Replicant('musicData'),
   obsData: nodecg.Replicant('obsData'),
   omnibar: nodecg.Replicant('omnibar'),
   otherStreamData: nodecg.Replicant('otherStreamData'),
@@ -92,6 +94,7 @@ export interface ReplicantTypes {
   donationTotalMilestones: DonationTotalMilestones;
   gameLayouts: GameLayouts;
   intermissionSlides: IntermissionSlides;
+  musicData: MusicData;
   obsData: ObsData;
   omnibar: Omnibar;
   otherStreamData: OtherStreamData;

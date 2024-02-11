@@ -38,7 +38,13 @@ export async function lookupUsersByStr(str: string): Promise<any[]> {
 async function lookupScheduleUserInfo(): Promise<void> {
   nodecg().log.info('[Server] Schedule reimported, looking up user information');
   const runs = sc.getRunDataArray();
+  const currentRunId = sc.getCurrentRun()?.id;
   for (const run of runs) {
+    // Do not modify the active run.
+    if (run.id === currentRunId) {
+      // eslint-disable-next-line no-continue
+      continue;
+    }
     const userIds = run.customData.userIds ? run.customData.userIds.split(',') : [];
     const userDataArr: any[] = [];
     for (const id of userIds) {

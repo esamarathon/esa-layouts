@@ -47,10 +47,10 @@
 }
 
 
-.ticker-enter-active[data-v-75858218], .ticker-leave-active[data-v-75858218] {
+.ticker-enter-active[data-v-a77fba50], .ticker-leave-active[data-v-a77fba50] {
   transition: opacity 1s;
 }
-.ticker-enter[data-v-75858218], .ticker-leave-to[data-v-75858218] {
+.ticker-enter[data-v-a77fba50], .ticker-leave-to[data-v-a77fba50] {
   opacity: 0;
 }
 

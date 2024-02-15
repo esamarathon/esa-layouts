@@ -74,6 +74,15 @@
 }
 
 
+.Icon[data-v-9bcafdbc] {
+  height: 100%;
+  padding: 4px 0;
+  box-sizing: border-box;
+  margin-right: 7px;
+  filter: drop-shadow(2px 2px 2px black);
+}
+
+
 .Player[data-v-5d7e5367] {
   width: calc(50%);
 }

@@ -41,40 +41,11 @@ var X32 = /** @class */ (function (_super) {
             _this.conn.on('error', function (err) {
                 nodecg.log.warn('[X32] Error on connection');
                 nodecg.log.debug('[X32] Error on connection:', err);
+                _this.emit('error', err);
             });
             _this.conn.on('message', function (message) {
-                // I don't trust myself with all posibilities, so wrapping this up.
-                try {
-                    if (message.address.endsWith('/fader')) {
-                        var args = message.args[0];
-                        _this.faders[message.address] = args.value;
-                        // Check if we're done fading and clear intervals if needed.
-                        if (_this.fadersExpected[message.address]) {
-                            var exp = _this.fadersExpected[message.address];
-                            // Sometimes we receive a delayed message, so we wait until
-                            // we've at least seen 1 value in the correct range.
-                            if ((exp.increase && exp.value > args.value)
-                                || (!exp.increase && exp.value < args.value)) {
-                                exp.seenOnce = true;
-                            }
-                            if (exp.seenOnce && ((exp.increase && exp.value <= args.value)
-                                || (!exp.increase && exp.value >= args.value))) {
-                                if (_this.conn) {
-                                    _this.conn.send({
-                                        address: message.address,
-                                        args: [{ type: 'f', value: exp.value }],
-                                    });
-                                }
-                                clearInterval(_this.fadersInterval[message.address]);
-                                delete _this.fadersExpected[message.address];
-                            }
-                        }
-                    }
-                }
-                catch (err) {
-                    nodecg.log.warn('[X32] Error parsing message');
-                    nodecg.log.debug('[X32] Error parsing message:', err);
-                }
+                _this.handleFaderEvent(message);
+                _this.emit('message', message);
             });
             _this.conn.on('close', function () {
                 nodecg.log.info('[X32] Connection closed');
@@ -104,7 +75,7 @@ var X32 = /** @class */ (function (_super) {
     /**
      * Just set a specific fader to the supplied value.
      * @param name Full name of fader (example: /dca/1/fader).
-     * @param startValue Value to set (0.0 - 1.0).
+     * @param value Value to set (0.0 - 1.0).
      */
     X32.prototype.setFader = function (name, value) {
         if (!this.config.enabled || !this.conn) {
@@ -158,6 +129,40 @@ var X32 = /** @class */ (function (_super) {
                 currentValue = endValue;
             }
         }, 100);
+    };
+    X32.prototype.handleFaderEvent = function (message) {
+        // I don't trust myself with all posibilities, so wrapping this up.
+        try {
+            if (message.address.endsWith('/fader')) {
+                var args = message.args[0];
+                this.faders[message.address] = args.value;
+                // Check if we're done fading and clear intervals if needed.
+                if (this.fadersExpected[message.address]) {
+                    var exp = this.fadersExpected[message.address];
+                    // Sometimes we receive a delayed message, so we wait until
+                    // we've at least seen 1 value in the correct range.
+                    if ((exp.increase && exp.value > args.value)
+                        || (!exp.increase && exp.value < args.value)) {
+                        exp.seenOnce = true;
+                    }
+                    if (exp.seenOnce && ((exp.increase && exp.value <= args.value)
+                        || (!exp.increase && exp.value >= args.value))) {
+                        if (this.conn) {
+                            this.conn.send({
+                                address: message.address,
+                                args: [{ type: 'f', value: exp.value }],
+                            });
+                        }
+                        clearInterval(this.fadersInterval[message.address]);
+                        delete this.fadersExpected[message.address];
+                    }
+                }
+            }
+        }
+        catch (err) {
+            this.nodecg.log.warn('[X32] Error parsing message');
+            this.nodecg.log.debug('[X32] Error parsing message:', err);
+        }
     };
     return X32;
 }(tiny_typed_emitter_1.TypedEmitter));

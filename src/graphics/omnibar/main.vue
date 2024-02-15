@@ -54,3 +54,12 @@ export default class extends Vue {
   zoom = getZoomAmountCSS();
 }
 </script>
+
+<style>
+  /* ESAW24 */
+  /* Used to "fix" the omnibar background colour. */
+  body {
+    /* Copied from ".bg--darkgrey" */
+    background: var(--colour--darkgrey);
+  }
+</style>

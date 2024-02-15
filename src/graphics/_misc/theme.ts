@@ -16,8 +16,9 @@ const { default: summer } = require('./themes/summer.theme.css');
 const { default: winter } = require('./themes/winter.theme.css');
 const { default: legends } = require('./themes/legends.theme.css');
 const { default: swcf } = require('./themes/swcf.theme.css');
+const { default: esaw24 } = require('./themes/esaw24.theme.css');
 
-defaultTheme.use();
+if (theme !== 'esaw24') defaultTheme.use();
 
 switch (theme) {
   case 'together':
@@ -65,6 +66,9 @@ switch (theme) {
     break;
   case 'legends':
     legends.use();
+    break;
+  case 'esaw24':
+    esaw24.use();
     break;
   default:
     // do nothing

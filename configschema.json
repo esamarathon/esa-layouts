@@ -92,7 +92,7 @@
           "default": false
         },
         "fallbackTwitchTitle": {
-          "$comment": "Set the fallback Twitch title for this event; {{total}} and {{run}} can be used as placeholders (see source code).",
+          "$comment": "Set the fallback Twitch title for this event; {{game}}, {{players}}, {{category}} and {{total}} can be used as placeholders (see source code).",
           "type": "string"
         }
       },

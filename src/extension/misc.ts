@@ -181,10 +181,19 @@ async function changeTwitchMetadata(title?: string, gameId?: string): Promise<vo
   try {
     let t = title || config.event.fallbackTwitchTitle;
     if (t) {
-      const run = sc.getCurrentRun()?.game;
+      // Lots below copied from nodecg-speedcontrol (with some minor modifications).
+      // TODO: Expose a helper in that bundle to do this stuff instead.
+      const runData = sc.getCurrentRun();
+      const mentionChannels = true;
+      const players = runData?.teams.map((team) => (
+        team.players.map((player) => (mentionChannels && player.social.twitch
+          ? `@${player.social.twitch}` : player.name)).join(', ')
+      )).join(' vs. ') || 'Runs coming up!'; // "Fake" string to show when no runners active
       t = t
-        .replace(/{{total}}/g, formatUSD(donationTotal.value, true))
-        .replace(/{{run}}/g, run ? ` - ${run}` : '');
+        .replace(/{{game}}/g, runData?.game || '') // Copied from SC
+        .replace(/{{players}}/g, players) // Copied from SC
+        .replace(/{{category}}/g, runData?.category || '') // Copied from SC
+        .replace(/{{total}}/g, formatUSD(donationTotal.value, true)); // Original to this bundle
     } else {
       throw new Error('no title found to update to');
     }

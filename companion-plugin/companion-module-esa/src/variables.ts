@@ -31,6 +31,27 @@ function initVariables(instance: InstanceBase<Config>) {
       variableId: 'twitch_commercials_disabled',
       name: 'Twitch Commercials Disabled (esa-commercials)',
     },
+    // TODO: Use some OBS stuff from an OBS plugin instead?
+    {
+      variableId: 'obs_connected',
+      name: 'OBS: Connected',
+    },
+    {
+      variableId: 'obs_transitioning',
+      name: 'OBS: Transitioning',
+    },
+    {
+      variableId: 'obs_transitioning_disabled',
+      name: 'OBS: Transitioning Disabled',
+    },
+    {
+      variableId: 'obs_scene',
+      name: 'OBS: Current Scene',
+    },
+    {
+      variableId: 'obs_scene_list',
+      name: 'OBS: Scene List (JSON stringified array)',
+    },
   ]);
 }
 export default initVariables;

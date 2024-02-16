@@ -8,6 +8,9 @@ dependencies:
   '@companion-module/base':
     specifier: ~1.7.0
     version: 1.7.0
+  string-similarity:
+    specifier: ^4.0.4
+    version: 4.0.4
   ws:
     specifier: ^8.16.0
     version: 8.16.0
@@ -16,6 +19,9 @@ devDependencies:
   '@companion-module/tools':
     specifier: ^1.4.2
     version: 1.4.2(@companion-module/base@1.7.0)(typescript@5.3.3)
+  '@types/string-similarity':
+    specifier: ^4.0.2
+    version: 4.0.2
   '@types/ws':
     specifier: ^8.5.10
     version: 8.5.10
@@ -314,6 +320,10 @@ packages:
 
   /@types/semver@7.5.6:
     resolution: {integrity: sha512-dn1l8LaMea/IjDoHNd9J52uBbInB796CDffS6VdIxvqYCPSG0V0DzHp76GpaWnlhg88uYyPbXCDIowa86ybd5A==}
+    dev: true
+
+  /@types/string-similarity@4.0.2:
+    resolution: {integrity: sha512-LkJQ/jsXtCVMK+sKYAmX/8zEq+/46f1PTQw7YtmQwb74jemS1SlNLmARM2Zml9DgdDTWKAtc5L13WorpHPDjDA==}
     dev: true
 
   /@types/which@3.0.3:
@@ -2673,6 +2683,11 @@ packages:
     dependencies:
       duplexer: 0.1.2
     dev: true
+
+  /string-similarity@4.0.4:
+    resolution: {integrity: sha512-/q/8Q4Bl4ZKAPjj8WerIBJWALKkaPRfrvhfF8k/B23i4nzrlRj2/go1m90In7nG/3XDSbOo0+pu6RvCTM9RGMQ==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+    dev: false
 
   /string.prototype.trim@1.2.8:
     resolution: {integrity: sha512-lfjY4HcixfQXOfaqCvcBuOIapyaroTXhbkfJN3gcB1OtyupngWK4sEET9Knd0cXd28kTUqu/kHoV4HKSJdnjiQ==}

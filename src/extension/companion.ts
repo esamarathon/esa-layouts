@@ -1,7 +1,7 @@
 import companion from './util/companion';
 import { get as nodecg } from './util/nodecg';
 import obs, { changeScene } from './util/obs';
-import { obsData, readerIntroduction, streamDeckData } from './util/replicants';
+import { obsData, streamDeckData } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const config = nodecg().bundleConfig;
@@ -18,6 +18,8 @@ sc.twitchCommercialTimer.on('change', (value) => (
   companion.send({ name: 'twitchCommercialTimer', value })));
 twitchCommercialsDisabled.on('change', (value) => (
   companion.send({ name: 'twitchCommercialsDisabled', value })));
+obsData.on('change', (value) => (
+  companion.send({ name: 'obsData', value: { ...value, gameLayoutScreenshot: undefined } })));
 
 // Sending things on connection.
 companion.evt.on('open', (socket) => {
@@ -26,6 +28,8 @@ companion.evt.on('open', (socket) => {
   companion.send({ name: 'streamDeckData', value: streamDeckData.value });
   companion.send({ name: 'twitchCommercialTimer', value: sc.twitchCommercialTimer.value });
   companion.send({ name: 'twitchCommercialsDisabled', value: twitchCommercialsDisabled.value });
+  companion.send({ name: 'obsData', value: { ...obsData.value, gameLayoutScreenshot: undefined } });
+  companion.send({ name: 'cfgScenes', value: nodecg().bundleConfig.obs.names.scenes });
 });
 
 // Listening for any actions triggered from Companion.

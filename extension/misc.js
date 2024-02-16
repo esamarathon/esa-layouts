@@ -204,14 +204,20 @@ exports.searchSrcomPronouns = searchSrcomPronouns;
     }
 });
 async function changeTwitchMetadata(title, gameId) {
-    var _a;
     try {
         let t = title || config.event.fallbackTwitchTitle;
         if (t) {
-            const run = (_a = speedcontrol_1.sc.getCurrentRun()) === null || _a === void 0 ? void 0 : _a.game;
+            // Lots below copied from nodecg-speedcontrol (with some minor modifications).
+            // TODO: Expose a helper in that bundle to do this stuff instead.
+            const runData = speedcontrol_1.sc.getCurrentRun();
+            const mentionChannels = true;
+            const players = (runData === null || runData === void 0 ? void 0 : runData.teams.map((team) => (team.players.map((player) => (mentionChannels && player.social.twitch
+                ? `@${player.social.twitch}` : player.name)).join(', '))).join(' vs. ')) || 'Runs coming up!'; // "Fake" string to show when no runners active
             t = t
-                .replace(/{{total}}/g, (0, helpers_1.formatUSD)(replicants_1.donationTotal.value, true))
-                .replace(/{{run}}/g, run ? ` - ${run}` : '');
+                .replace(/{{game}}/g, (runData === null || runData === void 0 ? void 0 : runData.game) || '') // Copied from SC
+                .replace(/{{players}}/g, players) // Copied from SC
+                .replace(/{{category}}/g, (runData === null || runData === void 0 ? void 0 : runData.category) || '') // Copied from SC
+                .replace(/{{total}}/g, (0, helpers_1.formatUSD)(replicants_1.donationTotal.value, true)); // Original to this bundle
         }
         else {
             throw new Error('no title found to update to');

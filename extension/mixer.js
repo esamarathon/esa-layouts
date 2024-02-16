@@ -16,6 +16,7 @@ function getNonGameScenes() {
         obs_1.default.findScene(config.obs.names.scenes.commercials),
         obs_1.default.findScene(config.obs.names.scenes.intermission),
         obs_1.default.findScene(config.obs.names.scenes.intermissionPlayer),
+        obs_1.default.findScene(config.obs.names.scenes.intermissionCrowd),
         obs_1.default.findScene(config.obs.names.scenes.countdown),
     ].filter(Boolean);
 }
@@ -80,6 +81,7 @@ async function setInitialFaders() {
                 obs_1.default.findScene(config.obs.names.scenes.commercials),
                 obs_1.default.findScene(config.obs.names.scenes.gameLayout),
                 obs_1.default.findScene(config.obs.names.scenes.intermission),
+                obs_1.default.findScene(config.obs.names.scenes.intermissionCrowd),
                 obs_1.default.findScene(config.obs.names.scenes.readerIntroduction),
             ].filter(Boolean);
             // These scenes will have the game and players audible.
@@ -118,6 +120,7 @@ obs_1.default.conn.on('TransitionBegin', async (data) => {
                 obs_1.default.findScene(config.obs.names.scenes.commercials),
                 obs_1.default.findScene(config.obs.names.scenes.gameLayout),
                 obs_1.default.findScene(config.obs.names.scenes.intermission),
+                obs_1.default.findScene(config.obs.names.scenes.intermissionCrowd),
                 obs_1.default.findScene(config.obs.names.scenes.readerIntroduction),
             ].filter(Boolean);
             // These scenes will have the game and players audible.

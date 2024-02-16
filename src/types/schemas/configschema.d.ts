@@ -56,6 +56,7 @@ export interface Configschema {
 				readerIntroduction: string;
 				intermission: string;
 				intermissionPlayer: string;
+				intermissionCrowd: string;
 				countdown: string;
 			};
 			sources: {

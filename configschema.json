@@ -284,6 +284,10 @@
                   "type": "string",
                   "default": "Intermission Player"
                 },
+                "intermissionCrowd": {
+                  "type": "string",
+                  "default": "Intermission (crowd camera)"
+                },
                 "countdown": {
                   "type": "string",
                   "default": "Countdown"
@@ -295,6 +299,7 @@
                 "readerIntroduction",
                 "intermission",
                 "intermissionPlayer",
+                "intermissionCrowd",
                 "countdown"
               ]
             },

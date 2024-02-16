@@ -62,6 +62,35 @@ function initActions(instance: ModuleInstance) {
         instance.wsSend({ name: 'twitch_commercials_disable' });
       },
     },
+    scene_cycle: {
+      name: 'Scene Cycle',
+      description: 'Cycles through scenes as needed and if applicable, usually to be used by hosts',
+      options: [],
+      callback: () => {
+        instance.wsSend({ name: 'scene_cycle' });
+      },
+    },
+    intermission_scene_change: {
+      name: 'Intermission Scene Change',
+      description: 'Changes to a supplied intermission scene',
+      options: [
+        {
+          id: 'scene',
+          type: 'dropdown',
+          label: 'Scene',
+          choices: [
+            { id: 'intermission', label: 'Intermission' },
+            { id: 'intermissionCrowd', label: 'Intermission (crowd camera)' },
+          ],
+          default: '',
+        },
+      ],
+      callback: (action) => {
+        if (action.options.scene) {
+          instance.wsSend({ name: 'intermission_scene_change', value: action.options.scene });
+        }
+      },
+    },
   });
 }
 export default initActions;

@@ -2,7 +2,7 @@ import { InstanceBase, InstanceStatus, SomeCompanionConfigField, runEntrypoint }
 import { WebSocket } from 'ws';
 import initActions from './actions';
 import { Config, getConfigFields } from './config';
-import initFeedbacks from './feedbacks';
+import { initFeedbacks, obsSceneFeedback, setObsSceneKeys } from './feedbacks';
 import initPresets from './presets';
 import upgradeScripts from './upgrades';
 import initVariables from './variables';
@@ -111,6 +111,45 @@ class ModuleInstance extends InstanceBase<Config> {
         this.setVariableValues({
           twitch_commercials_disabled: value,
         });
+      } else if (msg.name === 'obsData') {
+        // TODO: Reference type from another location?
+        const value = msg.value as {
+          connected: boolean;
+          scene?: string;
+          sceneList: string[];
+          transitioning: boolean;
+          streaming: boolean;
+          disableTransitioning: boolean;
+          transitionTimestamp: number;
+        };
+        this.setVariableValues({
+          obs_connected: value.connected,
+          obs_transitioning: value.transitioning,
+          obs_transitioning_disabled: value.disableTransitioning,
+          obs_scene: value.scene,
+          obs_scene_list: JSON.stringify(value.sceneList), // Weird to store, change?
+        });
+        // Trigger this feedback check in case we changed scenes here.
+        this.checkFeedbacks('obsSceneFeedback');
+      } else if (msg.name === 'cfgScenes') {
+        // TODO: Reference type from another location?
+        const value = msg.value as {
+          commercials: string;
+          gameLayout: string;
+          readerIntroduction: string;
+          intermission: string;
+          intermissionPlayer: string;
+          countdown: string;
+        };
+        // Stores this for use later (maybe could be done better?)
+        setObsSceneKeys(value);
+        // Updates the multidropdown with the configuration scene names.
+        this.setFeedbackDefinitions({
+          obsSceneFeedback: obsSceneFeedback(),
+        });
+        // Trigger this feedback check, needed on connection, not sure if needed
+        // for anything else, but safe to have.
+        this.checkFeedbacks('obsSceneFeedback');
       }
     });
   }

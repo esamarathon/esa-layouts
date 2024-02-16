@@ -54,7 +54,7 @@
             :pronouns="reader.pronouns"
           />
           <participant-info
-            v-for="commentator of comms"
+            v-for="commentator of comms.slice(0).reverse()"
             :key="commentator.name"
             type="commentator"
             :name="commentator.name"
@@ -96,22 +96,6 @@
         }"
       />
     </div>
-
-    <!-- Player/Commentators -->
-    <!--<div
-      class="Fixed FlexColumn"
-      :style="{
-        left: '0px',
-        top: '843px',
-        width: '673px',
-        height: '157px',
-        'justify-content': 'flex-start',
-      }"
-    >
-      <player />
-      <commentators-reader />
-      <commentators-reader show-reader />
-    </div>-->
 
     <!-- Media Box -->
     <media-box

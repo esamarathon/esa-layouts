@@ -133,7 +133,8 @@ body {
   background-color: rgba(0, 0, 0, 0.85);
 }
 
-#IntermissionPlayer .UpcomingBar .Header {
+#IntermissionPlayer .UpcomingBar .Header,
+#IntermissionHosts .UpcomingBar .Header {
   background-color: #41245b;
 }
 

@@ -1,84 +1,4 @@
 
-.CustomText[data-v-ec69e86e] * {
-  margin: 0;
-}
-
-
-.Slide[data-v-6a5b5a40] {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-.fade-enter-active[data-v-6a5b5a40], .fade-leave-active[data-v-6a5b5a40] {
-  transition: opacity 1s;
-}
-.fade-enter[data-v-6a5b5a40], .fade-leave-to[data-v-6a5b5a40] {
-  opacity: 0;
-}
-
-
-.Pronouns[data-v-771bcc66] {
-  position: relative;
-  display: inline-block;
-  font-weight: 400;
-  font-size: 0.75em;
-  top: -0.1em;
-  line-height: 1.5em;
-  color: #cccccc;
-  text-transform: uppercase;
-  padding: 0 3px;
-  margin-left: 3px;
-}
-
-
-.donations-enter-active[data-v-6adf2293] {
-  transition: all 1s;
-}
-.donations-enter[data-v-6adf2293], .donations-leave-to[data-v-6adf2293] {
-  opacity: 0;
-  transform: translateY(100%);
-}
-.donations-move[data-v-6adf2293] {
-  transition: transform 1s;
-}
-
-
-.Icon[data-v-33ac4f98] {
-  height: 100%;
-  position: absolute;
-}
-.TextWrapper[data-v-33ac4f98] {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  white-space: nowrap;
-}
-.fade-enter-active[data-v-33ac4f98], .fade-leave-active[data-v-33ac4f98] {
-  transition: opacity 1s;
-}
-.fade-enter[data-v-33ac4f98], .fade-leave-to[data-v-33ac4f98] {
-  opacity: 0;
-}
-
-
-.RunInfoExtra > span[data-v-850a45e2]:not(:last-child)::after {
-  content: ' /';
-}
-
-
-.fade-enter-active[data-v-879e78e0], .fade-leave-active[data-v-879e78e0] {
-  transition: opacity 0.5s;
-}
-.fade-enter[data-v-879e78e0], .fade-leave-to[data-v-879e78e0] {
-  opacity: 0;
-}
-
-
-.Player[data-v-5d7e5367] {
-  width: calc(50%);
-}
-
-
 .Icon[data-v-427e9688] {
   height: 100%;
   padding: 4px 0;
@@ -334,4 +254,9 @@ body {
 }
 
 
+
+
+.RunInfoExtra > span[data-v-62a034be]:not(:last-child)::after {
+  content: ' /';
+}
 

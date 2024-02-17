@@ -137,6 +137,7 @@ async function searchSrcomPronouns(val) {
 exports.searchSrcomPronouns = searchSrcomPronouns;
 // Processes adding commentators from the dashboard panel.
 (0, nodecg_1.get)().listenFor('commentatorAdd', async (val, ack) => {
+    var _a;
     if (val) {
         if (config.server.enabled) {
             let user;
@@ -148,6 +149,8 @@ exports.searchSrcomPronouns = searchSrcomPronouns;
             }
             if (user) {
                 // TODO: ALLOW PRONOUNS TO BE OVERRIDDEN!
+                //       (Technically can be done now as a result won't return,
+                //       but a flag won't be returned).
                 // TODO: Stop someone adding the same person twice.
                 // Fix some flags which use a different format (mostly GB).
                 let { country } = user;
@@ -162,10 +165,13 @@ exports.searchSrcomPronouns = searchSrcomPronouns;
                 replicants_1.commentators.value.push(user.pronouns ? `${user.name} (${user.pronouns})` : user.name);
             }
             else {
-                // TODO: user not found, process string as is!
-                // str = val;
+                // User not found, process string as NAME or NAME (PRONOUNS).
+                replicants_1.commentatorsNew.value.push({
+                    name: val.replace(/\((.*?)\)/g, '').trim(),
+                    pronouns: (_a = (val.match(/\((.*?)\)/g) || [])[0]) === null || _a === void 0 ? void 0 : _a.replace(/[()]/g, ''),
+                });
                 // Old way for backwards compatibility.
-                // commentators.value.push(val);
+                replicants_1.commentators.value.push(val);
             }
         }
         else {
@@ -189,6 +195,7 @@ exports.searchSrcomPronouns = searchSrcomPronouns;
 });
 // Processes modifying the reader from the dasboard panel.
 (0, nodecg_1.get)().listenFor('readerModify', async (val, ack) => {
+    var _a;
     if (!val) {
         replicants_1.donationReaderNew.value = null;
         replicants_1.donationReader.value = null;
@@ -216,10 +223,13 @@ exports.searchSrcomPronouns = searchSrcomPronouns;
             replicants_1.donationReader.value = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
         }
         else {
-            // TODO: user not found, process string as is!
-            // str = val;
+            // User not found, process string as NAME or NAME (PRONOUNS).
+            replicants_1.donationReaderNew.value = {
+                name: val.replace(/\((.*?)\)/g, '').trim(),
+                pronouns: (_a = (val.match(/\((.*?)\)/g) || [])[0]) === null || _a === void 0 ? void 0 : _a.replace(/[()]/g, ''),
+            };
             // Old way for backwards compatibility.
-            // donationReader.value = val;
+            replicants_1.donationReader.value = val;
         }
     }
     else {

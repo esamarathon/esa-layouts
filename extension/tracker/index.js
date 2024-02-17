@@ -13,6 +13,8 @@ const eventConfig = (0, nodecg_1.get)().bundleConfig.event;
 const config = (0, nodecg_1.get)().bundleConfig.tracker;
 const { useTestData } = (0, nodecg_1.get)().bundleConfig;
 let cookies;
+let tiltifyApiBackupInterval;
+const tiltifyApiBackupLength = 5 * 60 * 1000;
 /**
  * Returns tracker cookies, if set.
  */
@@ -48,6 +50,16 @@ async function updateDonationTotalFromAPI(init = false) {
         if (init || replicants_1.donationTotal.value < total) {
             (0, nodecg_1.get)().log.info('[Tracker] API donation total changed: $%s', total);
             replicants_1.donationTotal.value = total;
+            // If we checked the donation total on an interval and it was different, the MQ
+            // messages may be failing. Using a Discord Webhook to notify someone for ease of use.
+            const webhookUrl = (0, nodecg_1.get)().bundleConfig.tiltify.errorDiscordWebhook;
+            const userId = (0, nodecg_1.get)().bundleConfig.tiltify.errorDiscordWebhookUserIdToPing;
+            if (!init && webhookUrl) {
+                await (0, needle_1.default)('post', webhookUrl, {
+                    content: `${userId ? `<@${userId}> ` : ''}There may be an issue with the esa-layouts `
+                        + 'Tiltify integration with RabbitMQ messages!',
+                });
+            }
         }
     }
     catch (err) {
@@ -83,7 +95,9 @@ rabbitmq_1.mq.evt.on('donationTotalUpdated', (data) => {
     let total = 0;
     // HARDCODED FOR NOW!
     if (data.event === 'esaw2024') {
+        clearInterval(tiltifyApiBackupInterval);
         total += data.new_total;
+        tiltifyApiBackupInterval = setInterval(updateDonationTotalFromAPITiltify, tiltifyApiBackupLength);
     }
     if (replicants_1.donationTotal.value < total) {
         (0, nodecg_1.get)().log.debug('[Tracker] Updated donation total received: $%s', total.toFixed(2));
@@ -203,5 +217,5 @@ else {
     // FOR TILTIFY USE!
     // Get initial total from API and set an interval as a fallback.
     updateDonationTotalFromAPITiltify(true);
-    setInterval(updateDonationTotalFromAPITiltify, 60 * 1000);
+    tiltifyApiBackupInterval = setInterval(updateDonationTotalFromAPITiltify, tiltifyApiBackupLength);
 }

@@ -91,12 +91,17 @@ cycleNames(true);
 // Change the game layout based on information supplied via the run data.
 let layoutInit = false;
 speedcontrol_1.sc.runDataActiveRun.on('change', (newVal, oldVal) => {
+    var _a;
     // This shouldn't trigger on initial start up, so should only happen on an *actual* run change.
     if (newVal && layoutInit) {
         // If there's no old run or we changed to a different run, try to automatically set the layout.
         if (!oldVal || newVal.id !== oldVal.id) {
-            const layout = replicants_1.gameLayouts.value.available
-                .find((l) => { var _a; return l.code.toLowerCase() === ((_a = newVal.customData.layout) === null || _a === void 0 ? void 0 : _a.toLowerCase()); });
+            // Overwrite code with new ESAW24 layout if 1 player.
+            let code = (_a = newVal.customData.layout) === null || _a === void 0 ? void 0 : _a.toLowerCase();
+            if ((code === null || code === void 0 ? void 0 : code.endsWith('-1p')) && !code.startsWith('ds') && !code.startsWith('3ds')) {
+                code = `esaw24-${code}`;
+            }
+            const layout = replicants_1.gameLayouts.value.available.find((l) => l.code.toLowerCase() === code);
             replicants_1.gameLayouts.value.selected = layout === null || layout === void 0 ? void 0 : layout.code;
             if (newVal.customData.layout && !layout) {
                 (0, nodecg_1.get)().log.warn('[Layouts] Run specified game layout with code %s but none available', newVal.customData.layout);

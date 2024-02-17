@@ -74,6 +74,11 @@
 }
 
 
+.Player[data-v-5d7e5367] {
+  width: calc(50%);
+}
+
+
 .Icon[data-v-9bcafdbc] {
   height: 100%;
   padding: 4px 0;
@@ -82,8 +87,250 @@
   filter: drop-shadow(2px 2px 2px black);
 }
 
+/**
+Right now, this is (at least was on creation) a direct copy of the default.theme.css file.
+Modifications are being done to test new overall theming.
+**/
 
-.Player[data-v-5d7e5367] {
-  width: calc(50%);
+/* This is (originally at least) directly copied from esa-btrl-layouts common.css */
+
+/* Brand Fonts */
+.text--barlowc { font-family: 'Barlow Condensed'; font-weight: 400; }
+
+/* Brand Colours */
+/* Variables */
+:root {
+  --colour--offwhite: #efeeec;
+  --colour--darkgrey: #191919;
+  --colour--yellow: #fdbb1c;
+  --colour--purple: #734e9e;
+  --colour--purple--rgb: 115, 78, 158;
+  --colour--green: #5cbd7d;
+  --colour--red: #fc1c67;
+  --colour--darkyellow: #d09846;
+  --colour--darkyellow--rgb: 208, 152, 70;
+  --colour--darkpurple: #5f4082;
+  --colour--darkpurple--rgb: 95, 64, 130;
 }
+/* Text Helpers */
+.text--offwhite { color: var(--colour--offwhite); }
+/* Background Helpers (Solid) */
+.bg--darkgrey { background: var(--colour--darkgrey); }
+.bg--darkpurple { background: var(--colour--darkpurple); }
+/* Background Helpers (Gradient) */
+.bg--halfgradient { background: linear-gradient(90deg, var(--colour--purple) 50%, var(--colour--darkyellow) 100%); }
+.bg--dimmedgradient { background: linear-gradient(90deg, rgba(var(--colour--purple--rgb), 0.5) 50%, rgba(var(--colour--darkyellow--rgb), 0.5) 100%); }
+
+/* Text Shadow */
+.text--shadow { text-shadow: 2px 2px 2px var(--colour--darkgrey); }
+
+/**
+Actually I lied, this isn't in the default.theme.css for some reason,
+so I added it from another file.
+**/
+#Countdown .Logo {
+  content: url(../img/CountdownLogo-bfc11fa585298de38147.svg);
+  height: 500px;
+}
+
+body {
+  color: #fff073;
+}
+
+#Background {
+  /* Copied from ".bg--darkgrey" */
+  background: var(--colour--darkgrey);
+}
+
+*[class*='Border'] {
+  border-color: var(--colour--darkpurple);
+}
+
+.TimerStopped, .TimerPaused {
+  color: #b7b7b7;
+}
+.TimerRunning {
+  color: #fff073;
+}
+.TimerFinished {
+  color: white;
+}
+
+#GameLayout .RunInfoExtra {
+  color: #b7b7b7;
+}
+
+.Player {
+  color: white;
+
+  /* Copied from ".bg--darkpurple" */
+  background: var(--colour--darkpurple);
+}
+
+.Player .Pronouns,
+.DonationReader .Pronouns,
+.CommAndReader .Pronouns {
+  font-weight: 400;
+  font-size: 0.7em;
+  color: #cccccc;
+  text-transform: lowercase;
+
+  /* Copied from ".bg--darkgrey" */
+  background: var(--colour--darkgrey);
+
+  border-radius: 6px 0 0 6px;
+  padding: 4px 10px 4px 6px !important;
+  clip-path: polygon(0% 0%, calc(100% - 5px) 0, 100% 50%, calc(100% - 5px) 100%, 0% 100%);
+}
+.CommAndReader .Pronouns {
+  background-color: #4b3163;
+}
+
+/** New commentators and reader component! **/
+#GameLayout .CommentatorsReader .Header {
+  background-color: #2d1d3c;
+}
+#GameLayout .CommentatorsReader .Pronouns {
+  background-color: #2d1d3c;
+}
+
+.Player .Icon {
+  filter: invert(1);
+}
+
+.Player .Flag {
+ border-color: white;
+}
+
+.GameCapture {
+  color: white;
+}
+
+.GameCapture .TeamFinishTime {
+  background-color: rgba(65, 36, 91, 0.5);
+}
+
+.CommAndReader {
+  background-color: #2d1d3c;
+  color: white;
+}
+
+.DonationBar {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+*[class*='DonationBox'] {
+  background-color: #301b4c;
+  color: #f1d13f;
+  font-weight: 500;
+  font-size: 1em;
+}
+
+.DonationBoxTier1-1 {
+  background-color: #301b4c;
+}
+.DonationBoxTier1-2 {
+  background-color: #281643;
+}
+.DonationBoxTier1-3 {
+  background-color: #502f59;
+}
+
+*[class*='DonationBoxTier2'] {
+  color: #604054;
+  font-weight: 600;
+}
+.DonationBoxTier2-1 {
+  background-color: #f1d13f;
+}
+.DonationBoxTier2-2 {
+  background-color: #fbd93f;
+}
+.DonationBoxTier2-3 {
+  background-color: #e1c43c;
+}
+
+.DonationBoxTier3 {
+  background-color: #efbe00;
+  color: #604054;
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+#Intermission .Logo > img {
+  content: url(../img/IntermissionLogo-3c9728deecd56faac48e.png);
+}
+
+#Intermission .DonationReader .Mic,
+#Intermission .MusicTrack .MCat {
+  /* Copied from ".bg--darkpurple" */
+  background: var(--colour--darkpurple);
+}
+
+#Intermission .Header, #ReaderIntroduction .Header {
+  /* Copied from ".bg--darkpurple" */
+  background: var(--colour--darkpurple);
+  color: white;
+}
+
+#Intermission .BottomBox,
+#Intermission .Content, #ReaderIntroduction .Content {
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+#IntermissionPlayer .UpcomingBar .Header {
+  /* Copied from ".bg--darkpurple" */
+  background: var(--colour--darkpurple);
+}
+
+#Omnibar {
+  color: white;
+  /* Copied from ".bg--dimmedgradient" */
+  background: linear-gradient(90deg, rgba(var(--colour--purple--rgb), 0.5) 50%, rgba(var(--colour--darkyellow--rgb), 0.5) 100%);
+}
+
+#Omnibar > #Logo {
+  content: url(../img/OmnibarLogo-e52bb6bc647a4c0682b3.png);
+  padding: 0 10px;
+}
+
+#Omnibar #CharityLogo {
+  content: url(../img/OmnibarCharityLogo-d43cae5c40fd8b1655e0.png);
+  height: 58px;
+  margin: 0 15px;
+}
+
+#Omnibar .Divider {
+  background-color: #fff073;
+}
+
+#Omnibar .Alert {
+  background-color: rgba(255, 255, 255, 0.22);
+}
+
+#Omnibar .Milestone .Bar, #Omnibar .Goal .Bar {
+  background-color: #e8d53a;
+}
+
+#Omnibar .War1v1 .Bar1 {
+  background-color: #e8d53a;
+}
+
+#Omnibar .War1v1 .Bar2 {
+  background-color: #af60f7;
+}
+
+#Omnibar .WarOther .OptionWinning {
+  background-color: #877520;
+}
+
+#Omnibar .WarOther .OptionOther {
+  background-color: #502f59;
+}
+
+#Omnibar .MiniCredits > .Msg > span + span::before {
+  border-left: solid white 5px;
+}
+
+
 

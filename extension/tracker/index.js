@@ -13,7 +13,7 @@ const eventConfig = (0, nodecg_1.get)().bundleConfig.event;
 const config = (0, nodecg_1.get)().bundleConfig.tracker;
 const { useTestData } = (0, nodecg_1.get)().bundleConfig;
 let cookies;
-let tiltifyApiBackupInterval;
+let tiltifyApiBackupTimeout;
 const tiltifyApiBackupLength = 5 * 60 * 1000;
 /**
  * Returns tracker cookies, if set.
@@ -50,16 +50,6 @@ async function updateDonationTotalFromAPI(init = false) {
         if (init || replicants_1.donationTotal.value < total) {
             (0, nodecg_1.get)().log.info('[Tracker] API donation total changed: $%s', total);
             replicants_1.donationTotal.value = total;
-            // If we checked the donation total on an interval and it was different, the MQ
-            // messages may be failing. Using a Discord Webhook to notify someone for ease of use.
-            const webhookUrl = (0, nodecg_1.get)().bundleConfig.tiltify.errorDiscordWebhook;
-            const userId = (0, nodecg_1.get)().bundleConfig.tiltify.errorDiscordWebhookUserIdToPing;
-            if (!init && webhookUrl) {
-                await (0, needle_1.default)('post', webhookUrl, {
-                    content: `${userId ? `<@${userId}> ` : ''}There may be an issue with the esa-layouts `
-                        + 'Tiltify integration with RabbitMQ messages!',
-                });
-            }
         }
     }
     catch (err) {
@@ -80,14 +70,33 @@ async function updateDonationTotalFromAPITiltify(init = false) {
             total += eventTotal;
         }
         if (init || replicants_1.donationTotal.value < total) {
+            const diff = total - replicants_1.donationTotal.value;
+            (0, nodecg_1.get)().sendMessage('donationTotalUpdated', { total, diff, showAlert: false });
             (0, nodecg_1.get)().log.info('[Tracker] API donation total changed: $%s', total);
             replicants_1.donationTotal.value = total;
+            // If we checked the donation total on an interval and it was different, the MQ
+            // messages may be failing. Using a Discord Webhook to notify someone for ease of use.
+            const webhookUrl = (0, nodecg_1.get)().bundleConfig.tiltify.errorDiscordWebhook;
+            const userId = (0, nodecg_1.get)().bundleConfig.tiltify.errorDiscordWebhookUserIdToPing;
+            if (!init && webhookUrl) {
+                try {
+                    await (0, needle_1.default)('post', webhookUrl, {
+                        content: `${userId ? `<@${userId}> ` : ''}There may be an issue with the esa-layouts `
+                            + 'Tiltify integration with RabbitMQ messages!',
+                    });
+                    (0, nodecg_1.get)().log.debug('[Tracker] Discord webhook sent');
+                }
+                catch (err) {
+                    (0, nodecg_1.get)().log.debug('[Tracker] Discord webhook failed:', err);
+                }
+            }
         }
     }
     catch (err) {
         (0, nodecg_1.get)().log.warn('[Tracker] Error updating donation total from API');
         (0, nodecg_1.get)().log.debug('[Tracker] Error updating donation total from API:', err);
     }
+    tiltifyApiBackupTimeout = setTimeout(updateDonationTotalFromAPITiltify, tiltifyApiBackupLength);
 }
 // Triggered when a donation total is updated in our tracker.
 // THIS WORKS EVEN IF TRACKER CONFIG IS DISABLED! WHICH IS GOOD FOR TILTIFY!
@@ -95,11 +104,13 @@ rabbitmq_1.mq.evt.on('donationTotalUpdated', (data) => {
     let total = 0;
     // HARDCODED FOR NOW!
     if (data.event === 'esaw2024') {
-        clearInterval(tiltifyApiBackupInterval);
+        clearInterval(tiltifyApiBackupTimeout);
         total += data.new_total;
-        tiltifyApiBackupInterval = setInterval(updateDonationTotalFromAPITiltify, tiltifyApiBackupLength);
+        tiltifyApiBackupTimeout = setTimeout(updateDonationTotalFromAPITiltify, tiltifyApiBackupLength);
     }
     if (replicants_1.donationTotal.value < total) {
+        const diff = total - replicants_1.donationTotal.value;
+        (0, nodecg_1.get)().sendMessage('donationTotalUpdated', { total, diff, showAlert: true });
         (0, nodecg_1.get)().log.debug('[Tracker] Updated donation total received: $%s', total.toFixed(2));
         replicants_1.donationTotal.value = total;
     }
@@ -215,7 +226,6 @@ if (config.enabled) {
 }
 else {
     // FOR TILTIFY USE!
-    // Get initial total from API and set an interval as a fallback.
+    // Get initial total from API (function also sets a timeout as a fallback).
     updateDonationTotalFromAPITiltify(true);
-    tiltifyApiBackupInterval = setInterval(updateDonationTotalFromAPITiltify, tiltifyApiBackupLength);
 }

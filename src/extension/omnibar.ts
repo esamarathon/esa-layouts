@@ -414,8 +414,9 @@ sc.on('timerStopped', () => {
     )
     : undefined;
 
+  // DISABLED FOR NOW (ESAW24).
   // Push actual data to the queue.
-  omnibar.value.alertQueue.push({
+  /* omnibar.value.alertQueue.push({
     type: 'MiniCredits',
     id: uuid(),
     data: {
@@ -429,5 +430,5 @@ sc.on('timerStopped', () => {
       subscribers,
       cheers,
     },
-  });
+  }); */
 });

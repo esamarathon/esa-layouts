@@ -752,6 +752,18 @@
       "required": [
         "enabled"
       ]
+    },
+    "tiltify": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "errorDiscordWebhook": {
+          "type": "string"
+        },
+        "errorDiscordWebhookUserIdToPing": {
+          "type": "string"
+        }
+      }
     }
   },
   "required": [
@@ -772,6 +784,7 @@
     "server",
     "discord",
     "streamlabsCharity",
-    "therungg"
+    "therungg",
+    "tiltify"
   ]
 }

@@ -75,6 +75,8 @@ async function updateDonationTotalFromAPITiltify(init = false): Promise<void> {
       total += eventTotal;
     }
     if (init || donationTotal.value < total) {
+      const diff = total - donationTotal.value;
+      nodecg().sendMessage('donationTotalUpdated', { total, diff, showAlert: false });
       nodecg().log.info('[Tracker] API donation total changed: $%s', total);
       donationTotal.value = total;
       // If we checked the donation total on an interval and it was different, the MQ
@@ -118,6 +120,8 @@ mq.evt.on('donationTotalUpdated', (data) => {
     );
   }
   if (donationTotal.value < total) {
+    const diff = total - donationTotal.value;
+    nodecg().sendMessage('donationTotalUpdated', { total, diff, showAlert: true });
     nodecg().log.debug('[Tracker] Updated donation total received: $%s', total.toFixed(2));
     donationTotal.value = total;
   }

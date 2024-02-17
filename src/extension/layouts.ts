@@ -47,11 +47,12 @@ const obsSourceKeys: { [key: string]: string | undefined } = {
 
 // Hardcoded (for now) sets of keys to use for groups/sources/etc for XKeys panel.
 // slice removes any that won't be applicable because of the current configuration.
-const gameCaptureKeys = [1, 2, 3, 4].slice(0, gameCaptures.length);
-const cameraCaptureKeys = [5, 6, 7, 8].slice(0, cameraCaptures.length);
+const gameCaptureKeys = [1, 2, 3, 4].slice(0, Math.min(gameCaptures.length, 4));
+const cameraCaptureKeys = [5, 6, 7, 8].slice(0, Math.min(cameraCaptures.length, 4));
 const allCaptureKeys = gameCaptureKeys.concat(cameraCaptureKeys);
-const gameSourceKeys = [9, 10, 11, 12].slice(0, gameSources.length);
-const cameraSourceKeys = [13, 14, 15, 16, 21].slice(0, cameraSources.length);
+const gameSourceKeys = [9, 10, 11, 12, 17, 18, 19, 20].slice(0, Math.min(gameSources.length, 8));
+const cameraSourceKeys = [13, 14, 15, 16, 21, 22, 23, 24]
+  .slice(0, Math.min(cameraSources.length, 8));
 const allSourceKeys = gameSourceKeys.concat(cameraSourceKeys);
 const gameCropKeys = [70, 79, 72, 63]; // order: top, right, bottom, left
 const gameCropResetKeys = { selected: 78, all: 62 };

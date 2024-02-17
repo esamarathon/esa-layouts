@@ -26,7 +26,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const intermission_player_1 = require("./intermission-player");
 const companion_1 = __importDefault(require("./util/companion"));
+const helpers_1 = require("./util/helpers");
 const nodecg_1 = require("./util/nodecg");
 const obs_1 = __importStar(require("./util/obs"));
 const replicants_1 = require("./util/replicants");
@@ -41,6 +43,7 @@ replicants_1.streamDeckData.on('change', (value) => companion_1.default.send({ n
 speedcontrol_1.sc.twitchCommercialTimer.on('change', (value) => (companion_1.default.send({ name: 'twitchCommercialTimer', value })));
 twitchCommercialsDisabled.on('change', (value) => (companion_1.default.send({ name: 'twitchCommercialsDisabled', value })));
 replicants_1.obsData.on('change', (value) => (companion_1.default.send({ name: 'obsData', value: Object.assign(Object.assign({}, value), { gameLayoutScreenshot: undefined }) })));
+replicants_1.assetsVideos.on('change', (value) => companion_1.default.send({ name: 'videos', value }));
 // Sending things on connection.
 companion_1.default.evt.on('open', (socket) => {
     companion_1.default.send({ name: 'timer', value: speedcontrol_1.sc.timer.value }, socket);
@@ -50,6 +53,7 @@ companion_1.default.evt.on('open', (socket) => {
     companion_1.default.send({ name: 'twitchCommercialsDisabled', value: twitchCommercialsDisabled.value });
     companion_1.default.send({ name: 'obsData', value: Object.assign(Object.assign({}, replicants_1.obsData.value), { gameLayoutScreenshot: undefined }) });
     companion_1.default.send({ name: 'cfgScenes', value: (0, nodecg_1.get)().bundleConfig.obs.names.scenes });
+    companion_1.default.send({ name: 'videos', value: replicants_1.assetsVideos.value });
 });
 // Listening for any actions triggered from Companion.
 companion_1.default.evt.on('action', async (name, value) => {
@@ -134,5 +138,22 @@ companion_1.default.evt.on('action', async (name, value) => {
         const val = value;
         const scene = scenes[val];
         await (0, obs_1.changeScene)({ scene, force: true });
+        // Used to play back a single video in the "Intermission Player" scene,
+        // intended to be used by hosts.
+    }
+    else if (name === 'video_play') {
+        const val = value;
+        const video = replicants_1.assetsVideos.value.find((v) => v.sum === val);
+        if (video) {
+            replicants_1.videoPlayer.value.playlist = [
+                {
+                    sum: video.sum,
+                    length: 0,
+                    commercial: false,
+                },
+            ];
+            (0, helpers_1.wait)(500); // Safety wait
+            await (0, intermission_player_1.startPlaylist)();
+        }
     }
 });

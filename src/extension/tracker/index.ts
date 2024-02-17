@@ -1,12 +1,11 @@
 import { Configschema } from '@esa-layouts/types/schemas';
 import type { Tracker } from '@shared/types';
-import clone from 'clone';
 import type { NeedleResponse } from 'needle';
 import needle from 'needle';
-import { DeepWritable } from 'ts-essentials';
+import type { DeepWritable } from 'ts-essentials';
 import { get as nodecg } from '../util/nodecg';
 import { mq } from '../util/rabbitmq';
-import { donationTotal, notableDonations } from '../util/replicants';
+import { donationTotal } from '../util/replicants';
 
 export const eventInfo: Tracker.EventInfo[] = [];
 const eventConfig = nodecg().bundleConfig.event;
@@ -62,10 +61,12 @@ async function updateDonationTotalFromAPI(init = false): Promise<void> {
 }
 
 // Triggered when a donation total is updated in our tracker.
+// THIS WORKS EVEN IF TRACKER CONFIG IS DISABLED! WHICH IS GOOD FOR TILTIFY!
 mq.evt.on('donationTotalUpdated', (data) => {
   let total = 0;
   for (const event of eventInfo) {
-    if (data.event === event.short) {
+    // HARDCODED FOR NOW!
+    if (data.event === 'esaw2024') {
       event.total = data.new_total;
     }
     total += event.total;
@@ -76,8 +77,9 @@ mq.evt.on('donationTotalUpdated', (data) => {
   }
 });
 
+// DISABLED FOR NOW (ESAW24)
 // Triggered when a new donation is fully processed on the tracker.
-mq.evt.on('donationFullyProcessed', (data) => {
+/* mq.evt.on('donationFullyProcessed', (data) => {
   if (data.comment_state === 'APPROVED') {
     // eslint-disable-next-line no-underscore-dangle
     nodecg().log.debug('[Tracker] Received new donation with ID %s', data._id);
@@ -87,7 +89,7 @@ mq.evt.on('donationFullyProcessed', (data) => {
       notableDonations.value.length = Math.min(notableDonations.value.length, 20);
     }
   }
-});
+}); */
 
 let isFirstLogin = true;
 async function loginToTracker(): Promise<void> {

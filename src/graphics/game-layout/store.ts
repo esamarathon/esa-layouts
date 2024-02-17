@@ -1,4 +1,4 @@
-import type { Bids, Commentators, CurrentRunDelay, DelayedTimer, DonationReader, GameLayouts, MediaBox, NameCycle, NotableDonations, Prizes, TaskmasterTimestamps } from '@esa-layouts/types/schemas'; // eslint-disable-line object-curly-newline, max-len
+import type { Bids, Commentators, CommentatorsNew, CurrentRunDelay, DelayedTimer, DonationReader, DonationReaderNew, GameLayouts, MediaBox, NameCycle, NotableDonations, Prizes, TaskmasterTimestamps } from '@esa-layouts/types/schemas'; // eslint-disable-line object-curly-newline, max-len
 import type NodeCGTypes from '@nodecg/types';
 import clone from 'clone';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
@@ -13,9 +13,11 @@ Vue.use(Vuex);
 const reps: {
   bids: NodeCGTypes.ClientReplicant<Bids>;
   commentators: NodeCGTypes.ClientReplicant<Commentators>;
+  commentatorsNew: NodeCGTypes.ClientReplicant<CommentatorsNew>;
   currentRunDelay: NodeCGTypes.ClientReplicant<CurrentRunDelay>;
   delayedTimer: NodeCGTypes.ClientReplicant<DelayedTimer>;
   donationReader: NodeCGTypes.ClientReplicant<DonationReader>;
+  donationReaderNew: NodeCGTypes.ClientReplicant<DonationReaderNew>;
   gameLayouts: NodeCGTypes.ClientReplicant<GameLayouts>;
   mediaBox: NodeCGTypes.ClientReplicant<MediaBox>;
   mediaBoxImages: NodeCGTypes.ClientReplicant<NodeCGTypes.AssetFile[]>;
@@ -29,9 +31,11 @@ const reps: {
 } = {
   bids: nodecg.Replicant('bids'),
   commentators: nodecg.Replicant('commentators'),
+  commentatorsNew: nodecg.Replicant('commentatorsNew'),
   currentRunDelay: nodecg.Replicant('currentRunDelay'),
   delayedTimer: nodecg.Replicant('delayedTimer'),
   donationReader: nodecg.Replicant('donationReader'),
+  donationReaderNew: nodecg.Replicant('donationReaderNew'),
   gameLayouts: nodecg.Replicant('gameLayouts'),
   mediaBox: nodecg.Replicant('mediaBox'),
   mediaBoxImages: nodecg.Replicant('assets:media-box-images'),

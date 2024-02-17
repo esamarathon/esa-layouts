@@ -1,4 +1,4 @@
-import type { Bids, BigbuttonPlayerMap, Commentators, Countdown, CurrentRunDelay, DonationAlerts, DonationReader, DonationTotal, DonationTotalMilestones, DonationsToRead, GameLayouts, IntermissionSlides, MusicData, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import type { Bids, BigbuttonPlayerMap, Commentators, CommentatorsNew, Countdown, CurrentRunDelay, DonationAlerts, DonationReader, DonationReaderNew, DonationTotal, DonationTotalMilestones, DonationsToRead, GameLayouts, IntermissionSlides, MusicData, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import type NodeCGTypes from '@nodecg/types';
 import clone from 'clone';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
@@ -19,10 +19,12 @@ export const reps: {
   bids: NodeCGTypes.ClientReplicant<Bids>;
   bigbuttonPlayerMap: NodeCGTypes.ClientReplicant<BigbuttonPlayerMap>;
   commentators: NodeCGTypes.ClientReplicant<Commentators>;
+  commentatorsNew: NodeCGTypes.ClientReplicant<CommentatorsNew>;
   countdown: NodeCGTypes.ClientReplicant<Countdown>;
   currentRunDelay: NodeCGTypes.ClientReplicant<CurrentRunDelay>;
   donationAlerts: NodeCGTypes.ClientReplicant<DonationAlerts>;
   donationReader: NodeCGTypes.ClientReplicant<DonationReader>;
+  donationReaderNew: NodeCGTypes.ClientReplicant<DonationReaderNew>;
   donationsToRead: NodeCGTypes.ClientReplicant<DonationsToRead>;
   donationTotal: NodeCGTypes.ClientReplicant<DonationTotal>;
   donationTotalMilestones: NodeCGTypes.ClientReplicant<DonationTotalMilestones>;
@@ -51,10 +53,12 @@ export const reps: {
   bids: nodecg.Replicant('bids'),
   bigbuttonPlayerMap: nodecg.Replicant('bigbuttonPlayerMap'),
   commentators: nodecg.Replicant('commentators'),
+  commentatorsNew: nodecg.Replicant('commentatorsNew'),
   countdown: nodecg.Replicant('countdown'),
   currentRunDelay: nodecg.Replicant('currentRunDelay'),
   donationAlerts: nodecg.Replicant('donationAlerts'),
   donationReader: nodecg.Replicant('donationReader'),
+  donationReaderNew: nodecg.Replicant('donationReaderNew'),
   donationsToRead: nodecg.Replicant('donationsToRead'),
   donationTotal: nodecg.Replicant('donationTotal'),
   donationTotalMilestones: nodecg.Replicant('donationTotalMilestones'),
@@ -85,10 +89,12 @@ export interface ReplicantTypes {
   bids: Bids;
   bigbuttonPlayerMap: BigbuttonPlayerMap;
   commentators: Commentators;
+  commentatorsNew: CommentatorsNew;
   countdown: Countdown;
   currentRunDelay: CurrentRunDelay;
   donationAlerts: DonationAlerts;
   donationReader: DonationReader;
+  donationReaderNew: DonationReaderNew;
   donationsToRead: DonationsToRead;
   donationTotal: DonationTotal;
   donationTotalMilestones: DonationTotalMilestones;

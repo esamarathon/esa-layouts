@@ -6,7 +6,7 @@ import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
-import { bigbuttonPlayerMap, commentators, donationReader, donationTotal, horaroImportStatus, oengusImportStatus, otherStreamData, serverTimestamp, twitchAPIData, twitchChannelInfo, upcomingRunID } from './util/replicants';
+import { bigbuttonPlayerMap, commentators, commentatorsNew, donationReader, donationReaderNew, donationTotal, horaroImportStatus, oengusImportStatus, otherStreamData, serverTimestamp, twitchAPIData, twitchChannelInfo, upcomingRunID } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const config = nodecg().bundleConfig;
@@ -123,20 +123,31 @@ nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack)
       } catch (err) {
         // catch
       }
-      let str = '';
       if (user) {
-        str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+        // TODO: ALLOW PRONOUNS TO BE OVERRIDDEN!
+        // TODO: Stop someone adding the same person twice.
+        // Fix some flags which use a different format (mostly GB).
+        let { country } = user;
+        if (country && country.includes('-')) country = country.replace('-', '/');
+        commentatorsNew.value.push({
+          name: user.name,
+          country: user.country || undefined,
+          pronouns: user.pronouns || undefined,
+        });
+        // Old way for backwards compatibility.
+        commentators.value.push(user.pronouns ? `${user.name} (${user.pronouns})` : user.name);
       } else {
-        str = val;
-      }
-      if (str && !commentators.value.includes(str)) {
-        commentators.value.push(str);
+        // TODO: user not found, process string as is!
+        // str = val;
+        // Old way for backwards compatibility.
+        // commentators.value.push(val);
       }
     } else {
-      const str = await searchSrcomPronouns(val);
+      // TODO: IMPLEMENT WITH NEW CHANGES!
+      /* const str = await searchSrcomPronouns(val);
       if (!commentators.value.includes(str)) {
         commentators.value.push(str);
-      }
+      } */
     }
   }
   if (ack && !ack.handled) {
@@ -145,6 +156,7 @@ nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack)
 });
 
 nodecg().listenFor('commentatorRemove', (val: number, ack) => {
+  commentatorsNew.value.splice(val, 1);
   commentators.value.splice(val, 1);
   if (ack && !ack.handled) {
     ack(null);
@@ -154,6 +166,7 @@ nodecg().listenFor('commentatorRemove', (val: number, ack) => {
 // Processes modifying the reader from the dasboard panel.
 nodecg().listenFor('readerModify', async (val: string | null | undefined, ack) => {
   if (!val) {
+    donationReaderNew.value = null;
     donationReader.value = null;
   } else if (config.server.enabled) {
     let user;
@@ -162,15 +175,27 @@ nodecg().listenFor('readerModify', async (val: string | null | undefined, ack) =
     } catch (err) {
       // catch
     }
-    let str = '';
     if (user) {
-      str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+      // TODO: ALLOW PRONOUNS TO BE OVERRIDDEN!
+      // Fix some flags which use a different format (mostly GB).
+      let { country } = user;
+      if (country && country.includes('-')) country = country.replace('-', '/');
+      donationReaderNew.value = {
+        name: user.name,
+        country: user.country || undefined,
+        pronouns: user.pronouns || undefined,
+      };
+      // Old way for backwards compatibility.
+      donationReader.value = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
     } else {
-      str = val;
+      // TODO: user not found, process string as is!
+      // str = val;
+      // Old way for backwards compatibility.
+      // donationReader.value = val;
     }
-    donationReader.value = str;
   } else {
-    donationReader.value = await searchSrcomPronouns(val);
+    // TODO: IMPLEMENT WITH NEW CHANGES!
+    // donationReader.value = await searchSrcomPronouns(val);
   }
   if (ack && !ack.handled) {
     ack(null);

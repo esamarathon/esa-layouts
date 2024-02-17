@@ -1,5 +1,5 @@
 import { replicantModule, ReplicantModule, ReplicantTypes } from '@esa-layouts/browser_shared/replicant_store';
-import { Commentators } from '@esa-layouts/types/schemas';
+import { Commentators, CommentatorsNew } from '@esa-layouts/types/schemas';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 import { getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators';
@@ -15,6 +15,9 @@ class OurModule extends VuexModule {
 
   @Mutation
   clearCommentators(): void {
+    replicantModule.setReplicant<CommentatorsNew>({
+      name: 'commentatorsNew', val: [],
+    });
     replicantModule.setReplicant<Commentators>({
       name: 'commentators', val: [],
     });

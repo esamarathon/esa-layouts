@@ -1,6 +1,6 @@
 import { InstanceBase, InstanceStatus, SomeCompanionConfigField, runEntrypoint } from '@companion-module/base';
 import { WebSocket } from 'ws';
-import initActions from './actions';
+import { initActions, videoPlayAction } from './actions';
 import { Config, getConfigFields } from './config';
 import { initFeedbacks, obsSceneFeedback, setObsSceneKeys } from './feedbacks';
 import initPresets from './presets';
@@ -150,6 +150,17 @@ class ModuleInstance extends InstanceBase<Config> {
         // Trigger this feedback check, needed on connection, not sure if needed
         // for anything else, but safe to have.
         this.checkFeedbacks('obsSceneFeedback');
+      } else if (msg.name === 'videos') {
+        // TODO: Reference type from another location?
+        const videos = msg.value as {
+          name: string;
+          sum: string;
+          // Other unimportant (at the moment) types omitted.
+        }[];
+        // Updates the dropdown with the video information.
+        this.setActionDefinitions({
+          video_play: videoPlayAction(videos),
+        });
       }
     });
   }

@@ -1,7 +1,9 @@
+import { startPlaylist } from './intermission-player';
 import companion from './util/companion';
+import { wait } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import obs, { changeScene } from './util/obs';
-import { obsData, streamDeckData } from './util/replicants';
+import { assetsVideos, obsData, streamDeckData, videoPlayer } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const config = nodecg().bundleConfig;
@@ -20,6 +22,7 @@ twitchCommercialsDisabled.on('change', (value) => (
   companion.send({ name: 'twitchCommercialsDisabled', value })));
 obsData.on('change', (value) => (
   companion.send({ name: 'obsData', value: { ...value, gameLayoutScreenshot: undefined } })));
+assetsVideos.on('change', (value) => companion.send({ name: 'videos', value }));
 
 // Sending things on connection.
 companion.evt.on('open', (socket) => {
@@ -30,6 +33,7 @@ companion.evt.on('open', (socket) => {
   companion.send({ name: 'twitchCommercialsDisabled', value: twitchCommercialsDisabled.value });
   companion.send({ name: 'obsData', value: { ...obsData.value, gameLayoutScreenshot: undefined } });
   companion.send({ name: 'cfgScenes', value: nodecg().bundleConfig.obs.names.scenes });
+  companion.send({ name: 'videos', value: assetsVideos.value });
 });
 
 // Listening for any actions triggered from Companion.
@@ -107,5 +111,21 @@ companion.evt.on('action', async (name, value) => {
     const val = value as string;
     const scene = (scenes as { [k: string]: string })[val];
     await changeScene({ scene, force: true });
+  // Used to play back a single video in the "Intermission Player" scene,
+  // intended to be used by hosts.
+  } else if (name === 'video_play') {
+    const val = value as string;
+    const video = assetsVideos.value.find((v) => v.sum === val);
+    if (video) {
+      videoPlayer.value.playlist = [
+        {
+          sum: video.sum,
+          length: 0,
+          commercial: false,
+        },
+      ];
+      wait(500); // Safety wait
+      await startPlaylist();
+    }
   }
 });

@@ -1,10 +1,35 @@
+import { CompanionActionDefinition } from '@companion-module/base';
 import type ModuleInstance from './index';
+
+let instance: ModuleInstance;
+
+export const videoPlayAction = (
+  videos: { name: string, sum: string }[],
+): CompanionActionDefinition => ({
+  name: 'Video Play',
+  description: 'Plays the chosen video',
+  options: [
+    {
+      id: 'video',
+      type: 'dropdown',
+      label: 'Video',
+      choices: videos.map(({ name, sum }) => ({ id: sum, label: name })),
+      default: '',
+    },
+  ],
+  callback: (action) => {
+    if (action.options.video) {
+      instance.wsSend({ name: 'video_play', value: action.options.video });
+    }
+  },
+});
 
 /**
  * Called by module instance class when actions should be set up.
  * @param instance Copy of current module instance class
  */
-function initActions(instance: ModuleInstance) {
+export function initActions(instance_: ModuleInstance) {
+  instance = instance_;
   instance.setActionDefinitions({
     // Blank action that can be attached if connection status is needed but nothing else.
     // There may be another way of doing this, just not found it yet?
@@ -91,6 +116,6 @@ function initActions(instance: ModuleInstance) {
         }
       },
     },
+    video_play: videoPlayAction([]),
   });
 }
-export default initActions;

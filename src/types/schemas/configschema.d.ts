@@ -134,6 +134,10 @@ export interface Configschema {
 	therungg: {
 		enabled: boolean;
 	};
+	tiltify: {
+		errorDiscordWebhook?: string;
+		errorDiscordWebhookUserIdToPing?: string;
+	};
 }
 export interface BidwarBias {
 	bidId: number;

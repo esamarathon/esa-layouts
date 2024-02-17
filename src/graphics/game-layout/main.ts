@@ -30,9 +30,14 @@ const routes = [
     component: List.L_SWCF_16x9_4p_Bingo,
   }, */
   {
-    name: '(ESAW24) 1 Player',
-    path: '/1p-esaw24',
-    component: List.L_1p_ESAW24,
+    name: '(ESAW24) 4:3 1 Player',
+    path: '/esaw24-4x3-1p',
+    component: List.L_ESAW24_4x3_1p,
+  },
+  {
+    name: '(ESAW24) 16:9 1 Player',
+    path: '/esaw24-16x9-1p',
+    component: List.L_ESAW24_16x9_1p,
   },
   {
     name: '4:3 1 Player',

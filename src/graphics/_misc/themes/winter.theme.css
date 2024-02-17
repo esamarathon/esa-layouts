@@ -14,5 +14,6 @@
 
 #Omnibar #CharityLogo {
   content: url('./winter/OmnibarCharityLogo.png');
+  height: 58px;
   margin: 0 15px;
 }

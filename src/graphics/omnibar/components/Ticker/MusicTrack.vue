@@ -16,8 +16,8 @@
 <script lang="ts">
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
 import { wait } from '@esa-layouts/graphics/_misc/helpers';
-import { Vue, Component, Prop } from 'vue-property-decorator';
 import { MusicData } from '@esa-layouts/types/schemas';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({
   name: 'MusicTrack',
@@ -36,7 +36,7 @@ export default class extends Vue {
 
   async created(): Promise<void> {
     // Skip display if no track is playing
-    if (!this.trackInformation) {
+    if (!this.trackInformation || !this.musicData.playing) {
       this.$emit('end');
       return;
     }

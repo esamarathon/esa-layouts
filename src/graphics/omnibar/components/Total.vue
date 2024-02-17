@@ -137,7 +137,7 @@
 import { replicantModule } from '@esa-layouts/browser_shared/replicant_store';
 import { formatUSD } from '@esa-layouts/graphics/_misc/helpers';
 import gsap from 'gsap';
-import { Component, Vue, Watch } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class extends Vue {
@@ -147,7 +147,7 @@ export default class extends Vue {
   playingAlerts = false;
   showAlert = false;
   alertText = '$0';
-  alertList: { total: number, amount: number }[] = [];
+  alertList: { total: number, amount: number, showAlert: boolean }[] = [];
 
   get rawTotal(): number {
     return replicantModule.repsTyped.donationTotal;
@@ -165,7 +165,8 @@ export default class extends Vue {
   async playNextAlert(start = false): Promise<void> {
     this.playingAlerts = true;
     if (!start) await new Promise((res) => { setTimeout(res, 500); });
-    if (this.alertList[0].amount > 0) { // Only show alerts for positive values
+    // Only show alerts for positive values and if the alert should be "shown".
+    if (this.alertList[0].amount > 0 && this.alertList[0].showAlert) {
       nodecg.sendMessage('omnibarPlaySound', { amount: this.alertList[0].amount });
       // await this.sfx.play();
       await new Promise((res) => { setTimeout(res, 500); });
@@ -183,17 +184,19 @@ export default class extends Vue {
     else this.playingAlerts = false;
   }
 
-  @Watch('rawTotal')
-  onRawTotalChanged(newVal: number, oldVal: number): void {
-    this.alertList.push({
-      total: newVal,
-      amount: newVal - oldVal,
-    });
-    if (!this.playingAlerts) this.playNextAlert(true);
-  }
-
   async created(): Promise<void> {
     this.total = this.rawTotal;
+    nodecg.listenFor(
+      'donationTotalUpdated',
+      (data: { total: number, diff: number, showAlert: boolean }) => {
+        this.alertList.push({
+          total: data.total,
+          amount: data.diff,
+          showAlert: data.showAlert,
+        });
+        if (!this.playingAlerts) this.playNextAlert(true);
+      },
+    );
   }
 }
 </script>

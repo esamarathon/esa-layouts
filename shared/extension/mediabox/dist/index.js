@@ -24,55 +24,57 @@ var MediaBox = /** @class */ (function () {
             persistent: false,
         });
         this.assetsMediaBoxImages = nodecg.Replicant('assets:media-box-images');
+        // ALL OF THESE DISABLED FOR NOW (ESAW24).
         // Manages received donations/subscriptions/cheers.
-        evt.on('donationFullyProcessed', function (data) {
-            if (data.comment_state === 'APPROVED') {
-                // eslint-disable-next-line no-underscore-dangle
-                _this.nodecg.log.debug('[Media Box] Received new donation with ID %s', data._id);
-                _this.mediaBox.value.alertQueue.push({
-                    type: 'donation',
-                    id: (0, uuid_1.v4)(),
-                    data: {
-                        name: data.donor_visiblename.replace('(Anonymous)', 'Anonymous'),
-                        amount: data.amount,
-                        comment: data.comment || undefined,
-                    },
-                });
-            }
-        });
-        evt.on('newScreenedSub', function (data) {
-            _this.nodecg.log.debug('[Media Box] Received new subscription');
-            _this.mediaBox.value.alertQueue.push({
-                type: 'subscription',
-                id: (0, uuid_1.v4)(),
-                data: {
-                    systemMsg: data.message.tags['system-msg'].replace(/\\s/g, ' '),
-                    message: data.message.trailing,
-                },
+        /* evt.on('donationFullyProcessed', (data) => {
+          if (data.comment_state === 'APPROVED') {
+            // eslint-disable-next-line no-underscore-dangle
+            this.nodecg.log.debug('[Media Box] Received new donation with ID %s', data._id);
+            this.mediaBox.value.alertQueue.push({
+              type: 'donation',
+              id: uuid(),
+              data: {
+                name: data.donor_visiblename.replace('(Anonymous)', 'Anonymous'),
+                amount: data.amount,
+                comment: data.comment || undefined,
+              },
             });
+          }
         });
-        evt.on('newScreenedCheer', function (data) {
-            _this.nodecg.log.debug('[Media Box] Received new cheer');
-            _this.mediaBox.value.alertQueue.push({
-                type: 'cheer',
-                id: (0, uuid_1.v4)(),
-                data: {
-                    name: data.message.tags['display-name'],
-                    amount: Number(data.message.tags.bits),
-                    message: data.message.trailing,
-                },
-            });
+        evt.on('newScreenedSub', (data) => {
+          this.nodecg.log.debug('[Media Box] Received new subscription');
+          this.mediaBox.value.alertQueue.push({
+            type: 'subscription',
+            id: uuid(),
+            data: {
+              systemMsg: data.message.tags['system-msg'].replace(/\\s/g, ' '),
+              message: data.message.trailing,
+            },
+          });
         });
-        nodecg.listenFor('therunggMessage', function (msg) {
-            _this.nodecg.log.debug('[Media Box] Received new therun.gg message');
-            _this.mediaBox.value.alertQueue.push({
-                type: 'therungg',
-                id: (0, uuid_1.v4)(),
-                data: {
-                    msg: msg,
-                },
-            });
+        evt.on('newScreenedCheer', (data) => {
+          this.nodecg.log.debug('[Media Box] Received new cheer');
+          this.mediaBox.value.alertQueue.push({
+            type: 'cheer',
+            id: uuid(),
+            data: {
+              name: data.message.tags['display-name'],
+              amount: Number(data.message.tags.bits),
+              message: data.message.trailing,
+            },
+          });
         });
+    
+        nodecg.listenFor('therunggMessage', (msg: string) => {
+          this.nodecg.log.debug('[Media Box] Received new therun.gg message');
+          this.mediaBox.value.alertQueue.push({
+            type: 'therungg',
+            id: uuid(),
+            data: {
+              msg,
+            },
+          });
+        }); */
         this.update();
         setInterval(function () { return _this.update(); }, 1000);
     }

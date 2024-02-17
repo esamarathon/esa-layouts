@@ -44,8 +44,9 @@ class MediaBox {
       'assets:media-box-images',
     ) as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<NodeCGTypes.AssetFile[]>;
 
+    // ALL OF THESE DISABLED FOR NOW (ESAW24).
     // Manages received donations/subscriptions/cheers.
-    evt.on('donationFullyProcessed', (data) => {
+    /* evt.on('donationFullyProcessed', (data) => {
       if (data.comment_state === 'APPROVED') {
         // eslint-disable-next-line no-underscore-dangle
         this.nodecg.log.debug('[Media Box] Received new donation with ID %s', data._id);
@@ -93,7 +94,7 @@ class MediaBox {
           msg,
         },
       });
-    });
+    }); */
 
     this.update();
     setInterval(() => this.update(), 1000);

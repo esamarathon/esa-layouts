@@ -349,7 +349,7 @@ rabbitmq_1.mq.evt.on('donationFullyProcessed', (data) => {
 });
 // Pushes our "mini credits" to the alert queue.
 speedcontrol_1.sc.on('timerStopped', () => {
-    var _a, _b, _c, _d, _e, _f;
+    var _a, _b;
     if (config.event.shorts === 'swcf')
         return;
     (0, nodecg_1.get)().log.debug('[Omnibar] Timer stopped, generating mini credits');
@@ -377,10 +377,10 @@ speedcontrol_1.sc.on('timerStopped', () => {
             return prev;
         }, [])
         : undefined;
-    const comms = replicants_1.commentators.value.length // Regex removes pronouns
-        ? replicants_1.commentators.value.map((c) => c.replace(/\((.*?)\)/g, '').trim())
+    const comms = replicants_1.commentatorsNew.value.length
+        ? replicants_1.commentatorsNew.value.map((c) => c.name)
         : undefined;
-    const reader = (_b = replicants_1.donationReader.value) === null || _b === void 0 ? void 0 : _b.replace(/\((.*?)\)/g, '').trim(); // Regex removes pronouns
+    const reader = (_b = replicants_1.donationReaderNew.value) === null || _b === void 0 ? void 0 : _b.name;
     const donators = runDonations.length
         ? (0, lodash_1.orderBy)(// Groups donation totals amounts by name and sorts descending.
         Object.entries(runDonations.reduce((prev, curr) => {
@@ -421,20 +421,21 @@ speedcontrol_1.sc.on('timerStopped', () => {
             return obj;
         }, {})).filter(([, v]) => v > 0), ([, v]) => v, 'desc')
         : undefined;
+    // DISABLED FOR NOW (ESAW24).
     // Push actual data to the queue.
-    replicants_1.omnibar.value.alertQueue.push({
-        type: 'MiniCredits',
-        id: (0, uuid_1.v4)(),
-        data: {
-            seconds: 25,
-            players,
-            comms,
-            reader,
-            screeners: (_d = (_c = config.omnibar) === null || _c === void 0 ? void 0 : _c.miniCredits) === null || _d === void 0 ? void 0 : _d.screeners,
-            tech: (_f = (_e = config.omnibar) === null || _e === void 0 ? void 0 : _e.miniCredits) === null || _f === void 0 ? void 0 : _f.tech,
-            donators,
-            subscribers,
-            cheers,
-        },
-    });
+    /* omnibar.value.alertQueue.push({
+      type: 'MiniCredits',
+      id: uuid(),
+      data: {
+        seconds: 25,
+        players,
+        comms,
+        reader,
+        screeners: config.omnibar?.miniCredits?.screeners,
+        tech: config.omnibar?.miniCredits?.tech,
+        donators,
+        subscribers,
+        cheers,
+      },
+    }); */
 });

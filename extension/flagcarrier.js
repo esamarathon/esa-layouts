@@ -150,10 +150,15 @@ async function onBigButtonTagScanned(data) {
         }
         // We show a "success" message to users even if the tag was already scanned, for simplicity.
         scanState = 'success_comm';
-        if (!replicants_1.commentators.value.includes(str)) {
-            replicants_1.commentators.value.push(str);
-            (0, nodecg_1.get)().log.debug('[FlagCarrier] Commentator successfully scanned in (ButtonID: %s, Name: %s)', data.flagcarrier.id, data.user.displayName);
-        }
+        // TODO: RE-ENABLE!
+        /* if (!commentators.value.includes(str)) {
+          commentators.value.push(str);
+          nodecg().log.debug(
+            '[FlagCarrier] Commentator successfully scanned in (ButtonID: %s, Name: %s)',
+            data.flagcarrier.id,
+            data.user.displayName,
+          );
+        } */
     }
     (0, nodecg_1.get)().sendMessage('bigbuttonTagScanned', {
         state: scanState,
@@ -243,7 +248,7 @@ function setup() {
                 else
                     str = data.user.displayName;
                 // donationReader.value = await searchSrcomPronouns(str);
-                replicants_1.donationReader.value = str;
+                // donationReader.value = str; // TODO: RE-ENABLE!
                 (0, nodecg_1.get)().log.info('[FlagCarrier] Donation reader was updated (Name: %s, DeviceID: %s)', str, device);
                 return res.send('You\'ve been logged in.');
             }

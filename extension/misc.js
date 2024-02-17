@@ -146,22 +146,34 @@ exports.searchSrcomPronouns = searchSrcomPronouns;
             catch (err) {
                 // catch
             }
-            let str = '';
             if (user) {
-                str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+                // TODO: ALLOW PRONOUNS TO BE OVERRIDDEN!
+                // TODO: Stop someone adding the same person twice.
+                // Fix some flags which use a different format (mostly GB).
+                let { country } = user;
+                if (country && country.includes('-'))
+                    country = country.replace('-', '/');
+                replicants_1.commentatorsNew.value.push({
+                    name: user.name,
+                    country: user.country || undefined,
+                    pronouns: user.pronouns || undefined,
+                });
+                // Old way for backwards compatibility.
+                replicants_1.commentators.value.push(user.pronouns ? `${user.name} (${user.pronouns})` : user.name);
             }
             else {
-                str = val;
-            }
-            if (str && !replicants_1.commentators.value.includes(str)) {
-                replicants_1.commentators.value.push(str);
+                // TODO: user not found, process string as is!
+                // str = val;
+                // Old way for backwards compatibility.
+                // commentators.value.push(val);
             }
         }
         else {
-            const str = await searchSrcomPronouns(val);
-            if (!replicants_1.commentators.value.includes(str)) {
-                replicants_1.commentators.value.push(str);
-            }
+            // TODO: IMPLEMENT WITH NEW CHANGES!
+            /* const str = await searchSrcomPronouns(val);
+            if (!commentators.value.includes(str)) {
+              commentators.value.push(str);
+            } */
         }
     }
     if (ack && !ack.handled) {
@@ -169,6 +181,7 @@ exports.searchSrcomPronouns = searchSrcomPronouns;
     }
 });
 (0, nodecg_1.get)().listenFor('commentatorRemove', (val, ack) => {
+    replicants_1.commentatorsNew.value.splice(val, 1);
     replicants_1.commentators.value.splice(val, 1);
     if (ack && !ack.handled) {
         ack(null);
@@ -177,6 +190,7 @@ exports.searchSrcomPronouns = searchSrcomPronouns;
 // Processes modifying the reader from the dasboard panel.
 (0, nodecg_1.get)().listenFor('readerModify', async (val, ack) => {
     if (!val) {
+        replicants_1.donationReaderNew.value = null;
         replicants_1.donationReader.value = null;
     }
     else if (config.server.enabled) {
@@ -187,17 +201,30 @@ exports.searchSrcomPronouns = searchSrcomPronouns;
         catch (err) {
             // catch
         }
-        let str = '';
         if (user) {
-            str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
+            // TODO: ALLOW PRONOUNS TO BE OVERRIDDEN!
+            // Fix some flags which use a different format (mostly GB).
+            let { country } = user;
+            if (country && country.includes('-'))
+                country = country.replace('-', '/');
+            replicants_1.donationReaderNew.value = {
+                name: user.name,
+                country: user.country || undefined,
+                pronouns: user.pronouns || undefined,
+            };
+            // Old way for backwards compatibility.
+            replicants_1.donationReader.value = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
         }
         else {
-            str = val;
+            // TODO: user not found, process string as is!
+            // str = val;
+            // Old way for backwards compatibility.
+            // donationReader.value = val;
         }
-        replicants_1.donationReader.value = str;
     }
     else {
-        replicants_1.donationReader.value = await searchSrcomPronouns(val);
+        // TODO: IMPLEMENT WITH NEW CHANGES!
+        // donationReader.value = await searchSrcomPronouns(val);
     }
     if (ack && !ack.handled) {
         ack(null);

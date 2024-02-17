@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCookies = exports.eventInfo = void 0;
-const clone_1 = __importDefault(require("clone"));
 const needle_1 = __importDefault(require("needle"));
 const nodecg_1 = require("../util/nodecg");
 const rabbitmq_1 = require("../util/rabbitmq");
@@ -57,10 +56,12 @@ async function updateDonationTotalFromAPI(init = false) {
     }
 }
 // Triggered when a donation total is updated in our tracker.
+// THIS WORKS EVEN IF TRACKER CONFIG IS DISABLED! WHICH IS GOOD FOR TILTIFY!
 rabbitmq_1.mq.evt.on('donationTotalUpdated', (data) => {
     let total = 0;
     for (const event of exports.eventInfo) {
-        if (data.event === event.short) {
+        // HARDCODED FOR NOW!
+        if (data.event === 'esaw2024') {
             event.total = data.new_total;
         }
         total += event.total;
@@ -70,18 +71,19 @@ rabbitmq_1.mq.evt.on('donationTotalUpdated', (data) => {
         replicants_1.donationTotal.value = total;
     }
 });
+// DISABLED FOR NOW (ESAW24)
 // Triggered when a new donation is fully processed on the tracker.
-rabbitmq_1.mq.evt.on('donationFullyProcessed', (data) => {
-    if (data.comment_state === 'APPROVED') {
-        // eslint-disable-next-line no-underscore-dangle
-        (0, nodecg_1.get)().log.debug('[Tracker] Received new donation with ID %s', data._id);
-        (0, nodecg_1.get)().sendMessage('newDonation', data);
-        if (data.amount >= 20) { // Notable donations are over $20
-            replicants_1.notableDonations.value.unshift((0, clone_1.default)(data));
-            replicants_1.notableDonations.value.length = Math.min(replicants_1.notableDonations.value.length, 20);
-        }
+/* mq.evt.on('donationFullyProcessed', (data) => {
+  if (data.comment_state === 'APPROVED') {
+    // eslint-disable-next-line no-underscore-dangle
+    nodecg().log.debug('[Tracker] Received new donation with ID %s', data._id);
+    nodecg().sendMessage('newDonation', data);
+    if (data.amount >= 20) { // Notable donations are over $20
+      notableDonations.value.unshift(clone(data));
+      notableDonations.value.length = Math.min(notableDonations.value.length, 20);
     }
-});
+  }
+}); */
 let isFirstLogin = true;
 async function loginToTracker() {
     if (isFirstLogin)

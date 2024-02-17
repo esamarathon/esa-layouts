@@ -99,8 +99,12 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
   if (newVal && layoutInit) {
     // If there's no old run or we changed to a different run, try to automatically set the layout.
     if (!oldVal || newVal.id !== oldVal.id) {
-      const layout = gameLayouts.value.available
-        .find((l) => l.code.toLowerCase() === newVal.customData.layout?.toLowerCase());
+      // Overwrite code with new ESAW24 layout if 1 player.
+      let code = (newVal.customData.layout as string | undefined)?.toLowerCase();
+      if (code?.endsWith('-1p') && !code.startsWith('ds') && !code.startsWith('3ds')) {
+        code = `esaw24-${code}`;
+      }
+      const layout = gameLayouts.value.available.find((l) => l.code.toLowerCase() === code);
       gameLayouts.value.selected = layout?.code;
       if (newVal.customData.layout && !layout) {
         nodecg().log.warn(

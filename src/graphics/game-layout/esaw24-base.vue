@@ -5,10 +5,10 @@
       id="GameCapture1"
       class="BorderLeft"
       :style="{
-        left: '796px',
-        top: '0px',
-        width: '1124px',
-        height: '843px',
+        left: left || '796px',
+        top: top || '0px',
+        width: width || '1124px',
+        height: height || '843px',
       }"
     />
 
@@ -117,7 +117,7 @@
 import { CommentatorsNew, DonationReaderNew } from '@esa-layouts/types/schemas';
 import MediaBox from '@shared/graphics/mediabox';
 import { RunDataActiveRun } from 'speedcontrol-util/types';
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import CommentatorsReader from './components/CommentatorsReader.vue';
 import DonationBar from './components/DonationBar.vue';
@@ -140,6 +140,10 @@ import Timer from './components/Timer.vue';
   },
 })
 export default class extends Vue {
+  @Prop({ type: String, required: false }) left!: string | undefined;
+  @Prop({ type: String, required: false }) top!: string | undefined;
+  @Prop({ type: String, required: false }) width!: string | undefined;
+  @Prop({ type: String, required: false }) height!: string | undefined;
   @State('runDataActiveRun') runData!: RunDataActiveRun;
   @State readonly commentatorsNew!: CommentatorsNew;
   @State readonly donationReaderNew!: DonationReaderNew;
@@ -152,3 +156,7 @@ export default class extends Vue {
   }
 }
 </script>
+
+<style>
+  @import url('../_misc/themes/esaw24.theme.css');
+</style>

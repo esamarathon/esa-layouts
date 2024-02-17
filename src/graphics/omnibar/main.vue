@@ -60,6 +60,13 @@ export default class extends Vue {
   /* Used to "fix" the omnibar background colour. */
   body {
     /* Copied from ".bg--darkgrey" */
-    background: var(--colour--darkgrey);
+    background: #191919;
+  }
+
+  #Omnibar {
+    color: white;
+    /* Copied from ".bg--dimmedgradient" */
+    background: linear-gradient(90deg, rgba(115, 78, 158, 0.5) 50%,
+      rgba(208, 152, 70, 0.5) 100%);
   }
 </style>

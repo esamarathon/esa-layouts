@@ -61,10 +61,12 @@ async function updateDonationTotalFromAPI(init = false): Promise<void> {
 }
 
 // Triggered when a donation total is updated in our tracker.
+// THIS WORKS EVEN IF TRACKER CONFIG IS DISABLED! WHICH IS GOOD FOR TILTIFY!
 mq.evt.on('donationTotalUpdated', (data) => {
   let total = 0;
   for (const event of eventInfo) {
-    if (data.event === event.short) {
+    // HARDCODED FOR NOW!
+    if (data.event === 'esaw2024') {
       event.total = data.new_total;
     }
     total += event.total;

@@ -60,16 +60,35 @@ async function updateDonationTotalFromAPI(init = false): Promise<void> {
   }
 }
 
+async function updateDonationTotalFromAPITiltify(init = false): Promise<void> {
+  try {
+    let total = 0;
+    // TODO: REMOVE ESAW24 AND URL HARDCODING!
+    const resp = await needle('get', 'https://app.esamarathon.com/tiltify/campaigns/team/esaw2024');
+    if (resp.statusCode === 200) {
+      const eventTotal = resp.body.total_amount_raised.value
+        ? parseFloat(resp.body.total_amount_raised.value)
+        : 0;
+      // event.total = eventTotal; // I hope this isn't important?
+      total += eventTotal;
+    }
+    if (init || donationTotal.value < total) {
+      nodecg().log.info('[Tracker] API donation total changed: $%s', total);
+      donationTotal.value = total;
+    }
+  } catch (err) {
+    nodecg().log.warn('[Tracker] Error updating donation total from API');
+    nodecg().log.debug('[Tracker] Error updating donation total from API:', err);
+  }
+}
+
 // Triggered when a donation total is updated in our tracker.
 // THIS WORKS EVEN IF TRACKER CONFIG IS DISABLED! WHICH IS GOOD FOR TILTIFY!
 mq.evt.on('donationTotalUpdated', (data) => {
   let total = 0;
-  for (const event of eventInfo) {
-    // HARDCODED FOR NOW!
-    if (data.event === 'esaw2024') {
-      event.total = data.new_total;
-    }
-    total += event.total;
+  // HARDCODED FOR NOW!
+  if (data.event === 'esaw2024') {
+    total += data.new_total;
   }
   if (donationTotal.value < total) {
     nodecg().log.debug('[Tracker] Updated donation total received: $%s', total.toFixed(2));
@@ -195,4 +214,9 @@ async function setup(): Promise<void> {
 
 if (config.enabled) {
   setup();
+} else {
+  // FOR TILTIFY USE!
+  // Get initial total from API and set an interval as a fallback.
+  updateDonationTotalFromAPITiltify(true);
+  setInterval(updateDonationTotalFromAPITiltify, 60 * 1000);
 }

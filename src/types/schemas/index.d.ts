@@ -10,6 +10,8 @@ export * from './capturePositions';
 // @ts-ignore
 export * from './commentators';
 // @ts-ignore
+export * from './commentatorsNew';
+// @ts-ignore
 export * from './countdown';
 // @ts-ignore
 export * from './currentRunDelay';
@@ -19,6 +21,8 @@ export * from './delayedTimer';
 export * from './donationAlerts';
 // @ts-ignore
 export * from './donationReader';
+// @ts-ignore
+export * from './donationReaderNew';
 // @ts-ignore
 export * from './donationsToRead';
 // @ts-ignore

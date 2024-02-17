@@ -8,7 +8,7 @@
         <v-list-item-group>
           <template v-if="commentators.length">
             <v-list-item
-              v-for="(name, i) in commentators"
+              v-for="({ name, country, pronouns }, i) in commentators"
               :key="i"
             >
               <v-list-item-action>
@@ -16,6 +16,12 @@
               </v-list-item-action>
               <v-list-item-content>
                 {{ name }}
+                <template v-if="pronouns">
+                  ({{ pronouns }})
+                </template>
+                <template v-if="country">
+                  ({{ country }})
+                </template>
               </v-list-item-content>
             </v-list-item>
           </template>
@@ -59,7 +65,7 @@
 
 <script lang="ts">
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
-import { Commentators } from '@esa-layouts/types/schemas';
+import { CommentatorsNew } from '@esa-layouts/types/schemas';
 import { Component, Vue } from 'vue-property-decorator';
 import { storeModule } from './store';
 
@@ -67,7 +73,7 @@ import { storeModule } from './store';
 export default class extends Vue {
   nameEntry = '';
   disable = false;
-  @replicantNS.State((s) => s.reps.commentators) readonly commentators!: Commentators;
+  @replicantNS.State((s) => s.reps.commentatorsNew) readonly commentators!: CommentatorsNew;
   clear = storeModule.clearCommentators;
 
   async add(): Promise<void> {

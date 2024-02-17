@@ -48,17 +48,19 @@
           to the bottom (more on bottom than on top) we actually add the elements
           in reverse order -->
           <participant-info
-            v-if="reader"
+            v-if="donationReaderNew"
             type="reader"
-            :name="reader.name"
-            :pronouns="reader.pronouns"
+            :name="donationReaderNew.name"
+            :pronouns="donationReaderNew.pronouns"
+            :country="donationReaderNew.country"
           />
           <participant-info
-            v-for="commentator of comms.slice(0).reverse()"
+            v-for="commentator of commentatorsNew.slice(0).reverse()"
             :key="commentator.name"
             type="commentator"
             :name="commentator.name"
             :pronouns="commentator.pronouns"
+            :country="commentator.country"
           />
           <participant-info
             v-for="player of players.slice(0).reverse()"
@@ -112,7 +114,7 @@
 </template>
 
 <script lang="ts">
-import { Commentators, DonationReader } from '@esa-layouts/types/schemas';
+import { CommentatorsNew, DonationReaderNew } from '@esa-layouts/types/schemas';
 import MediaBox from '@shared/graphics/mediabox';
 import { RunDataActiveRun } from 'speedcontrol-util/types';
 import { Component, Vue } from 'vue-property-decorator';
@@ -139,33 +141,14 @@ import Timer from './components/Timer.vue';
 })
 export default class extends Vue {
   @State('runDataActiveRun') runData!: RunDataActiveRun;
-  @State readonly commentators!: Commentators;
-  @State readonly donationReader!: DonationReader;
+  @State readonly commentatorsNew!: CommentatorsNew;
+  @State readonly donationReaderNew!: DonationReaderNew;
   @State((s) => s.gameLayouts.crowdCamera) readonly crowdCam!: boolean;
   online = nodecg.bundleConfig.event.online;
 
   get players() {
     if (!this.runData) return [];
     return this.runData.teams.map((t) => t.players).flat(1);
-  }
-
-  // This needs replacing with server data correctly!
-  get comms(): { name: string, pronouns?: string }[] {
-    return this.commentators.map((c) => ({
-      name: c.replace(/\((.*?)\)/g, '').trim(),
-      pronouns: (c.match(/\((.*?)\)/g) || [])[0]?.replace(/[()]/g, ''),
-    }));
-  }
-
-  // This needs replacing with server data correctly!
-  get reader(): { name: string, pronouns?: string } | undefined {
-    if (!this.donationReader) {
-      return undefined;
-    }
-    return {
-      name: this.donationReader.replace(/\((.*?)\)/g, '').trim(),
-      pronouns: (this.donationReader.match(/\((.*?)\)/g) || [])[0]?.replace(/[()]/g, ''),
-    };
   }
 }
 </script>

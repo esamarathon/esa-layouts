@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import { Bids, BigbuttonPlayerMap, CapturePositions, Commentators, Countdown, CurrentRunDelay, DelayedTimer, DonationAlerts, DonationReader, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, IntermissionSlides, MusicData, NameCycle, NotableDonations, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TaskmasterTimestamps, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import { Bids, BigbuttonPlayerMap, CapturePositions, Commentators, CommentatorsNew, Countdown, CurrentRunDelay, DelayedTimer, DonationAlerts, DonationReader, DonationReaderNew, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, IntermissionSlides, MusicData, NameCycle, NotableDonations, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TaskmasterTimestamps, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import type NodeCGTypes from '@nodecg/types';
 import { HoraroImportStatus, OengusImportStatus, TwitchAPIData, TwitchChannelInfo } from 'speedcontrol-util/types/schemas';
 import { get as nodecg } from './nodecg';
@@ -18,11 +18,13 @@ export const bids = nodecg().Replicant<Bids>('bids', { persistent: false }) as u
 export const bigbuttonPlayerMap = nodecg().Replicant<BigbuttonPlayerMap>('bigbuttonPlayerMap') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<BigbuttonPlayerMap>;
 export const capturePositions = nodecg().Replicant<CapturePositions>('capturePositions') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<CapturePositions>;
 export const commentators = nodecg().Replicant<Commentators>('commentators') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<Commentators>;
+export const commentatorsNew = nodecg().Replicant<CommentatorsNew>('commentatorsNew') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<CommentatorsNew>;
 export const countdown = nodecg().Replicant<Countdown>('countdown') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<Countdown>;
 export const currentRunDelay = nodecg().Replicant<CurrentRunDelay>('currentRunDelay') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<CurrentRunDelay>;
 export const delayedTimer = nodecg().Replicant<DelayedTimer>('delayedTimer') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<DelayedTimer>;
 export const donationAlerts = nodecg().Replicant<DonationAlerts>('donationAlerts') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<DonationAlerts>;
 export const donationReader = nodecg().Replicant<DonationReader>('donationReader') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<DonationReader>;
+export const donationReaderNew = nodecg().Replicant<DonationReaderNew>('donationReaderNew') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<DonationReaderNew>;
 export const donationsToRead = nodecg().Replicant<DonationsToRead>('donationsToRead', { persistent: false }) as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<DonationsToRead>;
 export const donationTotal = nodecg().Replicant<DonationTotal>('donationTotal') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<DonationTotal>;
 export const donationTotalMilestones = nodecg().Replicant<DonationTotalMilestones>('donationTotalMilestones') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<DonationTotalMilestones>;

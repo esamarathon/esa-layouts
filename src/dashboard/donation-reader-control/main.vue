@@ -30,19 +30,22 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator';
-import { DonationReader } from '@esa-layouts/types/schemas';
 import { replicantNS } from '@esa-layouts/browser_shared/replicant_store';
+import { DonationReaderNew } from '@esa-layouts/types/schemas';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 
 @Component
 export default class extends Vue {
-  @replicantNS.State((s) => s.reps.donationReader) readonly donationReader!: DonationReader;
+  @replicantNS.State((s) => s.reps.donationReaderNew) readonly donationReader!: DonationReaderNew;
   entry = '';
   disable = false;
 
   @Watch('donationReader', { immediate: true })
-  onDonationReaderChanged(val: DonationReader): void {
-    this.entry = val || '';
+  onDonationReaderChanged(val: DonationReaderNew): void {
+    this.entry = val?.pronouns ? `${val.name} (${val.pronouns})` : (val?.name || '');
+    this.entry = val?.country
+      ? `${this.entry} (${val.country})`
+      : this.entry;
   }
 
   async modify(clear = false): Promise<void> {
@@ -52,7 +55,12 @@ export default class extends Vue {
     } catch (err) {
       // catch
     }
-    this.entry = this.donationReader || '';
+    this.entry = this.donationReader?.pronouns
+      ? `${this.donationReader.name} (${this.donationReader.pronouns})`
+      : (this.donationReader?.name || '');
+    this.entry = this.donationReader?.country
+      ? `${this.entry} (${this.donationReader.country})`
+      : this.entry;
     this.disable = false;
   }
 }

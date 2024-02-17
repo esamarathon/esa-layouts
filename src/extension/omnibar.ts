@@ -8,7 +8,7 @@ import { v4 as uuid } from 'uuid';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
-import { assetsDonationAlertAssets, bids, commentators, donationAlerts, donationReader, donationTotalMilestones, omnibar, prizes } from './util/replicants';
+import { assetsDonationAlertAssets, bids, commentatorsNew, donationAlerts, donationReaderNew, donationTotalMilestones, omnibar, prizes } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const config = nodecg().bundleConfig;
@@ -361,10 +361,10 @@ sc.on('timerStopped', () => {
       return prev;
     }, [])
     : undefined;
-  const comms = commentators.value.length // Regex removes pronouns
-    ? commentators.value.map((c) => c.replace(/\((.*?)\)/g, '').trim())
+  const comms = commentatorsNew.value.length
+    ? commentatorsNew.value.map((c) => c.name)
     : undefined;
-  const reader = donationReader.value?.replace(/\((.*?)\)/g, '').trim(); // Regex removes pronouns
+  const reader = donationReaderNew.value?.name;
   const donators = runDonations.length
     ? orderBy( // Groups donation totals amounts by name and sorts descending.
       Object.entries(runDonations.reduce<{ [k: string]: number }>((prev, curr) => {

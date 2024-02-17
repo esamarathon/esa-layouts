@@ -9,7 +9,7 @@ import { lookupUserByID, lookupUsersByStr } from './server';
 import { logError } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
 import { mq } from './util/rabbitmq';
-import { bigbuttonPlayerMap, commentators, donationReader } from './util/replicants';
+import { bigbuttonPlayerMap, donationReader } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const router = nodecg().Router();
@@ -166,14 +166,15 @@ async function onBigButtonTagScanned(data: FlagCarrier.TagScanned): Promise<void
     }
     // We show a "success" message to users even if the tag was already scanned, for simplicity.
     scanState = 'success_comm';
-    if (!commentators.value.includes(str)) {
+    // TODO: RE-ENABLE!
+    /* if (!commentators.value.includes(str)) {
       commentators.value.push(str);
       nodecg().log.debug(
         '[FlagCarrier] Commentator successfully scanned in (ButtonID: %s, Name: %s)',
         data.flagcarrier.id,
         data.user.displayName,
       );
-    }
+    } */
   }
   nodecg().sendMessage('bigbuttonTagScanned', {
     state: scanState,
@@ -275,7 +276,7 @@ function setup(): void {
         if (user) str = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
         else str = data.user.displayName;
         // donationReader.value = await searchSrcomPronouns(str);
-        donationReader.value = str;
+        // donationReader.value = str; // TODO: RE-ENABLE!
         nodecg().log.info(
           '[FlagCarrier] Donation reader was updated (Name: %s, DeviceID: %s)',
           str,

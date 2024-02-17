@@ -189,7 +189,8 @@ body {
   background-color: rgba(0, 0, 0, 0.85);
 }
 
-#IntermissionPlayer .UpcomingBar .Header {
+#IntermissionPlayer .UpcomingBar .Header,
+#IntermissionHosts .UpcomingBar .Header {
   /* Copied from ".bg--darkpurple" */
   background: var(--colour--darkpurple);
 }

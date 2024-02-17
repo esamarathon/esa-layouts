@@ -1,43 +1,30 @@
-import type NodeCGTypes from '@nodecg/types';
-import clone from 'clone';
+import { ReplicantModule, ReplicantTypes } from '@esa-layouts/browser_shared/replicant_store';
+import { RunData } from 'speedcontrol-util/types';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
+import { Module, Mutation, VuexModule, getModule } from 'vuex-module-decorators';
 
 Vue.use(Vuex);
 
-export interface Users {
-  [k: string]: {
-    [k: string]: {
-      display_name: string; // eslint-disable-line camelcase
-      country_code?: string; // eslint-disable-line camelcase
-    };
-  };
+@Module({ name: 'OurModule' })
+class OurModule extends VuexModule {
+  nextRun: RunData | null = null;
+
+  // Helper getter to return all replicants.
+  get reps(): ReplicantTypes {
+    return this.context.rootState.ReplicantModule.reps;
+  }
+
+  @Mutation
+  setNextRun(run: RunData): void {
+    Vue.set(this, 'nextRun', run);
+  }
 }
 
-// Replicants and their types
-const reps: {
-  users: NodeCGTypes.ClientReplicant<Users>;
-  [k: string]: NodeCGTypes.ClientReplicant<unknown>;
-} = {
-  users: nodecg.Replicant('users', 'speedcontrol-flagcarrier'),
-};
-
-const store = new Vuex.Store({
+const store = new Store({
+  strict: process.env.NODE_ENV !== 'production',
   state: {},
-  mutations: {
-    setState(state, { name, val }): void {
-      Vue.set(state, name, val);
-    },
-  },
+  modules: { ReplicantModule, OurModule },
 });
-
-Object.keys(reps).forEach((key) => {
-  reps[key].on('change', (val) => {
-    store.commit('setState', { name: key, val: clone(val) });
-  });
-});
-
-export default async (): Promise<Store<Record<string, unknown>>> => {
-  await NodeCG.waitForReplicants(...Object.keys(reps).map((key) => reps[key]));
-  return store;
-};
+export default store;
+export const storeModule = getModule(OurModule, store);

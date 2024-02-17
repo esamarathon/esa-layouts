@@ -125,6 +125,8 @@ nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack)
       }
       if (user) {
         // TODO: ALLOW PRONOUNS TO BE OVERRIDDEN!
+        //       (Technically can be done now as a result won't return,
+        //       but a flag won't be returned).
         // TODO: Stop someone adding the same person twice.
         // Fix some flags which use a different format (mostly GB).
         let { country } = user;
@@ -137,10 +139,13 @@ nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack)
         // Old way for backwards compatibility.
         commentators.value.push(user.pronouns ? `${user.name} (${user.pronouns})` : user.name);
       } else {
-        // TODO: user not found, process string as is!
-        // str = val;
+        // User not found, process string as NAME or NAME (PRONOUNS).
+        commentatorsNew.value.push({
+          name: val.replace(/\((.*?)\)/g, '').trim(),
+          pronouns: (val.match(/\((.*?)\)/g) || [])[0]?.replace(/[()]/g, ''),
+        });
         // Old way for backwards compatibility.
-        // commentators.value.push(val);
+        commentators.value.push(val);
       }
     } else {
       // TODO: IMPLEMENT WITH NEW CHANGES!
@@ -188,10 +193,13 @@ nodecg().listenFor('readerModify', async (val: string | null | undefined, ack) =
       // Old way for backwards compatibility.
       donationReader.value = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
     } else {
-      // TODO: user not found, process string as is!
-      // str = val;
+      // User not found, process string as NAME or NAME (PRONOUNS).
+      donationReaderNew.value = {
+        name: val.replace(/\((.*?)\)/g, '').trim(),
+        pronouns: (val.match(/\((.*?)\)/g) || [])[0]?.replace(/[()]/g, ''),
+      };
       // Old way for backwards compatibility.
-      // donationReader.value = val;
+      donationReader.value = val;
     }
   } else {
     // TODO: IMPLEMENT WITH NEW CHANGES!

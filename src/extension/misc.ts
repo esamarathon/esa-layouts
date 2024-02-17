@@ -156,6 +156,7 @@ nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack)
 });
 
 nodecg().listenFor('commentatorRemove', (val: number, ack) => {
+  commentatorsNew.value.splice(val, 1);
   commentators.value.splice(val, 1);
   if (ack && !ack.handled) {
     ack(null);
@@ -165,6 +166,7 @@ nodecg().listenFor('commentatorRemove', (val: number, ack) => {
 // Processes modifying the reader from the dasboard panel.
 nodecg().listenFor('readerModify', async (val: string | null | undefined, ack) => {
   if (!val) {
+    donationReaderNew.value = null;
     donationReader.value = null;
   } else if (config.server.enabled) {
     let user;

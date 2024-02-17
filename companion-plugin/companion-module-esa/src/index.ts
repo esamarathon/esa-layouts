@@ -1,6 +1,6 @@
 import { InstanceBase, InstanceStatus, SomeCompanionConfigField, runEntrypoint } from '@companion-module/base';
 import { WebSocket } from 'ws';
-import { initActions, videoPlayAction } from './actions';
+import initActions from './actions';
 import { Config, getConfigFields } from './config';
 import { initFeedbacks, obsSceneFeedback, setObsSceneKeys } from './feedbacks';
 import initPresets from './presets';
@@ -157,10 +157,9 @@ class ModuleInstance extends InstanceBase<Config> {
           sum: string;
           // Other unimportant (at the moment) types omitted.
         }[];
-        // Updates the dropdown with the video information.
-        this.setActionDefinitions({
-          video_play: videoPlayAction(videos),
-        });
+        // Updates the dropdown with the video information by re-initialising all actions.
+        // TODO: Is there a better way?
+        initActions(this, videos);
       }
     });
   }

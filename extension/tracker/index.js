@@ -55,16 +55,35 @@ async function updateDonationTotalFromAPI(init = false) {
         (0, nodecg_1.get)().log.debug('[Tracker] Error updating donation total from API:', err);
     }
 }
+async function updateDonationTotalFromAPITiltify(init = false) {
+    try {
+        let total = 0;
+        // TODO: REMOVE ESAW24 AND URL HARDCODING!
+        const resp = await (0, needle_1.default)('get', 'https://app.esamarathon.com/tiltify/campaigns/team/esaw2024');
+        if (resp.statusCode === 200) {
+            const eventTotal = resp.body.total_amount_raised.value
+                ? parseFloat(resp.body.total_amount_raised.value)
+                : 0;
+            // event.total = eventTotal; // I hope this isn't important?
+            total += eventTotal;
+        }
+        if (init || replicants_1.donationTotal.value < total) {
+            (0, nodecg_1.get)().log.info('[Tracker] API donation total changed: $%s', total);
+            replicants_1.donationTotal.value = total;
+        }
+    }
+    catch (err) {
+        (0, nodecg_1.get)().log.warn('[Tracker] Error updating donation total from API');
+        (0, nodecg_1.get)().log.debug('[Tracker] Error updating donation total from API:', err);
+    }
+}
 // Triggered when a donation total is updated in our tracker.
 // THIS WORKS EVEN IF TRACKER CONFIG IS DISABLED! WHICH IS GOOD FOR TILTIFY!
 rabbitmq_1.mq.evt.on('donationTotalUpdated', (data) => {
     let total = 0;
-    for (const event of exports.eventInfo) {
-        // HARDCODED FOR NOW!
-        if (data.event === 'esaw2024') {
-            event.total = data.new_total;
-        }
-        total += event.total;
+    // HARDCODED FOR NOW!
+    if (data.event === 'esaw2024') {
+        total += data.new_total;
     }
     if (replicants_1.donationTotal.value < total) {
         (0, nodecg_1.get)().log.debug('[Tracker] Updated donation total received: $%s', total.toFixed(2));
@@ -179,4 +198,10 @@ async function setup() {
 }
 if (config.enabled) {
     setup();
+}
+else {
+    // FOR TILTIFY USE!
+    // Get initial total from API and set an interval as a fallback.
+    updateDonationTotalFromAPITiltify(true);
+    setInterval(updateDonationTotalFromAPITiltify, 60 * 1000);
 }

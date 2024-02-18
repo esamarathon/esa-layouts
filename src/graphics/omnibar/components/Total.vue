@@ -164,10 +164,16 @@ export default class extends Vue {
   }
 
   async playNextAlert(start = false): Promise<void> {
+    nodecg.sendMessage('donationAlertsLogging', `playNextAlert called (start: ${start})`);
+    clearTimeout(this.donationTotalTimeout); // Clearing here for safety
     this.playingAlerts = true;
     if (!start) await new Promise((res) => { setTimeout(res, 500); });
     // Only show alerts for positive values and if the alert should be "shown".
     const { amount, total, showAlert } = this.alertList[0];
+    nodecg.sendMessage(
+      'donationAlertsLogging',
+      `alert - amount: ${amount}, total: ${total}, showAlert: ${showAlert}`,
+    );
     if (amount && amount > 0 && showAlert) {
       nodecg.sendMessage('omnibarPlaySound', { amount });
       // await this.sfx.play();
@@ -175,8 +181,10 @@ export default class extends Vue {
       this.showAlert = true;
       this.alertText = formatUSD(amount);
     }
+    const totalToAnimateTo = total ?? (this.total + (amount ?? 0));
+    nodecg.sendMessage('donationAlertsLogging', `decided we should animate to ${totalToAnimateTo}`);
     gsap.to(this, {
-      total: total ?? (this.total + (amount ?? 0)),
+      total: totalToAnimateTo,
       duration: 5,
     });
     await new Promise((res) => { setTimeout(res, 6000); });
@@ -186,11 +194,19 @@ export default class extends Vue {
     // Checks the currently set total against the raw replicant total.
     // If they don't line up, just queue up another "alert" to adjust it.
     else if (this.total !== this.rawTotal) {
+      nodecg.sendMessage(
+        'donationAlertsLogging',
+        'totals do not match at end of queue, pushing another total alert '
+          + `(was ${this.total}, should be ${this.rawTotal})`,
+      );
+      clearTimeout(this.donationTotalTimeout); // Clearing here for safety
       this.alertList.push({
         total: this.rawTotal,
         showAlert: false,
       });
+      this.playNextAlert();
     } else {
+      nodecg.sendMessage('donationAlertsLogging', 'queue ended');
       this.playingAlerts = false;
     }
   }
@@ -200,15 +216,22 @@ export default class extends Vue {
     nodecg.listenFor('donationTotalUpdated', (data: { total: number }) => {
       // If after 10s this hasn't been cleared by a new donation, update the total with it.
       this.donationTotalTimeout = window.setTimeout(() => {
+        nodecg.sendMessage('donationAlertsLogging', 'donationTotalTimeout triggered');
         // Double check if the total really needs updating.
-        if (data.total !== this.total) {
+        // Also, only queue if alerts are not already
+        // (the play system will check the final total at the end anyway).
+        if (!this.playingAlerts && data.total !== this.total) {
+          nodecg.sendMessage(
+            'donationAlertsLogging',
+            'donationTotalTimeout decided we should push a new total as an alert',
+          );
           this.alertList.push({
             total: data.total,
             showAlert: false,
           });
+          if (!this.playingAlerts) this.playNextAlert(true);
         }
       }, 10 * 1000);
-      if (!this.playingAlerts) this.playNextAlert(true);
     });
     nodecg.listenFor('newDonation', (data: { amount: number }) => {
       clearTimeout(this.donationTotalTimeout);

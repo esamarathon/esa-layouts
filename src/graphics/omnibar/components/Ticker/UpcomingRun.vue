@@ -47,7 +47,8 @@ export default class extends Vue {
   getRunTotalPlayers = SpeedcontrolUtilBrowser.getRunTotalPlayers;
 
   get when(): string {
-    return this.run.scheduledS
+    // Show relative time string if possible and run is actually in the future.
+    return this.run.scheduledS && this.run.scheduledS > (Date.now() / 1000)
       ? `in about ${dayjs.utc().to(dayjs.unix(this.run.scheduledS), true)}`
       : 'soon';
   }

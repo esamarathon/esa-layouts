@@ -158,7 +158,7 @@ exports.searchSrcomPronouns = searchSrcomPronouns;
                     country = country.replace('-', '/');
                 replicants_1.commentatorsNew.value.push({
                     name: user.name,
-                    country: user.country || undefined,
+                    country: country || undefined,
                     pronouns: user.pronouns || undefined,
                 });
                 // Old way for backwards compatibility.
@@ -216,7 +216,7 @@ exports.searchSrcomPronouns = searchSrcomPronouns;
                 country = country.replace('-', '/');
             replicants_1.donationReaderNew.value = {
                 name: user.name,
-                country: user.country || undefined,
+                country: country || undefined,
                 pronouns: user.pronouns || undefined,
             };
             // Old way for backwards compatibility.

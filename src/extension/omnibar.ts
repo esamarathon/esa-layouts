@@ -325,10 +325,11 @@ mq.evt.on('newScreenedCheer', (data) => {
   const overriddenTypes = data as unknown as never;
   omnibar.value.miniCredits.runCheers.push(clone(overriddenTypes));
 });
-mq.evt.on('donationFullyProcessed', (data) => {
+// DISABLED FOR NOW (ESAW24).
+/* mq.evt.on('donationFullyProcessed', (data) => {
   const overriddenTypes = data as unknown as never;
   omnibar.value.miniCredits.runDonations.push(clone(overriddenTypes));
-});
+}); */
 
 // Pushes our "mini credits" to the alert queue.
 sc.on('timerStopped', () => {

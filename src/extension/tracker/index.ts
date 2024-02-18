@@ -75,8 +75,7 @@ async function updateDonationTotalFromAPITiltify(init = false): Promise<void> {
       total += eventTotal;
     }
     if (init || donationTotal.value < total) {
-      const diff = total - donationTotal.value;
-      nodecg().sendMessage('donationTotalUpdated', { total, diff, showAlert: false });
+      nodecg().sendMessage('donationTotalUpdated', { total });
       nodecg().log.info('[Tracker] API donation total changed: $%s', total);
       donationTotal.value = total;
       // If we checked the donation total on an interval and it was different, the MQ
@@ -110,23 +109,48 @@ async function updateDonationTotalFromAPITiltify(init = false): Promise<void> {
 // Triggered when a donation total is updated in our tracker.
 // THIS WORKS EVEN IF TRACKER CONFIG IS DISABLED! WHICH IS GOOD FOR TILTIFY!
 mq.evt.on('donationTotalUpdated', (data) => {
-  let total = 0;
   // HARDCODED FOR NOW!
   if (data.event === 'esaw2024') {
     clearInterval(tiltifyApiBackupTimeout);
-    total += data.new_total;
     tiltifyApiBackupTimeout = setTimeout(
       updateDonationTotalFromAPITiltify,
       tiltifyApiBackupLength,
     );
-  }
-  if (donationTotal.value < total) {
-    const diff = total - donationTotal.value;
-    nodecg().sendMessage('donationTotalUpdated', { total, diff, showAlert: true });
-    nodecg().log.debug('[Tracker] Updated donation total received: $%s', total.toFixed(2));
-    donationTotal.value = total;
+    if (donationTotal.value < data.new_total) {
+      nodecg().sendMessage('donationTotalUpdated', { total: data.new_total });
+      nodecg().log.debug(
+        '[Tracker] Updated donation total received: $%s',
+        data.new_total.toFixed(2),
+      );
+      donationTotal.value = data.new_total;
+    }
   }
 });
+
+const seenDonationIds: number[] = [];
+// Fully processed donations for donations targeted towards this stream.
+mq.evt.on('donationFullyProcessedStream', (data) => {
+  // eslint-disable-next-line no-underscore-dangle
+  const id = data._id;
+  if (!seenDonationIds.includes(id)) {
+    seenDonationIds.push(id);
+    nodecg().log.debug('[Tracker] Received new donation with ID %s', id);
+    nodecg().sendMessage('newDonation', { amount: data.amount });
+  }
+});
+// Fully processed donations for donations targeted towards the main campaign.
+// We only listen for this on stream 1.
+if (eventConfig.thisEvent === 1) {
+  mq.evt.on('donationFullyProcessedTeam', (data) => {
+    // eslint-disable-next-line no-underscore-dangle
+    const id = data._id;
+    if (!seenDonationIds.includes(id)) {
+      seenDonationIds.push(id);
+      nodecg().log.debug('[Tracker] Received new donation with ID %s', id);
+      nodecg().sendMessage('newDonation', { amount: data.amount });
+    }
+  });
+}
 
 // DISABLED FOR NOW (ESAW24)
 // Triggered when a new donation is fully processed on the tracker.

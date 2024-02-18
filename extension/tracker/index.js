@@ -136,6 +136,10 @@ if (eventConfig.thisEvent === 1) {
         }
     });
 }
+// Used to log messages from the browser.
+(0, nodecg_1.get)().listenFor('donationAlertsLogging', (msg) => {
+    (0, nodecg_1.get)().log.debug('[Tracker] %s', msg);
+});
 // DISABLED FOR NOW (ESAW24)
 // Triggered when a new donation is fully processed on the tracker.
 /* mq.evt.on('donationFullyProcessed', (data) => {

@@ -55,7 +55,7 @@ sc.runDataActiveRun.on('change', (newVal, oldVal) => {
   || (obs.connected && !obs.isCurrentScene(config.obs.names.scenes.gameLayout)))) {
     // Only trigger these changes if the new run has a scheduled time, which means it was
     // imported from an external schedule. This stops manually added runs (like bonus runs)
-    // Having things erased.
+    // having things erased.
     if (sc.runDataActiveRun.value && newVal && newVal.scheduled) {
       if (config.event.shorts !== 'swcf') commentators.value.length = 0;
       // If not online and flagcarrier is enabled,

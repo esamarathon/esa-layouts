@@ -82,7 +82,8 @@ async function updateDonationTotalFromAPITiltify(init = false) {
                 try {
                     await (0, needle_1.default)('post', webhookUrl, {
                         content: `${userId ? `<@${userId}> ` : ''}There may be an issue with the esa-layouts `
-                            + 'Tiltify integration with RabbitMQ messages!',
+                            + 'Tiltify integration with RabbitMQ messages! '
+                            + `(sent from stream ${(0, nodecg_1.get)().bundleConfig.event.thisEvent})`,
                     });
                     (0, nodecg_1.get)().log.debug('[Tracker] Discord webhook sent');
                 }

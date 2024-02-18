@@ -78,7 +78,7 @@ speedcontrol_1.sc.runDataActiveRun.on('change', (newVal, oldVal) => {
             || (obs_1.default.connected && !obs_1.default.isCurrentScene(config.obs.names.scenes.gameLayout)))) {
         // Only trigger these changes if the new run has a scheduled time, which means it was
         // imported from an external schedule. This stops manually added runs (like bonus runs)
-        // Having things erased.
+        // having things erased.
         if (speedcontrol_1.sc.runDataActiveRun.value && newVal && newVal.scheduled) {
             if (config.event.shorts !== 'swcf')
                 replicants_1.commentators.value.length = 0;

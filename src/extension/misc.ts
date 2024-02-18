@@ -133,7 +133,7 @@ nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack)
         if (country && country.includes('-')) country = country.replace('-', '/');
         commentatorsNew.value.push({
           name: user.name,
-          country: user.country || undefined,
+          country: country || undefined,
           pronouns: user.pronouns || undefined,
         });
         // Old way for backwards compatibility.
@@ -187,7 +187,7 @@ nodecg().listenFor('readerModify', async (val: string | null | undefined, ack) =
       if (country && country.includes('-')) country = country.replace('-', '/');
       donationReaderNew.value = {
         name: user.name,
-        country: user.country || undefined,
+        country: country || undefined,
         pronouns: user.pronouns || undefined,
       };
       // Old way for backwards compatibility.

@@ -343,10 +343,11 @@ rabbitmq_1.mq.evt.on('newScreenedCheer', (data) => {
     const overriddenTypes = data;
     replicants_1.omnibar.value.miniCredits.runCheers.push((0, clone_1.default)(overriddenTypes));
 });
-rabbitmq_1.mq.evt.on('donationFullyProcessed', (data) => {
-    const overriddenTypes = data;
-    replicants_1.omnibar.value.miniCredits.runDonations.push((0, clone_1.default)(overriddenTypes));
-});
+// DISABLED FOR NOW (ESAW24).
+/* mq.evt.on('donationFullyProcessed', (data) => {
+  const overriddenTypes = data as unknown as never;
+  omnibar.value.miniCredits.runDonations.push(clone(overriddenTypes));
+}); */
 // Pushes our "mini credits" to the alert queue.
 speedcontrol_1.sc.on('timerStopped', () => {
     var _a, _b;

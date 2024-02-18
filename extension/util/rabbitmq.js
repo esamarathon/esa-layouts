@@ -22,9 +22,14 @@ exports.mq = new rabbitmq_1.default((0, nodecg_1.get)(), useTestData, {
             key: '*.donation_total.updated',
         },
         {
-            name: 'donationFullyProcessed',
+            name: 'donationFullyProcessedStream',
             exchange: 'tracker',
             key: `${event}.donation.*.fully_processed`,
+        },
+        {
+            name: 'donationFullyProcessedTeam',
+            exchange: 'tracker',
+            key: 'esaw2024.donation.*.fully_processed', // HARDCODED! (ESAW24)
         },
         {
             name: 'newScreenedTweet',

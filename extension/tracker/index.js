@@ -70,8 +70,7 @@ async function updateDonationTotalFromAPITiltify(init = false) {
             total += eventTotal;
         }
         if (init || replicants_1.donationTotal.value < total) {
-            const diff = total - replicants_1.donationTotal.value;
-            (0, nodecg_1.get)().sendMessage('donationTotalUpdated', { total, diff, showAlert: false });
+            (0, nodecg_1.get)().sendMessage('donationTotalUpdated', { total });
             (0, nodecg_1.get)().log.info('[Tracker] API donation total changed: $%s', total);
             replicants_1.donationTotal.value = total;
             // If we checked the donation total on an interval and it was different, the MQ
@@ -102,20 +101,41 @@ async function updateDonationTotalFromAPITiltify(init = false) {
 // Triggered when a donation total is updated in our tracker.
 // THIS WORKS EVEN IF TRACKER CONFIG IS DISABLED! WHICH IS GOOD FOR TILTIFY!
 rabbitmq_1.mq.evt.on('donationTotalUpdated', (data) => {
-    let total = 0;
     // HARDCODED FOR NOW!
     if (data.event === 'esaw2024') {
         clearInterval(tiltifyApiBackupTimeout);
-        total += data.new_total;
         tiltifyApiBackupTimeout = setTimeout(updateDonationTotalFromAPITiltify, tiltifyApiBackupLength);
-    }
-    if (replicants_1.donationTotal.value < total) {
-        const diff = total - replicants_1.donationTotal.value;
-        (0, nodecg_1.get)().sendMessage('donationTotalUpdated', { total, diff, showAlert: true });
-        (0, nodecg_1.get)().log.debug('[Tracker] Updated donation total received: $%s', total.toFixed(2));
-        replicants_1.donationTotal.value = total;
+        if (replicants_1.donationTotal.value < data.new_total) {
+            (0, nodecg_1.get)().sendMessage('donationTotalUpdated', { total: data.new_total });
+            (0, nodecg_1.get)().log.debug('[Tracker] Updated donation total received: $%s', data.new_total.toFixed(2));
+            replicants_1.donationTotal.value = data.new_total;
+        }
     }
 });
+const seenDonationIds = [];
+// Fully processed donations for donations targeted towards this stream.
+rabbitmq_1.mq.evt.on('donationFullyProcessedStream', (data) => {
+    // eslint-disable-next-line no-underscore-dangle
+    const id = data._id;
+    if (!seenDonationIds.includes(id)) {
+        seenDonationIds.push(id);
+        (0, nodecg_1.get)().log.debug('[Tracker] Received new donation with ID %s', id);
+        (0, nodecg_1.get)().sendMessage('newDonation', { amount: data.amount });
+    }
+});
+// Fully processed donations for donations targeted towards the main campaign.
+// We only listen for this on stream 1.
+if (eventConfig.thisEvent === 1) {
+    rabbitmq_1.mq.evt.on('donationFullyProcessedTeam', (data) => {
+        // eslint-disable-next-line no-underscore-dangle
+        const id = data._id;
+        if (!seenDonationIds.includes(id)) {
+            seenDonationIds.push(id);
+            (0, nodecg_1.get)().log.debug('[Tracker] Received new donation with ID %s', id);
+            (0, nodecg_1.get)().sendMessage('newDonation', { amount: data.amount });
+        }
+    });
+}
 // DISABLED FOR NOW (ESAW24)
 // Triggered when a new donation is fully processed on the tracker.
 /* mq.evt.on('donationFullyProcessed', (data) => {

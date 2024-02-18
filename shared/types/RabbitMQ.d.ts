@@ -31,7 +31,8 @@ export namespace RabbitMQ {
 
   interface Events extends EventEmitter {
     on(event: 'donationTotalUpdated', listener: (data: types.Tracker.EventDonationTotalUpdated) => void): this;
-    on(event: 'donationFullyProcessed', listener: (data: types.Tracker.DonationFullyProcessed) => void): this;
+    on(event: 'donationFullyProcessedStream', listener: (data: types.Tracker.DonationFullyProcessed) => void): this;
+    on(event: 'donationFullyProcessedTeam', listener: (data: types.Tracker.DonationFullyProcessed) => void): this;
     on(event: 'newScreenedTweet', listener: (data: types.OmnibarModeration.NewScreenedTweet) => void): this;
     on(event: 'newScreenedSub', listener: (data: types.OmnibarModeration.NewScreenedSub) => void): this;
     on(event: 'newScreenedCheer', listener: (data: types.OmnibarModeration.NewScreenedCheer) => void): this;

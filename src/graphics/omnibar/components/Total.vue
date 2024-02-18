@@ -147,7 +147,8 @@ export default class extends Vue {
   playingAlerts = false;
   showAlert = false;
   alertText = '$0';
-  alertList: { total: number, amount: number, showAlert: boolean }[] = [];
+  alertList: { total?: number, amount?: number, showAlert: boolean }[] = [];
+  donationTotalTimeout: number | undefined;
 
   get rawTotal(): number {
     return replicantModule.repsTyped.donationTotal;
@@ -166,37 +167,57 @@ export default class extends Vue {
     this.playingAlerts = true;
     if (!start) await new Promise((res) => { setTimeout(res, 500); });
     // Only show alerts for positive values and if the alert should be "shown".
-    if (this.alertList[0].amount > 0 && this.alertList[0].showAlert) {
-      nodecg.sendMessage('omnibarPlaySound', { amount: this.alertList[0].amount });
+    const { amount, total, showAlert } = this.alertList[0];
+    if (amount && amount > 0 && showAlert) {
+      nodecg.sendMessage('omnibarPlaySound', { amount });
       // await this.sfx.play();
       await new Promise((res) => { setTimeout(res, 500); });
       this.showAlert = true;
-      this.alertText = formatUSD(this.alertList[0].amount);
+      this.alertText = formatUSD(amount);
     }
     gsap.to(this, {
-      total: this.alertList[0].total,
+      total: total ?? (this.total + (amount ?? 0)),
       duration: 5,
     });
     await new Promise((res) => { setTimeout(res, 6000); });
     this.alertList.shift();
     this.showAlert = false;
     if (this.alertList.length) this.playNextAlert();
-    else this.playingAlerts = false;
+    // Checks the currently set total against the raw replicant total.
+    // If they don't line up, just queue up another "alert" to adjust it.
+    else if (this.total !== this.rawTotal) {
+      this.alertList.push({
+        total: this.rawTotal,
+        showAlert: false,
+      });
+    } else {
+      this.playingAlerts = false;
+    }
   }
 
   async created(): Promise<void> {
     this.total = this.rawTotal;
-    nodecg.listenFor(
-      'donationTotalUpdated',
-      (data: { total: number, diff: number, showAlert: boolean }) => {
-        this.alertList.push({
-          total: data.total,
-          amount: data.diff,
-          showAlert: data.showAlert,
-        });
-        if (!this.playingAlerts) this.playNextAlert(true);
-      },
-    );
+    nodecg.listenFor('donationTotalUpdated', (data: { total: number }) => {
+      // If after 10s this hasn't been cleared by a new donation, update the total with it.
+      this.donationTotalTimeout = window.setTimeout(() => {
+        // Double check if the total really needs updating.
+        if (data.total !== this.total) {
+          this.alertList.push({
+            total: data.total,
+            showAlert: false,
+          });
+        }
+      }, 10 * 1000);
+      if (!this.playingAlerts) this.playNextAlert(true);
+    });
+    nodecg.listenFor('newDonation', (data: { amount: number }) => {
+      clearTimeout(this.donationTotalTimeout);
+      this.alertList.push({
+        amount: data.amount,
+        showAlert: true,
+      });
+      if (!this.playingAlerts) this.playNextAlert(true);
+    });
   }
 }
 </script>

@@ -297,7 +297,7 @@ if (config.tracker.donationTotalInTitle) {
     // Used to change the Twitch title when the donation total updates.
     let donationTotalInit = false;
     replicants_1.donationTotal.on('change', async (val) => {
-        if (donationTotalInit) {
+        if (donationTotalInit && replicants_1.twitchAPIData.value.sync) {
             (0, nodecg_1.get)().log.debug('[Misc] Donation total updated to %s, will attempt to set title', val);
             await changeTwitchMetadata();
         }

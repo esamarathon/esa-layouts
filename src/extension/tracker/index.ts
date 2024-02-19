@@ -1,5 +1,6 @@
 import { Configschema } from '@esa-layouts/types/schemas';
 import type { Tracker } from '@shared/types';
+import { round } from 'lodash';
 import type { NeedleResponse } from 'needle';
 import needle from 'needle';
 import type { DeepWritable } from 'ts-essentials';
@@ -74,7 +75,9 @@ async function updateDonationTotalFromAPITiltify(init = false): Promise<void> {
       // event.total = eventTotal; // I hope this isn't important?
       total += eventTotal;
     }
+    total = round(total, 2);
     if (init || donationTotal.value < total) {
+      const oldTotal = donationTotal.value;
       nodecg().sendMessage('donationTotalUpdated', { total });
       nodecg().log.info('[Tracker] API donation total changed: $%s', total);
       donationTotal.value = total;
@@ -90,6 +93,7 @@ async function updateDonationTotalFromAPITiltify(init = false): Promise<void> {
             {
               content: `${userId ? `<@${userId}> ` : ''}There may be an issue with the esa-layouts `
                 + 'Tiltify integration with RabbitMQ messages! '
+                + `Stored total was ${oldTotal} but API said total was ${total}`
                 + `(sent from stream ${nodecg().bundleConfig.event.thisEvent})`,
             },
           );
@@ -116,13 +120,14 @@ mq.evt.on('donationTotalUpdated', (data) => {
       updateDonationTotalFromAPITiltify,
       tiltifyApiBackupLength,
     );
-    if (donationTotal.value < data.new_total) {
-      nodecg().sendMessage('donationTotalUpdated', { total: data.new_total });
+    const total = round(data.new_total, 2);
+    if (donationTotal.value < total) {
+      nodecg().sendMessage('donationTotalUpdated', { total });
       nodecg().log.debug(
         '[Tracker] Updated donation total received: $%s',
-        data.new_total.toFixed(2),
+        total,
       );
-      donationTotal.value = data.new_total;
+      donationTotal.value = total;
     }
   }
 });

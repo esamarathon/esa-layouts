@@ -4,7 +4,7 @@
   "$comment": "Some of this schema is actually wrong, and was modified due to another application sending incorrect data!",
   "items": {
     "type": "object",
-    "additionalProperties": false,
+    "additionalProperties": true,
     "properties": {
       "event": {
         "type": "string"

@@ -1,5 +1,8 @@
 <template>
-  <layout-base />
+  <layout-base
+    :camera-height="thisEvent === 2 ? `550px` : undefined"
+    :camera-extra-box="thisEvent === 2"
+  />
 </template>
 
 <script lang="ts">
@@ -12,6 +15,6 @@ import LayoutBase from './esaw24-base.vue';
   },
 })
 export default class extends Vue {
-  // code
+  thisEvent = nodecg.bundleConfig.event.thisEvent;
 }
 </script>

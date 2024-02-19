@@ -78,6 +78,17 @@
       </div>
     </div>
 
+    <div
+      v-if="cameraExtraBox"
+      class="Fixed BorderBottom"
+      :style="{
+        top: '550px',
+        left: '0px',
+        width: '533px',
+        height: '230px',
+      }"
+    />
+
     <!-- Run Game Info/Timer -->
     <div
       class="Fixed Flex"
@@ -158,6 +169,7 @@ export default class extends Vue {
   @Prop({ type: String, required: false }) cameraWidth!: string | undefined;
   @Prop({ type: String, required: false }) cameraHeight!: string | undefined;
   @Prop({ type: Boolean, default: true }) cameraBorderBottom!: boolean;
+  @Prop({ type: Boolean, default: false }) cameraExtraBox!: boolean;
   @Prop({ type: String, required: false }) gameInfoMediaBoxTop!: string | undefined;
   @Prop({ type: String, required: false }) gameInfoMediaBoxHeight!: string | undefined;
   @Prop({ type: String, required: false }) donationBarTop!: string | undefined;

@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCookies = exports.eventInfo = void 0;
+const lodash_1 = require("lodash");
 const needle_1 = __importDefault(require("needle"));
 const nodecg_1 = require("../util/nodecg");
 const rabbitmq_1 = require("../util/rabbitmq");
@@ -69,7 +70,9 @@ async function updateDonationTotalFromAPITiltify(init = false) {
             // event.total = eventTotal; // I hope this isn't important?
             total += eventTotal;
         }
+        total = (0, lodash_1.round)(total, 2);
         if (init || replicants_1.donationTotal.value < total) {
+            const oldTotal = replicants_1.donationTotal.value;
             (0, nodecg_1.get)().sendMessage('donationTotalUpdated', { total });
             (0, nodecg_1.get)().log.info('[Tracker] API donation total changed: $%s', total);
             replicants_1.donationTotal.value = total;
@@ -82,6 +85,7 @@ async function updateDonationTotalFromAPITiltify(init = false) {
                     await (0, needle_1.default)('post', webhookUrl, {
                         content: `${userId ? `<@${userId}> ` : ''}There may be an issue with the esa-layouts `
                             + 'Tiltify integration with RabbitMQ messages! '
+                            + `Stored total was ${oldTotal} but API said total was ${total}`
                             + `(sent from stream ${(0, nodecg_1.get)().bundleConfig.event.thisEvent})`,
                     });
                     (0, nodecg_1.get)().log.debug('[Tracker] Discord webhook sent');
@@ -105,10 +109,11 @@ rabbitmq_1.mq.evt.on('donationTotalUpdated', (data) => {
     if (data.event === 'esaw2024') {
         clearInterval(tiltifyApiBackupTimeout);
         tiltifyApiBackupTimeout = setTimeout(updateDonationTotalFromAPITiltify, tiltifyApiBackupLength);
-        if (replicants_1.donationTotal.value < data.new_total) {
-            (0, nodecg_1.get)().sendMessage('donationTotalUpdated', { total: data.new_total });
-            (0, nodecg_1.get)().log.debug('[Tracker] Updated donation total received: $%s', data.new_total.toFixed(2));
-            replicants_1.donationTotal.value = data.new_total;
+        const total = (0, lodash_1.round)(data.new_total, 2);
+        if (replicants_1.donationTotal.value < total) {
+            (0, nodecg_1.get)().sendMessage('donationTotalUpdated', { total });
+            (0, nodecg_1.get)().log.debug('[Tracker] Updated donation total received: $%s', total);
+            replicants_1.donationTotal.value = total;
         }
     }
 });

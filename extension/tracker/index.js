@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCookies = exports.eventInfo = void 0;
-const clone_1 = __importDefault(require("clone"));
 const lodash_1 = require("lodash");
 const needle_1 = __importDefault(require("needle"));
 const nodecg_1 = require("../util/nodecg");
@@ -87,7 +86,8 @@ async function updateDonationTotalFromAPITiltify(init = false) {
                         content: `${userId ? `<@${userId}> ` : ''}There may be an issue with the esa-layouts `
                             + 'Tiltify integration with RabbitMQ messages! '
                             + `Stored total was ${oldTotal} but API said total was ${total}`
-                            + `(sent from stream ${(0, nodecg_1.get)().bundleConfig.event.thisEvent})`,
+                            + ` (sent from stream ${(0, nodecg_1.get)().bundleConfig.event.thisEvent}`
+                            + ` at ${(new Date().toISOString())})`,
                     });
                     (0, nodecg_1.get)().log.debug('[Tracker] Discord webhook sent');
                 }
@@ -128,7 +128,14 @@ rabbitmq_1.mq.evt.on('donationFullyProcessedStream', (data) => {
         (0, nodecg_1.get)().log.debug('[Tracker] Received new donation with ID %s', id);
         (0, nodecg_1.get)().sendMessage('newDonation', { amount: data.amount });
         if (data.amount >= 20) { // Notable donations are over $20
-            replicants_1.notableDonations.value.unshift((0, clone_1.default)(data));
+            replicants_1.notableDonations.value.unshift({
+                event: data.event,
+                // eslint-disable-next-line no-underscore-dangle
+                _id: data._id,
+                donor_visiblename: data.donor_visiblename,
+                amount: data.amount,
+                comment: data.comment,
+            });
             replicants_1.notableDonations.value.length = Math.min(replicants_1.notableDonations.value.length, 20);
         }
     }
@@ -144,7 +151,14 @@ if (eventConfig.thisEvent === 1) {
             (0, nodecg_1.get)().log.debug('[Tracker] Received new donation with ID %s', id);
             (0, nodecg_1.get)().sendMessage('newDonation', { amount: data.amount });
             if (data.amount >= 20) { // Notable donations are over $20
-                replicants_1.notableDonations.value.unshift((0, clone_1.default)(data));
+                replicants_1.notableDonations.value.unshift({
+                    event: data.event,
+                    // eslint-disable-next-line no-underscore-dangle
+                    _id: data._id,
+                    donor_visiblename: data.donor_visiblename,
+                    amount: data.amount,
+                    comment: data.comment,
+                });
                 replicants_1.notableDonations.value.length = Math.min(replicants_1.notableDonations.value.length, 20);
             }
         }

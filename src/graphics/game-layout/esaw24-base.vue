@@ -46,6 +46,7 @@
           'align-items': 'flex-end',
           padding: '25px',
           'padding-bottom': '25px',
+          zoom: participantsZoom || 1,
         }
       ">
         <div
@@ -168,6 +169,7 @@ export default class extends Vue {
   @Prop({ type: String, required: false }) cameraWidth!: string | undefined;
   @Prop({ type: String, required: false }) cameraHeight!: string | undefined;
   @Prop({ type: String, required: false }) participantsHeight!: string | undefined;
+  @Prop({ type: Number, required: false }) participantsZoom!: number | undefined;
   @Prop({ type: Boolean, default: true }) participantsBorderBottom!: boolean;
   @Prop({ type: Boolean, default: false }) cameraExtraBox!: boolean;
   @Prop({ type: String, required: false }) gameInfoMediaBoxTop!: string | undefined;

@@ -15,16 +15,26 @@
     <!-- Camera Captures -->
     <div
       id="CameraCapture1"
-      :class="{
-        Capture: true,
-        Flex: true,
-        BorderBottom: cameraBorderBottom
-      }"
+      class="Capture Flex"
       :style="{
         left: '0px',
         top: '0px',
         width: cameraWidth || '533px',
         height: cameraHeight || '780px',
+      }"
+    />
+
+    <!-- Participants -->
+    <div
+      :class="{
+        Flex: true,
+        BorderBottom: participantsBorderBottom,
+      }"
+      :style="{
+        left: '0px',
+        top: '0px',
+        width: cameraWidth || '533px',
+        height: participantsHeight || '780px',
         'align-items': 'flex-end',
       }"
     >
@@ -77,17 +87,6 @@
         </div>
       </div>
     </div>
-
-    <div
-      v-if="cameraExtraBox"
-      class="Fixed BorderBottom"
-      :style="{
-        top: '550px',
-        left: '0px',
-        width: '533px',
-        height: '230px',
-      }"
-    />
 
     <!-- Run Game Info/Timer -->
     <div
@@ -168,7 +167,8 @@ export default class extends Vue {
   @Prop({ type: String, required: false }) gameHeight!: string | undefined;
   @Prop({ type: String, required: false }) cameraWidth!: string | undefined;
   @Prop({ type: String, required: false }) cameraHeight!: string | undefined;
-  @Prop({ type: Boolean, default: true }) cameraBorderBottom!: boolean;
+  @Prop({ type: String, required: false }) participantsHeight!: string | undefined;
+  @Prop({ type: Boolean, default: true }) participantsBorderBottom!: boolean;
   @Prop({ type: Boolean, default: false }) cameraExtraBox!: boolean;
   @Prop({ type: String, required: false }) gameInfoMediaBoxTop!: string | undefined;
   @Prop({ type: String, required: false }) gameInfoMediaBoxHeight!: string | undefined;

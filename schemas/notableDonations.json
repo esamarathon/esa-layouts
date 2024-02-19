@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
   "type": "array",
+  "$comment": "Some of this schema is actually wrong, and was modified due to another application sending incorrect data!",
   "items": {
     "type": "object",
     "additionalProperties": false,
@@ -21,7 +22,14 @@
         "type": "string"
       },
       "comment": {
-        "type": "string"
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
       },
       "time_received": {
         "type": "string"
@@ -32,9 +40,7 @@
       "_id",
       "donor_visiblename",
       "amount",
-      "comment_state",
-      "comment",
-      "time_received"
+      "comment"
     ]
   },
   "default": []

@@ -1,8 +1,5 @@
 <template>
-  <layout-base
-    top="105px"
-    height="632px"
-  />
+  <layout-base />
 </template>
 
 <script lang="ts">

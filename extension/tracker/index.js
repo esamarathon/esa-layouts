@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCookies = exports.eventInfo = void 0;
+const clone_1 = __importDefault(require("clone"));
 const lodash_1 = require("lodash");
 const needle_1 = __importDefault(require("needle"));
 const nodecg_1 = require("../util/nodecg");
@@ -126,6 +127,10 @@ rabbitmq_1.mq.evt.on('donationFullyProcessedStream', (data) => {
         seenDonationIds.push(id);
         (0, nodecg_1.get)().log.debug('[Tracker] Received new donation with ID %s', id);
         (0, nodecg_1.get)().sendMessage('newDonation', { amount: data.amount });
+        if (data.amount >= 20) { // Notable donations are over $20
+            replicants_1.notableDonations.value.unshift((0, clone_1.default)(data));
+            replicants_1.notableDonations.value.length = Math.min(replicants_1.notableDonations.value.length, 20);
+        }
     }
 });
 // Fully processed donations for donations targeted towards the main campaign.
@@ -138,6 +143,10 @@ if (eventConfig.thisEvent === 1) {
             seenDonationIds.push(id);
             (0, nodecg_1.get)().log.debug('[Tracker] Received new donation with ID %s', id);
             (0, nodecg_1.get)().sendMessage('newDonation', { amount: data.amount });
+            if (data.amount >= 20) { // Notable donations are over $20
+                replicants_1.notableDonations.value.unshift((0, clone_1.default)(data));
+                replicants_1.notableDonations.value.length = Math.min(replicants_1.notableDonations.value.length, 20);
+            }
         }
     });
 }
@@ -145,19 +154,6 @@ if (eventConfig.thisEvent === 1) {
 (0, nodecg_1.get)().listenFor('donationAlertsLogging', (msg) => {
     (0, nodecg_1.get)().log.debug('[Tracker] %s', msg);
 });
-// DISABLED FOR NOW (ESAW24)
-// Triggered when a new donation is fully processed on the tracker.
-/* mq.evt.on('donationFullyProcessed', (data) => {
-  if (data.comment_state === 'APPROVED') {
-    // eslint-disable-next-line no-underscore-dangle
-    nodecg().log.debug('[Tracker] Received new donation with ID %s', data._id);
-    nodecg().sendMessage('newDonation', data);
-    if (data.amount >= 20) { // Notable donations are over $20
-      notableDonations.value.unshift(clone(data));
-      notableDonations.value.length = Math.min(notableDonations.value.length, 20);
-    }
-  }
-}); */
 let isFirstLogin = true;
 async function loginToTracker() {
     if (isFirstLogin)

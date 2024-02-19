@@ -3,24 +3,28 @@
     <!-- Game Captures -->
     <game-capture
       id="GameCapture1"
-      class="BorderLeft"
+      class="BorderLeft BorderBottom"
       :style="{
-        left: left || '796px',
-        top: top || '0px',
-        width: width || '1124px',
-        height: height || '843px',
+        left: gameLeft || '533px',
+        top: '0px',
+        width: gameWidth || '1387px',
+        height: gameHeight || '780px',
       }"
     />
 
     <!-- Camera Captures -->
     <div
       id="CameraCapture1"
-      class="Capture Flex"
+      :class="{
+        Capture: true,
+        Flex: true,
+        BorderBottom: cameraBorderBottom
+      }"
       :style="{
         left: '0px',
         top: '0px',
-        width: '796px',
-        height: '843px',
+        width: cameraWidth || '533px',
+        height: cameraHeight || '780px',
         'align-items': 'flex-end',
       }"
     >
@@ -76,12 +80,12 @@
 
     <!-- Run Game Info/Timer -->
     <div
-      class="Fixed Flex BorderTop"
+      class="Fixed Flex"
       :style="{
         left: '0px',
-        top: '843px',
+        top: gameInfoMediaBoxTop || '780px',
         width: '1346px',
-        height: '157px',
+        height: gameInfoMediaBoxHeight || '160px',
       }"
     >
       <run-info
@@ -101,13 +105,25 @@
 
     <!-- Media Box -->
     <media-box
-      class="BorderLeft BorderTop"
+      class="BorderLeft"
       :font-size="40"
       :style="{
         left: '1346px',
-        top: '843px',
+        top: gameInfoMediaBoxTop || '780px',
         width: '574px',
-        height: '157px',
+        height: gameInfoMediaBoxHeight || '160px',
+      }"
+    />
+
+    <!-- Donation Bar -->
+    <donation-bar
+      :padding="donationBarBoxPadding || 15"
+      :style="{
+        left: '0px',
+        top: donationBarTop || '940px',
+        width: donationBarWidth || '1920px',
+        height: donationBarHeight || '60px',
+        'font-size': donationBarBoxFontSize || '30px',
       }"
     />
   </div>
@@ -120,18 +136,14 @@ import { RunDataActiveRun } from 'speedcontrol-util/types';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import ParticipantInfo from '../_misc/components/ParticipantInfo.vue';
-import CommentatorsReader from './components/CommentatorsReader.vue';
 import DonationBar from './components/DonationBar.vue';
 import GameCapture from './components/GameCapture.vue';
-import Player from './components/Player.vue';
 import RunInfo from './components/RunInfo.vue';
 import Timer from './components/Timer.vue';
 
 @Component({
   components: {
     GameCapture,
-    Player,
-    CommentatorsReader,
     RunInfo,
     Timer,
     MediaBox,
@@ -140,15 +152,22 @@ import Timer from './components/Timer.vue';
   },
 })
 export default class extends Vue {
-  @Prop({ type: String, required: false }) left!: string | undefined;
-  @Prop({ type: String, required: false }) top!: string | undefined;
-  @Prop({ type: String, required: false }) width!: string | undefined;
-  @Prop({ type: String, required: false }) height!: string | undefined;
+  @Prop({ type: String, required: false }) gameLeft!: string | undefined;
+  @Prop({ type: String, required: false }) gameWidth!: string | undefined;
+  @Prop({ type: String, required: false }) gameHeight!: string | undefined;
+  @Prop({ type: String, required: false }) cameraWidth!: string | undefined;
+  @Prop({ type: String, required: false }) cameraHeight!: string | undefined;
+  @Prop({ type: Boolean, default: true }) cameraBorderBottom!: boolean;
+  @Prop({ type: String, required: false }) gameInfoMediaBoxTop!: string | undefined;
+  @Prop({ type: String, required: false }) gameInfoMediaBoxHeight!: string | undefined;
+  @Prop({ type: String, required: false }) donationBarTop!: string | undefined;
+  @Prop({ type: String, required: false }) donationBarWidth!: string | undefined;
+  @Prop({ type: String, required: false }) donationBarHeight!: string | undefined;
+  @Prop({ type: Number, required: false }) donationBarBoxPadding!: number | undefined;
+  @Prop({ type: String, required: false }) donationBarBoxFontSize!: string | undefined;
   @State('runDataActiveRun') runData!: RunDataActiveRun;
   @State readonly commentatorsNew!: CommentatorsNew;
   @State readonly donationReaderNew!: DonationReaderNew;
-  @State((s) => s.gameLayouts.crowdCamera) readonly crowdCam!: boolean;
-  online = nodecg.bundleConfig.event.online;
 
   get players() {
     if (!this.runData) return [];

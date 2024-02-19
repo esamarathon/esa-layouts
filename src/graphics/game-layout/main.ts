@@ -40,6 +40,11 @@ const routes = [
     component: List.L_ESAW24_16x9_1p,
   },
   {
+    name: '(ESAW24) GBA 1 Player',
+    path: '/esaw24-gba-1p',
+    component: List.L_ESAW24_GBA_1p,
+  },
+  {
     name: '4:3 1 Player',
     path: '/4x3-1p',
     component: List.L_4x3_1p,

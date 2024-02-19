@@ -1,6 +1,5 @@
 import { Configschema } from '@esa-layouts/types/schemas';
 import type { Tracker } from '@shared/types';
-import clone from 'clone';
 import { round } from 'lodash';
 import type { NeedleResponse } from 'needle';
 import needle from 'needle';
@@ -95,7 +94,8 @@ async function updateDonationTotalFromAPITiltify(init = false): Promise<void> {
               content: `${userId ? `<@${userId}> ` : ''}There may be an issue with the esa-layouts `
                 + 'Tiltify integration with RabbitMQ messages! '
                 + `Stored total was ${oldTotal} but API said total was ${total}`
-                + `(sent from stream ${nodecg().bundleConfig.event.thisEvent})`,
+                + ` (sent from stream ${nodecg().bundleConfig.event.thisEvent}`
+                + ` at ${(new Date().toISOString())})`,
             },
           );
           nodecg().log.debug('[Tracker] Discord webhook sent');
@@ -143,7 +143,14 @@ mq.evt.on('donationFullyProcessedStream', (data) => {
     nodecg().log.debug('[Tracker] Received new donation with ID %s', id);
     nodecg().sendMessage('newDonation', { amount: data.amount });
     if (data.amount >= 20) { // Notable donations are over $20
-      notableDonations.value.unshift(clone(data));
+      notableDonations.value.unshift({
+        event: data.event,
+        // eslint-disable-next-line no-underscore-dangle
+        _id: data._id,
+        donor_visiblename: data.donor_visiblename,
+        amount: data.amount,
+        comment: data.comment,
+      });
       notableDonations.value.length = Math.min(notableDonations.value.length, 20);
     }
   }
@@ -159,7 +166,14 @@ if (eventConfig.thisEvent === 1) {
       nodecg().log.debug('[Tracker] Received new donation with ID %s', id);
       nodecg().sendMessage('newDonation', { amount: data.amount });
       if (data.amount >= 20) { // Notable donations are over $20
-        notableDonations.value.unshift(clone(data));
+        notableDonations.value.unshift({
+          event: data.event,
+          // eslint-disable-next-line no-underscore-dangle
+          _id: data._id,
+          donor_visiblename: data.donor_visiblename,
+          amount: data.amount,
+          comment: data.comment,
+        });
         notableDonations.value.length = Math.min(notableDonations.value.length, 20);
       }
     }

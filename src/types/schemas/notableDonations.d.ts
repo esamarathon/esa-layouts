@@ -10,7 +10,8 @@ export type NotableDonations = {
 	_id: number;
 	donor_visiblename: string;
 	amount: number;
-	comment_state?: string;
+	comment_state?: string | number;
 	comment: string | null;
 	time_received?: string;
+	[k: string]: unknown;
 }[];

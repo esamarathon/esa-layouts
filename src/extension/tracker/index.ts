@@ -1,12 +1,13 @@
 import { Configschema } from '@esa-layouts/types/schemas';
 import type { Tracker } from '@shared/types';
+import clone from 'clone';
 import { round } from 'lodash';
 import type { NeedleResponse } from 'needle';
 import needle from 'needle';
 import type { DeepWritable } from 'ts-essentials';
 import { get as nodecg } from '../util/nodecg';
 import { mq } from '../util/rabbitmq';
-import { donationTotal } from '../util/replicants';
+import { donationTotal, notableDonations } from '../util/replicants';
 
 export const eventInfo: Tracker.EventInfo[] = [];
 const eventConfig = nodecg().bundleConfig.event;
@@ -141,6 +142,10 @@ mq.evt.on('donationFullyProcessedStream', (data) => {
     seenDonationIds.push(id);
     nodecg().log.debug('[Tracker] Received new donation with ID %s', id);
     nodecg().sendMessage('newDonation', { amount: data.amount });
+    if (data.amount >= 20) { // Notable donations are over $20
+      notableDonations.value.unshift(clone(data));
+      notableDonations.value.length = Math.min(notableDonations.value.length, 20);
+    }
   }
 });
 // Fully processed donations for donations targeted towards the main campaign.
@@ -153,6 +158,10 @@ if (eventConfig.thisEvent === 1) {
       seenDonationIds.push(id);
       nodecg().log.debug('[Tracker] Received new donation with ID %s', id);
       nodecg().sendMessage('newDonation', { amount: data.amount });
+      if (data.amount >= 20) { // Notable donations are over $20
+        notableDonations.value.unshift(clone(data));
+        notableDonations.value.length = Math.min(notableDonations.value.length, 20);
+      }
     }
   });
 }
@@ -161,20 +170,6 @@ if (eventConfig.thisEvent === 1) {
 nodecg().listenFor('donationAlertsLogging', (msg) => {
   nodecg().log.debug('[Tracker] %s', msg);
 });
-
-// DISABLED FOR NOW (ESAW24)
-// Triggered when a new donation is fully processed on the tracker.
-/* mq.evt.on('donationFullyProcessed', (data) => {
-  if (data.comment_state === 'APPROVED') {
-    // eslint-disable-next-line no-underscore-dangle
-    nodecg().log.debug('[Tracker] Received new donation with ID %s', data._id);
-    nodecg().sendMessage('newDonation', data);
-    if (data.amount >= 20) { // Notable donations are over $20
-      notableDonations.value.unshift(clone(data));
-      notableDonations.value.length = Math.min(notableDonations.value.length, 20);
-    }
-  }
-}); */
 
 let isFirstLogin = true;
 async function loginToTracker(): Promise<void> {

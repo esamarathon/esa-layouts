@@ -80,6 +80,7 @@ async function setInitialFaders() {
             const readerScenes = [
                 obs_1.default.findScene(config.obs.names.scenes.commercials),
                 obs_1.default.findScene(config.obs.names.scenes.gameLayout),
+                obs_1.default.findScene(`${config.obs.names.scenes.gameLayout} (custom)`),
                 obs_1.default.findScene(config.obs.names.scenes.intermission),
                 obs_1.default.findScene(config.obs.names.scenes.intermissionCrowd),
                 obs_1.default.findScene(config.obs.names.scenes.readerIntroduction),
@@ -87,6 +88,7 @@ async function setInitialFaders() {
             // These scenes will have the game and players audible.
             const gameScenes = [
                 obs_1.default.findScene(config.obs.names.scenes.gameLayout),
+                obs_1.default.findScene(`${config.obs.names.scenes.gameLayout} (custom)`),
             ].filter(Boolean);
             if (readerScenes.includes(obs_1.default.currentScene || '')) {
                 x32_1.default.setFader('/dca/2/fader', 0.75); // LIVE Readers
@@ -119,6 +121,7 @@ obs_1.default.conn.on('TransitionBegin', async (data) => {
             const readerScenes = [
                 obs_1.default.findScene(config.obs.names.scenes.commercials),
                 obs_1.default.findScene(config.obs.names.scenes.gameLayout),
+                obs_1.default.findScene(`${config.obs.names.scenes.gameLayout} (custom)`),
                 obs_1.default.findScene(config.obs.names.scenes.intermission),
                 obs_1.default.findScene(config.obs.names.scenes.intermissionCrowd),
                 obs_1.default.findScene(config.obs.names.scenes.readerIntroduction),
@@ -126,6 +129,7 @@ obs_1.default.conn.on('TransitionBegin', async (data) => {
             // These scenes will have the game and players audible.
             const gameScenes = [
                 obs_1.default.findScene(config.obs.names.scenes.gameLayout),
+                obs_1.default.findScene(`${config.obs.names.scenes.gameLayout} (custom)`),
             ].filter(Boolean);
             toggleFadeHelper('/dca/1/fader', gameScenes, data, false); // LIVE Runners
             toggleFadeHelper('/dca/2/fader', readerScenes, data, false); // LIVE Readers

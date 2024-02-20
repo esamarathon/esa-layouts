@@ -85,6 +85,7 @@ async function setInitialFaders(): Promise<void> {
       const readerScenes = [
         obs.findScene(config.obs.names.scenes.commercials),
         obs.findScene(config.obs.names.scenes.gameLayout),
+        obs.findScene(`${config.obs.names.scenes.gameLayout} (custom)`),
         obs.findScene(config.obs.names.scenes.intermission),
         obs.findScene(config.obs.names.scenes.intermissionCrowd),
         obs.findScene(config.obs.names.scenes.readerIntroduction),
@@ -92,6 +93,7 @@ async function setInitialFaders(): Promise<void> {
       // These scenes will have the game and players audible.
       const gameScenes = [
         obs.findScene(config.obs.names.scenes.gameLayout),
+        obs.findScene(`${config.obs.names.scenes.gameLayout} (custom)`),
       ].filter(Boolean) as string[];
       if (readerScenes.includes(obs.currentScene || '')) {
         x32.setFader('/dca/2/fader', 0.75); // LIVE Readers
@@ -124,6 +126,7 @@ obs.conn.on('TransitionBegin', async (data) => {
       const readerScenes = [
         obs.findScene(config.obs.names.scenes.commercials),
         obs.findScene(config.obs.names.scenes.gameLayout),
+        obs.findScene(`${config.obs.names.scenes.gameLayout} (custom)`),
         obs.findScene(config.obs.names.scenes.intermission),
         obs.findScene(config.obs.names.scenes.intermissionCrowd),
         obs.findScene(config.obs.names.scenes.readerIntroduction),
@@ -131,6 +134,7 @@ obs.conn.on('TransitionBegin', async (data) => {
       // These scenes will have the game and players audible.
       const gameScenes = [
         obs.findScene(config.obs.names.scenes.gameLayout),
+        obs.findScene(`${config.obs.names.scenes.gameLayout} (custom)`),
       ].filter(Boolean) as string[];
       toggleFadeHelper('/dca/1/fader', gameScenes, data, false); // LIVE Runners
       toggleFadeHelper('/dca/2/fader', readerScenes, data, false); // LIVE Readers

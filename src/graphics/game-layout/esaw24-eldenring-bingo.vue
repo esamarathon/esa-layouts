@@ -11,6 +11,15 @@
         height: '780px',
       }"
     />
+    <game-capture
+      id="GameCapture2"
+      :style="{
+        left: '0px',
+        top: '455px',
+        width: '533px',
+        height: '485px',
+      }"
+    />
 
     <!-- Camera Captures -->
     <div
@@ -90,11 +99,6 @@
         </div>
       </div>
     </div>
-
-    <div
-      class="Fixed Capture"
-      :style="{ left: '0px', top: '455px', width: '533px', height: '485px' }"
-    />
 
     <!-- Run Game Info/Timer -->
     <div

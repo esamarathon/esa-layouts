@@ -6,7 +6,7 @@ import * as mqLogging from './util/mq-logging';
 import { get as nodecg } from './util/nodecg';
 import obs from './util/obs';
 import { mq } from './util/rabbitmq';
-import { bigbuttonPlayerMap, commentators, commentatorsNew, donationReader, donationReaderNew, donationTotal, horaroImportStatus, oengusImportStatus, otherStreamData, serverTimestamp, twitchAPIData, twitchChannelInfo, upcomingRunID } from './util/replicants';
+import { additionalDonations, bigbuttonPlayerMap, commentators, commentatorsNew, donationReader, donationReaderNew, donationTotal, horaroImportStatus, oengusImportStatus, otherStreamData, serverTimestamp, twitchAPIData, twitchChannelInfo, upcomingRunID } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const config = nodecg().bundleConfig;
@@ -222,11 +222,20 @@ async function changeTwitchMetadata(title?: string, gameId?: string): Promise<vo
         team.players.map((player) => (mentionChannels && player.social.twitch
           ? `@${player.social.twitch}` : player.name)).join(', ')
       )).join(' vs. ') || 'Runs coming up!'; // "Fake" string to show when no runners active
+      const additionalDonationsMapped = nodecg().bundleConfig.additionalDonations.map((d) => ({
+        key: d.key,
+        description: d.description,
+        amount: d.amount,
+        active: additionalDonations.value.find((a) => a.key === d.key)?.active ?? false,
+      }));
+      const donationTotalAdditional = additionalDonationsMapped
+        .filter((d) => d.active).reduce((partialSum, a) => partialSum + a.amount, 0);
+      const fullDonationTotal = donationTotal.value + donationTotalAdditional;
       t = t
         .replace(/{{game}}/g, runData?.game || '') // Copied from SC
         .replace(/{{players}}/g, players) // Copied from SC
         .replace(/{{category}}/g, runData?.category || '') // Copied from SC
-        .replace(/{{total}}/g, formatUSD(donationTotal.value, true)); // Original to this bundle
+        .replace(/{{total}}/g, formatUSD(fullDonationTotal, true)); // Original to this bundle
     } else {
       throw new Error('no title found to update to');
     }
@@ -283,6 +292,14 @@ if (config.tracker.donationTotalInTitle) {
       await changeTwitchMetadata();
     }
     donationTotalInit = true;
+  });
+  let additionalDonationsInit = false;
+  additionalDonations.on('change', async () => {
+    if (additionalDonationsInit && twitchAPIData.value.sync) {
+      nodecg().log.debug('[Misc] Additional donations updated, will attempt to set title');
+      await changeTwitchMetadata();
+    }
+    additionalDonationsInit = true;
   });
 }
 

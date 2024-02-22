@@ -138,6 +138,11 @@ export interface Configschema {
 		errorDiscordWebhook?: string;
 		errorDiscordWebhookUserIdToPing?: string;
 	};
+	additionalDonations: {
+		key: string;
+		description: string;
+		amount: number;
+	}[];
 }
 export interface BidwarBias {
 	bidId: number;

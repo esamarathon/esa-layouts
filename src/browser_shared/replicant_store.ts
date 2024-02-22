@@ -1,4 +1,4 @@
-import type { Bids, BigbuttonPlayerMap, Commentators, CommentatorsNew, Countdown, CurrentRunDelay, DonationAlerts, DonationReader, DonationReaderNew, DonationTotal, DonationTotalMilestones, DonationsToRead, GameLayouts, IntermissionSlides, MusicData, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import type { AdditionalDonations, Bids, BigbuttonPlayerMap, Commentators, CommentatorsNew, Countdown, CurrentRunDelay, DonationAlerts, DonationReader, DonationReaderNew, DonationTotal, DonationTotalMilestones, DonationsToRead, GameLayouts, IntermissionSlides, MusicData, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import type NodeCGTypes from '@nodecg/types';
 import clone from 'clone';
 import { SpeedcontrolUtilBrowser } from 'speedcontrol-util';
@@ -13,6 +13,7 @@ const sc = new SpeedcontrolUtilBrowser(nodecg);
 
 // Declaring replicants.
 export const reps: {
+  additionalDonations: NodeCGTypes.ClientReplicant<AdditionalDonations>;
   assetsDonationAlertAssets: NodeCGTypes.ClientReplicant<NodeCGTypes.AssetFile[]>;
   assetsIntermissionSlides: NodeCGTypes.ClientReplicant<NodeCGTypes.AssetFile[]>;
   assetsReaderIntroductionImages: NodeCGTypes.ClientReplicant<NodeCGTypes.AssetFile[]>;
@@ -47,6 +48,7 @@ export const reps: {
   videoPlayer: NodeCGTypes.ClientReplicant<VideoPlayer>;
   [k: string]: NodeCGTypes.ClientReplicant<unknown>;
 } = {
+  additionalDonations: nodecg.Replicant('additionalDonations'),
   assetsDonationAlertAssets: nodecg.Replicant('assets:donation-alert-assets'),
   assetsIntermissionSlides: nodecg.Replicant('assets:intermission-slides'),
   assetsReaderIntroductionImages: nodecg.Replicant('assets:reader-introduction-images'),
@@ -83,6 +85,7 @@ export const reps: {
 
 // All the replicant types.
 export interface ReplicantTypes {
+  additionalDonations: AdditionalDonations;
   assetsDonationAlertAssets: NodeCGTypes.AssetFile[];
   assetsIntermissionSlides: NodeCGTypes.AssetFile[];
   assetsReaderIntroductionImages: NodeCGTypes.AssetFile[];

@@ -134,8 +134,9 @@
 </template>
 
 <script lang="ts">
-import { replicantModule } from '@esa-layouts/browser_shared/replicant_store';
+import { replicantModule, replicantNS } from '@esa-layouts/browser_shared/replicant_store';
 import { formatUSD } from '@esa-layouts/graphics/_misc/helpers';
+import { AdditionalDonations } from '@esa-layouts/types/schemas';
 import gsap from 'gsap';
 import { Component, Vue } from 'vue-property-decorator';
 
@@ -149,9 +150,24 @@ export default class extends Vue {
   alertText = '$0';
   alertList: { total?: number, amount?: number, showAlert: boolean }[] = [];
   donationTotalTimeout: number | undefined;
+  @replicantNS.State(
+    (s) => s.reps.additionalDonations,
+  ) readonly additionalDonations!: AdditionalDonations;
+  additionalDonationsCfg = nodecg.bundleConfig.additionalDonations;
+
+  get additionalDonationsMapped() {
+    return this.additionalDonationsCfg.map((d) => ({
+      key: d.key,
+      description: d.description,
+      amount: d.amount,
+      active: this.additionalDonations.find((a) => a.key === d.key)?.active ?? false,
+    }));
+  }
 
   get rawTotal(): number {
-    return replicantModule.repsTyped.donationTotal;
+    const additional = this.additionalDonationsMapped
+      .filter((d) => d.active).reduce((partialSum, a) => partialSum + a.amount, 0);
+    return replicantModule.repsTyped.donationTotal + additional;
   }
 
   get totalStr(): string {
@@ -240,6 +256,16 @@ export default class extends Vue {
         showAlert: true,
       });
       if (!this.playingAlerts) this.playNextAlert(true);
+    });
+    nodecg.listenFor('additionalDonationToggle', (data: { key: string, active: boolean }) => {
+      const donation = this.additionalDonationsMapped.find((d) => d.key === data.key);
+      if (donation) {
+        this.alertList.push({
+          amount: (data.active ? 1 : -1) * donation.amount,
+          showAlert: data.active,
+        });
+        if (!this.playingAlerts) this.playNextAlert(true);
+      }
     });
   }
 }

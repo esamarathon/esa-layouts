@@ -242,6 +242,14 @@
         "file": "rabbitmq-test.html",
         "workspace": "Z9 - Debug",
         "headerColor": "#c49215"
+      },
+      {
+        "name": "additional-donations-control",
+        "title": "Additional Donations Control",
+        "width": 3,
+        "file": "additional-donations-control.html",
+        "workspace": "Z2 - ESA Advanced",
+        "headerColor": "#c49215"
       }
     ],
     "graphics": [

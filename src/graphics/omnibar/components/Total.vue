@@ -164,10 +164,13 @@ export default class extends Vue {
     }));
   }
 
-  get rawTotal(): number {
-    const additional = this.additionalDonationsMapped
+  get additionalDonationsAmount() {
+    return this.additionalDonationsMapped
       .filter((d) => d.active).reduce((partialSum, a) => partialSum + a.amount, 0);
-    return replicantModule.repsTyped.donationTotal + additional;
+  }
+
+  get rawTotal(): number {
+    return replicantModule.repsTyped.donationTotal + this.additionalDonationsAmount;
   }
 
   get totalStr(): string {
@@ -236,13 +239,14 @@ export default class extends Vue {
         // Double check if the total really needs updating.
         // Also, only queue if alerts are not already
         // (the play system will check the final total at the end anyway).
-        if (!this.playingAlerts && data.total !== this.total) {
+        const completeTotal = data.total + this.additionalDonationsAmount;
+        if (!this.playingAlerts && completeTotal !== this.total) {
           nodecg.sendMessage(
             'donationAlertsLogging',
             'donationTotalTimeout decided we should push a new total as an alert',
           );
           this.alertList.push({
-            total: data.total,
+            total: completeTotal,
             showAlert: false,
           });
           if (!this.playingAlerts) this.playNextAlert(true);

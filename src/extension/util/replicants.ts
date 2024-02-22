@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import { Bids, BigbuttonPlayerMap, CapturePositions, Commentators, CommentatorsNew, Countdown, CurrentRunDelay, DelayedTimer, DonationAlerts, DonationReader, DonationReaderNew, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, IntermissionSlides, MusicData, NameCycle, NotableDonations, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TaskmasterTimestamps, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
+import { AdditionalDonations, Bids, BigbuttonPlayerMap, CapturePositions, Commentators, CommentatorsNew, Countdown, CurrentRunDelay, DelayedTimer, DonationAlerts, DonationReader, DonationReaderNew, DonationsToRead, DonationTotal, DonationTotalMilestones, GameLayouts, IntermissionSlides, MusicData, NameCycle, NotableDonations, ObsData, Omnibar, OtherStreamData, Prizes, ReaderIntroduction, ServerTimestamp, StreamDeckData, TaskmasterTimestamps, TtsVoices, UpcomingRunID, VideoPlayer } from '@esa-layouts/types/schemas';
 import type NodeCGTypes from '@nodecg/types';
 import { HoraroImportStatus, OengusImportStatus, TwitchAPIData, TwitchChannelInfo } from 'speedcontrol-util/types/schemas';
 import { get as nodecg } from './nodecg';
@@ -9,6 +9,7 @@ import { get as nodecg } from './nodecg';
  * This is where you can declare all your replicant to import easily into other files,
  * and to make sure they have any correct settings on startup.
  */
+export const additionalDonations = nodecg().Replicant<AdditionalDonations>('additionalDonations') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<AdditionalDonations>;
 export const assetsDonationAlertAssets = nodecg().Replicant<NodeCGTypes.AssetFile[]>('assets:donation-alert-assets') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<NodeCGTypes.AssetFile[]>;
 export const assetsIntermissionSlides = nodecg().Replicant<NodeCGTypes.AssetFile[]>('assets:intermission-slides') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<NodeCGTypes.AssetFile[]>;
 export const assetsMediaBoxImages = nodecg().Replicant<NodeCGTypes.AssetFile[]>('assets:media-box-images') as unknown as NodeCGTypes.ServerReplicantWithSchemaDefault<NodeCGTypes.AssetFile[]>;

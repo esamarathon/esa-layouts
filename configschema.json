@@ -764,6 +764,30 @@
           "type": "string"
         }
       }
+    },
+    "additionalDonations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "key",
+          "description",
+          "amount"
+        ]
+      },
+      "default": []
     }
   },
   "required": [
@@ -785,6 +809,7 @@
     "discord",
     "streamlabsCharity",
     "therungg",
-    "tiltify"
+    "tiltify",
+    "additionalDonations"
   ]
 }

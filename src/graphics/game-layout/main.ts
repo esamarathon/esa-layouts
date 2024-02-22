@@ -45,6 +45,11 @@ const routes = [
     component: List.L_ESAW24_GBA_1p,
   },
   {
+    name: '(ESAW24) Elden Ring Bingo',
+    path: '/esaw24-eldenring-bingo',
+    component: List.L_ESAW24_EldenRing_Bingo,
+  },
+  {
     name: '4:3 1 Player',
     path: '/4x3-1p',
     component: List.L_4x3_1p,

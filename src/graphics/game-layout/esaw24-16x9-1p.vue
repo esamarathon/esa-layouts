@@ -1,7 +1,6 @@
 <template>
   <layout-base
     :camera-height="thisEvent === 2 ? `550px` : undefined"
-    :camera-extra-box="thisEvent === 2"
     :participants-zoom="0.85"
   />
 </template>

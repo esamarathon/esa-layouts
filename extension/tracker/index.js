@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCookies = exports.eventInfo = void 0;
+const helpers_1 = require("@esa-layouts/util/helpers");
 const lodash_1 = require("lodash");
 const needle_1 = __importDefault(require("needle"));
 const nodecg_1 = require("../util/nodecg");
@@ -71,6 +72,8 @@ async function updateDonationTotalFromAPITiltify(init = false) {
             total += eventTotal;
         }
         total = (0, lodash_1.round)(total, 2);
+        // Wait 10s to just check we're not getting a new total just before a MQ message.
+        await (0, helpers_1.wait)(10 * 1000);
         if (init || replicants_1.donationTotal.value < total) {
             const oldTotal = replicants_1.donationTotal.value;
             (0, nodecg_1.get)().sendMessage('donationTotalUpdated', { total });

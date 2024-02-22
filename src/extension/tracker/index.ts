@@ -1,4 +1,5 @@
 import { Configschema } from '@esa-layouts/types/schemas';
+import { wait } from '@esa-layouts/util/helpers';
 import type { Tracker } from '@shared/types';
 import { round } from 'lodash';
 import type { NeedleResponse } from 'needle';
@@ -76,6 +77,8 @@ async function updateDonationTotalFromAPITiltify(init = false): Promise<void> {
       total += eventTotal;
     }
     total = round(total, 2);
+    // Wait 10s to just check we're not getting a new total just before a MQ message.
+    await wait(10 * 1000);
     if (init || donationTotal.value < total) {
       const oldTotal = donationTotal.value;
       nodecg().sendMessage('donationTotalUpdated', { total });

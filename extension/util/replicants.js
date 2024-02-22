@@ -1,12 +1,13 @@
 "use strict";
 /* eslint-disable max-len */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.videoPlayer = exports.upcomingRunID = exports.twitchChannelInfo = exports.twitchAPIData = exports.ttsVoices = exports.taskmasterTimestamps = exports.streamDeckData = exports.serverTimestamp = exports.readerIntroduction = exports.prizes = exports.otherStreamData = exports.omnibar = exports.oengusImportStatus = exports.obsData = exports.notableDonations = exports.nameCycle = exports.musicData = exports.intermissionSlides = exports.horaroImportStatus = exports.gameLayouts = exports.donationTotalMilestones = exports.donationTotal = exports.donationsToRead = exports.donationReaderNew = exports.donationReader = exports.donationAlerts = exports.delayedTimer = exports.currentRunDelay = exports.countdown = exports.commentatorsNew = exports.commentators = exports.capturePositions = exports.bigbuttonPlayerMap = exports.bids = exports.assetsVideos = exports.assetsReaderIntroductionImages = exports.assetsMediaBoxImages = exports.assetsIntermissionSlides = exports.assetsDonationAlertAssets = void 0;
+exports.videoPlayer = exports.upcomingRunID = exports.twitchChannelInfo = exports.twitchAPIData = exports.ttsVoices = exports.taskmasterTimestamps = exports.streamDeckData = exports.serverTimestamp = exports.readerIntroduction = exports.prizes = exports.otherStreamData = exports.omnibar = exports.oengusImportStatus = exports.obsData = exports.notableDonations = exports.nameCycle = exports.musicData = exports.intermissionSlides = exports.horaroImportStatus = exports.gameLayouts = exports.donationTotalMilestones = exports.donationTotal = exports.donationsToRead = exports.donationReaderNew = exports.donationReader = exports.donationAlerts = exports.delayedTimer = exports.currentRunDelay = exports.countdown = exports.commentatorsNew = exports.commentators = exports.capturePositions = exports.bigbuttonPlayerMap = exports.bids = exports.assetsVideos = exports.assetsReaderIntroductionImages = exports.assetsMediaBoxImages = exports.assetsIntermissionSlides = exports.assetsDonationAlertAssets = exports.additionalDonations = void 0;
 const nodecg_1 = require("./nodecg");
 /**
  * This is where you can declare all your replicant to import easily into other files,
  * and to make sure they have any correct settings on startup.
  */
+exports.additionalDonations = (0, nodecg_1.get)().Replicant('additionalDonations');
 exports.assetsDonationAlertAssets = (0, nodecg_1.get)().Replicant('assets:donation-alert-assets');
 exports.assetsIntermissionSlides = (0, nodecg_1.get)().Replicant('assets:intermission-slides');
 exports.assetsMediaBoxImages = (0, nodecg_1.get)().Replicant('assets:media-box-images');

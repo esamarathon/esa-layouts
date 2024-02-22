@@ -250,11 +250,23 @@ async function changeTwitchMetadata(title, gameId) {
             const mentionChannels = true;
             const players = (runData === null || runData === void 0 ? void 0 : runData.teams.map((team) => (team.players.map((player) => (mentionChannels && player.social.twitch
                 ? `@${player.social.twitch}` : player.name)).join(', '))).join(' vs. ')) || 'Runs coming up!'; // "Fake" string to show when no runners active
+            const additionalDonationsMapped = (0, nodecg_1.get)().bundleConfig.additionalDonations.map((d) => {
+                var _a, _b;
+                return ({
+                    key: d.key,
+                    description: d.description,
+                    amount: d.amount,
+                    active: (_b = (_a = replicants_1.additionalDonations.value.find((a) => a.key === d.key)) === null || _a === void 0 ? void 0 : _a.active) !== null && _b !== void 0 ? _b : false,
+                });
+            });
+            const donationTotalAdditional = additionalDonationsMapped
+                .filter((d) => d.active).reduce((partialSum, a) => partialSum + a.amount, 0);
+            const fullDonationTotal = replicants_1.donationTotal.value + donationTotalAdditional;
             t = t
                 .replace(/{{game}}/g, (runData === null || runData === void 0 ? void 0 : runData.game) || '') // Copied from SC
                 .replace(/{{players}}/g, players) // Copied from SC
                 .replace(/{{category}}/g, (runData === null || runData === void 0 ? void 0 : runData.category) || '') // Copied from SC
-                .replace(/{{total}}/g, (0, helpers_1.formatUSD)(replicants_1.donationTotal.value, true)); // Original to this bundle
+                .replace(/{{total}}/g, (0, helpers_1.formatUSD)(fullDonationTotal, true)); // Original to this bundle
         }
         else {
             throw new Error('no title found to update to');
@@ -302,6 +314,14 @@ if (config.tracker.donationTotalInTitle) {
             await changeTwitchMetadata();
         }
         donationTotalInit = true;
+    });
+    let additionalDonationsInit = false;
+    replicants_1.additionalDonations.on('change', async () => {
+        if (additionalDonationsInit && replicants_1.twitchAPIData.value.sync) {
+            (0, nodecg_1.get)().log.debug('[Misc] Additional donations updated, will attempt to set title');
+            await changeTwitchMetadata();
+        }
+        additionalDonationsInit = true;
     });
 }
 async function formatScheduleImportedPronouns() {

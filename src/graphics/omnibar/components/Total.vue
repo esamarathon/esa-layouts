@@ -138,6 +138,7 @@ import { replicantModule, replicantNS } from '@esa-layouts/browser_shared/replic
 import { formatUSD } from '@esa-layouts/graphics/_misc/helpers';
 import { AdditionalDonations } from '@esa-layouts/types/schemas';
 import gsap from 'gsap';
+import { round } from 'lodash';
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component
@@ -170,7 +171,7 @@ export default class extends Vue {
   }
 
   get rawTotal(): number {
-    return replicantModule.repsTyped.donationTotal + this.additionalDonationsAmount;
+    return round(replicantModule.repsTyped.donationTotal + this.additionalDonationsAmount, 2);
   }
 
   get totalStr(): string {
@@ -239,7 +240,7 @@ export default class extends Vue {
         // Double check if the total really needs updating.
         // Also, only queue if alerts are not already
         // (the play system will check the final total at the end anyway).
-        const completeTotal = data.total + this.additionalDonationsAmount;
+        const completeTotal = round(data.total + this.additionalDonationsAmount, 2);
         if (!this.playingAlerts && completeTotal !== this.total) {
           nodecg.sendMessage(
             'donationAlertsLogging',

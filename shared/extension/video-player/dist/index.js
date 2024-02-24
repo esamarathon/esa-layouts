@@ -219,7 +219,15 @@ var VideoPlayer = /** @class */ (function (_super) {
                     case 1:
                         source = _a.sent();
                         location = (0, path_1.join)((0, process_1.cwd)(), "assets/".concat(video.namespace, "/").concat(video.category, "/").concat(video.base));
-                        if (!(source.sourceType === 'ffmpeg_source')) return [3 /*break*/, 3];
+                        if (!(source.sourceSettings.local_file === location)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.obs.conn.send('RestartMedia', {
+                                sourceName: this.obsConfig.names.sources.videoPlayer,
+                            })];
+                    case 2:
+                        _a.sent();
+                        return [3 /*break*/, 8];
+                    case 3:
+                        if (!(source.sourceType === 'ffmpeg_source')) return [3 /*break*/, 5];
                         return [4 /*yield*/, this.obs.conn.send('SetSourceSettings', {
                                 sourceName: this.obsConfig.names.sources.videoPlayer,
                                 sourceSettings: {
@@ -229,11 +237,11 @@ var VideoPlayer = /** @class */ (function (_super) {
                                     restart_on_activate: false,
                                 },
                             })];
-                    case 2:
+                    case 4:
                         _a.sent();
-                        return [3 /*break*/, 6];
-                    case 3:
-                        if (!(source.sourceType === 'vlc_source')) return [3 /*break*/, 5];
+                        return [3 /*break*/, 8];
+                    case 5:
+                        if (!(source.sourceType === 'vlc_source')) return [3 /*break*/, 7];
                         return [4 /*yield*/, this.obs.conn.send('SetSourceSettings', {
                                 sourceName: this.obsConfig.names.sources.videoPlayer,
                                 sourceSettings: {
@@ -249,11 +257,11 @@ var VideoPlayer = /** @class */ (function (_super) {
                                     ],
                                 },
                             })];
-                    case 4:
+                    case 6:
                         _a.sent();
-                        return [3 /*break*/, 6];
-                    case 5: throw new Error('No video player source found in OBS to trigger');
-                    case 6: return [2 /*return*/];
+                        return [3 /*break*/, 8];
+                    case 7: throw new Error('No video player source found in OBS to trigger');
+                    case 8: return [2 /*return*/];
                 }
             });
         });

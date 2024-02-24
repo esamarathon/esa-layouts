@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.startPlaylist = void 0;
+exports.startPlaylist = exports.player = void 0;
 const video_player_1 = __importDefault(require("@shared/extension/video-player"));
 const uuid_1 = require("uuid");
 const helpers_1 = require("./util/helpers");
@@ -36,7 +36,7 @@ const obs_1 = __importStar(require("./util/obs"));
 const replicants_1 = require("./util/replicants");
 const speedcontrol_1 = require("./util/speedcontrol");
 const config = (0, nodecg_1.get)().bundleConfig;
-const player = new video_player_1.default((0, nodecg_1.get)(), config.obs, obs_1.default);
+exports.player = new video_player_1.default((0, nodecg_1.get)(), config.obs, obs_1.default);
 // Reset replicant values on startup.
 replicants_1.videoPlayer.value.playing = false;
 replicants_1.videoPlayer.value.current = null;
@@ -75,11 +75,11 @@ function generatePlaylist() {
 async function startPlaylist() {
     try {
         const playlist = generatePlaylist();
-        player.loadPlaylist(playlist);
+        exports.player.loadPlaylist(playlist);
         replicants_1.videoPlayer.value.playing = true;
         // Switch to correct scene depending on if first element has a video or not.
         if (playlist[0].video) {
-            await (0, obs_1.changeScene)({ scene: config.obs.names.scenes.intermissionPlayer });
+            await (0, obs_1.changeScene)({ scene: config.obs.names.scenes.intermissionPlayer, force: true });
         }
         else {
             // Does not work if first element is not a video and we're already on the
@@ -89,17 +89,17 @@ async function startPlaylist() {
             await (0, obs_1.changeScene)({ scene: config.obs.names.scenes.intermission });
         }
         replicants_1.obsData.value.disableTransitioning = true;
-        await player.playNext();
+        await exports.player.playNext();
         // Calculates when this playlist should end.
         replicants_1.videoPlayer.value.estimatedFinishTimestamp = Date.now()
-            + (await player.calculatePlaylistLength() * 1000);
+            + (await exports.player.calculatePlaylistLength() * 1000);
     }
     catch (err) {
         (0, helpers_1.logError)('[Intermission Player] Could not be started', err);
         // Return to the intermission scene if there was an issue starting the playlist.
         await new Promise((res) => { setTimeout(res, 5000); });
         // TODO: Should this be commercials scene if available?
-        await (0, obs_1.changeScene)({ scene: config.obs.names.scenes.intermission });
+        await (0, obs_1.changeScene)({ scene: config.obs.names.scenes.intermission, force: true });
     }
 }
 exports.startPlaylist = startPlaylist;
@@ -160,17 +160,20 @@ replicants_1.videoPlayer.on('change', (newVal, oldVal) => {
     }
 });
 // Used if a user manually switches to the intermission player scene in OBS.
-obs_1.default.conn.on('TransitionBegin', (data) => {
+obs_1.default.conn.on('TransitionBegin', async (data) => {
     if (obs_1.default.findScene(config.obs.names.scenes.intermissionPlayer) === data['to-scene']
         && !replicants_1.videoPlayer.value.playing) {
-        startPlaylist();
+        await startPlaylist();
+    }
+    if (obs_1.default.findScene(config.obs.names.scenes.intermissionPlayer) === data['from-scene']) {
+        await exports.player.endPlaylistEarly();
     }
 });
 // Triggered from the intermission player control to stop early.
 (0, nodecg_1.get)().listenFor('stopIntermissionPlayerEarly', () => {
-    player.endPlaylistEarly();
+    exports.player.endPlaylistEarly();
 });
-player.on('videoStarted', async (item) => {
+exports.player.on('videoStarted', async (item) => {
     var _a;
     replicants_1.videoPlayer.value.current = ((_a = item.video) === null || _a === void 0 ? void 0 : _a.sum) || null;
     // Change to intermission player scene if needed and not done already.
@@ -181,7 +184,7 @@ player.on('videoStarted', async (item) => {
         await (0, obs_1.changeScene)({ scene: config.obs.names.scenes.intermission, force: true });
     }
 });
-player.on('videoEnded', async (item) => {
+exports.player.on('videoEnded', async (item) => {
     // Update video play count.
     if (item.video) {
         if (!replicants_1.videoPlayer.value.plays[item.video.sum]) {
@@ -197,16 +200,16 @@ player.on('videoEnded', async (item) => {
         if (item.commercial)
             await waitForCommercialEnd();
         try {
-            await player.playNext();
+            await exports.player.playNext();
         }
         catch (err) {
             (0, helpers_1.logError)('[Intermission Player] Could not play next video', err);
-            player.endPlaylistEarly();
+            exports.player.endPlaylistEarly();
         }
     }
     catch (err) { /* do nothing */ }
 });
-player.on('playlistEnded', async (early) => {
+exports.player.on('playlistEnded', async (early) => {
     replicants_1.videoPlayer.value.playing = false;
     replicants_1.videoPlayer.value.current = null;
     if (!early)
@@ -215,7 +218,7 @@ player.on('playlistEnded', async (early) => {
     replicants_1.obsData.value.disableTransitioning = false;
     await (0, obs_1.changeScene)({ scene: config.obs.names.scenes.intermission, force: true });
 });
-player.on('playCommercial', async (item) => {
+exports.player.on('playCommercial', async (item) => {
     try {
         await speedcontrol_1.sc.sendMessage('twitchStartCommercial', { duration: item.length });
     }

@@ -56,6 +56,7 @@ companion_1.default.evt.on('open', (socket) => {
     companion_1.default.send({ name: 'videos', value: replicants_1.assetsVideos.value });
 });
 // Listening for any actions triggered from Companion.
+let videoPlayPressedRecently = false;
 companion_1.default.evt.on('action', async (name, value) => {
     // Controls the nodecg-speedcontrol timer.
     // Currently the "Stop Timer" state works if there's only 1 team.
@@ -142,18 +143,36 @@ companion_1.default.evt.on('action', async (name, value) => {
         // intended to be used by hosts.
     }
     else if (name === 'video_play') {
-        const val = value;
-        const video = replicants_1.assetsVideos.value.find((v) => v.sum === val);
-        if (video) {
-            replicants_1.videoPlayer.value.playlist = [
-                {
-                    sum: video.sum,
-                    length: 0,
-                    commercial: false,
-                },
-            ];
-            (0, helpers_1.wait)(500); // Safety wait
-            await (0, intermission_player_1.startPlaylist)();
+        if (!videoPlayPressedRecently && !replicants_1.videoPlayer.value.playing
+            && (0, obs_1.canChangeScene)({ scene: config.obs.names.scenes.intermissionPlayer, force: true })) {
+            videoPlayPressedRecently = true;
+            setTimeout(() => { videoPlayPressedRecently = false; }, 1000);
+            const val = value;
+            (0, nodecg_1.get)().log.debug('[Companion] Message received to play video (sum: %s)', val);
+            const videos = replicants_1.assetsVideos.value.filter((v) => v.sum === val);
+            if (videos.length > 1) {
+                // VIDEO WAS FOUND TWICE, MAKES NO SENSE!
+                (0, nodecg_1.get)().log.debug('[Companion] Multiple videos with the same sum found!');
+            }
+            else if (!videos.length) {
+                // VIDEO WAS NOT FOUND
+                (0, nodecg_1.get)().log.debug('[Companion] No videos found with that sum!');
+            }
+            else {
+                (0, nodecg_1.get)().log.debug('[Companion] Video found matching sum: %s', videos[0].name);
+                replicants_1.videoPlayer.value.playlist = [
+                    {
+                        sum: videos[0].sum,
+                        length: 0,
+                        commercial: false,
+                    },
+                ];
+                (0, helpers_1.wait)(500); // Safety wait
+                await (0, intermission_player_1.startPlaylist)();
+            }
         }
+    }
+    else if (name === 'video_stop') {
+        await intermission_player_1.player.endPlaylistEarly();
     }
 });

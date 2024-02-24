@@ -131,7 +131,15 @@ class VideoPlayer extends TypedEmitter<VideoPlayerEvents> {
       sourceName: this.obsConfig.names.sources.videoPlayer,
     });
     const location = join(cwd(), `assets/${video.namespace}/${video.category}/${video.base}`);
-    if (source.sourceType === 'ffmpeg_source') {
+    // File is the same as before, just restart it.
+    // ONLY WORKS FOR ffmpeg_source, but might not even be needed for VLC source!
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((source.sourceSettings as any).local_file === location) {
+      await this.obs.conn.send('RestartMedia', {
+        sourceName: this.obsConfig.names.sources.videoPlayer,
+      });
+    // If different, explicitily set it. This also starts the playback.
+    } else if (source.sourceType === 'ffmpeg_source') {
       await this.obs.conn.send('SetSourceSettings', {
         sourceName: this.obsConfig.names.sources.videoPlayer,
         sourceSettings: {

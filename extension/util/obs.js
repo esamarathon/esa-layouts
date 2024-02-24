@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.changeScene = void 0;
+exports.changeScene = exports.canChangeScene = void 0;
 const obs_1 = __importDefault(require("@shared/extension/obs"));
 const helpers_1 = require("./helpers");
 const nodecg_1 = require("./nodecg");
@@ -11,6 +11,18 @@ const replicants_1 = require("./replicants");
 const config = (0, nodecg_1.get)().bundleConfig.obs;
 const obs = new obs_1.default((0, nodecg_1.get)(), config);
 let sceneChangeCodeTriggered = 0;
+function canChangeScene({ scene, force = false }) {
+    // Don't change scene if identical, we're currently transitioning, transitioning is disabled,
+    // or if we triggered a scene change here in the last 2 seconds.
+    if (sceneChangeCodeTriggered > (Date.now() - 2000)
+        || obs.isCurrentScene(scene)
+        || (!force && (replicants_1.obsData.value.transitioning
+            || replicants_1.obsData.value.disableTransitioning))) {
+        return false;
+    }
+    return true;
+}
+exports.canChangeScene = canChangeScene;
 async function changeScene({ scene, force = false }) {
     // Don't change scene if identical, we're currently transitioning, transitioning is disabled,
     // or if we triggered a scene change here in the last 2 seconds.

@@ -1,4 +1,4 @@
-import { startPlaylist } from './intermission-player';
+import { player, startPlaylist } from './intermission-player';
 import companion from './util/companion';
 import { wait } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
@@ -141,5 +141,7 @@ companion.evt.on('action', async (name, value) => {
         await startPlaylist();
       }
     }
+  } else if (name === 'video_stop') {
+    await player.endPlaylistEarly();
   }
 });

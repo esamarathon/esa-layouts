@@ -248,8 +248,15 @@ async function changeTwitchMetadata(title, gameId) {
             // TODO: Expose a helper in that bundle to do this stuff instead.
             const runData = speedcontrol_1.sc.getCurrentRun();
             const mentionChannels = true;
-            const players = (runData === null || runData === void 0 ? void 0 : runData.teams.map((team) => (team.players.map((player) => (mentionChannels && player.social.twitch
-                ? `@${player.social.twitch}` : player.name)).join(', '))).join(' vs. ')) || 'Runs coming up!'; // "Fake" string to show when no runners active
+            let players = 'Runs coming up!'; // "Fake" string to show when no runners active
+            // OVERRIDE FOR RELAYS BECAUSE LOTS OF PEOPLE! ESAW24
+            if ((runData === null || runData === void 0 ? void 0 : runData.relay) && runData.teams[0].name) {
+                players = runData.teams[0].name;
+            }
+            else {
+                players = (runData === null || runData === void 0 ? void 0 : runData.teams.map((team) => (team.players.map((player) => (mentionChannels && player.social.twitch
+                    ? `@${player.social.twitch}` : player.name)).join(', '))).join(' vs. ')) || 'Runs coming up!'; // "Fake" string to show when no runners active
+            }
             const additionalDonationsMapped = (0, nodecg_1.get)().bundleConfig.additionalDonations.map((d) => {
                 var _a, _b;
                 return ({

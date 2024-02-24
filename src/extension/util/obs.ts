@@ -7,6 +7,20 @@ const config = nodecg().bundleConfig.obs;
 const obs = new OBS(nodecg(), config);
 let sceneChangeCodeTriggered = 0;
 
+export function canChangeScene(
+  { scene, force = false }: { scene: string, force?: boolean },
+): boolean {
+  // Don't change scene if identical, we're currently transitioning, transitioning is disabled,
+  // or if we triggered a scene change here in the last 2 seconds.
+  if (sceneChangeCodeTriggered > (Date.now() - 2000)
+    || obs.isCurrentScene(scene)
+    || (!force && (obsData.value.transitioning
+    || obsData.value.disableTransitioning))) {
+    return false;
+  }
+  return true;
+}
+
 export async function changeScene(
   { scene, force = false }: { scene: string, force?: boolean },
 ): Promise<boolean> {

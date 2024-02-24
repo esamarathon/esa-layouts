@@ -11,7 +11,7 @@ import { assetsVideos, obsData, videoPlayer } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
 const config = nodecg().bundleConfig;
-const player = new Player(nodecg(), config.obs, obs);
+export const player = new Player(nodecg(), config.obs, obs);
 
 // Reset replicant values on startup.
 videoPlayer.value.playing = false;
@@ -61,7 +61,7 @@ export async function startPlaylist(): Promise<void> {
     videoPlayer.value.playing = true;
     // Switch to correct scene depending on if first element has a video or not.
     if (playlist[0].video) {
-      await changeScene({ scene: config.obs.names.scenes.intermissionPlayer });
+      await changeScene({ scene: config.obs.names.scenes.intermissionPlayer, force: true });
     } else {
       // Does not work if first element is not a video and we're already on the
       // intermission player scene, but waitForCommercialEnd handles that.
@@ -79,7 +79,7 @@ export async function startPlaylist(): Promise<void> {
     // Return to the intermission scene if there was an issue starting the playlist.
     await new Promise((res) => { setTimeout(res, 5000); });
     // TODO: Should this be commercials scene if available?
-    await changeScene({ scene: config.obs.names.scenes.intermission });
+    await changeScene({ scene: config.obs.names.scenes.intermission, force: true });
   }
 }
 
@@ -144,10 +144,13 @@ videoPlayer.on('change', (newVal, oldVal) => {
 });
 
 // Used if a user manually switches to the intermission player scene in OBS.
-obs.conn.on('TransitionBegin', (data) => {
+obs.conn.on('TransitionBegin', async (data) => {
   if (obs.findScene(config.obs.names.scenes.intermissionPlayer) === data['to-scene']
   && !videoPlayer.value.playing) {
-    startPlaylist();
+    await startPlaylist();
+  }
+  if (obs.findScene(config.obs.names.scenes.intermissionPlayer) === data['from-scene']) {
+    await player.endPlaylistEarly();
   }
 });
 

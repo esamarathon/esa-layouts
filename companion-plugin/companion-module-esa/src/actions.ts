@@ -109,6 +109,14 @@ function initActions(instance: ModuleInstance, videos?: { name: string, sum: str
         }
       },
     },
+    video_stop: {
+      name: 'Video Stop',
+      description: 'Stops any videos playing, to be used in emergencies',
+      options: [],
+      callback: () => {
+        instance.wsSend({ name: 'video_stop' });
+      },
+    },
   });
 }
 

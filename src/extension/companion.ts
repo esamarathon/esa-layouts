@@ -1,8 +1,8 @@
-import { startPlaylist } from './intermission-player';
+import { player, startPlaylist } from './intermission-player';
 import companion from './util/companion';
 import { wait } from './util/helpers';
 import { get as nodecg } from './util/nodecg';
-import obs, { changeScene } from './util/obs';
+import obs, { canChangeScene, changeScene } from './util/obs';
 import { assetsVideos, obsData, streamDeckData, videoPlayer } from './util/replicants';
 import { sc } from './util/speedcontrol';
 
@@ -37,6 +37,7 @@ companion.evt.on('open', (socket) => {
 });
 
 // Listening for any actions triggered from Companion.
+let videoPlayPressedRecently = false;
 companion.evt.on('action', async (name, value) => {
   // Controls the nodecg-speedcontrol timer.
   // Currently the "Stop Timer" state works if there's only 1 team.
@@ -114,18 +115,33 @@ companion.evt.on('action', async (name, value) => {
   // Used to play back a single video in the "Intermission Player" scene,
   // intended to be used by hosts.
   } else if (name === 'video_play') {
-    const val = value as string;
-    const video = assetsVideos.value.find((v) => v.sum === val);
-    if (video) {
-      videoPlayer.value.playlist = [
-        {
-          sum: video.sum,
-          length: 0,
-          commercial: false,
-        },
-      ];
-      wait(500); // Safety wait
-      await startPlaylist();
+    if (!videoPlayPressedRecently && !videoPlayer.value.playing
+    && canChangeScene({ scene: config.obs.names.scenes.intermissionPlayer, force: true })) {
+      videoPlayPressedRecently = true;
+      setTimeout(() => { videoPlayPressedRecently = false; }, 1000);
+      const val = value as string;
+      nodecg().log.debug('[Companion] Message received to play video (sum: %s)', val);
+      const videos = assetsVideos.value.filter((v) => v.sum === val);
+      if (videos.length > 1) {
+        // VIDEO WAS FOUND TWICE, MAKES NO SENSE!
+        nodecg().log.debug('[Companion] Multiple videos with the same sum found!');
+      } else if (!videos.length) {
+        // VIDEO WAS NOT FOUND
+        nodecg().log.debug('[Companion] No videos found with that sum!');
+      } else {
+        nodecg().log.debug('[Companion] Video found matching sum: %s', videos[0].name);
+        videoPlayer.value.playlist = [
+          {
+            sum: videos[0].sum,
+            length: 0,
+            commercial: false,
+          },
+        ];
+        wait(500); // Safety wait
+        await startPlaylist();
+      }
     }
+  } else if (name === 'video_stop') {
+    await player.endPlaylistEarly();
   }
 });

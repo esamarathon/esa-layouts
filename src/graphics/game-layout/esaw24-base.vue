@@ -143,7 +143,7 @@
 <script lang="ts">
 import { CommentatorsNew, DonationReaderNew } from '@esa-layouts/types/schemas';
 import MediaBox from '@shared/graphics/mediabox';
-import { RunDataActiveRun } from 'speedcontrol-util/types';
+import { RunDataActiveRun, RunDataPlayer } from 'speedcontrol-util/types';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import ParticipantInfo from '../_misc/components/ParticipantInfo.vue';
@@ -182,8 +182,13 @@ export default class extends Vue {
   @State readonly commentatorsNew!: CommentatorsNew;
   @State readonly donationReaderNew!: DonationReaderNew;
 
-  get players() {
+  get players(): RunDataPlayer[] {
     if (!this.runData) return [];
+    if (this.runData.relay) {
+      const team = this.runData?.teams[0];
+      const player = team?.players.find((p) => p.id === team.relayPlayerID);
+      return player ? [player] : [];
+    }
     return this.runData.teams.map((t) => t.players).flat(1);
   }
 }

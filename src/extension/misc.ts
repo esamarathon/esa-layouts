@@ -242,7 +242,7 @@ nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack)
     await addNameToCommentators(val, commentatorsNew.value);
 
     // Update old commentators replicant.
-    commentators.value = commentatorsNew.value.map((it) => it.name);
+    commentators.value = commentatorsNew.value.map(objToSimpleDisplay);
   }
   if (ack && !ack.handled) {
     ack(null);

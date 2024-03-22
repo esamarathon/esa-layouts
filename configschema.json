@@ -699,6 +699,11 @@
         "key"
       ]
     },
+    "useOengusInsteadOfSrdc": {
+      "type": "boolean",
+      "description": "Looks up pronouns on Oengus instead of speedrun.com",
+      "default": false
+    },
     "discord": {
       "type": "object",
       "additionalProperties": false,
@@ -806,6 +811,7 @@
     "flagcarrier",
     "offsite",
     "server",
+    "useOengusInsteadOfSrdc",
     "discord",
     "streamlabsCharity",
     "therungg",

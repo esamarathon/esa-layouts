@@ -122,6 +122,10 @@ export interface Configschema {
 		address: string;
 		key: string;
 	};
+	/**
+	 * Looks up pronouns on Oengus instead of speedrun.com
+	 */
+	useOengusInsteadOfSrdc: boolean;
 	discord: {
 		enabled: boolean;
 		token: string;

@@ -1,5 +1,7 @@
 import AudioNormaliser from '@shared/extension/audio-normaliser';
-import type { RunData } from 'speedcontrol-util/types';
+import type { OengusUser, RunData } from 'speedcontrol-util/types';
+import needle from 'needle';
+import { CommentatorsNew, DonationReaderNew } from '@esa-layouts/types/schemas';
 import { lookupUsersByStr } from './server';
 import { formatSrcomPronouns, formatUSD, getOtherStreamEventShort, logError } from './util/helpers';
 import * as mqLogging from './util/mq-logging';
@@ -96,9 +98,69 @@ nodecg().listenFor('forceUpcomingRun', (id?: string) => {
   upcomingRunID.value = run?.id || null;
 });
 
+function processNameWithPronouns(val: string): DonationReaderNew {
+  // User not found, process string as NAME or NAME (PRONOUNS).
+  return {
+    name: val.replace(/\((.*?)\)/g, '').trim(),
+    pronouns: (val.match(/\((.*?)\)/g) || [])[0]?.replace(/[()]/g, ''),
+    country: undefined,
+  };
+}
+
+function objToSimpleDisplay(input: DonationReaderNew | CommentatorsNew): string {
+  if (!input) {
+    return '';
+  }
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  let selected: DonationReaderNew = input;
+
+  if ('length' in input) {
+    selected = input[0] as DonationReaderNew;
+  }
+
+  if (!selected) {
+    return '';
+  }
+
+  if (selected.pronouns) {
+    return `${selected.name} (${selected.pronouns})`;
+  }
+
+  return selected.name;
+}
+
+export async function searchESAServerPronouns(val: string): Promise<DonationReaderNew> {
+  if (!config.server.enabled) {
+    throw new Error('ESA server is not enabled');
+  }
+
+  let user;
+  const foundUsers = await lookupUsersByStr(val);
+
+  if (foundUsers.length) {
+    [user] = foundUsers;
+  }
+
+  if (!user) {
+    return processNameWithPronouns(val);
+  }
+
+  // Fix some flags which use a different format (mostly GB).
+  let { country } = user;
+  if (country && country.includes('-')) country = country.replace('-', '/');
+
+  return {
+    name: user.name,
+    country: country || undefined,
+    pronouns: user.pronouns || undefined,
+  };
+}
+
 // Helper function to get pronouns of a specified user name from speedrun.com
 // eslint-disable-next-line import/prefer-default-export
-export async function searchSrcomPronouns(val: string): Promise<string> {
+export async function searchSrcomPronouns(val: string): Promise<DonationReaderNew> {
   const name = val.replace(/\((.*?)\)/g, '').trim();
   let pronouns = (val.match(/\((.*?)\)/g) || [])[0]?.replace(/[()]/g, '');
   if (!pronouns) {
@@ -110,50 +172,77 @@ export async function searchSrcomPronouns(val: string): Promise<string> {
   }
   // Allows the user to specify "(none)" and bypass a look-up.
   if (pronouns.toLowerCase().includes('none')) pronouns = '';
-  return pronouns ? `${name} (${pronouns})` : name;
+  return processNameWithPronouns(pronouns ? `${name} (${pronouns})` : name);
+}
+
+export async function searchOengusPronouns(val: string): Promise<DonationReaderNew> {
+  // speedcontrol has outdated types.
+  let user: OengusUser & { displayName: string } | undefined;
+
+  try {
+    const resp = await needle(
+      'get',
+      `https://oengus.io/api/v1/users/${val}/search`,
+      {
+        headers: {
+          'User-Agent': 'github+bsgmarathon/esa-layouts',
+        },
+      },
+    );
+
+    const foundUsers = resp.body as OengusUser[];
+
+    if (foundUsers.length) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore display name is not in types
+      [user] = foundUsers;
+    }
+  } catch (err) {
+    nodecg().log.error(err);
+  }
+
+  if (!user) {
+    return processNameWithPronouns(val);
+  }
+
+  const pronouns = typeof user.pronouns === 'string'
+    ? user.pronouns.split(',')[0]
+    : user.pronouns?.[0];
+
+  return {
+    name: user.displayName || user.username,
+    pronouns: pronouns || undefined,
+    country: user.country || undefined,
+  };
+}
+
+async function searchSingleName(val: string): Promise<DonationReaderNew> {
+  if (config.server.enabled) {
+    return searchESAServerPronouns(val);
+  }
+
+  if (config.useOengusInsteadOfSrdc) {
+    return searchOengusPronouns(val);
+  }
+
+  return searchSrcomPronouns(val);
+}
+
+async function addNameToCommentators(val: string, currentVal: CommentatorsNew): Promise<void> {
+  const item = await searchSingleName(val) as CommentatorsNew[0];
+
+  if (!currentVal.includes(item)) {
+    currentVal.push(item);
+  }
 }
 
 // Processes adding commentators from the dashboard panel.
 nodecg().listenFor('commentatorAdd', async (val: string | null | undefined, ack) => {
   if (val) {
-    if (config.server.enabled) {
-      let user;
-      try {
-        [user] = (await lookupUsersByStr(val));
-      } catch (err) {
-        // catch
-      }
-      if (user) {
-        // TODO: ALLOW PRONOUNS TO BE OVERRIDDEN!
-        //       (Technically can be done now as a result won't return,
-        //       but a flag won't be returned).
-        // TODO: Stop someone adding the same person twice.
-        // Fix some flags which use a different format (mostly GB).
-        let { country } = user;
-        if (country && country.includes('-')) country = country.replace('-', '/');
-        commentatorsNew.value.push({
-          name: user.name,
-          country: country || undefined,
-          pronouns: user.pronouns || undefined,
-        });
-        // Old way for backwards compatibility.
-        commentators.value.push(user.pronouns ? `${user.name} (${user.pronouns})` : user.name);
-      } else {
-        // User not found, process string as NAME or NAME (PRONOUNS).
-        commentatorsNew.value.push({
-          name: val.replace(/\((.*?)\)/g, '').trim(),
-          pronouns: (val.match(/\((.*?)\)/g) || [])[0]?.replace(/[()]/g, ''),
-        });
-        // Old way for backwards compatibility.
-        commentators.value.push(val);
-      }
-    } else {
-      // TODO: IMPLEMENT WITH NEW CHANGES!
-      /* const str = await searchSrcomPronouns(val);
-      if (!commentators.value.includes(str)) {
-        commentators.value.push(str);
-      } */
-    }
+    await addNameToCommentators(val, commentatorsNew.value);
+
+    // Update old commentators replicant.
+    commentators.value = commentatorsNew.value.map((it) => it.name);
   }
   if (ack && !ack.handled) {
     ack(null);
@@ -173,38 +262,16 @@ nodecg().listenFor('readerModify', async (val: string | null | undefined, ack) =
   if (!val) {
     donationReaderNew.value = null;
     donationReader.value = null;
-  } else if (config.server.enabled) {
-    let user;
-    try {
-      [user] = (await lookupUsersByStr(val));
-    } catch (err) {
-      // catch
-    }
-    if (user) {
-      // TODO: ALLOW PRONOUNS TO BE OVERRIDDEN!
-      // Fix some flags which use a different format (mostly GB).
-      let { country } = user;
-      if (country && country.includes('-')) country = country.replace('-', '/');
-      donationReaderNew.value = {
-        name: user.name,
-        country: country || undefined,
-        pronouns: user.pronouns || undefined,
-      };
-      // Old way for backwards compatibility.
-      donationReader.value = user.pronouns ? `${user.name} (${user.pronouns})` : user.name;
-    } else {
-      // User not found, process string as NAME or NAME (PRONOUNS).
-      donationReaderNew.value = {
-        name: val.replace(/\((.*?)\)/g, '').trim(),
-        pronouns: (val.match(/\((.*?)\)/g) || [])[0]?.replace(/[()]/g, ''),
-      };
-      // Old way for backwards compatibility.
-      donationReader.value = val;
-    }
   } else {
-    // TODO: IMPLEMENT WITH NEW CHANGES!
-    // donationReader.value = await searchSrcomPronouns(val);
+    // TODO: ALLOW PRONOUNS TO BE OVERRIDDEN!
+    donationReaderNew.value = await searchSingleName(val);
   }
+
+  // Old way for backwards compatibility.
+  if (donationReaderNew.value) {
+    donationReader.value = objToSimpleDisplay(donationReaderNew.value);
+  }
+
   if (ack && !ack.handled) {
     ack(null);
   }

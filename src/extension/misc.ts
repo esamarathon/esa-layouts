@@ -185,7 +185,7 @@ export async function searchOengusPronouns(val: string): Promise<DonationReaderN
       `https://oengus.io/api/v1/users/${val}/search`,
       {
         headers: {
-          'User-Agent': 'github+bsgmarathon/esa-layouts',
+          'User-Agent': 'github+esamarathon/esa-layouts',
         },
       },
     );
